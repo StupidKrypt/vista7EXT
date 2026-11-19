@@ -1,0 +1,9 @@
+# bcryptprimitives.dll export names: Windows Vista SP2 and Windows 7 SP1, x86 and x64.
+# Each line: name, then where it exists (vista/win7, 32/64).
+GetAsymmetricEncryptionInterface win7-32,win7-64
+GetCipherInterface win7-32,win7-64
+GetHashInterface win7-32,win7-64
+GetRngInterface win7-32,win7-64
+GetSecretAgreementInterface win7-32,win7-64
+GetSignatureInterface win7-32,win7-64
+ProcessPrng vista-32,vista-64

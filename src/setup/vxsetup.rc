@@ -1,0 +1,6 @@
+#include <winver.h>
+#define VX_DESC "VistaExt Setup"
+#define VX_NAME "VistaExtSetup"
+1 24 "../common/requireAdministrator.manifest"
+#include "../common/version.rci"
+1 ICON "../vxcenter/vxcenter.ico"

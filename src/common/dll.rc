@@ -1,0 +1,35 @@
+/* Version information and ownership marker, linked into every VistaExt DLL.
+ * install.cmd and uninstall.cmd look for the marker text, so they only ever
+ * replace or delete a file in System32 that VistaExt itself put there (and
+ * never one that Windows Update has replaced since). The marker sits on a
+ * line of its own (newlines around it) so findstr finds it in the binary. */
+#include <winver.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_DLL
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904b0"
+    BEGIN
+      VALUE "CompanyName", "VistaExt project"
+      VALUE "FileDescription", "VistaExt add-on for running newer programs on Windows Vista and 7"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "ProductName", "VistaExt"
+      VALUE "ProductVersion", "1.0.0"
+      VALUE "LegalCopyright", "GPL-2.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END
+
+100 RCDATA
+BEGIN
+  "\nVistaExt-owned-file\n\0"
+END

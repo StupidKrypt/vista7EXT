@@ -1,0 +1,8 @@
+# bcryptprimitives.dll export ordinals: vista-64, win7-32, win7-64.
+# Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
+1 vista-64:ProcessPrng win7-32:GetAsymmetricEncryptionInterface win7-64:GetAsymmetricEncryptionInterface
+2 win7-32:GetCipherInterface win7-64:GetCipherInterface
+3 win7-32:GetHashInterface win7-64:GetHashInterface
+4 win7-32:GetRngInterface win7-64:GetRngInterface
+5 win7-32:GetSecretAgreementInterface win7-64:GetSecretAgreementInterface
+6 win7-32:GetSignatureInterface win7-64:GetSignatureInterface

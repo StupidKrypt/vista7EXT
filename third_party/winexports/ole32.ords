@@ -1,0 +1,460 @@
+# ole32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
+1 vista-32:CoVrfCheckThreadState vista-64:CoVrfCheckThreadState win7-32:CoVrfCheckThreadState win7-64:CoVrfCheckThreadState
+2 vista-32:CoVrfGetThreadState vista-64:CoVrfGetThreadState win7-32:CoVrfGetThreadState win7-64:CoVrfGetThreadState
+3 vista-32:CoVrfReleaseThreadState vista-64:CoVrfReleaseThreadState win7-32:CoVrfReleaseThreadState win7-64:CoVrfReleaseThreadState
+4 vista-32:HRGN_UserFree vista-64:HRGN_UserFree win7-32:HRGN_UserFree win7-64:HRGN_UserFree
+5 vista-32:HRGN_UserMarshal vista-64:HRGN_UserMarshal win7-32:HRGN_UserMarshal win7-64:HRGN_UserMarshal
+6 vista-32:HRGN_UserSize vista-64:HRGN_UserSize win7-32:HRGN_UserSize win7-64:HRGN_UserSize
+7 vista-32:HRGN_UserUnmarshal vista-64:HRGN_UserUnmarshal win7-32:HRGN_UserUnmarshal win7-64:HRGN_UserUnmarshal
+8 vista-32:PropVariantChangeType vista-64:PropVariantChangeType win7-32:NdrOleInitializeExtension win7-64:NdrOleInitializeExtension
+9 vista-32:BindMoniker vista-64:BindMoniker win7-32:PropVariantChangeType win7-64:PropVariantChangeType
+10 vista-32:CLIPFORMAT_UserFree vista-64:CLIPFORMAT_UserFree win7-32:BindMoniker win7-64:BindMoniker
+11 vista-32:CLIPFORMAT_UserMarshal vista-64:CLIPFORMAT_UserFree64 win7-32:CLIPFORMAT_UserFree win7-64:CLIPFORMAT_UserFree
+12 vista-32:CLIPFORMAT_UserSize vista-64:CLIPFORMAT_UserMarshal win7-32:CLIPFORMAT_UserMarshal win7-64:CLIPFORMAT_UserFree64
+13 vista-32:CLIPFORMAT_UserUnmarshal vista-64:CLIPFORMAT_UserMarshal64 win7-32:CLIPFORMAT_UserSize win7-64:CLIPFORMAT_UserMarshal
+14 vista-32:CLSIDFromOle1Class vista-64:CLIPFORMAT_UserSize win7-32:CLIPFORMAT_UserUnmarshal win7-64:CLIPFORMAT_UserMarshal64
+15 vista-32:CLSIDFromProgID vista-64:CLIPFORMAT_UserSize64 win7-32:CLSIDFromOle1Class win7-64:CLIPFORMAT_UserSize
+16 vista-32:CLSIDFromProgIDEx vista-64:CLIPFORMAT_UserUnmarshal win7-32:CLSIDFromProgID win7-64:CLIPFORMAT_UserSize64
+17 vista-32:CLSIDFromString vista-64:CLIPFORMAT_UserUnmarshal64 win7-32:CLSIDFromProgIDEx win7-64:CLIPFORMAT_UserUnmarshal
+18 vista-32:CoAddRefServerProcess vista-64:CLSIDFromOle1Class win7-32:CLSIDFromString win7-64:CLIPFORMAT_UserUnmarshal64
+19 vista-32:CoAllowSetForegroundWindow vista-64:CLSIDFromProgID win7-32:CoAddRefServerProcess win7-64:CLSIDFromOle1Class
+20 vista-32:CoBuildVersion vista-64:CLSIDFromProgIDEx win7-32:CoAllowSetForegroundWindow win7-64:CLSIDFromProgID
+21 vista-32:CoCancelCall vista-64:CLSIDFromString win7-32:CoBuildVersion win7-64:CLSIDFromProgIDEx
+22 vista-32:CoCopyProxy vista-64:CoAddRefServerProcess win7-32:CoCancelCall win7-64:CLSIDFromString
+23 vista-32:CoCreateFreeThreadedMarshaler vista-64:CoAllowSetForegroundWindow win7-32:CoCopyProxy win7-64:CoAddRefServerProcess
+24 vista-32:CoCreateGuid vista-64:CoBuildVersion win7-32:CoCreateFreeThreadedMarshaler win7-64:CoAllowSetForegroundWindow
+25 vista-32:CoCreateInstance vista-64:CoCancelCall win7-32:CoCreateGuid win7-64:CoBuildVersion
+26 vista-32:CoCreateInstanceEx vista-64:CoCopyProxy win7-32:CoCreateInstance win7-64:CoCancelCall
+27 vista-32:CoCreateObjectInContext vista-64:CoCreateFreeThreadedMarshaler win7-32:CoCreateInstanceEx win7-64:CoCopyProxy
+28 vista-32:CoDeactivateObject vista-64:CoCreateGuid win7-32:CoCreateObjectInContext win7-64:CoCreateFreeThreadedMarshaler
+29 vista-32:CoDisableCallCancellation vista-64:CoCreateInstance win7-32:CoDeactivateObject win7-64:CoCreateGuid
+30 vista-32:CoDisconnectContext vista-64:CoCreateInstanceEx win7-32:CoDisableCallCancellation win7-64:CoCreateInstance
+31 vista-32:CoDisconnectObject vista-64:CoCreateObjectInContext win7-32:CoDisconnectContext win7-64:CoCreateInstanceEx
+32 vista-32:CoDosDateTimeToFileTime vista-64:CoDeactivateObject win7-32:CoDisconnectObject win7-64:CoCreateObjectInContext
+33 vista-32:CoEnableCallCancellation vista-64:CoDisableCallCancellation win7-32:CoDosDateTimeToFileTime win7-64:CoDeactivateObject
+34 vista-32:CoFileTimeNow vista-64:CoDisconnectContext win7-32:CoEnableCallCancellation win7-64:CoDisableCallCancellation
+35 vista-32:CoFileTimeToDosDateTime vista-64:CoDisconnectObject win7-32:CoFileTimeNow win7-64:CoDisconnectContext
+36 vista-32:CoFreeAllLibraries vista-64:CoDosDateTimeToFileTime win7-32:CoFileTimeToDosDateTime win7-64:CoDisconnectObject
+37 vista-32:CoFreeLibrary vista-64:CoEnableCallCancellation win7-32:CoFreeAllLibraries win7-64:CoDosDateTimeToFileTime
+38 vista-32:CoFreeUnusedLibraries vista-64:CoFileTimeNow win7-32:CoFreeLibrary win7-64:CoEnableCallCancellation
+39 vista-32:CoFreeUnusedLibrariesEx vista-64:CoFileTimeToDosDateTime win7-32:CoFreeUnusedLibraries win7-64:CoFileTimeNow
+40 vista-32:CoGetActivationState vista-64:CoFreeAllLibraries win7-32:CoFreeUnusedLibrariesEx win7-64:CoFileTimeToDosDateTime
+41 vista-32:CoGetApartmentID vista-64:CoFreeLibrary win7-32:CoGetActivationState win7-64:CoFreeAllLibraries
+42 vista-32:CoGetCallContext vista-64:CoFreeUnusedLibraries win7-32:CoGetApartmentID win7-64:CoFreeLibrary
+43 vista-32:CoGetCallState vista-64:CoFreeUnusedLibrariesEx win7-32:CoGetApartmentType win7-64:CoFreeUnusedLibraries
+44 vista-32:CoGetCallerTID vista-64:CoGetActivationState win7-32:CoGetCallContext win7-64:CoFreeUnusedLibrariesEx
+45 vista-32:CoGetCancelObject vista-64:CoGetApartmentID win7-32:CoGetCallState win7-64:CoGetActivationState
+46 vista-32:CoGetClassObject vista-64:CoGetCallContext win7-32:CoGetCallerTID win7-64:CoGetApartmentID
+47 vista-32:CoGetClassVersion vista-64:CoGetCallState win7-32:CoGetCancelObject win7-64:CoGetApartmentType
+48 vista-32:CoGetComCatalog vista-64:CoGetCallerTID win7-32:CoGetClassObject win7-64:CoGetCallContext
+49 vista-32:CoGetContextToken vista-64:CoGetCancelObject win7-32:CoGetClassVersion win7-64:CoGetCallState
+50 vista-32:CoGetCurrentLogicalThreadId vista-64:CoGetClassObject win7-32:CoGetComCatalog win7-64:CoGetCallerTID
+51 vista-32:CoGetCurrentProcess vista-64:CoGetClassVersion win7-32:CoGetContextToken win7-64:CoGetCancelObject
+52 vista-32:CoGetDefaultContext vista-64:CoGetComCatalog win7-32:CoGetCurrentLogicalThreadId win7-64:CoGetClassObject
+53 vista-32:CoGetInstanceFromFile vista-64:CoGetContextToken win7-32:CoGetCurrentProcess win7-64:CoGetClassVersion
+54 vista-32:CoGetInstanceFromIStorage vista-64:CoGetCurrentLogicalThreadId win7-32:CoGetDefaultContext win7-64:CoGetComCatalog
+55 vista-32:CoGetInterceptor vista-64:CoGetCurrentProcess win7-32:CoGetInstanceFromFile win7-64:CoGetContextToken
+56 vista-32:CoGetInterceptorFromTypeInfo vista-64:CoGetDefaultContext win7-32:CoGetInstanceFromIStorage win7-64:CoGetCurrentLogicalThreadId
+57 vista-32:CoGetInterfaceAndReleaseStream vista-64:CoGetInstanceFromFile win7-32:CoGetInterceptor win7-64:CoGetCurrentProcess
+58 vista-32:CoGetMalloc vista-64:CoGetInstanceFromIStorage win7-32:CoGetInterceptorFromTypeInfo win7-64:CoGetDefaultContext
+59 vista-32:CoGetMarshalSizeMax vista-64:CoGetInterceptor win7-32:CoGetInterfaceAndReleaseStream win7-64:CoGetInstanceFromFile
+60 vista-32:CoGetModuleType vista-64:CoGetInterceptorFromTypeInfo win7-32:CoGetMalloc win7-64:CoGetInstanceFromIStorage
+61 vista-32:CoGetObject vista-64:CoGetInterfaceAndReleaseStream win7-32:CoGetMarshalSizeMax win7-64:CoGetInterceptor
+62 vista-32:CoGetObjectContext vista-64:CoGetMalloc win7-32:CoGetModuleType win7-64:CoGetInterceptorFromTypeInfo
+63 vista-32:CoGetPSClsid vista-64:CoGetMarshalSizeMax win7-32:CoGetObject win7-64:CoGetInterfaceAndReleaseStream
+64 vista-32:CoGetProcessIdentifier vista-64:CoGetModuleType win7-32:CoGetObjectContext win7-64:CoGetMalloc
+65 vista-32:CoGetStandardMarshal vista-64:CoGetObject win7-32:CoGetPSClsid win7-64:CoGetMarshalSizeMax
+66 vista-32:CoGetStdMarshalEx vista-64:CoGetObjectContext win7-32:CoGetProcessIdentifier win7-64:CoGetModuleType
+67 vista-32:CoGetSystemSecurityPermissions vista-64:CoGetPSClsid win7-32:CoGetStandardMarshal win7-64:CoGetObject
+68 vista-32:CoGetTreatAsClass vista-64:CoGetProcessIdentifier win7-32:CoGetStdMarshalEx win7-64:CoGetObjectContext
+69 vista-32:CoImpersonateClient vista-64:CoGetStandardMarshal win7-32:CoGetSystemSecurityPermissions win7-64:CoGetPSClsid
+70 vista-32:CoInitialize vista-64:CoGetStdMarshalEx win7-32:CoGetTreatAsClass win7-64:CoGetProcessIdentifier
+71 vista-32:CoInitializeEx vista-64:CoGetSystemSecurityPermissions win7-32:CoImpersonateClient win7-64:CoGetStandardMarshal
+72 vista-32:CoInitializeSecurity vista-64:CoGetTreatAsClass win7-32:CoInitialize win7-64:CoGetStdMarshalEx
+73 vista-32:CoInitializeWOW vista-64:CoImpersonateClient win7-32:CoInitializeEx win7-64:CoGetSystemSecurityPermissions
+74 vista-32:CoInstall vista-64:CoInitialize win7-32:CoInitializeSecurity win7-64:CoGetTreatAsClass
+75 vista-32:CoInvalidateRemoteMachineBindings vista-64:CoInitializeEx win7-32:CoInitializeWOW win7-64:CoImpersonateClient
+76 vista-32:CoIsHandlerConnected vista-64:CoInitializeSecurity win7-32:CoInstall win7-64:CoInitialize
+77 vista-32:CoIsOle1Class vista-64:CoInitializeWOW win7-32:CoInvalidateRemoteMachineBindings win7-64:CoInitializeEx
+78 vista-32:CoLoadLibrary vista-64:CoInstall win7-32:CoIsHandlerConnected win7-64:CoInitializeSecurity
+79 vista-32:CoLockObjectExternal vista-64:CoInvalidateRemoteMachineBindings win7-32:CoIsOle1Class win7-64:CoInitializeWOW
+80 vista-32:CoMarshalHresult vista-64:CoIsHandlerConnected win7-32:CoLoadLibrary win7-64:CoInstall
+81 vista-32:CoMarshalInterThreadInterfaceInStream vista-64:CoIsOle1Class win7-32:CoLockObjectExternal win7-64:CoInvalidateRemoteMachineBindings
+82 vista-32:CoMarshalInterface vista-64:CoLoadLibrary win7-32:CoMarshalHresult win7-64:CoIsHandlerConnected
+83 vista-32:CoPopServiceDomain vista-64:CoLockObjectExternal win7-32:CoMarshalInterThreadInterfaceInStream win7-64:CoIsOle1Class
+84 vista-32:CoPushServiceDomain vista-64:CoMarshalHresult win7-32:CoMarshalInterface win7-64:CoLoadLibrary
+85 vista-32:CoQueryAuthenticationServices vista-64:CoMarshalInterThreadInterfaceInStream win7-32:CoPopServiceDomain win7-64:CoLockObjectExternal
+86 vista-32:CoQueryClientBlanket vista-64:CoMarshalInterface win7-32:CoPushServiceDomain win7-64:CoMarshalHresult
+87 vista-32:CoQueryProxyBlanket vista-64:CoPopServiceDomain win7-32:CoQueryAuthenticationServices win7-64:CoMarshalInterThreadInterfaceInStream
+88 vista-32:CoQueryReleaseObject vista-64:CoPushServiceDomain win7-32:CoQueryClientBlanket win7-64:CoMarshalInterface
+89 vista-32:CoReactivateObject vista-64:CoQueryAuthenticationServices win7-32:CoQueryProxyBlanket win7-64:CoPopServiceDomain
+90 vista-32:CoRegisterChannelHook vista-64:CoQueryClientBlanket win7-32:CoQueryReleaseObject win7-64:CoPushServiceDomain
+91 vista-32:CoRegisterClassObject vista-64:CoQueryProxyBlanket win7-32:CoReactivateObject win7-64:CoQueryAuthenticationServices
+92 vista-32:CoRegisterInitializeSpy vista-64:CoQueryReleaseObject win7-32:CoRegisterChannelHook win7-64:CoQueryClientBlanket
+93 vista-32:CoRegisterMallocSpy vista-64:CoReactivateObject win7-32:CoRegisterClassObject win7-64:CoQueryProxyBlanket
+94 vista-32:CoRegisterMessageFilter vista-64:CoRegisterChannelHook win7-32:CoRegisterInitializeSpy win7-64:CoQueryReleaseObject
+95 vista-32:CoRegisterPSClsid vista-64:CoRegisterClassObject win7-32:CoRegisterMallocSpy win7-64:CoReactivateObject
+96 vista-32:CoRegisterSurrogate vista-64:CoRegisterInitializeSpy win7-32:CoRegisterMessageFilter win7-64:CoRegisterChannelHook
+97 vista-32:CoRegisterSurrogateEx vista-64:CoRegisterMallocSpy win7-32:CoRegisterPSClsid win7-64:CoRegisterClassObject
+98 vista-32:CoReleaseMarshalData vista-64:CoRegisterMessageFilter win7-32:CoRegisterSurrogate win7-64:CoRegisterInitializeSpy
+99 vista-32:CoReleaseServerProcess vista-64:CoRegisterPSClsid win7-32:CoRegisterSurrogateEx win7-64:CoRegisterMallocSpy
+100 vista-32:CoResumeClassObjects vista-64:CoRegisterSurrogate win7-32:CoReleaseMarshalData win7-64:CoRegisterMessageFilter
+101 vista-32:CoRetireServer vista-64:CoRegisterSurrogateEx win7-32:CoReleaseServerProcess win7-64:CoRegisterPSClsid
+102 vista-32:CoRevertToSelf vista-64:CoReleaseMarshalData win7-32:CoResumeClassObjects win7-64:CoRegisterSurrogate
+103 vista-32:CoRevokeClassObject vista-64:CoReleaseServerProcess win7-32:CoRetireServer win7-64:CoRegisterSurrogateEx
+104 vista-32:CoRevokeInitializeSpy vista-64:CoResumeClassObjects win7-32:CoRevertToSelf win7-64:CoReleaseMarshalData
+105 vista-32:CoRevokeMallocSpy vista-64:CoRetireServer win7-32:CoRevokeClassObject win7-64:CoReleaseServerProcess
+106 vista-32:CoSetCancelObject vista-64:CoRevertToSelf win7-32:CoRevokeInitializeSpy win7-64:CoResumeClassObjects
+107 vista-32:CoSetProxyBlanket vista-64:CoRevokeClassObject win7-32:CoRevokeMallocSpy win7-64:CoRetireServer
+108 vista-32:CoSetState vista-64:CoRevokeInitializeSpy win7-32:CoSetCancelObject win7-64:CoRevertToSelf
+109 vista-32:CoSuspendClassObjects vista-64:CoRevokeMallocSpy win7-32:CoSetProxyBlanket win7-64:CoRevokeClassObject
+110 vista-32:CoSwitchCallContext vista-64:CoSetCancelObject win7-32:CoSetState win7-64:CoRevokeInitializeSpy
+111 vista-32:CoTaskMemAlloc vista-64:CoSetProxyBlanket win7-32:CoSuspendClassObjects win7-64:CoRevokeMallocSpy
+112 vista-32:CoTaskMemFree vista-64:CoSetState win7-32:CoSwitchCallContext win7-64:CoSetCancelObject
+113 vista-32:CoTaskMemRealloc vista-64:CoSuspendClassObjects win7-32:CoTaskMemAlloc win7-64:CoSetProxyBlanket
+114 vista-32:CoTestCancel vista-64:CoSwitchCallContext win7-32:CoTaskMemFree win7-64:CoSetState
+115 vista-32:CoTreatAsClass vista-64:CoTaskMemAlloc win7-32:CoTaskMemRealloc win7-64:CoSuspendClassObjects
+116 vista-32:CoUninitialize vista-64:CoTaskMemFree win7-32:CoTestCancel win7-64:CoSwitchCallContext
+117 vista-32:CoUnloadingWOW vista-64:CoTaskMemRealloc win7-32:CoTreatAsClass win7-64:CoTaskMemAlloc
+118 vista-32:CoUnmarshalHresult vista-64:CoTestCancel win7-32:CoUninitialize win7-64:CoTaskMemFree
+119 vista-32:CoUnmarshalInterface vista-64:CoTreatAsClass win7-32:CoUnloadingWOW win7-64:CoTaskMemRealloc
+120 vista-32:CoWaitForMultipleHandles vista-64:CoUninitialize win7-32:CoUnmarshalHresult win7-64:CoTestCancel
+121 vista-32:ComPs_NdrDllCanUnloadNow vista-64:CoUnloadingWOW win7-32:CoUnmarshalInterface win7-64:CoTreatAsClass
+122 vista-32:ComPs_NdrDllGetClassObject vista-64:CoUnmarshalHresult win7-32:CoWaitForMultipleHandles win7-64:CoUninitialize
+123 vista-32:ComPs_NdrDllRegisterProxy vista-64:CoUnmarshalInterface win7-32:ComPs_NdrDllCanUnloadNow win7-64:CoUnloadingWOW
+124 vista-32:ComPs_NdrDllUnregisterProxy vista-64:CoWaitForMultipleHandles win7-32:ComPs_NdrDllGetClassObject win7-64:CoUnmarshalHresult
+125 vista-32:CreateAntiMoniker vista-64:ComPs_NdrDllCanUnloadNow win7-32:ComPs_NdrDllRegisterProxy win7-64:CoUnmarshalInterface
+126 vista-32:CreateBindCtx vista-64:ComPs_NdrDllGetClassObject win7-32:ComPs_NdrDllUnregisterProxy win7-64:CoWaitForMultipleHandles
+127 vista-32:CreateClassMoniker vista-64:ComPs_NdrDllRegisterProxy win7-32:CreateAntiMoniker win7-64:ComPs_NdrDllCanUnloadNow
+128 vista-32:CreateDataAdviseHolder vista-64:ComPs_NdrDllUnregisterProxy win7-32:CreateBindCtx win7-64:ComPs_NdrDllGetClassObject
+129 vista-32:CreateDataCache vista-64:CreateAntiMoniker win7-32:CreateClassMoniker win7-64:ComPs_NdrDllRegisterProxy
+130 vista-32:CreateErrorInfo vista-64:CreateBindCtx win7-32:CreateDataAdviseHolder win7-64:ComPs_NdrDllUnregisterProxy
+131 vista-32:CreateFileMoniker vista-64:CreateClassMoniker win7-32:CreateDataCache win7-64:CreateAntiMoniker
+132 vista-32:CreateGenericComposite vista-64:CreateDataAdviseHolder win7-32:CreateErrorInfo win7-64:CreateBindCtx
+133 vista-32:CreateILockBytesOnHGlobal vista-64:CreateDataCache win7-32:CreateFileMoniker win7-64:CreateClassMoniker
+134 vista-32:CreateItemMoniker vista-64:CreateErrorInfo win7-32:CreateGenericComposite win7-64:CreateDataAdviseHolder
+135 vista-32:CreateObjrefMoniker vista-64:CreateFileMoniker win7-32:CreateILockBytesOnHGlobal win7-64:CreateDataCache
+136 vista-32:CreateOleAdviseHolder vista-64:CreateGenericComposite win7-32:CreateItemMoniker win7-64:CreateErrorInfo
+137 vista-32:CreatePointerMoniker vista-64:CreateILockBytesOnHGlobal win7-32:CreateObjrefMoniker win7-64:CreateFileMoniker
+138 vista-32:CreateStdProgressIndicator vista-64:CreateItemMoniker win7-32:CreateOleAdviseHolder win7-64:CreateGenericComposite
+139 vista-32:CreateStreamOnHGlobal vista-64:CreateObjrefMoniker win7-32:CreatePointerMoniker win7-64:CreateILockBytesOnHGlobal
+140 vista-32:DcomChannelSetHResult vista-64:CreateOleAdviseHolder win7-32:CreateStdProgressIndicator win7-64:CreateItemMoniker
+141 vista-32:DllDebugObjectRPCHook vista-64:CreatePointerMoniker win7-32:CreateStreamOnHGlobal win7-64:CreateObjrefMoniker
+142 vista-32:DllGetClassObject vista-64:CreateStdProgressIndicator win7-32:DcomChannelSetHResult win7-64:CreateOleAdviseHolder
+143 vista-32:DllGetClassObjectWOW vista-64:CreateStreamOnHGlobal win7-32:DllDebugObjectRPCHook win7-64:CreatePointerMoniker
+144 vista-32:DllRegisterServer vista-64:DcomChannelSetHResult win7-32:DllGetClassObject win7-64:CreateStdProgressIndicator
+145 vista-32:DoDragDrop vista-64:DllDebugObjectRPCHook win7-32:DllGetClassObjectWOW win7-64:CreateStreamOnHGlobal
+146 vista-32:EnableHookObject vista-64:DllGetClassObject win7-32:DllRegisterServer win7-64:DcomChannelSetHResult
+147 vista-32:FmtIdToPropStgName vista-64:DllGetClassObjectWOW win7-32:DoDragDrop win7-64:DllDebugObjectRPCHook
+148 vista-32:FreePropVariantArray vista-64:DllRegisterServer win7-32:EnableHookObject win7-64:DllGetClassObject
+149 vista-32:GetClassFile vista-64:DoDragDrop win7-32:FmtIdToPropStgName win7-64:DllGetClassObjectWOW
+150 vista-32:GetConvertStg vista-64:EnableHookObject win7-32:FreePropVariantArray win7-64:DllRegisterServer
+151 vista-32:GetDocumentBitStg vista-64:FmtIdToPropStgName win7-32:GetClassFile win7-64:DoDragDrop
+152 vista-32:GetErrorInfo vista-64:FreePropVariantArray win7-32:GetConvertStg win7-64:EnableHookObject
+153 vista-32:GetHGlobalFromILockBytes vista-64:GetClassFile win7-32:GetDocumentBitStg win7-64:FmtIdToPropStgName
+154 vista-32:GetHGlobalFromStream vista-64:GetConvertStg win7-32:GetErrorInfo win7-64:FreePropVariantArray
+155 vista-32:GetHookInterface vista-64:GetDocumentBitStg win7-32:GetHGlobalFromILockBytes win7-64:GetClassFile
+156 vista-32:GetRunningObjectTable vista-64:GetErrorInfo win7-32:GetHGlobalFromStream win7-64:GetConvertStg
+157 vista-32:HACCEL_UserFree vista-64:GetHGlobalFromILockBytes win7-32:GetHookInterface win7-64:GetDocumentBitStg
+158 vista-32:HACCEL_UserMarshal vista-64:GetHGlobalFromStream win7-32:GetRunningObjectTable win7-64:GetErrorInfo
+159 vista-32:HACCEL_UserSize vista-64:GetHookInterface win7-32:HACCEL_UserFree win7-64:GetHGlobalFromILockBytes
+160 vista-32:HACCEL_UserUnmarshal vista-64:GetRunningObjectTable win7-32:HACCEL_UserMarshal win7-64:GetHGlobalFromStream
+161 vista-32:HBITMAP_UserFree vista-64:HACCEL_UserFree win7-32:HACCEL_UserSize win7-64:GetHookInterface
+162 vista-32:HBITMAP_UserMarshal vista-64:HACCEL_UserFree64 win7-32:HACCEL_UserUnmarshal win7-64:GetRunningObjectTable
+163 vista-32:HBITMAP_UserSize vista-64:HACCEL_UserMarshal win7-32:HBITMAP_UserFree win7-64:HACCEL_UserFree
+164 vista-32:HBITMAP_UserUnmarshal vista-64:HACCEL_UserMarshal64 win7-32:HBITMAP_UserMarshal win7-64:HACCEL_UserFree64
+165 vista-32:HBRUSH_UserFree vista-64:HACCEL_UserSize win7-32:HBITMAP_UserSize win7-64:HACCEL_UserMarshal
+166 vista-32:HBRUSH_UserMarshal vista-64:HACCEL_UserSize64 win7-32:HBITMAP_UserUnmarshal win7-64:HACCEL_UserMarshal64
+167 vista-32:HBRUSH_UserSize vista-64:HACCEL_UserUnmarshal win7-32:HBRUSH_UserFree win7-64:HACCEL_UserSize
+168 vista-32:HBRUSH_UserUnmarshal vista-64:HACCEL_UserUnmarshal64 win7-32:HBRUSH_UserMarshal win7-64:HACCEL_UserSize64
+169 vista-32:HDC_UserFree vista-64:HBITMAP_UserFree win7-32:HBRUSH_UserSize win7-64:HACCEL_UserUnmarshal
+170 vista-32:HDC_UserMarshal vista-64:HBITMAP_UserFree64 win7-32:HBRUSH_UserUnmarshal win7-64:HACCEL_UserUnmarshal64
+171 vista-32:HDC_UserSize vista-64:HBITMAP_UserMarshal win7-32:HDC_UserFree win7-64:HBITMAP_UserFree
+172 vista-32:HDC_UserUnmarshal vista-64:HBITMAP_UserMarshal64 win7-32:HDC_UserMarshal win7-64:HBITMAP_UserFree64
+173 vista-32:HENHMETAFILE_UserFree vista-64:HBITMAP_UserSize win7-32:HDC_UserSize win7-64:HBITMAP_UserMarshal
+174 vista-32:HENHMETAFILE_UserMarshal vista-64:HBITMAP_UserSize64 win7-32:HDC_UserUnmarshal win7-64:HBITMAP_UserMarshal64
+175 vista-32:HENHMETAFILE_UserSize vista-64:HBITMAP_UserUnmarshal win7-32:HENHMETAFILE_UserFree win7-64:HBITMAP_UserSize
+176 vista-32:HENHMETAFILE_UserUnmarshal vista-64:HBITMAP_UserUnmarshal64 win7-32:HENHMETAFILE_UserMarshal win7-64:HBITMAP_UserSize64
+177 vista-32:HGLOBAL_UserFree vista-64:HBRUSH_UserFree win7-32:HENHMETAFILE_UserSize win7-64:HBITMAP_UserUnmarshal
+178 vista-32:HGLOBAL_UserMarshal vista-64:HBRUSH_UserFree64 win7-32:HENHMETAFILE_UserUnmarshal win7-64:HBITMAP_UserUnmarshal64
+179 vista-32:HGLOBAL_UserSize vista-64:HBRUSH_UserMarshal win7-32:HGLOBAL_UserFree win7-64:HBRUSH_UserFree
+180 vista-32:HGLOBAL_UserUnmarshal vista-64:HBRUSH_UserMarshal64 win7-32:HGLOBAL_UserMarshal win7-64:HBRUSH_UserFree64
+181 vista-32:HICON_UserFree vista-64:HBRUSH_UserSize win7-32:HGLOBAL_UserSize win7-64:HBRUSH_UserMarshal
+182 vista-32:HICON_UserMarshal vista-64:HBRUSH_UserSize64 win7-32:HGLOBAL_UserUnmarshal win7-64:HBRUSH_UserMarshal64
+183 vista-32:HICON_UserSize vista-64:HBRUSH_UserUnmarshal win7-32:HICON_UserFree win7-64:HBRUSH_UserSize
+184 vista-32:HICON_UserUnmarshal vista-64:HBRUSH_UserUnmarshal64 win7-32:HICON_UserMarshal win7-64:HBRUSH_UserSize64
+185 vista-32:HMENU_UserFree vista-64:HDC_UserFree win7-32:HICON_UserSize win7-64:HBRUSH_UserUnmarshal
+186 vista-32:HMENU_UserMarshal vista-64:HDC_UserFree64 win7-32:HICON_UserUnmarshal win7-64:HBRUSH_UserUnmarshal64
+187 vista-32:HMENU_UserSize vista-64:HDC_UserMarshal win7-32:HMENU_UserFree win7-64:HDC_UserFree
+188 vista-32:HMENU_UserUnmarshal vista-64:HDC_UserMarshal64 win7-32:HMENU_UserMarshal win7-64:HDC_UserFree64
+189 vista-32:HMETAFILEPICT_UserFree vista-64:HDC_UserSize win7-32:HMENU_UserSize win7-64:HDC_UserMarshal
+190 vista-32:HMETAFILEPICT_UserMarshal vista-64:HDC_UserSize64 win7-32:HMENU_UserUnmarshal win7-64:HDC_UserMarshal64
+191 vista-32:HMETAFILEPICT_UserSize vista-64:HDC_UserUnmarshal win7-32:HMETAFILEPICT_UserFree win7-64:HDC_UserSize
+192 vista-32:HMETAFILEPICT_UserUnmarshal vista-64:HDC_UserUnmarshal64 win7-32:HMETAFILEPICT_UserMarshal win7-64:HDC_UserSize64
+193 vista-32:HMETAFILE_UserFree vista-64:HENHMETAFILE_UserFree win7-32:HMETAFILEPICT_UserSize win7-64:HDC_UserUnmarshal
+194 vista-32:HMETAFILE_UserMarshal vista-64:HENHMETAFILE_UserFree64 win7-32:HMETAFILEPICT_UserUnmarshal win7-64:HDC_UserUnmarshal64
+195 vista-32:HMETAFILE_UserSize vista-64:HENHMETAFILE_UserMarshal win7-32:HMETAFILE_UserFree win7-64:HENHMETAFILE_UserFree
+196 vista-32:HMETAFILE_UserUnmarshal vista-64:HENHMETAFILE_UserMarshal64 win7-32:HMETAFILE_UserMarshal win7-64:HENHMETAFILE_UserFree64
+197 vista-32:HPALETTE_UserFree vista-64:HENHMETAFILE_UserSize win7-32:HMETAFILE_UserSize win7-64:HENHMETAFILE_UserMarshal
+198 vista-32:HPALETTE_UserMarshal vista-64:HENHMETAFILE_UserSize64 win7-32:HMETAFILE_UserUnmarshal win7-64:HENHMETAFILE_UserMarshal64
+199 vista-32:HPALETTE_UserSize vista-64:HENHMETAFILE_UserUnmarshal win7-32:HPALETTE_UserFree win7-64:HENHMETAFILE_UserSize
+200 vista-32:HPALETTE_UserUnmarshal vista-64:HENHMETAFILE_UserUnmarshal64 win7-32:HPALETTE_UserMarshal win7-64:HENHMETAFILE_UserSize64
+201 vista-32:HWND_UserFree vista-64:HGLOBAL_UserFree win7-32:HPALETTE_UserSize win7-64:HENHMETAFILE_UserUnmarshal
+202 vista-32:HWND_UserMarshal vista-64:HGLOBAL_UserFree64 win7-32:HPALETTE_UserUnmarshal win7-64:HENHMETAFILE_UserUnmarshal64
+203 vista-32:HWND_UserSize vista-64:HGLOBAL_UserMarshal win7-32:HWND_UserFree win7-64:HGLOBAL_UserFree
+204 vista-32:HWND_UserUnmarshal vista-64:HGLOBAL_UserMarshal64 win7-32:HWND_UserMarshal win7-64:HGLOBAL_UserFree64
+205 vista-32:HkOleRegisterObject vista-64:HGLOBAL_UserSize win7-32:HWND_UserSize win7-64:HGLOBAL_UserMarshal
+206 vista-32:IIDFromString vista-64:HGLOBAL_UserSize64 win7-32:HWND_UserUnmarshal win7-64:HGLOBAL_UserMarshal64
+207 vista-32:IsAccelerator vista-64:HGLOBAL_UserUnmarshal win7-32:HkOleRegisterObject win7-64:HGLOBAL_UserSize
+208 vista-32:IsEqualGUID vista-64:HGLOBAL_UserUnmarshal64 win7-32:IIDFromString win7-64:HGLOBAL_UserSize64
+209 vista-32:IsValidIid vista-64:HICON_UserFree win7-32:IsAccelerator win7-64:HGLOBAL_UserUnmarshal
+210 vista-32:IsValidInterface vista-64:HICON_UserFree64 win7-32:IsEqualGUID win7-64:HGLOBAL_UserUnmarshal64
+211 vista-32:IsValidPtrIn vista-64:HICON_UserMarshal win7-32:IsValidIid win7-64:HICON_UserFree
+212 vista-32:IsValidPtrOut vista-64:HICON_UserMarshal64 win7-32:IsValidInterface win7-64:HICON_UserFree64
+213 vista-32:MkParseDisplayName vista-64:HICON_UserSize win7-32:IsValidPtrIn win7-64:HICON_UserMarshal
+214 vista-32:MonikerCommonPrefixWith vista-64:HICON_UserSize64 win7-32:IsValidPtrOut win7-64:HICON_UserMarshal64
+215 vista-32:MonikerRelativePathTo vista-64:HICON_UserUnmarshal win7-32:MkParseDisplayName win7-64:HICON_UserSize
+216 vista-32:OleBuildVersion vista-64:HICON_UserUnmarshal64 win7-32:MonikerCommonPrefixWith win7-64:HICON_UserSize64
+217 vista-32:OleConvertIStorageToOLESTREAM vista-64:HMENU_UserFree win7-32:MonikerRelativePathTo win7-64:HICON_UserUnmarshal
+218 vista-32:OleConvertIStorageToOLESTREAMEx vista-64:HMENU_UserFree64 win7-32:NdrProxyForwardingFunction10 win7-64:HICON_UserUnmarshal64
+219 vista-32:OleConvertOLESTREAMToIStorage vista-64:HMENU_UserMarshal win7-32:NdrProxyForwardingFunction11 win7-64:HMENU_UserFree
+220 vista-32:OleConvertOLESTREAMToIStorageEx vista-64:HMENU_UserMarshal64 win7-32:NdrProxyForwardingFunction12 win7-64:HMENU_UserFree64
+221 vista-32:OleCreate vista-64:HMENU_UserSize win7-32:NdrProxyForwardingFunction13 win7-64:HMENU_UserMarshal
+222 vista-32:OleCreateDefaultHandler vista-64:HMENU_UserSize64 win7-32:NdrProxyForwardingFunction14 win7-64:HMENU_UserMarshal64
+223 vista-32:OleCreateEmbeddingHelper vista-64:HMENU_UserUnmarshal win7-32:NdrProxyForwardingFunction15 win7-64:HMENU_UserSize
+224 vista-32:OleCreateEx vista-64:HMENU_UserUnmarshal64 win7-32:NdrProxyForwardingFunction16 win7-64:HMENU_UserSize64
+225 vista-32:OleCreateFromData vista-64:HMETAFILEPICT_UserFree win7-32:NdrProxyForwardingFunction17 win7-64:HMENU_UserUnmarshal
+226 vista-32:OleCreateFromDataEx vista-64:HMETAFILEPICT_UserFree64 win7-32:NdrProxyForwardingFunction18 win7-64:HMENU_UserUnmarshal64
+227 vista-32:OleCreateFromFile vista-64:HMETAFILEPICT_UserMarshal win7-32:NdrProxyForwardingFunction19 win7-64:HMETAFILEPICT_UserFree
+228 vista-32:OleCreateFromFileEx vista-64:HMETAFILEPICT_UserMarshal64 win7-32:NdrProxyForwardingFunction20 win7-64:HMETAFILEPICT_UserFree64
+229 vista-32:OleCreateLink vista-64:HMETAFILEPICT_UserSize win7-32:NdrProxyForwardingFunction21 win7-64:HMETAFILEPICT_UserMarshal
+230 vista-32:OleCreateLinkEx vista-64:HMETAFILEPICT_UserSize64 win7-32:NdrProxyForwardingFunction22 win7-64:HMETAFILEPICT_UserMarshal64
+231 vista-32:OleCreateLinkFromData vista-64:HMETAFILEPICT_UserUnmarshal win7-32:NdrProxyForwardingFunction23 win7-64:HMETAFILEPICT_UserSize
+232 vista-32:OleCreateLinkFromDataEx vista-64:HMETAFILEPICT_UserUnmarshal64 win7-32:NdrProxyForwardingFunction24 win7-64:HMETAFILEPICT_UserSize64
+233 vista-32:OleCreateLinkToFile vista-64:HMETAFILE_UserFree win7-32:NdrProxyForwardingFunction25 win7-64:HMETAFILEPICT_UserUnmarshal
+234 vista-32:OleCreateLinkToFileEx vista-64:HMETAFILE_UserFree64 win7-32:NdrProxyForwardingFunction26 win7-64:HMETAFILEPICT_UserUnmarshal64
+235 vista-32:OleCreateMenuDescriptor vista-64:HMETAFILE_UserMarshal win7-32:NdrProxyForwardingFunction27 win7-64:HMETAFILE_UserFree
+236 vista-32:OleCreateStaticFromData vista-64:HMETAFILE_UserMarshal64 win7-32:NdrProxyForwardingFunction28 win7-64:HMETAFILE_UserFree64
+237 vista-32:OleDestroyMenuDescriptor vista-64:HMETAFILE_UserSize win7-32:NdrProxyForwardingFunction29 win7-64:HMETAFILE_UserMarshal
+238 vista-32:OleDoAutoConvert vista-64:HMETAFILE_UserSize64 win7-32:NdrProxyForwardingFunction30 win7-64:HMETAFILE_UserMarshal64
+239 vista-32:OleDraw vista-64:HMETAFILE_UserUnmarshal win7-32:NdrProxyForwardingFunction31 win7-64:HMETAFILE_UserSize
+240 vista-32:OleDuplicateData vista-64:HMETAFILE_UserUnmarshal64 win7-32:NdrProxyForwardingFunction32 win7-64:HMETAFILE_UserSize64
+241 vista-32:OleFlushClipboard vista-64:HPALETTE_UserFree win7-32:NdrProxyForwardingFunction3 win7-64:HMETAFILE_UserUnmarshal
+242 vista-32:OleGetAutoConvert vista-64:HPALETTE_UserFree64 win7-32:NdrProxyForwardingFunction4 win7-64:HMETAFILE_UserUnmarshal64
+243 vista-32:OleGetClipboard vista-64:HPALETTE_UserMarshal win7-32:NdrProxyForwardingFunction5 win7-64:HPALETTE_UserFree
+244 vista-32:OleGetIconOfClass vista-64:HPALETTE_UserMarshal64 win7-32:NdrProxyForwardingFunction6 win7-64:HPALETTE_UserFree64
+245 vista-32:OleGetIconOfFile vista-64:HPALETTE_UserSize win7-32:NdrProxyForwardingFunction7 win7-64:HPALETTE_UserMarshal
+246 vista-32:OleInitialize vista-64:HPALETTE_UserSize64 win7-32:NdrProxyForwardingFunction8 win7-64:HPALETTE_UserMarshal64
+247 vista-32:OleInitializeWOW vista-64:HPALETTE_UserUnmarshal win7-32:NdrProxyForwardingFunction9 win7-64:HPALETTE_UserSize
+248 vista-32:OleIsCurrentClipboard vista-64:HPALETTE_UserUnmarshal64 win7-32:ObjectStublessClient10 win7-64:HPALETTE_UserSize64
+249 vista-32:OleIsRunning vista-64:HWND_UserFree win7-32:ObjectStublessClient11 win7-64:HPALETTE_UserUnmarshal
+250 vista-32:OleLoad vista-64:HWND_UserFree64 win7-32:ObjectStublessClient12 win7-64:HPALETTE_UserUnmarshal64
+251 vista-32:OleLoadFromStream vista-64:HWND_UserMarshal win7-32:ObjectStublessClient13 win7-64:HWND_UserFree
+252 vista-32:OleLockRunning vista-64:HWND_UserMarshal64 win7-32:ObjectStublessClient14 win7-64:HWND_UserFree64
+253 vista-32:OleMetafilePictFromIconAndLabel vista-64:HWND_UserSize win7-32:ObjectStublessClient15 win7-64:HWND_UserMarshal
+254 vista-32:OleNoteObjectVisible vista-64:HWND_UserSize64 win7-32:ObjectStublessClient16 win7-64:HWND_UserMarshal64
+255 vista-32:OleQueryCreateFromData vista-64:HWND_UserUnmarshal win7-32:ObjectStublessClient17 win7-64:HWND_UserSize
+256 vista-32:OleQueryLinkFromData vista-64:HWND_UserUnmarshal64 win7-32:ObjectStublessClient18 win7-64:HWND_UserSize64
+257 vista-32:OleRegEnumFormatEtc vista-64:HkOleRegisterObject win7-32:ObjectStublessClient19 win7-64:HWND_UserUnmarshal
+258 vista-32:OleRegEnumVerbs vista-64:IIDFromString win7-32:ObjectStublessClient20 win7-64:HWND_UserUnmarshal64
+259 vista-32:OleRegGetMiscStatus vista-64:IsAccelerator win7-32:ObjectStublessClient21 win7-64:HkOleRegisterObject
+260 vista-32:OleRegGetUserType vista-64:IsEqualGUID win7-32:ObjectStublessClient22 win7-64:IIDFromString
+261 vista-32:OleRun vista-64:IsValidIid win7-32:ObjectStublessClient23 win7-64:IsAccelerator
+262 vista-32:OleSave vista-64:IsValidInterface win7-32:ObjectStublessClient24 win7-64:IsEqualGUID
+263 vista-32:OleSaveToStream vista-64:IsValidPtrIn win7-32:ObjectStublessClient25 win7-64:IsValidIid
+264 vista-32:OleSetAutoConvert vista-64:IsValidPtrOut win7-32:ObjectStublessClient26 win7-64:IsValidInterface
+265 vista-32:OleSetClipboard vista-64:MkParseDisplayName win7-32:ObjectStublessClient27 win7-64:IsValidPtrIn
+266 vista-32:OleSetContainedObject vista-64:MonikerCommonPrefixWith win7-32:ObjectStublessClient28 win7-64:IsValidPtrOut
+267 vista-32:OleSetMenuDescriptor vista-64:MonikerRelativePathTo win7-32:ObjectStublessClient29 win7-64:MkParseDisplayName
+268 vista-32:OleTranslateAccelerator vista-64:OleBuildVersion win7-32:ObjectStublessClient30 win7-64:MonikerCommonPrefixWith
+269 vista-32:OleUninitialize vista-64:OleConvertIStorageToOLESTREAM win7-32:ObjectStublessClient31 win7-64:MonikerRelativePathTo
+270 vista-32:OpenOrCreateStream vista-64:OleConvertIStorageToOLESTREAMEx win7-32:ObjectStublessClient32 win7-64:NdrProxyForwardingFunction10
+271 vista-32:ProgIDFromCLSID vista-64:OleConvertOLESTREAMToIStorage win7-32:ObjectStublessClient3 win7-64:NdrProxyForwardingFunction11
+272 vista-32:PropStgNameToFmtId vista-64:OleConvertOLESTREAMToIStorageEx win7-32:ObjectStublessClient4 win7-64:NdrProxyForwardingFunction12
+273 vista-32:PropSysAllocString vista-64:OleCreate win7-32:ObjectStublessClient5 win7-64:NdrProxyForwardingFunction13
+274 vista-32:PropSysFreeString vista-64:OleCreateDefaultHandler win7-32:ObjectStublessClient6 win7-64:NdrProxyForwardingFunction14
+275 vista-32:PropVariantClear vista-64:OleCreateEmbeddingHelper win7-32:ObjectStublessClient7 win7-64:NdrProxyForwardingFunction15
+276 vista-32:PropVariantCopy vista-64:OleCreateEx win7-32:ObjectStublessClient8 win7-64:NdrProxyForwardingFunction16
+277 vista-32:ReadClassStg vista-64:OleCreateFromData win7-32:ObjectStublessClient9 win7-64:NdrProxyForwardingFunction17
+278 vista-32:ReadClassStm vista-64:OleCreateFromDataEx win7-32:OleBuildVersion win7-64:NdrProxyForwardingFunction18
+279 vista-32:ReadFmtUserTypeStg vista-64:OleCreateFromFile win7-32:OleConvertIStorageToOLESTREAM win7-64:NdrProxyForwardingFunction19
+280 vista-32:ReadOleStg vista-64:OleCreateFromFileEx win7-32:OleConvertIStorageToOLESTREAMEx win7-64:NdrProxyForwardingFunction20
+281 vista-32:ReadStringStream vista-64:OleCreateLink win7-32:OleConvertOLESTREAMToIStorage win7-64:NdrProxyForwardingFunction21
+282 vista-32:RegisterDragDrop vista-64:OleCreateLinkEx win7-32:OleConvertOLESTREAMToIStorageEx win7-64:NdrProxyForwardingFunction22
+283 vista-32:ReleaseStgMedium vista-64:OleCreateLinkFromData win7-32:OleCreate win7-64:NdrProxyForwardingFunction23
+284 vista-32:RevokeDragDrop vista-64:OleCreateLinkFromDataEx win7-32:OleCreateDefaultHandler win7-64:NdrProxyForwardingFunction24
+285 vista-32:SNB_UserFree vista-64:OleCreateLinkToFile win7-32:OleCreateEmbeddingHelper win7-64:NdrProxyForwardingFunction25
+286 vista-32:SNB_UserMarshal vista-64:OleCreateLinkToFileEx win7-32:OleCreateEx win7-64:NdrProxyForwardingFunction26
+287 vista-32:SNB_UserSize vista-64:OleCreateMenuDescriptor win7-32:OleCreateFromData win7-64:NdrProxyForwardingFunction27
+288 vista-32:SNB_UserUnmarshal vista-64:OleCreateStaticFromData win7-32:OleCreateFromDataEx win7-64:NdrProxyForwardingFunction28
+289 vista-32:STGMEDIUM_UserFree vista-64:OleDestroyMenuDescriptor win7-32:OleCreateFromFile win7-64:NdrProxyForwardingFunction29
+290 vista-32:STGMEDIUM_UserMarshal vista-64:OleDoAutoConvert win7-32:OleCreateFromFileEx win7-64:NdrProxyForwardingFunction3
+291 vista-32:STGMEDIUM_UserSize vista-64:OleDraw win7-32:OleCreateLink win7-64:NdrProxyForwardingFunction30
+292 vista-32:STGMEDIUM_UserUnmarshal vista-64:OleDuplicateData win7-32:OleCreateLinkEx win7-64:NdrProxyForwardingFunction31
+293 vista-32:SetConvertStg vista-64:OleFlushClipboard win7-32:OleCreateLinkFromData win7-64:NdrProxyForwardingFunction32
+294 vista-32:SetDocumentBitStg vista-64:OleGetAutoConvert win7-32:OleCreateLinkFromDataEx win7-64:NdrProxyForwardingFunction4
+295 vista-32:SetErrorInfo vista-64:OleGetClipboard win7-32:OleCreateLinkToFile win7-64:NdrProxyForwardingFunction5
+296 vista-32:StgConvertPropertyToVariant vista-64:OleGetIconOfClass win7-32:OleCreateLinkToFileEx win7-64:NdrProxyForwardingFunction6
+297 vista-32:StgConvertVariantToProperty vista-64:OleGetIconOfFile win7-32:OleCreateMenuDescriptor win7-64:NdrProxyForwardingFunction7
+298 vista-32:StgCreateDocfile vista-64:OleInitialize win7-32:OleCreateStaticFromData win7-64:NdrProxyForwardingFunction8
+299 vista-32:StgCreateDocfileOnILockBytes vista-64:OleInitializeWOW win7-32:OleDestroyMenuDescriptor win7-64:NdrProxyForwardingFunction9
+300 vista-32:StgCreatePropSetStg vista-64:OleIsCurrentClipboard win7-32:OleDoAutoConvert win7-64:ObjectStublessClient10
+301 vista-32:StgCreatePropStg vista-64:OleIsRunning win7-32:OleDraw win7-64:ObjectStublessClient11
+302 vista-32:StgCreateStorageEx vista-64:OleLoad win7-32:OleDuplicateData win7-64:ObjectStublessClient12
+303 vista-32:StgGetIFillLockBytesOnFile vista-64:OleLoadFromStream win7-32:OleFlushClipboard win7-64:ObjectStublessClient13
+304 vista-32:StgGetIFillLockBytesOnILockBytes vista-64:OleLockRunning win7-32:OleGetAutoConvert win7-64:ObjectStublessClient14
+305 vista-32:StgIsStorageFile vista-64:OleMetafilePictFromIconAndLabel win7-32:OleGetClipboard win7-64:ObjectStublessClient15
+306 vista-32:StgIsStorageILockBytes vista-64:OleNoteObjectVisible win7-32:OleGetIconOfClass win7-64:ObjectStublessClient16
+307 vista-32:StgOpenAsyncDocfileOnIFillLockBytes vista-64:OleQueryCreateFromData win7-32:OleGetIconOfFile win7-64:ObjectStublessClient17
+308 vista-32:StgOpenPropStg vista-64:OleQueryLinkFromData win7-32:OleInitialize win7-64:ObjectStublessClient18
+309 vista-32:StgOpenStorage vista-64:OleRegEnumFormatEtc win7-32:OleInitializeWOW win7-64:ObjectStublessClient19
+310 vista-32:StgOpenStorageEx vista-64:OleRegEnumVerbs win7-32:OleIsCurrentClipboard win7-64:ObjectStublessClient20
+311 vista-32:StgOpenStorageOnHandle vista-64:OleRegGetMiscStatus win7-32:OleIsRunning win7-64:ObjectStublessClient21
+312 vista-32:StgOpenStorageOnILockBytes vista-64:OleRegGetUserType win7-32:OleLoad win7-64:ObjectStublessClient22
+313 vista-32:StgPropertyLengthAsVariant vista-64:OleRun win7-32:OleLoadFromStream win7-64:ObjectStublessClient23
+314 vista-32:StgSetTimes vista-64:OleSave win7-32:OleLockRunning win7-64:ObjectStublessClient24
+315 vista-32:StringFromCLSID vista-64:OleSaveToStream win7-32:OleMetafilePictFromIconAndLabel win7-64:ObjectStublessClient25
+316 vista-32:StringFromGUID2 vista-64:OleSetAutoConvert win7-32:OleNoteObjectVisible win7-64:ObjectStublessClient26
+317 vista-32:StringFromIID vista-64:OleSetClipboard win7-32:OleQueryCreateFromData win7-64:ObjectStublessClient27
+318 vista-32:UpdateDCOMSettings vista-64:OleSetContainedObject win7-32:OleQueryLinkFromData win7-64:ObjectStublessClient28
+319 vista-32:UpdateProcessTracing vista-64:OleSetMenuDescriptor win7-32:OleRegEnumFormatEtc win7-64:ObjectStublessClient29
+320 vista-32:UtConvertDvtd16toDvtd32 vista-64:OleTranslateAccelerator win7-32:OleRegEnumVerbs win7-64:ObjectStublessClient3
+321 vista-32:UtConvertDvtd32toDvtd16 vista-64:OleUninitialize win7-32:OleRegGetMiscStatus win7-64:ObjectStublessClient30
+322 vista-32:UtGetDvtd16Info vista-64:OpenOrCreateStream win7-32:OleRegGetUserType win7-64:ObjectStublessClient31
+323 vista-32:UtGetDvtd32Info vista-64:ProgIDFromCLSID win7-32:OleRun win7-64:ObjectStublessClient32
+324 vista-32:WdtpInterfacePointer_UserFree vista-64:PropStgNameToFmtId win7-32:OleSave win7-64:ObjectStublessClient4
+325 vista-32:WdtpInterfacePointer_UserMarshal vista-64:PropSysAllocString win7-32:OleSaveToStream win7-64:ObjectStublessClient5
+326 vista-32:WdtpInterfacePointer_UserSize vista-64:PropSysFreeString win7-32:OleSetAutoConvert win7-64:ObjectStublessClient6
+327 vista-32:WdtpInterfacePointer_UserUnmarshal vista-64:PropVariantClear win7-32:OleSetClipboard win7-64:ObjectStublessClient7
+328 vista-32:WriteClassStg vista-64:PropVariantCopy win7-32:OleSetContainedObject win7-64:ObjectStublessClient8
+329 vista-32:WriteClassStm vista-64:ReadClassStg win7-32:OleSetMenuDescriptor win7-64:ObjectStublessClient9
+330 vista-32:WriteFmtUserTypeStg vista-64:ReadClassStm win7-32:OleTranslateAccelerator win7-64:OleBuildVersion
+331 vista-32:WriteOleStg vista-64:ReadFmtUserTypeStg win7-32:OleUninitialize win7-64:OleConvertIStorageToOLESTREAM
+332 vista-32:WriteStringStream vista-64:ReadOleStg win7-32:OpenOrCreateStream win7-64:OleConvertIStorageToOLESTREAMEx
+333 vista-64:ReadStringStream win7-32:ProgIDFromCLSID win7-64:OleConvertOLESTREAMToIStorage
+334 vista-64:RegisterDragDrop win7-32:PropStgNameToFmtId win7-64:OleConvertOLESTREAMToIStorageEx
+335 vista-64:ReleaseStgMedium win7-32:PropSysAllocString win7-64:OleCreate
+336 vista-64:RevokeDragDrop win7-32:PropSysFreeString win7-64:OleCreateDefaultHandler
+337 vista-64:SNB_UserFree win7-32:PropVariantClear win7-64:OleCreateEmbeddingHelper
+338 vista-64:SNB_UserFree64 win7-32:PropVariantCopy win7-64:OleCreateEx
+339 vista-64:SNB_UserMarshal win7-32:ReadClassStg win7-64:OleCreateFromData
+340 vista-64:SNB_UserMarshal64 win7-32:ReadClassStm win7-64:OleCreateFromDataEx
+341 vista-64:SNB_UserSize win7-32:ReadFmtUserTypeStg win7-64:OleCreateFromFile
+342 vista-64:SNB_UserSize64 win7-32:ReadOleStg win7-64:OleCreateFromFileEx
+343 vista-64:SNB_UserUnmarshal win7-32:ReadStringStream win7-64:OleCreateLink
+344 vista-64:SNB_UserUnmarshal64 win7-32:RegisterDragDrop win7-64:OleCreateLinkEx
+345 vista-64:STGMEDIUM_UserFree win7-32:ReleaseStgMedium win7-64:OleCreateLinkFromData
+346 vista-64:STGMEDIUM_UserFree64 win7-32:RevokeDragDrop win7-64:OleCreateLinkFromDataEx
+347 vista-64:STGMEDIUM_UserMarshal win7-32:SNB_UserFree win7-64:OleCreateLinkToFile
+348 vista-64:STGMEDIUM_UserMarshal64 win7-32:SNB_UserMarshal win7-64:OleCreateLinkToFileEx
+349 vista-64:STGMEDIUM_UserSize win7-32:SNB_UserSize win7-64:OleCreateMenuDescriptor
+350 vista-64:STGMEDIUM_UserSize64 win7-32:SNB_UserUnmarshal win7-64:OleCreateStaticFromData
+351 vista-64:STGMEDIUM_UserUnmarshal win7-32:STGMEDIUM_UserFree win7-64:OleDestroyMenuDescriptor
+352 vista-64:STGMEDIUM_UserUnmarshal64 win7-32:STGMEDIUM_UserMarshal win7-64:OleDoAutoConvert
+353 vista-64:SetConvertStg win7-32:STGMEDIUM_UserSize win7-64:OleDraw
+354 vista-64:SetDocumentBitStg win7-32:STGMEDIUM_UserUnmarshal win7-64:OleDuplicateData
+355 vista-64:SetErrorInfo win7-32:SetConvertStg win7-64:OleFlushClipboard
+356 vista-64:StgConvertPropertyToVariant win7-32:SetDocumentBitStg win7-64:OleGetAutoConvert
+357 vista-64:StgConvertVariantToProperty win7-32:SetErrorInfo win7-64:OleGetClipboard
+358 vista-64:StgCreateDocfile win7-32:StgConvertPropertyToVariant win7-64:OleGetIconOfClass
+359 vista-64:StgCreateDocfileOnILockBytes win7-32:StgConvertVariantToProperty win7-64:OleGetIconOfFile
+360 vista-64:StgCreatePropSetStg win7-32:StgCreateDocfile win7-64:OleInitialize
+361 vista-64:StgCreatePropStg win7-32:StgCreateDocfileOnILockBytes win7-64:OleInitializeWOW
+362 vista-64:StgCreateStorageEx win7-32:StgCreatePropSetStg win7-64:OleIsCurrentClipboard
+363 vista-64:StgGetIFillLockBytesOnFile win7-32:StgCreatePropStg win7-64:OleIsRunning
+364 vista-64:StgGetIFillLockBytesOnILockBytes win7-32:StgCreateStorageEx win7-64:OleLoad
+365 vista-64:StgIsStorageFile win7-32:StgGetIFillLockBytesOnFile win7-64:OleLoadFromStream
+366 vista-64:StgIsStorageILockBytes win7-32:StgGetIFillLockBytesOnILockBytes win7-64:OleLockRunning
+367 vista-64:StgOpenAsyncDocfileOnIFillLockBytes win7-32:StgIsStorageFile win7-64:OleMetafilePictFromIconAndLabel
+368 vista-64:StgOpenPropStg win7-32:StgIsStorageILockBytes win7-64:OleNoteObjectVisible
+369 vista-64:StgOpenStorage win7-32:StgOpenAsyncDocfileOnIFillLockBytes win7-64:OleQueryCreateFromData
+370 vista-64:StgOpenStorageEx win7-32:StgOpenPropStg win7-64:OleQueryLinkFromData
+371 vista-64:StgOpenStorageOnHandle win7-32:StgOpenStorage win7-64:OleRegEnumFormatEtc
+372 vista-64:StgOpenStorageOnILockBytes win7-32:StgOpenStorageEx win7-64:OleRegEnumVerbs
+373 vista-64:StgPropertyLengthAsVariant win7-32:StgOpenStorageOnHandle win7-64:OleRegGetMiscStatus
+374 vista-64:StgSetTimes win7-32:StgOpenStorageOnILockBytes win7-64:OleRegGetUserType
+375 vista-64:StringFromCLSID win7-32:StgPropertyLengthAsVariant win7-64:OleRun
+376 vista-64:StringFromGUID2 win7-32:StgSetTimes win7-64:OleSave
+377 vista-64:StringFromIID win7-32:StringFromCLSID win7-64:OleSaveToStream
+378 vista-64:UpdateDCOMSettings win7-32:StringFromGUID2 win7-64:OleSetAutoConvert
+379 vista-64:UpdateProcessTracing win7-32:StringFromIID win7-64:OleSetClipboard
+380 vista-64:UtConvertDvtd16toDvtd32 win7-32:UpdateDCOMSettings win7-64:OleSetContainedObject
+381 vista-64:UtConvertDvtd32toDvtd16 win7-32:UpdateProcessTracing win7-64:OleSetMenuDescriptor
+382 vista-64:UtGetDvtd16Info win7-32:UtConvertDvtd16toDvtd32 win7-64:OleTranslateAccelerator
+383 vista-64:UtGetDvtd32Info win7-32:UtConvertDvtd32toDvtd16 win7-64:OleUninitialize
+384 vista-64:WdtpInterfacePointer_UserFree win7-32:UtGetDvtd16Info win7-64:OpenOrCreateStream
+385 vista-64:WdtpInterfacePointer_UserFree64 win7-32:UtGetDvtd32Info win7-64:ProgIDFromCLSID
+386 vista-64:WdtpInterfacePointer_UserMarshal win7-32:WdtpInterfacePointer_UserFree win7-64:PropStgNameToFmtId
+387 vista-64:WdtpInterfacePointer_UserMarshal64 win7-32:WdtpInterfacePointer_UserMarshal win7-64:PropSysAllocString
+388 vista-64:WdtpInterfacePointer_UserSize win7-32:WdtpInterfacePointer_UserSize win7-64:PropSysFreeString
+389 vista-64:WdtpInterfacePointer_UserSize64 win7-32:WdtpInterfacePointer_UserUnmarshal win7-64:PropVariantClear
+390 vista-64:WdtpInterfacePointer_UserUnmarshal win7-32:WriteClassStg win7-64:PropVariantCopy
+391 vista-64:WdtpInterfacePointer_UserUnmarshal64 win7-32:WriteClassStm win7-64:ReadClassStg
+392 vista-64:WriteClassStg win7-32:WriteFmtUserTypeStg win7-64:ReadClassStm
+393 vista-64:WriteClassStm win7-32:WriteOleStg win7-64:ReadFmtUserTypeStg
+394 vista-64:WriteFmtUserTypeStg win7-32:WriteStringStream win7-64:ReadOleStg
+395 vista-64:WriteOleStg win7-64:ReadStringStream
+396 vista-64:WriteStringStream win7-64:RegisterDragDrop
+397 win7-64:ReleaseStgMedium
+398 win7-64:RevokeDragDrop
+399 win7-64:SNB_UserFree
+400 win7-64:SNB_UserFree64
+401 win7-64:SNB_UserMarshal
+402 win7-64:SNB_UserMarshal64
+403 win7-64:SNB_UserSize
+404 win7-64:SNB_UserSize64
+405 win7-64:SNB_UserUnmarshal
+406 win7-64:SNB_UserUnmarshal64
+407 win7-64:STGMEDIUM_UserFree
+408 win7-64:STGMEDIUM_UserFree64
+409 win7-64:STGMEDIUM_UserMarshal
+410 win7-64:STGMEDIUM_UserMarshal64
+411 win7-64:STGMEDIUM_UserSize
+412 win7-64:STGMEDIUM_UserSize64
+413 win7-64:STGMEDIUM_UserUnmarshal
+414 win7-64:STGMEDIUM_UserUnmarshal64
+415 win7-64:SetConvertStg
+416 win7-64:SetDocumentBitStg
+417 win7-64:SetErrorInfo
+418 win7-64:StgConvertPropertyToVariant
+419 win7-64:StgConvertVariantToProperty
+420 win7-64:StgCreateDocfile
+421 win7-64:StgCreateDocfileOnILockBytes
+422 win7-64:StgCreatePropSetStg
+423 win7-64:StgCreatePropStg
+424 win7-64:StgCreateStorageEx
+425 win7-64:StgGetIFillLockBytesOnFile
+426 win7-64:StgGetIFillLockBytesOnILockBytes
+427 win7-64:StgIsStorageFile
+428 win7-64:StgIsStorageILockBytes
+429 win7-64:StgOpenAsyncDocfileOnIFillLockBytes
+430 win7-64:StgOpenPropStg
+431 win7-64:StgOpenStorage
+432 win7-64:StgOpenStorageEx
+433 win7-64:StgOpenStorageOnHandle
+434 win7-64:StgOpenStorageOnILockBytes
+435 win7-64:StgPropertyLengthAsVariant
+436 win7-64:StgSetTimes
+437 win7-64:StringFromCLSID
+438 win7-64:StringFromGUID2
+439 win7-64:StringFromIID
+440 win7-64:UpdateDCOMSettings
+441 win7-64:UpdateProcessTracing
+442 win7-64:UtConvertDvtd16toDvtd32
+443 win7-64:UtConvertDvtd32toDvtd16
+444 win7-64:UtGetDvtd16Info
+445 win7-64:UtGetDvtd32Info
+446 win7-64:WdtpInterfacePointer_UserFree
+447 win7-64:WdtpInterfacePointer_UserFree64
+448 win7-64:WdtpInterfacePointer_UserMarshal
+449 win7-64:WdtpInterfacePointer_UserMarshal64
+450 win7-64:WdtpInterfacePointer_UserSize
+451 win7-64:WdtpInterfacePointer_UserSize64
+452 win7-64:WdtpInterfacePointer_UserUnmarshal
+453 win7-64:WdtpInterfacePointer_UserUnmarshal64
+454 win7-64:WriteClassStg
+455 win7-64:WriteClassStm
+456 win7-64:WriteFmtUserTypeStg
+457 win7-64:WriteOleStg
+458 win7-64:WriteStringStream

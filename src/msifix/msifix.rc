@@ -1,0 +1,5 @@
+#include <winver.h>
+#define VX_DESC "VistaExt installer package fixer"
+#define VX_NAME "msifix"
+1 24 "../common/asInvoker.manifest"
+#include "../common/version.rci"

@@ -1,0 +1,16 @@
+# version.dll export names: Windows Vista SP2 and Windows 7 SP1
+GetFileVersionInfoA vista,win7
+GetFileVersionInfoByHandle vista,win7
+GetFileVersionInfoExW vista,win7
+GetFileVersionInfoSizeA vista,win7
+GetFileVersionInfoSizeExW vista,win7
+GetFileVersionInfoSizeW vista,win7
+GetFileVersionInfoW vista,win7
+VerFindFileA vista,win7
+VerFindFileW vista,win7
+VerInstallFileA vista,win7
+VerInstallFileW vista,win7
+VerLanguageNameA vista,win7
+VerLanguageNameW vista,win7
+VerQueryValueA vista,win7
+VerQueryValueW vista,win7

@@ -1,0 +1,2 @@
+The api-set name lists in third_party/oca-apisets come from One-Core-API-Source
+(https://github.com/shorthorn-project/One-Core-API-Source), GPL-2.0.

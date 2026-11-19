@@ -1,0 +1,5 @@
+#include <winver.h>
+#define VX_DESC "VistaExt automatic mode"
+#define VX_NAME "vxauto"
+1 24 "../common/asInvoker.manifest"
+#include "../common/version.rci"

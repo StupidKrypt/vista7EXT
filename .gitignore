@@ -1,0 +1,35 @@
+# Build output (build.sh, package.sh), test VMs and downloaded programs
+out/
+bin/
+obj/
+
+# Windows build output
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.obj
+*.o
+*.lib
+*.a
+*.exp
+*.res
+*.msi
+*.msu
+*.iso
+*.qcow2
+
+# Backups VistaExt makes next to patched programs
+*.vxorig
+
+# Python
+__pycache__/
+*.pyc
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db

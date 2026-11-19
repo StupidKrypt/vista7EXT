@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>VistaExt video playback test</title>
+<!--
+  A browser-independent playback test: any browser opens this page (the URL
+  on its command line is enough), it plays a YouTube video through YouTube's
+  public embed API and measures what any page can see:
+    - which quality YouTube actually played (the player is laid out at
+      3840x2160 and scaled down to fit, so YouTube's own choice is 2160p
+      when the browser and connection can take it),
+    - whether playback keeps up (video seconds per wall-clock second),
+    - stalls (the player going back to "buffering" once playing),
+    - how smoothly the page itself keeps drawing (animation frames per
+      second) while the video plays.
+  Results go back to the server the page came from (POST /report), every
+  few seconds, so a crash still leaves the measurements up to that point.
+  URL parameters: b=<browser> m=<mode> s=<seconds, default 150> v=<video id>
+  Plain ES5: it has to work in old browsers too.
+-->
+<style>
+  html, body { margin: 0; background: #111; color: #eee; font: 14px sans-serif; overflow: hidden; }
+  #status { height: 40px; line-height: 40px; padding: 0 10px; white-space: nowrap; overflow: hidden; }
+  #wrap { position: absolute; left: 0; top: 40px; transform-origin: 0 0; -webkit-transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<div id="status">starting...</div>
+<div id="wrap"><div id="player"></div></div>
+<script>
+(function () {
+  var W = 3840, H = 2160;
+  function param(n, d) {
+    var m = new RegExp('[?&]' + n + '=([^&]*)').exec(location.search);
+    return m ? decodeURIComponent(m[1]) : d;
+  }
+  var R = {
+    browser: param('b', '?'), mode: param('m', '?'), video: param('v', 'aqz-KE-bpKQ'),
+    seconds: +param('s', '150'), ua: navigator.userAgent,
+    screen: screen.width + 'x' + screen.height, dpr: window.devicePixelRatio || 1,
+    events: [], samples: [], qualities: {}, stalls: 0, errors: [],
+    posts_ok: 0, posts_failed: 0, last_post_ok: null
+  };
+  var t0 = Date.now(), player = null, playingSince = null, firstPlay = null, frames = 0, done = false;
+  function now() { return (Date.now() - t0) / 1000; }
+  function status(s) { document.getElementById('status').textContent = s; }
+  function ev(s) { R.events.push(now().toFixed(1) + ' ' + s); }
+
+  function send(final) {
+    R.final = !!final;
+    R.at = now();
+    try {
+      var x = new XMLHttpRequest();
+      /* a lost report is counted and sent again with the next one (each
+         report holds everything so far) */
+      x.onreadystatechange = function () {
+        if (x.readyState !== 4) return;
+        if (x.status >= 200 && x.status < 300) { R.posts_ok++; R.last_post_ok = +now().toFixed(1); }
+        else R.posts_failed++;
+      };
+      x.timeout = 4000;
+      x.open('POST', '/report', true);
+      x.setRequestHeader('Content-Type', 'application/json');
+      x.send(JSON.stringify(R));
+    } catch (e) {}
+  }
+
+  /* lay the 3840x2160 player out at full size, shown scaled to the window */
+  function fit() {
+    var s = Math.min(window.innerWidth / W, (window.innerHeight - 40) / H);
+    var w = document.getElementById('wrap');
+    w.style.transform = w.style.webkitTransform = 'scale(' + s + ')';
+  }
+  window.onresize = fit;
+  fit();
+
+  /* the page's own drawing rate */
+  var raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+  function tick() { frames++; if (!done && raf) raf(tick); }
+  if (raf) raf(tick);
+
+  var lastFrames = 0, lastAt = 0;
+  function sample() {
+    var s = { at: +now().toFixed(1), hidden: !!document.hidden }, dt = now() - lastAt;
+    s.page_fps = raf && dt > 0 ? +((frames - lastFrames) / dt).toFixed(1) : null;
+    lastFrames = frames; lastAt = now();
+    if (player && player.getCurrentTime) {
+      try {
+        s.t = +player.getCurrentTime().toFixed(2);
+        s.state = player.getPlayerState();
+        s.quality = player.getPlaybackQuality();
+        s.loaded = +(player.getVideoLoadedFraction() || 0).toFixed(3);
+        if (s.quality) R.qualities[s.quality] = (R.qualities[s.quality] || 0) + 1;
+      } catch (e) { s.error = String(e); }
+    }
+    R.samples.push(s);
+    status(R.browser + ' / ' + R.mode + ': ' + (s.quality || '-') + ', ' + (s.t || 0) + ' s played, ' +
+           R.stalls + ' stall(s), page ' + s.page_fps + ' fps');
+    summarize();
+    send(false);
+  }
+
+  function summarize() {
+    var p = [], i, s, a, z, fps = [];
+    for (i = 0; i < R.samples.length; i++) {
+      s = R.samples[i];
+      if (firstPlay !== null && s.at >= firstPlay && typeof s.t === 'number') p.push(s);
+      if (firstPlay !== null && s.at >= firstPlay && s.page_fps !== null) fps.push(s.page_fps);
+    }
+    if (p.length < 2) return;
+    a = p[0]; z = p[p.length - 1];
+    fps.sort(function (x, y) { return x - y; });
+    R.summary = {
+      quality: z.quality, qualities: R.qualities,
+      video_seconds: +(z.t - a.t).toFixed(1), wall_seconds: +(z.at - a.at).toFixed(1),
+      speed: z.at > a.at ? +((z.t - a.t) / (z.at - a.at)).toFixed(2) : null,
+      stalls: R.stalls, start_seconds: firstPlay,
+      page_fps_median: fps.length ? fps[Math.floor(fps.length / 2)] : null,
+      page_fps_min: fps.length ? fps[0] : null
+    };
+  }
+
+  window.onerror = function (m) { R.errors.push(String(m)); };
+  window.onYouTubeIframeAPIReady = function () {
+    ev('api ready');
+    player = new YT.Player('player', {
+      width: W, height: H, videoId: R.video,
+      playerVars: { autoplay: 1, mute: 1, playsinline: 1, rel: 0, vq: 'hd2160', origin: location.protocol + '//' + location.host },
+      events: {
+        onReady: function (e) { ev('player ready'); e.target.mute(); e.target.playVideo(); },
+        onStateChange: function (e) {
+          ev('state ' + e.data);
+          if (e.data === 1) { if (firstPlay === null) firstPlay = +now().toFixed(1); playingSince = now(); }
+          if (e.data === 3 && firstPlay !== null) R.stalls++;
+        },
+        onPlaybackQualityChange: function (e) { ev('quality ' + e.data); },
+        onError: function (e) { ev('error ' + e.data); R.errors.push('player error ' + e.data); }
+      }
+    });
+  };
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  tag.onerror = function () { R.errors.push('could not load the YouTube API'); send(false); };
+  document.body.appendChild(tag);
+
+  setInterval(function () { if (!done) sample(); }, 5000);
+  setTimeout(function () {
+    sample();
+    done = true;
+    try { if (player && player.pauseVideo) player.pauseVideo(); } catch (e) {}
+    summarize();
+    send(true);
+    status('done: ' + JSON.stringify(R.summary || {}));
+  }, R.seconds * 1000);
+  send(false);
+})();
+</script>
+</body>
+</html>

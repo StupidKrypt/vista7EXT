@@ -1,0 +1,5 @@
+#include <winver.h>
+#define VX_DESC "VistaExt program patcher"
+#define VX_NAME "vxpatch"
+1 24 "../common/asInvoker.manifest"
+#include "../common/version.rci"

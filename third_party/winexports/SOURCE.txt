@@ -1,0 +1,4 @@
+Export names (only the names) of Windows system DLLs, read from Windows Vista
+SP2 and Windows 7 SP1 installations (x86 and x64) with tools/peexp.py. They
+tell tools/gen.py which names each VistaExt companion must forward, and on
+which Windows a name exists. No Microsoft code is included.

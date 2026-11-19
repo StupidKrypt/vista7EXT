@@ -1,0 +1,17 @@
+# version.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
+1 vista-32:GetFileVersionInfoA vista-64:GetFileVersionInfoA win7-32:GetFileVersionInfoA win7-64:GetFileVersionInfoA
+2 vista-32:GetFileVersionInfoExW vista-64:GetFileVersionInfoExW win7-32:GetFileVersionInfoByHandle win7-64:GetFileVersionInfoByHandle
+3 vista-32:GetFileVersionInfoSizeA vista-64:GetFileVersionInfoSizeA win7-32:GetFileVersionInfoExW win7-64:GetFileVersionInfoExW
+4 vista-32:GetFileVersionInfoSizeExW vista-64:GetFileVersionInfoSizeExW win7-32:GetFileVersionInfoSizeA win7-64:GetFileVersionInfoSizeA
+5 vista-32:GetFileVersionInfoSizeW vista-64:GetFileVersionInfoSizeW win7-32:GetFileVersionInfoSizeExW win7-64:GetFileVersionInfoSizeExW
+6 vista-32:GetFileVersionInfoW vista-64:GetFileVersionInfoW win7-32:GetFileVersionInfoSizeW win7-64:GetFileVersionInfoSizeW
+7 vista-32:VerFindFileA vista-64:VerFindFileA win7-32:GetFileVersionInfoW win7-64:GetFileVersionInfoW
+8 vista-32:VerFindFileW vista-64:VerFindFileW win7-32:VerFindFileA win7-64:VerFindFileA
+9 vista-32:VerInstallFileA vista-64:VerInstallFileA win7-32:VerFindFileW win7-64:VerFindFileW
+10 vista-32:VerInstallFileW vista-64:VerInstallFileW win7-32:VerInstallFileA win7-64:VerInstallFileA
+11 vista-32:VerLanguageNameA vista-64:VerLanguageNameA win7-32:VerInstallFileW win7-64:VerInstallFileW
+12 vista-32:VerLanguageNameW vista-64:VerLanguageNameW win7-32:VerLanguageNameA win7-64:VerLanguageNameA
+13 vista-32:VerQueryValueA vista-64:VerQueryValueA win7-32:VerLanguageNameW win7-64:VerLanguageNameW
+14 vista-32:VerQueryValueW vista-64:VerQueryValueW win7-32:VerQueryValueA win7-64:VerQueryValueA
+15 win7-32:VerQueryValueW win7-64:VerQueryValueW
