@@ -10,7 +10,7 @@
 
 /* Windows 7: NtOpenKey with open options (backup/restore and the like); the
  * options only widen access checks, so the plain open is the safe fallback */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT NTSTATUS NTAPI vx_NtOpenKeyEx(PHANDLE key, ACCESS_MASK access, POBJECT_ATTRIBUTES attr, ULONG options)
 { VX_NATIVE(NTDLL, NtOpenKeyEx, NTSTATUS, (PHANDLE key, ACCESS_MASK access, POBJECT_ATTRIBUTES attr, ULONG options), (key, access, attr, options));
     return NtOpenKey(key, access, attr);
@@ -22,7 +22,7 @@ VX_EXPORT NTSTATUS NTAPI vx_ZwOpenKeyEx(PHANDLE key, ACCESS_MASK access, POBJECT
 #endif
 
 /* Windows 7 */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOLEAN NTAPI vx_RtlQueryPerformanceCounter(LARGE_INTEGER *c)
 { VX_NATIVE(NTDLL, RtlQueryPerformanceCounter, BOOLEAN, (LARGE_INTEGER *c), (c));
     return (BOOLEAN)QueryPerformanceCounter(c);
@@ -39,14 +39,11 @@ VX_EXPORT BOOLEAN NTAPI vx_RtlQueryPerformanceFrequency(LARGE_INTEGER *f)
  * programs (Edge) stop at start-up when this is missing. */
 VX_EXPORT void NTAPI vx_RtlGetDeviceFamilyInfoEnum(ULONGLONG *uap, DWORD *family, DWORD *form)
 {
-    BYTE *peb;
     VX_NATIVE_VOID(NTDLL, RtlGetDeviceFamilyInfoEnum, (ULONGLONG *uap, DWORD *family, DWORD *form), (uap, family, form));
-    peb = *(BYTE **)((BYTE *)NtCurrentTeb() + (sizeof(void *) == 8 ? 0x60 : 0x30));
     if (uap) {
-        ULONGLONG maj = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x118 : 0xA4));
-        ULONGLONG min = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x11C : 0xA8));
-        ULONGLONG bld = *(USHORT *)(peb + (sizeof(void *) == 8 ? 0x120 : 0xAC));
-        *uap = (maj & 0xFFFF) << 48 | (min & 0xFFFF) << 32 | bld << 16;
+        ULONG maj, min, bld;
+        vx_peb_version(&maj, &min, &bld);
+        *uap = ((ULONGLONG)maj & 0xFFFF) << 48 | ((ULONGLONG)min & 0xFFFF) << 32 | (ULONGLONG)bld << 16;
     }
     if (family) *family = 3;    /* DEVICEFAMILYINFOENUM_DESKTOP */
     if (form) *form = 0;        /* DEVICEFAMILYDEVICEFORM_UNKNOWN */
@@ -60,11 +57,9 @@ VX_EXPORT void NTAPI vx_RtlGetNtVersionNumbers(DWORD *major, DWORD *minor, DWORD
 {
     typedef void (NTAPI *fn)(DWORD *, DWORD *, DWORD *);
     static fn real;
-    BYTE *peb = *(BYTE **)((BYTE *)NtCurrentTeb() + (sizeof(void *) == 8 ? 0x60 : 0x30));
-    DWORD pmaj = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x118 : 0xA4));
-    DWORD pmin = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x11C : 0xA8));
-    DWORD pbld = *(USHORT *)(peb + (sizeof(void *) == 8 ? 0x120 : 0xAC));
+    ULONG pmaj, pmin, pbld;
     DWORD rmaj = 0, rmin = 0, rbld = 0;
+    vx_peb_version(&pmaj, &pmin, &pbld);
     if (!real) real = (fn)(void *)GetProcAddress(GetModuleHandleW(NTDLL), "RtlGetNtVersionNumbers");
     if (real) real(&rmaj, &rmin, &rbld);
     if (real && pmaj == rmaj && pmin == rmin && pbld == (rbld & 0xFFFF)) {

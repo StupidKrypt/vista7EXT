@@ -141,12 +141,39 @@ def other_os_only(dll, os_):
     return real_exports(dll) - real_exports(dll, os_)
 
 
+# companion -> the Windows DLL it stands in for
+BASE = {'kernelvx': 'kernel32', 'uservx': 'user32', 'advapivx': 'advapi32', 'shellvx': 'shell32',
+        'bcryptprimvx': 'bcryptprimitives', 'ntvx': 'ntdll', 'ws2vx': 'ws2_32', 'cfgmgrvx': 'cfgmgr32',
+        'olevx': 'ole32', 'versvx': 'version'}
+# the oldest Windows VistaExt supports: a function it implements that this
+# Windows has too is a deliberate wrapper (version reporting, GetProcAddress,
+# CreateProcess...), kept on every build
+OLDEST = 'vista'
+
+
+def has_os_data(os_):
+    """third_party/winexports lists this Windows (read from an installation)."""
+    return bool(real_exports('kernel32', os_))
+
+
+def native_newer(comp, os_):
+    """{name: 'dll.name'}: what this build's Windows has but the oldest lacks.
+    The companion forwards these to Windows instead of exporting its own
+    (which then is not linked in at all: --gc-sections)."""
+    out = {}
+    if not os_ or os_ == OLDEST or comp not in BASE:
+        return out
+    dlls = [BASE[comp]] + (['kernelbase'] if comp == 'kernelvx' else [])
+    for dll in dlls:
+        for n in real_exports(dll, os_) - real_exports(dll, OLDEST):
+            out.setdefault(n, '%s.%s' % (dll, n))
+    return out
+
+
 def forwards_for(comp, arch, outdir, os_=None):
     """Return {name: 'dll.func'} forwarders for a component."""
     f = forwards_all(comp, arch, outdir)
-    base = {'kernelvx': 'kernel32', 'uservx': 'user32', 'advapivx': 'advapi32', 'shellvx': 'shell32',
-            'bcryptprimvx': 'bcryptprimitives', 'ntvx': 'ntdll', 'ws2vx': 'ws2_32', 'cfgmgrvx': 'cfgmgr32',
-            'olevx': 'ole32', 'versvx': 'version'}.get(comp)
+    base = BASE.get(comp)
     if base:
         for n in other_os_only(base, os_):
             if f.get(n, '').split('.', 1)[0] == base:
@@ -265,6 +292,11 @@ def keep_ordinals(comp, arch, impl, fwd, os_=None):
 def cmd_component(a):
     impl = impl_symbols(a.objs, a.arch) if a.objs else {}
     fwd = forwards_for(a.comp, a.arch, a.outdir, a.os)
+    newer = native_newer(a.comp, a.os)
+    native = sorted(n for n in impl if n in newer)
+    for n in native:                    # Windows' own one wins
+        del impl[n]
+        fwd[n] = newer[n]
     ords = fixed_ordinals('ws2_32') if a.comp == 'ws2vx' else {}
     for n in ords:
         fwd.setdefault(n, 'ws2_32.' + n)
@@ -272,8 +304,9 @@ def cmd_component(a):
     if a.comp in ORDINAL_DLL:
         ords, by_number = keep_ordinals(a.comp, a.arch, impl, fwd, a.os)
     write_def(a.out, a.comp + '.dll', impl, fwd, ords, by_number)
-    print('%s-%s/%s: %d implemented, %d forwarded, %d export numbers kept' %
-          (a.os, a.arch, a.comp, len(impl), len(set(fwd) - set(impl)), len(ords) + len(by_number)))
+    print('%s-%s/%s: %d implemented, %d forwarded (%d of them Windows\' own instead of VistaExt\'s), '
+          '%d export numbers kept' % (a.os, a.arch, a.comp, len(impl), len(set(fwd) - set(impl)), len(native),
+                                      len(ords) + len(by_number)))
 
 
 def kernel_host(func, kvx, os_='vista'):
@@ -333,12 +366,12 @@ if __name__ == '__main__':
     c.add_argument('--comp', required=True)
     c.add_argument('--out', required=True)
     c.add_argument('--outdir', required=True)
-    c.add_argument('--os', required=True, choices=('vista', 'win7'))
+    c.add_argument('--os', required=True, choices=('vista', 'win7', 'win8'))
     c.add_argument('objs', nargs='*')
     s = sub.add_parser('apisets')
     s.add_argument('--arch', required=True)
     s.add_argument('--outdir', required=True)
-    s.add_argument('--os', required=True, choices=('vista', 'win7'))
+    s.add_argument('--os', required=True, choices=('vista', 'win7', 'win8'))
     s.add_argument('--bindir', required=True, help='this build\'s folder with kernelvx.dll')
     a = ap.parse_args()
     {'component': cmd_component, 'apisets': cmd_apisets}[a.cmd](a)

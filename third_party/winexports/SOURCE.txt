@@ -1,4 +1,8 @@
-Export names (only the names) of Windows system DLLs, read from Windows Vista
-SP2 and Windows 7 SP1 installations (x86 and x64) with tools/peexp.py. They
-tell tools/gen.py which names each VistaExt companion must forward, and on
-which Windows a name exists. No Microsoft code is included.
+Export names (only the names) and export numbers of Windows system DLLs,
+read from Windows Vista SP2 and Windows 7 SP1 installations (x86 and x64)
+with tools/peexp.py and tools/ordinals.py, and from Windows 8 RTM
+(6.2.9200, install.wim of the x64 DVD: System32 and SysWOW64) with
+tools/addwinexports.py. They tell tools/gen.py which names each VistaExt
+companion must forward, and on which Windows a name exists. Windows 8.1 runs
+the Windows 8 build, so only what 8.0 has is forwarded. No Microsoft code
+is included.

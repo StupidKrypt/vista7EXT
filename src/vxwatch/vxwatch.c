@@ -329,6 +329,19 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
     if (!(g_w = MapViewOfFile(sec, FILE_MAP_READ, 0, 0, sizeof(vx_watch))) || g_w->magic != VX_WATCH_MAGIC) return 3;
     WaitForSingleObject(proc, INFINITE);
     if (!GetExitCodeProcess(proc, &g_code) || !crash_code(g_code)) return 0;
+    {   /* The block was written by the program that just crashed - perhaps
+         * by the very bug that crashed it. Work on a copy whose texts are
+         * certain to end inside their fields. */
+        static vx_watch copy;
+        vx_memcpy(&copy, g_w, sizeof(copy));
+        copy.where[sizeof(copy.where) / sizeof(WCHAR) - 1] = 0;
+        copy.message[sizeof(copy.message) / sizeof(WCHAR) - 1] = 0;
+        copy.exe[MAX_PATH - 1] = 0;
+        copy.cwd[MAX_PATH - 1] = 0;
+        copy.cmdline[sizeof(copy.cmdline) / sizeof(WCHAR) - 1] = 0;
+        UnmapViewOfFile(g_w);
+        g_w = &copy;
+    }
     log_crash();
     {   /* tests: VX_WATCH_TEST_CHOICE=<WIN10...> answers the window at once */
         WCHAR t[32];

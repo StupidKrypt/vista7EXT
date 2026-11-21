@@ -6,11 +6,7 @@ extern DWORD vx_tls_errmode;
 VX_EXPORT void WINAPI vx_GetCurrentThreadStackLimits(PULONG_PTR low, PULONG_PTR high)
 { VX_NATIVE_VOID(K32, GetCurrentThreadStackLimits, (PULONG_PTR low, PULONG_PTR high), (low, high));
     BYTE *teb = (BYTE *)NtCurrentTeb();
-#ifdef _WIN64
-    *low = *(ULONG_PTR *)(teb + 0x1478);      /* TEB.DeallocationStack */
-#else
-    *low = *(ULONG_PTR *)(teb + 0xE0C);
-#endif
+    *low = *(ULONG_PTR *)(teb + VX_TEB_DEALLOCSTACK);
     *high = (ULONG_PTR)((NT_TIB *)teb)->StackBase;
 }
 
@@ -53,7 +49,7 @@ VX_EXPORT BOOL WINAPI vx_GetProcessInformation(HANDLE h, int cls, LPVOID info, D
     return FALSE;
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HANDLE WINAPI vx_CreateRemoteThreadEx(HANDLE proc, LPSECURITY_ATTRIBUTES sa, SIZE_T stack,
         LPTHREAD_START_ROUTINE start, LPVOID param, DWORD flags, LPVOID attrs, LPDWORD tid)
 { VX_NATIVE(K32, CreateRemoteThreadEx, HANDLE, (HANDLE proc, LPSECURITY_ATTRIBUTES sa, SIZE_T stack,         LPTHREAD_START_ROUTINE start, LPVOID param, DWORD flags, LPVOID attrs, LPDWORD tid), (proc, sa, stack, start, param, flags, attrs, tid));
@@ -63,7 +59,7 @@ VX_EXPORT HANDLE WINAPI vx_CreateRemoteThreadEx(HANDLE proc, LPSECURITY_ATTRIBUT
 #endif
 
 /* Per-thread error mode (Windows 7), stored per thread. */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT DWORD WINAPI vx_GetThreadErrorMode(void)
 { VX_NATIVE(K32, GetThreadErrorMode, DWORD, (void), ());
     return vx_tls_errmode == TLS_OUT_OF_INDEXES ? 0 : (DWORD)(ULONG_PTR)TlsGetValue(vx_tls_errmode);
@@ -77,7 +73,7 @@ VX_EXPORT DWORD WINAPI vx_GetThreadErrorMode(void)
 static volatile LONG g_fce_threads;
 static volatile LONG g_fce_added;
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_SetThreadErrorMode(DWORD mode, LPDWORD old)
 { VX_NATIVE(K32, SetThreadErrorMode, BOOL, (DWORD mode, LPDWORD old), (mode, old));
     DWORD prev;
@@ -131,14 +127,14 @@ VX_EXPORT BOOL WINAPI vx_GetProcessMitigationPolicy(HANDLE h, int policy, PVOID 
     return TRUE;
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT void WINAPI vx_RaiseFailFastException(PEXCEPTION_RECORD rec, PCONTEXT ctx, DWORD flags)
 { VX_NATIVE_VOID(K32, RaiseFailFastException, (PEXCEPTION_RECORD rec, PCONTEXT ctx, DWORD flags), (rec, ctx, flags));
     TerminateProcess(GetCurrentProcess(), rec ? rec->ExceptionCode : 0xC0000602 /* STATUS_FAIL_FAST_EXCEPTION */);
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_SetWaitableTimerEx(HANDLE h, const LARGE_INTEGER *due, LONG period,
         PTIMERAPCROUTINE fn, LPVOID arg, PVOID reason, ULONG delay)
 { VX_NATIVE(K32, SetWaitableTimerEx, BOOL, (HANDLE h, const LARGE_INTEGER *due, LONG period,         PTIMERAPCROUTINE fn, LPVOID arg, PVOID reason, ULONG delay), (h, due, period, fn, arg, reason, delay));
@@ -147,14 +143,14 @@ VX_EXPORT BOOL WINAPI vx_SetWaitableTimerEx(HANDLE h, const LARGE_INTEGER *due, 
 #endif
 
 /* ---- power requests (Windows 7) -> SetThreadExecutionState --------------- */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HANDLE WINAPI vx_PowerCreateRequest(PVOID ctx)
 { VX_NATIVE(K32, PowerCreateRequest, HANDLE, (PVOID ctx), (ctx));
     return CreateEventW(NULL, TRUE, FALSE, NULL);    /* any closable handle */
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_PowerSetRequest(HANDLE h, int type)
 { VX_NATIVE(K32, PowerSetRequest, BOOL, (HANDLE h, int type), (h, type));
     EXECUTION_STATE es = ES_CONTINUOUS | ES_SYSTEM_REQUIRED;
@@ -164,7 +160,7 @@ VX_EXPORT BOOL WINAPI vx_PowerSetRequest(HANDLE h, int type)
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_PowerClearRequest(HANDLE h, int type)
 { VX_NATIVE(K32, PowerClearRequest, BOOL, (HANDLE h, int type), (h, type));
     return SetThreadExecutionState(ES_CONTINUOUS) != 0;

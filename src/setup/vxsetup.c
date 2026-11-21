@@ -21,6 +21,7 @@
  * kept as %ProgramData%\VistaExt\setup.log. Nothing is unpacked or changed
  * before the user has accepted the warning and chosen the backup. */
 #include "../common/vx.h"
+#include "../common/userrun.h"
 #include <commctrl.h>
 #include <shlobj.h>
 #include <shellapi.h>
@@ -316,55 +317,13 @@ static const WCHAR *rp_reason(DWORD e)
 }
 
 /* ---- starting the tray icon as the signed-in user (setup runs as administrator) ---- */
-#undef ShellExecute          /* shellapi.h's A/W macro would rename the COM method */
-static BOOL run_as_user(const WCHAR *file, const WCHAR *args)
-{
-    IShellWindows *sw = NULL;
-    IDispatch *disp = NULL, *bg = NULL, *app = NULL;
-    IServiceProvider *sp = NULL;
-    IShellBrowser *sb = NULL;
-    IShellView *sv = NULL;
-    IShellFolderViewDual *fv = NULL;
-    IShellDispatch2 *sd = NULL;
-    VARIANT loc, none, vargs, vshow;
-    long hwnd = 0;
-    BOOL ok = FALSE;
-    VariantInit(&loc); VariantInit(&none); VariantInit(&vargs); VariantInit(&vshow);
-    loc.vt = VT_I4; loc.lVal = CSIDL_DESKTOP;
-    if (SUCCEEDED(CoCreateInstance(&CLSID_ShellWindows, NULL, CLSCTX_LOCAL_SERVER, &IID_IShellWindows, (void **)&sw)) &&
-        sw->lpVtbl->FindWindowSW(sw, &loc, &none, SWC_DESKTOP, &hwnd, SWFO_NEEDDISPATCH, &disp) == S_OK && disp &&
-        SUCCEEDED(disp->lpVtbl->QueryInterface(disp, &IID_IServiceProvider, (void **)&sp)) &&
-        SUCCEEDED(sp->lpVtbl->QueryService(sp, &SID_STopLevelBrowser, &IID_IShellBrowser, (void **)&sb)) &&
-        SUCCEEDED(sb->lpVtbl->QueryActiveShellView(sb, &sv)) &&
-        SUCCEEDED(sv->lpVtbl->GetItemObject(sv, SVGIO_BACKGROUND, &IID_IDispatch, (void **)&bg)) &&
-        SUCCEEDED(bg->lpVtbl->QueryInterface(bg, &IID_IShellFolderViewDual, (void **)&fv)) &&
-        SUCCEEDED(fv->lpVtbl->get_Application(fv, &app)) &&
-        SUCCEEDED(app->lpVtbl->QueryInterface(app, &IID_IShellDispatch2, (void **)&sd))) {
-        BSTR bfile = SysAllocString(file);
-        vargs.vt = VT_BSTR; vargs.bstrVal = SysAllocString(args);
-        vshow.vt = VT_I4; vshow.lVal = SW_SHOWNORMAL;
-        ok = bfile && vargs.bstrVal && SUCCEEDED(sd->lpVtbl->ShellExecute(sd, bfile, vargs, none, none, vshow));
-        SysFreeString(bfile);
-        VariantClear(&vargs);
-    }
-    if (sd) sd->lpVtbl->Release(sd);
-    if (app) app->lpVtbl->Release(app);
-    if (fv) fv->lpVtbl->Release(fv);
-    if (bg) bg->lpVtbl->Release(bg);
-    if (sv) sv->lpVtbl->Release(sv);
-    if (sb) sb->lpVtbl->Release(sb);
-    if (sp) sp->lpVtbl->Release(sp);
-    if (disp) disp->lpVtbl->Release(disp);
-    if (sw) sw->lpVtbl->Release(sw);
-    return ok;
-}
 
 static void start_tray(void)
 {
     WCHAR exe[MAX_PATH];
     GetEnvironmentVariableW(L"ProgramW6432", exe, MAX_PATH) || GetEnvironmentVariableW(L"ProgramFiles", exe, MAX_PATH);
     vx_wcscatn(exe, L"\\VistaExt\\vxtray.exe", MAX_PATH);
-    if (!run_as_user(exe, L"")) ShellExecuteW(NULL, NULL, exe, NULL, NULL, SW_SHOWNORMAL);
+    if (!vx_run_as_user(exe, NULL, NULL)) ShellExecuteW(NULL, NULL, exe, NULL, NULL, SW_SHOWNORMAL);
 }
 
 /* ---- the wizard --------------------------------------------------------------------- */
@@ -424,7 +383,8 @@ static void page(int p)
     case P_INSTALL:
         SetWindowTextW(g_title, L"Installing VistaExt");
         wsprintfW(t, L"Installing the VistaExt build for Windows %s (%s), the background service and the tray icon.\n\n"
-                     L"This takes a minute.", g_min == 0 ? L"Vista" : L"7", wow || sizeof(void *) == 8 ? L"64-bit" : L"32-bit");
+                     L"This takes a minute.", g_min == 0 ? L"Vista" : g_min == 1 ? L"7" : g_min == 2 ? L"8" : L"8 (on 8.1)",
+                  wow || sizeof(void *) == 8 ? L"64-bit" : L"32-bit");
         SetWindowTextW(g_text, t);
         break;
     case P_FINISH:
@@ -450,6 +410,26 @@ static void page(int p)
     }
 }
 
+/* creating the restore point takes a minute or two: in its own thread,
+ * so the window keeps drawing and answering meanwhile */
+typedef struct { BOOL begin, ok; DWORD result; } rp_job;
+static DWORD WINAPI rp_thread(LPVOID p)
+{
+    rp_job *j = p;
+    j->result = restore_point(j->begin, j->ok);
+    return 0;
+}
+
+static DWORD restore_point_pumping(BOOL begin, BOOL ok)
+{
+    rp_job j = { begin, ok, 0 };
+    HANDLE th = CreateThread(NULL, 0, rp_thread, &j, 0, NULL);
+    if (!th) return restore_point(begin, ok);
+    wait_pumping(th);
+    CloseHandle(th);
+    return j.result;
+}
+
 static void begin_install(void)
 {
     HANDLE th;
@@ -460,7 +440,7 @@ static void begin_install(void)
         SetWindowTextW(g_text, L"Windows is saving a System Restore point. This can take a minute or two.");
         EnableWindow(g_next, FALSE); EnableWindow(g_back, FALSE); EnableWindow(g_cancel, FALSE);
         UpdateWindow(g_wnd);
-        e = restore_point(TRUE, TRUE);
+        e = restore_point_pumping(TRUE, TRUE);
         SetCursor(c);
         EnableWindow(g_next, TRUE); EnableWindow(g_back, TRUE); EnableWindow(g_cancel, TRUE);
         if (e) {
@@ -484,7 +464,7 @@ static void begin_install(void)
             }
         CloseHandle(th);
     } else g_job.code = 9009;
-    if (g_rp_made) restore_point(FALSE, g_job.code == 0);
+    if (g_rp_made) restore_point_pumping(FALSE, g_job.code == 0);
     g_result = (int)g_job.code;
     if (!g_job.code) CheckDlgButton(g_wnd, ID_TRAY, BST_CHECKED);
     page(P_FINISH);
@@ -522,7 +502,7 @@ static LRESULT CALLBACK wizproc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         }
         break;
     case WM_CLOSE:
-        if (g_page == P_INSTALL) return 0;       /* not while installing */
+        if (g_page == P_INSTALL || !IsWindowEnabled(g_cancel)) return 0;   /* not while installing or saving a restore point */
         DestroyWindow(h);
         return 0;
     case WM_CTLCOLORSTATIC:
@@ -611,9 +591,9 @@ static int wizard(BOOL noauto)
 static int do_install(BOOL noauto, BOOL rp)
 {
     vx_real_version(&g_maj, &g_min);
-    if (!(g_maj == 6 && g_min <= 1)) {
+    if (!(g_maj == 6 && g_min <= 3)) {
         if (g_quiet) return 3;
-        if (MessageBoxW(NULL, L"VistaExt is made for Windows Vista and Windows 7. This Windows is newer and "
+        if (MessageBoxW(NULL, L"VistaExt is made for Windows Vista, 7, 8 and 8.1. This Windows is newer and "
                               L"already has what VistaExt adds.\n\nInstall anyway?", TITLE,
                         MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES) return 3;
     }
@@ -672,6 +652,58 @@ static int do_uninstall(BOOL fromtemp)
         msg(m, MB_ICONWARNING);
         return (int)code;
     }
+    {   /* files a running program still had loaded ("still in use" in the
+         * log): deleted when Windows restarts, with what uninstall.cmd kept
+         * for a retry - no second uninstall needed */
+        HANDLE h = CreateFileW(g_log, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        DWORD size = h != INVALID_HANDLE_VALUE ? GetFileSize(h, NULL) : 0, got = 0, i;
+        char *b = size && size < (8u << 20) ? HeapAlloc(GetProcessHeap(), 0, size + 1) : NULL;
+        int later = 0;
+        /* this setup is 32-bit: on 64-bit Windows, "System32" would be taken
+         * as SysWOW64 - the paths in the log are the 64-bit ones */
+        BOOL (WINAPI *off)(PVOID *) = (BOOL (WINAPI *)(PVOID *))(void *)GetProcAddress(GetModuleHandleW(L"kernel32.dll"),
+                                                                                    "Wow64DisableWow64FsRedirection");
+        BOOL (WINAPI *on)(PVOID) = (BOOL (WINAPI *)(PVOID))(void *)GetProcAddress(GetModuleHandleW(L"kernel32.dll"),
+                                                                               "Wow64RevertWow64FsRedirection");
+        PVOID redir = NULL;
+        BOOL wow = FALSE;
+        IsWow64Process(GetCurrentProcess(), &wow);
+        if (wow && off && !off(&redir)) wow = FALSE;
+        if (b && ReadFile(h, b, size, &got, NULL)) {
+            static const char key[] = "still in use: ";
+            b[got] = 0;
+            for (i = 0; i + sizeof(key) - 1 < got; i++) {
+                DWORD e;
+                WCHAR w[MAX_PATH];
+                if (memcmp(b + i, key, sizeof(key) - 1)) continue;
+                i += sizeof(key) - 1;
+                for (e = i; e < got && b[e] != '\r' && b[e] != '\n'; e++) ;
+                b[e] = 0;
+                if (MultiByteToWideChar(CP_OEMCP, 0, b + i, -1, w, MAX_PATH) &&
+                    MoveFileExW(w, NULL, MOVEFILE_DELAY_UNTIL_REBOOT)) later++;
+                i = e;
+            }
+        }
+        if (h != INVALID_HANDLE_VALUE) CloseHandle(h);
+        if (b) HeapFree(GetProcessHeap(), 0, b);
+        if (later) {
+            /* (with redirection still off: the 64-bit VistaExt.off below too) */
+            static const WCHAR *left[] = { L"installed.txt", L"uninstall.cmd", L"VistaExtSetup.exe", NULL };
+            WCHAR f[MAX_PATH + 32], d[MAX_PATH + 32];
+            int k;
+            for (k = 0; left[k]; k++) {
+                wsprintfW(f, L"%s\\%s", vx, left[k]);
+                if (GetFileAttributesW(f) != INVALID_FILE_ATTRIBUTES) MoveFileExW(f, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+            }
+            MoveFileExW(vx, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);           /* the folder, once empty */
+            for (k = 0; k < 2; k++) {                                      /* VistaExt.off, if switched off */
+                GetWindowsDirectoryW(d, MAX_PATH);
+                vx_wcscatn(d, k ? L"\\SysWOW64\\VistaExt.off" : L"\\System32\\VistaExt.off", MAX_PATH + 32);
+                if (GetFileAttributesW(d) != INVALID_FILE_ATTRIBUTES) MoveFileExW(d, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+            }
+        }
+        if (wow && on) on(redir);
+    }
     {   /* the last trace: setup.log (this removal's own log) and the folder go
          * when Windows restarts (Windows Installer packages msifix kept, if
          * any, stay: removing them would break repairing those programs) */
@@ -683,7 +715,8 @@ static int do_uninstall(BOOL fromtemp)
         }
     }
     if (log_line("in use", line, 300) || log_line("Restart Windows", line, 300)) {
-        wsprintfW(m, L"VistaExt is removed, but some of its files are still in use. Restart Windows to finish.");
+        wsprintfW(m, L"VistaExt is removed. Some of its files were still in use by programs that are running: they are "
+                     L"deleted when Windows restarts.");
         msg(m, MB_ICONINFORMATION);
     } else msg(L"VistaExt has been removed.", MB_ICONINFORMATION);
     return 0;

@@ -21,14 +21,26 @@
  * on disk: kernel32.dll -> kernelvx.dll, user32.dll -> uservx.dll, ... and an
  * API-set name api-ms-win-X -> vxs-ms-win-X (VistaExt's own copy of that API
  * set, which Windows' API-set table does not intercept), when that copy
- * exports every function imported from it. Windows' own DLLs are never
- * touched. The new names are never longer, so they are written in place.
+ * exports every function imported from it. The new names are never longer,
+ * so they are written in place. Windows' own DLLs keep their imports.
+ *
+ * When the program is told another Windows version, two places in Windows'
+ * DLLs are changed, in this process only, so that what it reads elsewhere
+ * agrees with the version it is told (see "version_hooks" below):
+ *   - ntdll's NtQueryValueKey: a 5-byte jump at the start of its stub (the
+ *     original stub runs from a copy), for the version values under
+ *     HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion. The stub's bytes are
+ *     checked first; unknown code is left alone.
+ *   - ole32's export entries for CoCreateInstance(Ex) and CoSetProxyBlanket
+ *     (WMI's Win32_OperatingSystem), when ole32 is loaded.
  *
  * This DLL is loaded before kernel32: it may only use ntdll. */
 #include <windows.h>
 #include <winternl.h>
 #include <objbase.h>
 #include "../common/companions.h"
+#include "../common/ntinternals.h"
+#include "../common/releases.h"
 
 #define DLL_PROCESS_VERIFIER 4
 #ifndef NtCurrentProcess
@@ -37,7 +49,6 @@
 #ifndef STATUS_BUFFER_OVERFLOW
 #define STATUS_BUFFER_OVERFLOW ((NTSTATUS)0x80000005L)
 #endif
-#define KUSER_NT_SYSTEM_ROOT ((const WCHAR *)(ULONG_PTR)0x7FFE0030)
 
 typedef struct { PWCHAR name; ULONG flags; PVOID addr; PVOID thunks; } vrf_dll;
 typedef struct {
@@ -57,7 +68,6 @@ typedef struct {
 static vrf_dll g_none[1];
 static void NTAPI verifier_load(PWSTR name, PVOID base, SIZE_T size, PVOID reserved);
 static vrf_provider g_prov = { sizeof(vrf_provider), g_none, (PVOID)verifier_load };
-#define KUSER_SAFE_BOOT (*(volatile BYTE *)(ULONG_PTR)0x7FFE02EC)       /* KUSER_SHARED_DATA.SafeBootMode */
 static BOOL g_on, g_trace;
 static void *g_cookie;
 
@@ -281,7 +291,7 @@ static void open_copy(apiset_copy *c)
     HANDLE f = NULL, sec = NULL;
     void *view = NULL;
     SIZE_T vsize = 0, n = 0, i;
-    const WCHAR *root = KUSER_NT_SYSTEM_ROOT;
+    const WCHAR *root = VX_KUSER_SYSTEM_ROOT;
     const IMAGE_DOS_HEADER *dh;
     const IMAGE_NT_HEADERS *nh;
     const IMAGE_EXPORT_DIRECTORY *ed;
@@ -468,7 +478,7 @@ static void rewrite(BYTE *base)
 /* a DLL from the Windows folder is never touched */
 static BOOL in_windows(const UNICODE_STRING *full)
 {
-    const WCHAR *root = KUSER_NT_SYSTEM_ROOT;
+    const WCHAR *root = VX_KUSER_SYSTEM_ROOT;
     SIZE_T i, n = full ? full->Length / sizeof(WCHAR) : 0;
     if (!n) return TRUE;
     for (i = 0; root[i]; i++) if (i >= n || lcw(full->Buffer[i]) != lcw(root[i])) return FALSE;
@@ -656,27 +666,12 @@ static void *g_real_qvk, *g_real_cci, *g_real_ccie, *g_real_cspb;
 
 static ULONG g_real_build;            /* this Windows' build, from ntdll */
 
-static BYTE *peb_bytes(void) { return (BYTE *)NtCurrentTeb()->Peb; }
-#ifdef _WIN64
-#define P_MAJOR 0x118
-#define P_MINOR 0x11C
-#define P_BUILD 0x120
-#define P_CSD   0x2E8
-#else
-#define P_MAJOR 0xA4
-#define P_MINOR 0xA8
-#define P_BUILD 0xAC
-#define P_CSD   0x1F0
-#endif
 
 /* is the program told another version than the real one? */
 static BOOL version_told(ULONG *maj, ULONG *min, ULONG *bld)
 {
-    BYTE *p = peb_bytes();
-    *maj = *(ULONG *)(p + P_MAJOR);
-    *min = *(ULONG *)(p + P_MINOR);
-    *bld = *(USHORT *)(p + P_BUILD);
-    return *maj != *(volatile ULONG *)(ULONG_PTR)0x7FFE026C || *min != *(volatile ULONG *)(ULONG_PTR)0x7FFE0270 ||
+    vx_peb_version(maj, min, bld);
+    return *maj != VX_KUSER_NT_MAJOR || *min != VX_KUSER_NT_MINOR ||
            (g_real_build && *bld != g_real_build);
 }
 
@@ -717,18 +712,6 @@ static void wnum(WCHAR *d, SIZE_T cch, ULONG v)
     while (n) { WCHAR c[2] = { t[--n], 0 }; wcat(d, cch, c); }
 }
 
-/* Windows 10/11 release names and build labs, as those Windows show them */
-static const struct { ULONG build; const WCHAR *disp, *rel, *lab; ULONG ubr; } g_rel[] = {
-    { 19041, L"2004", L"2004", L"19041.vb_release.191206-1406", 1415 },
-    { 19042, L"20H2", L"2009", L"19041.vb_release.191206-1406", 2965 },
-    { 19043, L"21H1", L"2009", L"19041.vb_release.191206-1406", 2364 },
-    { 19044, L"21H2", L"2009", L"19041.vb_release.191206-1406", 5131 },
-    { 19045, L"22H2", L"2009", L"19041.vb_release.191206-1406", 6456 },
-    { 22000, L"21H2", L"2009", L"22000.co_release.210604-1628", 3260 },
-    { 22621, L"22H2", L"2009", L"22621.ni_release.220506-1250", 6060 },
-    { 22631, L"23H2", L"2009", L"22621.ni_release.220506-1250", 6060 },
-    { 26100, L"24H2", L"2009", L"26100.ge_release.240331-1435", 7171 },
-};
 
 static NTSTATUS call_real_qvk(HANDLE key, PUNICODE_STRING name, KEY_VALUE_INFORMATION_CLASS cls, PVOID buf, ULONG len, PULONG res)
 {
@@ -765,10 +748,8 @@ static BOOL has(const WCHAR *s, const WCHAR *w)
 static BOOL fake_value(HANDLE key, int which, ULONG maj, ULONG min, ULONG bld, ULONG *type, BYTE *data, ULONG *size)
 {
     WCHAR *w = (WCHAR *)data, ed[64];
-    unsigned i;
-    int r = -1;
+    const vx_release *r = vx_find_release(bld);
     BOOL ten = maj >= 10;
-    for (i = 0; i < sizeof(g_rel) / sizeof(g_rel[0]); i++) if (g_rel[i].build == bld) r = (int)i;
     *type = REG_SZ;
     w[0] = 0;
     switch (which) {
@@ -782,7 +763,7 @@ static BOOL fake_value(HANDLE key, int which, ULONG maj, ULONG min, ULONG bld, U
         *type = REG_DWORD; *(ULONG *)data = which == V_MAJORNUM ? maj : min; *size = 4;
         return TRUE;
     case V_CSD: {
-        const UNICODE_STRING *c = (const UNICODE_STRING *)(peb_bytes() + P_CSD);
+        const UNICODE_STRING *c = (const UNICODE_STRING *)(vx_peb() + VX_PEB_CSDSTR);
         SIZE_T k;
         if (!c->Length || !c->Buffer) return FALSE;
         for (k = 0; k < c->Length / sizeof(WCHAR) && k < 63; k++) w[k] = c->Buffer[k];
@@ -812,15 +793,15 @@ static BOOL fake_value(HANDLE key, int which, ULONG maj, ULONG min, ULONG bld, U
         break;
     }
     case V_RELEASEID: case V_DISPLAYVER:
-        if (!ten || r < 0) return FALSE;
-        wcat(w, 64, which == V_RELEASEID ? g_rel[r].rel : g_rel[r].disp);
+        if (!ten || !r) return FALSE;
+        wcat(w, 64, which == V_RELEASEID ? r->rel : r->disp);
         break;
     case V_UBR:
         if (!ten) return FALSE;
-        *type = REG_DWORD; *(ULONG *)data = r >= 0 ? g_rel[r].ubr : 0; *size = 4;
+        *type = REG_DWORD; *(ULONG *)data = r ? r->ubr : 0; *size = 4;
         return TRUE;
     case V_BUILDLAB: case V_BUILDLABEX:
-        if (r >= 0 && ten) wcat(w, 64, g_rel[r].lab);
+        if (r && r->lab && ten) wcat(w, 64, r->lab);
         else { wnum(w, 64, bld); wcat(w, 64, L".winmain.000000-0000"); }
         if (which == V_BUILDLABEX) {                    /* "19041.1.amd64fre.vb_release.191206-1406" */
             WCHAR t[96] = L"";
@@ -964,7 +945,8 @@ static HRESULT WINAPI hook_cspb(IUnknown *p, DWORD a, DWORD b, OLECHAR *c, DWORD
 /* ---- redirecting a Windows function, in this process only ---------------------
  * The DLL's export entry is pointed at VistaExt's function, so every DLL
  * loaded from now on (and GetProcAddress) gets it; DLLs already loaded get
- * their import entries changed. The code of Windows' DLLs is not changed.
+ * their import entries changed. This does not change Windows' code (only
+ * stub_hook below does, for NtQueryValueKey).
  * An export entry is 32 bits relative to the DLL: on x64 it points at a
  * small jump placed right after the DLL, which goes on to the function. */
 static void *jump_near(BYTE *base, SIZE_T size, void *target)
@@ -974,14 +956,18 @@ static void *jump_near(BYTE *base, SIZE_T size, void *target)
     static SIZE_T used[4];
     unsigned i;
     BYTE *p = NULL;
+    BYTE code[16] = { 0xFF, 0x25, 0, 0, 0, 0 };                    /* jmp [rip+0] */
     for (i = 0; i < 4 && owner[i] && owner[i] != base; i++) ;
     if (i == 4) return NULL;
     if (!owner[i]) {
+        /* read and execute only: each jump is written through poke(), like
+         * changes to Windows' own code (another thread may already run an
+         * earlier jump on this page while one is added) */
         ULONG_PTR a = ((ULONG_PTR)base + size + 0xFFFF) & ~(ULONG_PTR)0xFFFF;
         for (; a < (ULONG_PTR)base + 0x7FFF0000; a += 0x10000) {
             void *q = (void *)a;
             SIZE_T sz = 4096;
-            if (NtAllocateVirtualMemory(NtCurrentProcess(), &q, 0, &sz, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE) >= 0) {
+            if (NtAllocateVirtualMemory(NtCurrentProcess(), &q, 0, &sz, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READ) >= 0) {
                 pages[i] = q;
                 owner[i] = base;
                 break;
@@ -992,8 +978,8 @@ static void *jump_near(BYTE *base, SIZE_T size, void *target)
     if (used[i] + 16 > 4096) return NULL;
     p = pages[i] + used[i];
     used[i] += 16;
-    p[0] = 0xFF; p[1] = 0x25; p[2] = p[3] = p[4] = p[5] = 0;      /* jmp [rip+0] */
-    *(void **)(p + 6) = target;
+    *(void **)(code + 6) = target;
+    poke(p, code, 14);
     return p;
 #else
     (void)base; (void)size;
@@ -1001,8 +987,10 @@ static void *jump_near(BYTE *base, SIZE_T size, void *target)
 #endif
 }
 
-/* point the export "name" of the DLL at "hook"; returns the real function */
-static void *export_hook(BYTE *base, const char *name, void *hook)
+/* point the export "name" of the DLL at "hook"; returns the real function.
+ * *real is set first: once the export entry points at the hook, another
+ * thread's GetProcAddress can reach it, and the hook calls *real. */
+static void *export_hook(BYTE *base, const char *name, void *hook, void **real)
 {
     IMAGE_NT_HEADERS *nh = RtlImageNtHeader((HMODULE)base);
     IMAGE_DATA_DIRECTORY *dd;
@@ -1023,6 +1011,7 @@ static void *export_hook(BYTE *base, const char *name, void *hook)
         rva = funcs[ords[i]];
         if (rva >= dd->VirtualAddress && rva < dd->VirtualAddress + dd->Size) return NULL;    /* a forwarder */
         if (!(j = jump_near(base, nh->OptionalHeader.SizeOfImage, hook))) return NULL;
+        if (!*real) *real = base + rva;
         {
             DWORD nr = (DWORD)((BYTE *)j - base);
             poke(&funcs[ords[i]], &nr, sizeof(nr));
@@ -1058,9 +1047,8 @@ static void import_hook(void *real, void *hook)
 
 static void redirect(BYTE *dll, const char *name, void *hook, void **real)
 {
-    void *r = export_hook(dll, name, hook);
+    void *r = export_hook(dll, name, hook, real);
     if (!r) return;
-    if (!*real) *real = r;
     import_hook(r, hook);
     trace("redirected", name, NULL);
 }
@@ -1142,7 +1130,7 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
         if (reserved) *(vrf_provider **)reserved = &g_prov;
         g_trace = env_set(L"VX_TRACE");
         /* Safe Mode: Windows as it is, for every program */
-        g_on = !KUSER_SAFE_BOOT && registered();
+        g_on = !VX_KUSER_SAFE_BOOT && registered();
         trace(g_on ? "on for this program" : "not registered for this program (or Safe Mode)", NULL, NULL);
         /* the verifier was switched on for VistaExt (by file name): keep it
          * out of the way also in programs of the same name that VistaExt

@@ -442,7 +442,7 @@ int wmain(int argc, WCHAR **argv)
         if (!console && install) g_gui = TRUE;
     }
 
-    /* this build's Windows (VersionNT 600 = Vista, 601 = 7) */
+    /* this build's Windows (VersionNT 600 = Vista, 601 = 7, 602 = 8) */
     g_nt = VX_OS;
     g_vista = VX_VISTA;
     {   /* the real build number (6001 on Vista SP1, 6002 on SP2, 7601 on 7 SP1) */
@@ -450,7 +450,7 @@ int wmain(int argc, WCHAR **argv)
             (void (WINAPI *)(DWORD *, DWORD *, DWORD *))(void *)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlGetNtVersionNumbers");
         DWORD a = 0, b = 0, build = 0;
         if (nums) nums(&a, &b, &build);
-        g_build = (build & 0xFFFF) && a == 6 && b == VX_OS % 100 ? (build & 0xFFFF) : VX_VISTA ? 6002 : 7601;
+        g_build = (build & 0xFFFF) && a == 6 && b == VX_OS % 100 ? (build & 0xFFFF) : VX_VISTA ? 6002 : VX_WIN7 ? 7601 : 9200;
     }
 
     if (!GetFullPathNameW(in, MAX_PATH, src, NULL)) { con_print(L"%s: bad path\r\n", in); return 2; }

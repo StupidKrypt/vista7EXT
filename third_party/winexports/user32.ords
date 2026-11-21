@@ -1,912 +1,912 @@
-# user32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# user32.dll export ordinals: vista-32, vista-64, win7-32, win7-64, win8-32, win8-64.
 # Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
 1500 win7-32:- win7-64:-
 1501 win7-32:- win7-64:-
-1502 win7-32:ActivateKeyboardLayout win7-64:ActivateKeyboardLayout
-1503 win7-32:AddClipboardFormatListener win7-64:AddClipboardFormatListener
-1504 win7-32:AdjustWindowRect win7-64:AdjustWindowRect
-1505 win7-32:AdjustWindowRectEx win7-64:AdjustWindowRectEx
-1506 win7-32:AlignRects win7-64:AlignRects
-1507 win7-32:AllowForegroundActivation win7-64:AllowForegroundActivation
-1508 win7-32:AllowSetForegroundWindow win7-64:AllowSetForegroundWindow
-1509 win7-32:AnimateWindow win7-64:AnimateWindow
-1510 win7-32:AnyPopup win7-64:AnyPopup
-1511 win7-32:AppendMenuA win7-64:AppendMenuA
-1512 win7-32:AppendMenuW win7-64:AppendMenuW
-1513 win7-32:ArrangeIconicWindows win7-64:ArrangeIconicWindows
-1514 win7-32:AttachThreadInput win7-64:AttachThreadInput
-1515 win7-32:BeginDeferWindowPos win7-64:BeginDeferWindowPos
-1516 win7-32:BeginPaint win7-64:BeginPaint
-1517 win7-32:BlockInput win7-64:BlockInput
-1518 win7-32:BringWindowToTop win7-64:BringWindowToTop
-1519 win7-32:BroadcastSystemMessage win7-64:BroadcastSystemMessage
-1520 win7-32:BroadcastSystemMessageA win7-64:BroadcastSystemMessageA
-1521 win7-32:BroadcastSystemMessageExA win7-64:BroadcastSystemMessageExA
-1522 win7-32:BroadcastSystemMessageExW win7-64:BroadcastSystemMessageExW
-1523 win7-32:BroadcastSystemMessageW win7-64:BroadcastSystemMessageW
-1524 win7-32:BuildReasonArray win7-64:BuildReasonArray
-1525 win7-32:CalcMenuBar win7-64:CalcMenuBar
-1526 win7-32:CalculatePopupWindowPosition win7-64:CalculatePopupWindowPosition
-1527 win7-32:CallMsgFilter win7-64:CallMsgFilter
-1528 win7-32:CallMsgFilterA win7-64:CallMsgFilterA
-1529 win7-32:CallMsgFilterW win7-64:CallMsgFilterW
-1530 win7-32:CallNextHookEx win7-64:CallNextHookEx
-1531 win7-32:CallWindowProcA win7-64:CallWindowProcA
-1532 win7-32:CallWindowProcW win7-64:CallWindowProcW
-1533 win7-32:CancelShutdown win7-64:CancelShutdown
-1534 win7-32:CascadeChildWindows win7-64:CascadeChildWindows
-1535 win7-32:CascadeWindows win7-64:CascadeWindows
-1536 win7-32:ChangeClipboardChain win7-64:ChangeClipboardChain
-1537 win7-32:ChangeDisplaySettingsA win7-64:ChangeDisplaySettingsA
-1538 win7-32:ChangeDisplaySettingsExA win7-64:ChangeDisplaySettingsExA
-1539 win7-32:ChangeDisplaySettingsExW win7-64:ChangeDisplaySettingsExW
-1540 win7-32:ChangeDisplaySettingsW win7-64:ChangeDisplaySettingsW
-1541 win7-32:ChangeMenuA win7-64:ChangeMenuA
-1542 win7-32:ChangeMenuW win7-64:ChangeMenuW
-1543 win7-32:ChangeWindowMessageFilter win7-64:ChangeWindowMessageFilter
-1544 win7-32:ChangeWindowMessageFilterEx win7-64:ChangeWindowMessageFilterEx
-1545 win7-32:CharLowerA win7-64:CharLowerA
-1546 win7-32:CharLowerBuffA win7-64:CharLowerBuffA
-1547 win7-32:CharLowerBuffW win7-64:CharLowerBuffW
-1548 win7-32:CharLowerW win7-64:CharLowerW
-1549 win7-32:CharNextA win7-64:CharNextA
-1550 win7-32:- win7-64:-
-1551 win7-32:- win7-64:-
-1552 win7-32:- win7-64:-
-1553 win7-32:- win7-64:-
-1554 win7-32:- win7-64:-
-1555 win7-32:- win7-64:-
-1556 win7-32:- win7-64:-
-1557 win7-32:CharNextExA win7-64:CharNextExA
-1558 win7-32:CharNextW win7-64:CharNextW
-1559 win7-32:CharPrevA win7-64:CharPrevA
-1560 win7-32:CharPrevExA win7-64:CharPrevExA
-1561 win7-32:CharPrevW win7-64:CharPrevW
-1562 win7-32:CharToOemA win7-64:CharToOemA
-1563 win7-32:CharToOemBuffA win7-64:CharToOemBuffA
-1564 win7-32:CharToOemBuffW win7-64:CharToOemBuffW
-1565 win7-32:CharToOemW win7-64:CharToOemW
-1566 win7-32:CharUpperA win7-64:CharUpperA
-1567 win7-32:CharUpperBuffA win7-64:CharUpperBuffA
-1568 win7-32:CharUpperBuffW win7-64:CharUpperBuffW
-1569 win7-32:CharUpperW win7-64:CharUpperW
-1570 win7-32:CheckDesktopByThreadId win7-64:CheckDesktopByThreadId
-1571 win7-32:CheckDlgButton win7-64:CheckDlgButton
-1572 win7-32:CheckMenuItem win7-64:CheckMenuItem
-1573 win7-32:CheckMenuRadioItem win7-64:CheckMenuRadioItem
-1574 win7-32:CheckRadioButton win7-64:CheckRadioButton
-1575 win7-32:CheckWindowThreadDesktop win7-64:CheckWindowThreadDesktop
-1576 win7-32:ChildWindowFromPoint win7-64:ChildWindowFromPoint
-1577 win7-32:ChildWindowFromPointEx win7-64:ChildWindowFromPointEx
-1578 win7-32:CliImmSetHotKey win7-64:CliImmSetHotKey
-1579 win7-32:ClientThreadSetup win7-64:ClientThreadSetup
-1580 win7-32:ClientToScreen win7-64:ClientToScreen
-1581 win7-32:ClipCursor win7-64:ClipCursor
-1582 win7-32:CloseClipboard win7-64:CloseClipboard
-1583 win7-32:CloseDesktop win7-64:CloseDesktop
-1584 win7-32:CloseGestureInfoHandle win7-64:CloseGestureInfoHandle
-1585 win7-32:CloseTouchInputHandle win7-64:CloseTouchInputHandle
-1586 win7-32:CloseWindow win7-64:CloseWindow
-1587 win7-32:CloseWindowStation win7-64:CloseWindowStation
-1588 win7-32:ConsoleControl win7-64:ConsoleControl
-1589 win7-32:ControlMagnification win7-64:ControlMagnification
-1590 win7-32:CopyAcceleratorTableA win7-64:CopyAcceleratorTableA
-1591 win7-32:CopyAcceleratorTableW win7-64:CopyAcceleratorTableW
-1592 win7-32:CopyIcon win7-64:CopyIcon
-1593 win7-32:CopyImage win7-64:CopyImage
-1594 win7-32:CopyRect win7-64:CopyRect
-1595 win7-32:CountClipboardFormats win7-64:CountClipboardFormats
-1596 win7-32:CreateAcceleratorTableA win7-64:CreateAcceleratorTableA
-1597 win7-32:CreateAcceleratorTableW win7-64:CreateAcceleratorTableW
-1598 win7-32:CreateCaret win7-64:CreateCaret
-1599 win7-32:CreateCursor win7-64:CreateCursor
-1600 win7-32:CreateDesktopA win7-64:CreateDesktopA
-1601 win7-32:CreateDesktopExA win7-64:CreateDesktopExA
-1602 win7-32:CreateDesktopExW win7-64:CreateDesktopExW
-1603 win7-32:CreateDesktopW win7-64:CreateDesktopW
-1604 win7-32:CreateDialogIndirectParamA win7-64:CreateDialogIndirectParamA
-1605 win7-32:CreateDialogIndirectParamAorW win7-64:CreateDialogIndirectParamAorW
-1606 win7-32:CreateDialogIndirectParamW win7-64:CreateDialogIndirectParamW
-1607 win7-32:CreateDialogParamA win7-64:CreateDialogParamA
-1608 win7-32:CreateDialogParamW win7-64:CreateDialogParamW
-1609 win7-32:CreateIcon win7-64:CreateIcon
-1610 win7-32:CreateIconFromResource win7-64:CreateIconFromResource
-1611 win7-32:CreateIconFromResourceEx win7-64:CreateIconFromResourceEx
-1612 win7-32:CreateIconIndirect win7-64:CreateIconIndirect
-1613 win7-32:CreateMDIWindowA win7-64:CreateMDIWindowA
-1614 win7-32:CreateMDIWindowW win7-64:CreateMDIWindowW
-1615 win7-32:CreateMenu win7-64:CreateMenu
-1616 win7-32:CreatePopupMenu win7-64:CreatePopupMenu
-1617 win7-32:CreateSystemThreads win7-64:CreateSystemThreads
-1618 win7-32:CreateWindowExA win7-64:CreateWindowExA
-1619 win7-32:CreateWindowExW win7-64:CreateWindowExW
-1620 win7-32:CreateWindowStationA win7-64:CreateWindowStationA
-1621 win7-32:CreateWindowStationW win7-64:CreateWindowStationW
-1622 win7-32:CsrBroadcastSystemMessageExW win7-64:CsrBroadcastSystemMessageExW
-1623 win7-32:CtxInitUser32 win7-64:CtxInitUser32
-1624 win7-32:DdeAbandonTransaction win7-64:DdeAbandonTransaction
-1625 win7-32:DdeAccessData win7-64:DdeAccessData
-1626 win7-32:DdeAddData win7-64:DdeAddData
-1627 win7-32:DdeClientTransaction win7-64:DdeClientTransaction
-1628 win7-32:DdeCmpStringHandles win7-64:DdeCmpStringHandles
-1629 win7-32:DdeConnect win7-64:DdeConnect
-1630 win7-32:DdeConnectList win7-64:DdeConnectList
-1631 win7-32:DdeCreateDataHandle win7-64:DdeCreateDataHandle
-1632 win7-32:DdeCreateStringHandleA win7-64:DdeCreateStringHandleA
-1633 win7-32:DdeCreateStringHandleW win7-64:DdeCreateStringHandleW
-1634 win7-32:DdeDisconnect win7-64:DdeDisconnect
-1635 win7-32:DdeDisconnectList win7-64:DdeDisconnectList
-1636 win7-32:DdeEnableCallback win7-64:DdeEnableCallback
-1637 win7-32:DdeFreeDataHandle win7-64:DdeFreeDataHandle
-1638 win7-32:DdeFreeStringHandle win7-64:DdeFreeStringHandle
-1639 win7-32:DdeGetData win7-64:DdeGetData
-1640 win7-32:DdeGetLastError win7-64:DdeGetLastError
-1641 win7-32:DdeGetQualityOfService win7-64:DdeGetQualityOfService
-1642 win7-32:DdeImpersonateClient win7-64:DdeImpersonateClient
-1643 win7-32:DdeInitializeA win7-64:DdeInitializeA
-1644 win7-32:DdeInitializeW win7-64:DdeInitializeW
-1645 win7-32:DdeKeepStringHandle win7-64:DdeKeepStringHandle
-1646 win7-32:DdeNameService win7-64:DdeNameService
-1647 win7-32:DdePostAdvise win7-64:DdePostAdvise
-1648 win7-32:DdeQueryConvInfo win7-64:DdeQueryConvInfo
-1649 win7-32:DdeQueryNextServer win7-64:DdeQueryNextServer
-1650 win7-32:DdeQueryStringA win7-64:DdeQueryStringA
-1651 win7-32:DdeQueryStringW win7-64:DdeQueryStringW
-1652 win7-32:DdeReconnect win7-64:DdeReconnect
-1653 win7-32:DdeSetQualityOfService win7-64:DdeSetQualityOfService
-1654 win7-32:DdeSetUserHandle win7-64:DdeSetUserHandle
-1655 win7-32:DdeUnaccessData win7-64:DdeUnaccessData
-1656 win7-32:DdeUninitialize win7-64:DdeUninitialize
-1657 win7-32:DefDlgProcA win7-64:DefDlgProcA
-1658 win7-32:DefDlgProcW win7-64:DefDlgProcW
-1659 win7-32:DefFrameProcA win7-64:DefFrameProcA
-1660 win7-32:DefFrameProcW win7-64:DefFrameProcW
-1661 win7-32:DefMDIChildProcA win7-64:DefMDIChildProcA
-1662 win7-32:DefMDIChildProcW win7-64:DefMDIChildProcW
-1663 win7-32:DefRawInputProc win7-64:DefRawInputProc
-1664 win7-32:DefWindowProcA win7-64:DefWindowProcA
-1665 win7-32:DefWindowProcW win7-64:DefWindowProcW
-1666 win7-32:DeferWindowPos win7-64:DeferWindowPos
-1667 win7-32:DeleteMenu win7-64:DeleteMenu
-1668 win7-32:DeregisterShellHookWindow win7-64:DeregisterShellHookWindow
-1669 win7-32:DestroyAcceleratorTable win7-64:DestroyAcceleratorTable
-1670 win7-32:DestroyCaret win7-64:DestroyCaret
-1671 win7-32:DestroyCursor win7-64:DestroyCursor
-1672 win7-32:DestroyIcon win7-64:DestroyIcon
-1673 win7-32:DestroyMenu win7-64:DestroyMenu
-1674 win7-32:DestroyReasons win7-64:DestroyReasons
-1675 win7-32:DestroyWindow win7-64:DestroyWindow
-1676 win7-32:DeviceEventWorker win7-64:DeviceEventWorker
-1677 win7-32:DialogBoxIndirectParamA win7-64:DialogBoxIndirectParamA
-1678 win7-32:DialogBoxIndirectParamAorW win7-64:DialogBoxIndirectParamAorW
-1679 win7-32:DialogBoxIndirectParamW win7-64:DialogBoxIndirectParamW
-1680 win7-32:DialogBoxParamA win7-64:DialogBoxParamA
-1681 win7-32:DialogBoxParamW win7-64:DialogBoxParamW
-1682 win7-32:DisableProcessWindowsGhosting win7-64:DisableProcessWindowsGhosting
-1683 win7-32:DispatchMessageA win7-64:DispatchMessageA
-1684 win7-32:DispatchMessageW win7-64:DispatchMessageW
-1685 win7-32:DisplayConfigGetDeviceInfo win7-64:DisplayConfigGetDeviceInfo
-1686 win7-32:DisplayConfigSetDeviceInfo win7-64:DisplayConfigSetDeviceInfo
-1687 win7-32:DisplayExitWindowsWarnings win7-64:DisplayExitWindowsWarnings
-1688 win7-32:DlgDirListA win7-64:DlgDirListA
-1689 win7-32:DlgDirListComboBoxA win7-64:DlgDirListComboBoxA
-1690 win7-32:DlgDirListComboBoxW win7-64:DlgDirListComboBoxW
-1691 win7-32:DlgDirListW win7-64:DlgDirListW
-1692 win7-32:DlgDirSelectComboBoxExA win7-64:DlgDirSelectComboBoxExA
-1693 win7-32:DlgDirSelectComboBoxExW win7-64:DlgDirSelectComboBoxExW
-1694 win7-32:DlgDirSelectExA win7-64:DlgDirSelectExA
-1695 win7-32:DlgDirSelectExW win7-64:DlgDirSelectExW
-1696 win7-32:DoSoundConnect win7-64:DoSoundConnect
-1697 win7-32:DoSoundDisconnect win7-64:DoSoundDisconnect
-1698 win7-32:DragDetect win7-64:DragDetect
-1699 win7-32:DragObject win7-64:DragObject
-1700 win7-32:DrawAnimatedRects win7-64:DrawAnimatedRects
-1701 win7-32:DrawCaption win7-64:DrawCaption
-1702 win7-32:DrawCaptionTempA win7-64:DrawCaptionTempA
-1703 win7-32:DrawCaptionTempW win7-64:DrawCaptionTempW
-1704 win7-32:DrawEdge win7-64:DrawEdge
-1705 win7-32:DrawFocusRect win7-64:DrawFocusRect
-1706 win7-32:DrawFrame win7-64:DrawFrame
-1707 win7-32:DrawFrameControl win7-64:DrawFrameControl
-1708 win7-32:DrawIcon win7-64:DrawIcon
-1709 win7-32:DrawIconEx win7-64:DrawIconEx
-1710 win7-32:DrawMenuBar win7-64:DrawMenuBar
-1711 win7-32:DrawMenuBarTemp win7-64:DrawMenuBarTemp
-1712 win7-32:DrawStateA win7-64:DrawStateA
-1713 win7-32:DrawStateW win7-64:DrawStateW
-1714 win7-32:DrawTextA win7-64:DrawTextA
-1715 win7-32:DrawTextExA win7-64:DrawTextExA
-1716 win7-32:DrawTextExW win7-64:DrawTextExW
-1717 win7-32:DrawTextW win7-64:DrawTextW
-1718 win7-32:DwmGetDxSharedSurface win7-64:DwmGetDxSharedSurface
-1719 win7-32:DwmStartRedirection win7-64:DwmStartRedirection
-1720 win7-32:DwmStopRedirection win7-64:DwmStopRedirection
-1721 win7-32:EditWndProc win7-64:EditWndProc
-1722 win7-32:EmptyClipboard win7-64:EmptyClipboard
-1723 win7-32:EnableMenuItem win7-64:EnableMenuItem
-1724 win7-32:EnableScrollBar win7-64:EnableScrollBar
-1725 win7-32:EnableWindow win7-64:EnableWindow
-1726 win7-32:EndDeferWindowPos win7-64:EndDeferWindowPos
-1727 win7-32:EndDialog win7-64:EndDialog
-1728 win7-32:EndMenu win7-64:EndMenu
-1729 win7-32:EndPaint win7-64:EndPaint
-1730 win7-32:EndTask win7-64:EndTask
-1731 win7-32:EnterReaderModeHelper win7-64:EnterReaderModeHelper
-1732 win7-32:EnumChildWindows win7-64:EnumChildWindows
-1733 win7-32:EnumClipboardFormats win7-64:EnumClipboardFormats
-1734 win7-32:EnumDesktopWindows win7-64:EnumDesktopWindows
-1735 win7-32:EnumDesktopsA win7-64:EnumDesktopsA
-1736 win7-32:EnumDesktopsW win7-64:EnumDesktopsW
-1737 win7-32:EnumDisplayDevicesA win7-64:EnumDisplayDevicesA
-1738 win7-32:EnumDisplayDevicesW win7-64:EnumDisplayDevicesW
-1739 win7-32:EnumDisplayMonitors win7-64:EnumDisplayMonitors
-1740 win7-32:EnumDisplaySettingsA win7-64:EnumDisplaySettingsA
-1741 win7-32:EnumDisplaySettingsExA win7-64:EnumDisplaySettingsExA
-1742 win7-32:EnumDisplaySettingsExW win7-64:EnumDisplaySettingsExW
-1743 win7-32:EnumDisplaySettingsW win7-64:EnumDisplaySettingsW
-1744 win7-32:EnumPropsA win7-64:EnumPropsA
-1745 win7-32:EnumPropsExA win7-64:EnumPropsExA
-1746 win7-32:EnumPropsExW win7-64:EnumPropsExW
-1747 win7-32:EnumPropsW win7-64:EnumPropsW
-1748 win7-32:EnumThreadWindows win7-64:EnumThreadWindows
-1749 win7-32:EnumWindowStationsA win7-64:EnumWindowStationsA
-1750 win7-32:EnumWindowStationsW win7-64:EnumWindowStationsW
-1751 win7-32:EnumWindows win7-64:EnumWindows
-1752 win7-32:EqualRect win7-64:EqualRect
-1753 win7-32:ExcludeUpdateRgn win7-64:ExcludeUpdateRgn
-1754 win7-32:ExitWindowsEx win7-64:ExitWindowsEx
-1755 win7-32:FillRect win7-64:FillRect
-1756 win7-32:FindWindowA win7-64:FindWindowA
-1757 win7-32:FindWindowExA win7-64:FindWindowExA
-1758 win7-32:FindWindowExW win7-64:FindWindowExW
-1759 win7-32:FindWindowW win7-64:FindWindowW
-1760 win7-32:FlashWindow win7-64:FlashWindow
-1761 win7-32:FlashWindowEx win7-64:FlashWindowEx
-1762 win7-32:FrameRect win7-64:FrameRect
-1763 win7-32:FreeDDElParam win7-64:FreeDDElParam
-1764 win7-32:FrostCrashedWindow win7-64:FrostCrashedWindow
-1765 win7-32:GetActiveWindow win7-64:GetActiveWindow
-1766 win7-32:GetAltTabInfo win7-64:GetAltTabInfo
-1767 win7-32:GetAltTabInfoA win7-64:GetAltTabInfoA
-1768 win7-32:GetAltTabInfoW win7-64:GetAltTabInfoW
-1769 win7-32:GetAncestor win7-64:GetAncestor
-1770 win7-32:GetAppCompatFlags2 win7-64:GetAppCompatFlags
-1771 win7-32:GetAppCompatFlags win7-64:GetAppCompatFlags2
-1772 win7-32:GetAsyncKeyState win7-64:GetAsyncKeyState
-1773 win7-32:GetCapture win7-64:GetCapture
-1774 win7-32:GetCaretBlinkTime win7-64:GetCaretBlinkTime
-1775 win7-32:GetCaretPos win7-64:GetCaretPos
-1776 win7-32:GetClassInfoA win7-64:GetClassInfoA
-1777 win7-32:GetClassInfoExA win7-64:GetClassInfoExA
-1778 win7-32:GetClassInfoExW win7-64:GetClassInfoExW
-1779 win7-32:GetClassInfoW win7-64:GetClassInfoW
-1780 win7-32:GetClassLongA win7-64:GetClassLongA
-1781 win7-32:GetClassLongW win7-64:GetClassLongPtrA
-1782 win7-32:GetClassNameA win7-64:GetClassLongPtrW
-1783 win7-32:GetClassNameW win7-64:GetClassLongW
-1784 win7-32:GetClassWord win7-64:GetClassNameA
-1785 win7-32:GetClientRect win7-64:GetClassNameW
-1786 win7-32:GetClipCursor win7-64:GetClassWord
-1787 win7-32:GetClipboardData win7-64:GetClientRect
-1788 win7-32:GetClipboardFormatNameA win7-64:GetClipCursor
-1789 win7-32:GetClipboardFormatNameW win7-64:GetClipboardData
-1790 win7-32:GetClipboardOwner win7-64:GetClipboardFormatNameA
-1791 win7-32:GetClipboardSequenceNumber win7-64:GetClipboardFormatNameW
-1792 win7-32:GetClipboardViewer win7-64:GetClipboardOwner
-1793 win7-32:GetComboBoxInfo win7-64:GetClipboardSequenceNumber
-1794 win7-32:GetCursor win7-64:GetClipboardViewer
-1795 win7-32:GetCursorFrameInfo win7-64:GetComboBoxInfo
-1796 win7-32:GetCursorInfo win7-64:GetCursor
-1797 win7-32:GetCursorPos win7-64:GetCursorFrameInfo
-1798 win7-32:GetDC win7-64:GetCursorInfo
-1799 win7-32:GetDCEx win7-64:GetCursorPos
-1800 win7-32:GetDesktopWindow win7-64:GetDC
-1801 win7-32:GetDialogBaseUnits win7-64:GetDCEx
-1802 win7-32:GetDisplayConfigBufferSizes win7-64:GetDesktopWindow
-1803 win7-32:GetDlgCtrlID win7-64:GetDialogBaseUnits
-1804 win7-32:GetDlgItem win7-64:GetDisplayConfigBufferSizes
-1805 win7-32:GetDlgItemInt win7-64:GetDlgCtrlID
-1806 win7-32:GetDlgItemTextA win7-64:GetDlgItem
-1807 win7-32:GetDlgItemTextW win7-64:GetDlgItemInt
-1808 win7-32:GetDoubleClickTime win7-64:GetDlgItemTextA
-1809 win7-32:GetFocus win7-64:GetDlgItemTextW
-1810 win7-32:GetForegroundWindow win7-64:GetDoubleClickTime
-1811 win7-32:GetGUIThreadInfo win7-64:GetFocus
-1812 win7-32:GetGestureConfig win7-64:GetForegroundWindow
-1813 win7-32:GetGestureExtraArgs win7-64:GetGUIThreadInfo
-1814 win7-32:GetGestureInfo win7-64:GetGestureConfig
-1815 win7-32:GetGuiResources win7-64:GetGestureExtraArgs
-1816 win7-32:GetIconInfo win7-64:GetGestureInfo
-1817 win7-32:GetIconInfoExA win7-64:GetGuiResources
-1818 win7-32:GetIconInfoExW win7-64:GetIconInfo
-1819 win7-32:GetInputDesktop win7-64:GetIconInfoExA
-1820 win7-32:GetInputLocaleInfo win7-64:GetIconInfoExW
-1821 win7-32:GetInputState win7-64:GetInputDesktop
-1822 win7-32:GetInternalWindowPos win7-64:GetInputLocaleInfo
-1823 win7-32:GetKBCodePage win7-64:GetInputState
-1824 win7-32:GetKeyNameTextA win7-64:GetInternalWindowPos
-1825 win7-32:GetKeyNameTextW win7-64:GetKBCodePage
-1826 win7-32:GetKeyState win7-64:GetKeyNameTextA
-1827 win7-32:GetKeyboardLayout win7-64:GetKeyNameTextW
-1828 win7-32:GetKeyboardLayoutList win7-64:GetKeyState
-1829 win7-32:GetKeyboardLayoutNameA win7-64:GetKeyboardLayout
-1830 win7-32:GetKeyboardLayoutNameW win7-64:GetKeyboardLayoutList
-1831 win7-32:GetKeyboardState win7-64:GetKeyboardLayoutNameA
-1832 win7-32:GetKeyboardType win7-64:GetKeyboardLayoutNameW
-1833 win7-32:GetLastActivePopup win7-64:GetKeyboardState
-1834 win7-32:GetLastInputInfo win7-64:GetKeyboardType
-1835 win7-32:GetLayeredWindowAttributes win7-64:GetLastActivePopup
-1836 win7-32:GetListBoxInfo win7-64:GetLastInputInfo
-1837 win7-32:GetMagnificationDesktopColorEffect win7-64:GetLayeredWindowAttributes
-1838 win7-32:GetMagnificationDesktopMagnification win7-64:GetListBoxInfo
-1839 win7-32:GetMagnificationLensCtxInformation win7-64:GetMagnificationDesktopColorEffect
-1840 win7-32:GetMenu win7-64:GetMagnificationDesktopMagnification
-1841 win7-32:GetMenuBarInfo win7-64:GetMagnificationLensCtxInformation
-1842 win7-32:GetMenuCheckMarkDimensions win7-64:GetMenu
-1843 win7-32:GetMenuContextHelpId win7-64:GetMenuBarInfo
-1844 win7-32:GetMenuDefaultItem win7-64:GetMenuCheckMarkDimensions
-1845 win7-32:GetMenuInfo win7-64:GetMenuContextHelpId
-1846 win7-32:GetMenuItemCount win7-64:GetMenuDefaultItem
-1847 win7-32:GetMenuItemID win7-64:GetMenuInfo
-1848 win7-32:GetMenuItemInfoA win7-64:GetMenuItemCount
-1849 win7-32:GetMenuItemInfoW win7-64:GetMenuItemID
-1850 win7-32:GetMenuItemRect win7-64:GetMenuItemInfoA
-1851 win7-32:GetMenuState win7-64:GetMenuItemInfoW
-1852 win7-32:GetMenuStringA win7-64:GetMenuItemRect
-1853 win7-32:GetMenuStringW win7-64:GetMenuState
-1854 win7-32:GetMessageA win7-64:GetMenuStringA
-1855 win7-32:GetMessageExtraInfo win7-64:GetMenuStringW
-1856 win7-32:GetMessagePos win7-64:GetMessageA
-1857 win7-32:GetMessageTime win7-64:GetMessageExtraInfo
-1858 win7-32:GetMessageW win7-64:GetMessagePos
-1859 win7-32:GetMonitorInfoA win7-64:GetMessageTime
-1860 win7-32:GetMonitorInfoW win7-64:GetMessageW
-1861 win7-32:GetMouseMovePointsEx win7-64:GetMonitorInfoA
-1862 win7-32:GetNextDlgGroupItem win7-64:GetMonitorInfoW
-1863 win7-32:GetNextDlgTabItem win7-64:GetMouseMovePointsEx
-1864 win7-32:GetOpenClipboardWindow win7-64:GetNextDlgGroupItem
-1865 win7-32:GetParent win7-64:GetNextDlgTabItem
-1866 win7-32:GetPhysicalCursorPos win7-64:GetOpenClipboardWindow
-1867 win7-32:GetPriorityClipboardFormat win7-64:GetParent
-1868 win7-32:GetProcessDefaultLayout win7-64:GetPhysicalCursorPos
-1869 win7-32:GetProcessWindowStation win7-64:GetPriorityClipboardFormat
-1870 win7-32:GetProgmanWindow win7-64:GetProcessDefaultLayout
-1871 win7-32:GetPropA win7-64:GetProcessWindowStation
-1872 win7-32:GetPropW win7-64:GetProgmanWindow
-1873 win7-32:GetQueueStatus win7-64:GetPropA
-1874 win7-32:GetRawInputBuffer win7-64:GetPropW
-1875 win7-32:GetRawInputData win7-64:GetQueueStatus
-1876 win7-32:GetRawInputDeviceInfoA win7-64:GetRawInputBuffer
-1877 win7-32:GetRawInputDeviceInfoW win7-64:GetRawInputData
-1878 win7-32:GetRawInputDeviceList win7-64:GetRawInputDeviceInfoA
-1879 win7-32:GetReasonTitleFromReasonCode win7-64:GetRawInputDeviceInfoW
-1880 win7-32:GetRegisteredRawInputDevices win7-64:GetRawInputDeviceList
-1881 win7-32:GetScrollBarInfo win7-64:GetReasonTitleFromReasonCode
-1882 win7-32:GetScrollInfo win7-64:GetRegisteredRawInputDevices
-1883 win7-32:GetScrollPos win7-64:GetScrollBarInfo
-1884 win7-32:GetScrollRange win7-64:GetScrollInfo
-1885 win7-32:GetSendMessageReceiver win7-64:GetScrollPos
-1886 win7-32:GetShellWindow win7-64:GetScrollRange
-1887 win7-32:GetSubMenu win7-64:GetSendMessageReceiver
-1888 win7-32:GetSysColor win7-64:GetShellWindow
-1889 win7-32:GetSysColorBrush win7-64:GetSubMenu
-1890 win7-32:GetSystemMenu win7-64:GetSysColor
-1891 win7-32:GetSystemMetrics win7-64:GetSysColorBrush
-1892 win7-32:GetTabbedTextExtentA win7-64:GetSystemMenu
-1893 win7-32:GetTabbedTextExtentW win7-64:GetSystemMetrics
-1894 win7-32:GetTaskmanWindow win7-64:GetTabbedTextExtentA
-1895 win7-32:GetThreadDesktop win7-64:GetTabbedTextExtentW
-1896 win7-32:GetTitleBarInfo win7-64:GetTaskmanWindow
-1897 win7-32:GetTopLevelWindow win7-64:GetThreadDesktop
-1898 win7-32:GetTopWindow win7-64:GetTitleBarInfo
-1899 win7-32:GetTouchInputInfo win7-64:GetTopLevelWindow
-1900 win7-32:GetUpdateRect win7-64:GetTopWindow
-1901 win7-32:GetUpdateRgn win7-64:GetTouchInputInfo
-1902 win7-32:GetUpdatedClipboardFormats win7-64:GetUpdateRect
-1903 win7-32:GetUserObjectInformationA win7-64:GetUpdateRgn
-1904 win7-32:GetUserObjectInformationW win7-64:GetUpdatedClipboardFormats
-1905 win7-32:GetUserObjectSecurity win7-64:GetUserObjectInformationA
-1906 win7-32:GetWinStationInfo win7-64:GetUserObjectInformationW
-1907 win7-32:GetWindow win7-64:GetUserObjectSecurity
-1908 win7-32:GetWindowCompositionAttribute win7-64:GetWinStationInfo
-1909 win7-32:GetWindowCompositionInfo win7-64:GetWindow
-1910 win7-32:GetWindowContextHelpId win7-64:GetWindowCompositionAttribute
-1911 win7-32:GetWindowDC win7-64:GetWindowCompositionInfo
-1912 win7-32:GetWindowDisplayAffinity win7-64:GetWindowContextHelpId
-1913 win7-32:GetWindowInfo win7-64:GetWindowDC
-1914 win7-32:GetWindowLongA win7-64:GetWindowDisplayAffinity
-1915 win7-32:GetWindowLongW win7-64:GetWindowInfo
-1916 win7-32:GetWindowMinimizeRect win7-64:GetWindowLongA
-1917 win7-32:GetWindowModuleFileName win7-64:GetWindowLongPtrA
-1918 win7-32:GetWindowModuleFileNameA win7-64:GetWindowLongPtrW
-1919 win7-32:GetWindowModuleFileNameW win7-64:GetWindowLongW
-1920 win7-32:GetWindowPlacement win7-64:GetWindowMinimizeRect
-1921 win7-32:GetWindowRect win7-64:GetWindowModuleFileName
-1922 win7-32:GetWindowRgn win7-64:GetWindowModuleFileNameA
-1923 win7-32:GetWindowRgnBox win7-64:GetWindowModuleFileNameW
-1924 win7-32:GetWindowRgnEx win7-64:GetWindowPlacement
-1925 win7-32:GetWindowTextA win7-64:GetWindowRect
-1926 win7-32:GetWindowTextLengthA win7-64:GetWindowRgn
-1927 win7-32:GetWindowTextLengthW win7-64:GetWindowRgnBox
-1928 win7-32:GetWindowTextW win7-64:GetWindowRgnEx
-1929 win7-32:GetWindowThreadProcessId win7-64:GetWindowTextA
-1930 win7-32:GetWindowWord win7-64:GetWindowTextLengthA
-1931 win7-32:GhostWindowFromHungWindow win7-64:GetWindowTextLengthW
-1932 win7-32:GrayStringA win7-64:GetWindowTextW
-1933 win7-32:GrayStringW win7-64:GetWindowThreadProcessId
-1934 win7-32:HideCaret win7-64:GetWindowWord
-1935 win7-32:HiliteMenuItem win7-64:GhostWindowFromHungWindow
-1936 win7-32:HungWindowFromGhostWindow win7-64:GrayStringA
-1937 win7-32:IMPGetIMEA win7-64:GrayStringW
-1938 win7-32:IMPGetIMEW win7-64:HideCaret
-1939 win7-32:IMPQueryIMEA win7-64:HiliteMenuItem
-1940 win7-32:IMPQueryIMEW win7-64:HungWindowFromGhostWindow
-1941 win7-32:IMPSetIMEA win7-64:IMPGetIMEA
-1942 win7-32:IMPSetIMEW win7-64:IMPGetIMEW
-1943 win7-32:ImpersonateDdeClientWindow win7-64:IMPQueryIMEA
-1944 win7-32:InSendMessage win7-64:IMPQueryIMEW
-1945 win7-32:InSendMessageEx win7-64:IMPSetIMEA
-1946 win7-32:InflateRect win7-64:IMPSetIMEW
-1947 win7-32:InitializeLpkHooks win7-64:ImpersonateDdeClientWindow
-1948 win7-32:InsertMenuA win7-64:InSendMessage
-1949 win7-32:InsertMenuItemA win7-64:InSendMessageEx
-1950 win7-32:InsertMenuItemW win7-64:InflateRect
-1951 win7-32:InsertMenuW win7-64:InitializeLpkHooks
-1952 win7-32:InternalGetWindowIcon win7-64:InsertMenuA
-1953 win7-32:InternalGetWindowText win7-64:InsertMenuItemA
-1954 win7-32:IntersectRect win7-64:InsertMenuItemW
-1955 win7-32:InvalidateRect win7-64:InsertMenuW
-1956 win7-32:InvalidateRgn win7-64:InternalGetWindowIcon
-1957 win7-32:InvertRect win7-64:InternalGetWindowText
-1958 win7-32:IsCharAlphaA win7-64:IntersectRect
-1959 win7-32:IsCharAlphaNumericA win7-64:InvalidateRect
-1960 win7-32:IsCharAlphaNumericW win7-64:InvalidateRgn
-1961 win7-32:IsCharAlphaW win7-64:InvertRect
-1962 win7-32:IsCharLowerA win7-64:IsCharAlphaA
-1963 win7-32:IsCharLowerW win7-64:IsCharAlphaNumericA
-1964 win7-32:IsCharUpperA win7-64:IsCharAlphaNumericW
-1965 win7-32:IsCharUpperW win7-64:IsCharAlphaW
-1966 win7-32:IsChild win7-64:IsCharLowerA
-1967 win7-32:IsClipboardFormatAvailable win7-64:IsCharLowerW
-1968 win7-32:IsDialogMessage win7-64:IsCharUpperA
-1969 win7-32:IsDialogMessageA win7-64:IsCharUpperW
-1970 win7-32:IsDialogMessageW win7-64:IsChild
-1971 win7-32:IsDlgButtonChecked win7-64:IsClipboardFormatAvailable
-1972 win7-32:IsGUIThread win7-64:IsDialogMessage
-1973 win7-32:IsHungAppWindow win7-64:IsDialogMessageA
-1974 win7-32:IsIconic win7-64:IsDialogMessageW
-1975 win7-32:IsMenu win7-64:IsDlgButtonChecked
-1976 win7-32:IsProcessDPIAware win7-64:IsGUIThread
-1977 win7-32:IsRectEmpty win7-64:IsHungAppWindow
-1978 win7-32:IsSETEnabled win7-64:IsIconic
-1979 win7-32:IsServerSideWindow win7-64:IsMenu
-1980 win7-32:IsThreadDesktopComposited win7-64:IsProcessDPIAware
-1981 win7-32:IsTopLevelWindow win7-64:IsRectEmpty
-1982 win7-32:IsTouchWindow win7-64:IsSETEnabled
-1983 win7-32:IsWinEventHookInstalled win7-64:IsServerSideWindow
-1984 win7-32:IsWindow win7-64:IsThreadDesktopComposited
-1985 win7-32:IsWindowEnabled win7-64:IsTopLevelWindow
-1986 win7-32:IsWindowInDestroy win7-64:IsTouchWindow
-1987 win7-32:IsWindowRedirectedForPrint win7-64:IsWinEventHookInstalled
-1988 win7-32:IsWindowUnicode win7-64:IsWindow
-1989 win7-32:IsWindowVisible win7-64:IsWindowEnabled
-1990 win7-32:IsWow64Message win7-64:IsWindowInDestroy
-1991 win7-32:IsZoomed win7-64:IsWindowRedirectedForPrint
-1992 win7-32:KillTimer win7-64:IsWindowUnicode
-1993 win7-32:LoadAcceleratorsA win7-64:IsWindowVisible
-1994 win7-32:LoadAcceleratorsW win7-64:IsWow64Message
-1995 win7-32:LoadBitmapA win7-64:IsZoomed
-1996 win7-32:LoadBitmapW win7-64:KillTimer
-1997 win7-32:LoadCursorA win7-64:LoadAcceleratorsA
-1998 win7-32:LoadCursorFromFileA win7-64:LoadAcceleratorsW
-1999 win7-32:LoadCursorFromFileW win7-64:LoadBitmapA
-2000 vista-32:- vista-64:- win7-32:- win7-64:-
-2001 vista-32:ActivateKeyboardLayout vista-64:ActivateKeyboardLayout win7-32:- win7-64:-
-2002 vista-32:AddClipboardFormatListener vista-64:AddClipboardFormatListener win7-32:- win7-64:-
-2003 vista-32:AdjustWindowRect vista-64:AdjustWindowRect win7-32:LoadCursorW win7-64:LoadBitmapW
-2004 vista-32:AdjustWindowRectEx vista-64:AdjustWindowRectEx win7-32:LoadIconA win7-64:LoadCursorA
-2005 vista-32:AlignRects vista-64:AlignRects win7-32:- win7-64:-
-2006 vista-32:AllowForegroundActivation vista-64:AllowForegroundActivation win7-32:LoadIconW win7-64:LoadCursorFromFileA
-2007 vista-32:AllowSetForegroundWindow vista-64:AllowSetForegroundWindow win7-32:LoadImageA win7-64:LoadCursorFromFileW
-2008 vista-32:AnimateWindow vista-64:AnimateWindow win7-32:LoadImageW win7-64:LoadCursorW
-2009 vista-32:AnyPopup vista-64:AnyPopup win7-32:LoadKeyboardLayoutA win7-64:LoadIconA
-2010 vista-32:AppendMenuA vista-64:AppendMenuA win7-32:LoadKeyboardLayoutEx win7-64:LoadIconW
-2011 vista-32:AppendMenuW vista-64:AppendMenuW win7-32:LoadKeyboardLayoutW win7-64:LoadImageA
-2012 vista-32:ArrangeIconicWindows vista-64:ArrangeIconicWindows win7-32:LoadLocalFonts win7-64:LoadImageW
-2013 vista-32:AttachThreadInput vista-64:AttachThreadInput win7-32:LoadMenuA win7-64:LoadKeyboardLayoutA
-2014 vista-32:BeginDeferWindowPos vista-64:BeginDeferWindowPos win7-32:LoadMenuIndirectA win7-64:LoadKeyboardLayoutEx
-2015 vista-32:BeginPaint vista-64:BeginPaint win7-32:LoadMenuIndirectW win7-64:LoadKeyboardLayoutW
-2016 vista-32:BlockInput vista-64:BlockInput win7-32:LoadMenuW win7-64:LoadLocalFonts
-2017 vista-32:BringWindowToTop vista-64:BringWindowToTop win7-32:LoadRemoteFonts win7-64:LoadMenuA
-2018 vista-32:BroadcastSystemMessage vista-64:BroadcastSystemMessage win7-32:LoadStringA win7-64:LoadMenuIndirectA
-2019 vista-32:BroadcastSystemMessageA vista-64:BroadcastSystemMessageA win7-32:LoadStringW win7-64:LoadMenuIndirectW
-2020 vista-32:BroadcastSystemMessageExA vista-64:BroadcastSystemMessageExA win7-32:LockSetForegroundWindow win7-64:LoadMenuW
-2021 vista-32:BroadcastSystemMessageExW vista-64:BroadcastSystemMessageExW win7-32:LockWindowStation win7-64:LoadRemoteFonts
-2022 vista-32:BroadcastSystemMessageW vista-64:BroadcastSystemMessageW win7-32:LockWindowUpdate win7-64:LoadStringA
-2023 vista-32:BuildReasonArray vista-64:BuildReasonArray win7-32:LockWorkStation win7-64:LoadStringW
-2024 vista-32:CalcMenuBar vista-64:CalcMenuBar win7-32:LogicalToPhysicalPoint win7-64:LockSetForegroundWindow
-2025 vista-32:CallMsgFilter vista-64:CallMsgFilter win7-32:LookupIconIdFromDirectory win7-64:LockWindowStation
-2026 vista-32:CallMsgFilterA vista-64:CallMsgFilterA win7-32:LookupIconIdFromDirectoryEx win7-64:LockWindowUpdate
-2027 vista-32:CallMsgFilterW vista-64:CallMsgFilterW win7-32:MBToWCSEx win7-64:LockWorkStation
-2028 vista-32:CallNextHookEx vista-64:CallNextHookEx win7-32:MB_GetString win7-64:LogicalToPhysicalPoint
-2029 vista-32:CallWindowProcA vista-64:CallWindowProcA win7-32:MapDialogRect win7-64:LookupIconIdFromDirectory
-2030 vista-32:CallWindowProcW vista-64:CallWindowProcW win7-32:MapVirtualKeyA win7-64:LookupIconIdFromDirectoryEx
-2031 vista-32:CancelShutdown vista-64:CancelShutdown win7-32:MapVirtualKeyExA win7-64:MBToWCSEx
-2032 vista-32:CascadeChildWindows vista-64:CascadeChildWindows win7-32:MapVirtualKeyExW win7-64:MB_GetString
-2033 vista-32:CascadeWindows vista-64:CascadeWindows win7-32:MapVirtualKeyW win7-64:MapDialogRect
-2034 vista-32:ChangeClipboardChain vista-64:ChangeClipboardChain win7-32:MapWindowPoints win7-64:MapVirtualKeyA
-2035 vista-32:ChangeDisplaySettingsA vista-64:ChangeDisplaySettingsA win7-32:MenuItemFromPoint win7-64:MapVirtualKeyExA
-2036 vista-32:ChangeDisplaySettingsExA vista-64:ChangeDisplaySettingsExA win7-32:MenuWindowProcA win7-64:MapVirtualKeyExW
-2037 vista-32:ChangeDisplaySettingsExW vista-64:ChangeDisplaySettingsExW win7-32:MenuWindowProcW win7-64:MapVirtualKeyW
-2038 vista-32:ChangeDisplaySettingsW vista-64:ChangeDisplaySettingsW win7-32:MessageBeep win7-64:MapWindowPoints
-2039 vista-32:ChangeMenuA vista-64:ChangeMenuA win7-32:MessageBoxA win7-64:MenuItemFromPoint
-2040 vista-32:ChangeMenuW vista-64:ChangeMenuW win7-32:MessageBoxExA win7-64:MenuWindowProcA
-2041 vista-32:ChangeWindowMessageFilter vista-64:ChangeWindowMessageFilter win7-32:MessageBoxExW win7-64:MenuWindowProcW
-2042 vista-32:CharLowerA vista-64:CharLowerA win7-32:MessageBoxIndirectA win7-64:MessageBeep
-2043 vista-32:CharLowerBuffA vista-64:CharLowerBuffA win7-32:MessageBoxIndirectW win7-64:MessageBoxA
-2044 vista-32:CharLowerBuffW vista-64:CharLowerBuffW win7-32:MessageBoxTimeoutA win7-64:MessageBoxExA
-2045 vista-32:CharLowerW vista-64:CharLowerW win7-32:MessageBoxTimeoutW win7-64:MessageBoxExW
-2046 vista-32:CharNextA vista-64:CharNextA win7-32:MessageBoxW win7-64:MessageBoxIndirectA
-2047 vista-32:CharNextExA vista-64:CharNextExA win7-32:ModifyMenuA win7-64:MessageBoxIndirectW
-2048 vista-32:CharNextW vista-64:CharNextW win7-32:ModifyMenuW win7-64:MessageBoxTimeoutA
-2049 vista-32:CharPrevA vista-64:CharPrevA win7-32:MonitorFromPoint win7-64:MessageBoxTimeoutW
-2050 vista-32:CharPrevExA vista-64:CharPrevExA win7-32:MonitorFromRect win7-64:MessageBoxW
-2051 vista-32:CharPrevW vista-64:CharPrevW win7-32:MonitorFromWindow win7-64:ModifyMenuA
-2052 vista-32:CharToOemA vista-64:CharToOemA win7-32:MoveWindow win7-64:ModifyMenuW
-2053 vista-32:CharToOemBuffA vista-64:CharToOemBuffA win7-32:MsgWaitForMultipleObjects win7-64:MonitorFromPoint
-2054 vista-32:CharToOemBuffW vista-64:CharToOemBuffW win7-32:MsgWaitForMultipleObjectsEx win7-64:MonitorFromRect
-2055 vista-32:CharToOemW vista-64:CharToOemW win7-32:NotifyOverlayWindow win7-64:MonitorFromWindow
-2056 vista-32:CharUpperA vista-64:CharUpperA win7-32:NotifyWinEvent win7-64:MoveWindow
-2057 vista-32:CharUpperBuffA vista-64:CharUpperBuffA win7-32:OemKeyScan win7-64:MsgWaitForMultipleObjects
-2058 vista-32:CharUpperBuffW vista-64:CharUpperBuffW win7-32:OemToCharA win7-64:MsgWaitForMultipleObjectsEx
-2059 vista-32:CharUpperW vista-64:CharUpperW win7-32:OemToCharBuffA win7-64:NotifyOverlayWindow
-2060 vista-32:CheckDesktopByThreadId vista-64:CheckDesktopByThreadId win7-32:OemToCharBuffW win7-64:NotifyWinEvent
-2061 vista-32:CheckDlgButton vista-64:CheckDlgButton win7-32:OemToCharW win7-64:OemKeyScan
-2062 vista-32:CheckMenuItem vista-64:CheckMenuItem win7-32:OffsetRect win7-64:OemToCharA
-2063 vista-32:CheckMenuRadioItem vista-64:CheckMenuRadioItem win7-32:OpenClipboard win7-64:OemToCharBuffA
-2064 vista-32:CheckRadioButton vista-64:CheckRadioButton win7-32:OpenDesktopA win7-64:OemToCharBuffW
-2065 vista-32:CheckWindowThreadDesktop vista-64:CheckWindowThreadDesktop win7-32:OpenDesktopW win7-64:OemToCharW
-2066 vista-32:ChildWindowFromPoint vista-64:ChildWindowFromPoint win7-32:OpenIcon win7-64:OffsetRect
-2067 vista-32:ChildWindowFromPointEx vista-64:ChildWindowFromPointEx win7-32:OpenInputDesktop win7-64:OpenClipboard
-2068 vista-32:CliImmSetHotKey vista-64:CliImmSetHotKey win7-32:OpenThreadDesktop win7-64:OpenDesktopA
-2069 vista-32:ClientThreadSetup vista-64:ClientThreadSetup win7-32:OpenWindowStationA win7-64:OpenDesktopW
-2070 vista-32:ClientToScreen vista-64:ClientToScreen win7-32:OpenWindowStationW win7-64:OpenIcon
-2071 vista-32:ClipCursor vista-64:ClipCursor win7-32:PackDDElParam win7-64:OpenInputDesktop
-2072 vista-32:CloseClipboard vista-64:CloseClipboard win7-32:PaintDesktop win7-64:OpenThreadDesktop
-2073 vista-32:CloseDesktop vista-64:CloseDesktop win7-32:PaintMenuBar win7-64:OpenWindowStationA
-2074 vista-32:CloseWindow vista-64:CloseWindow win7-32:PaintMonitor win7-64:OpenWindowStationW
-2075 vista-32:CloseWindowStation vista-64:CloseWindowStation win7-32:PeekMessageA win7-64:PackDDElParam
-2076 vista-32:CopyAcceleratorTableA vista-64:CopyAcceleratorTableA win7-32:PeekMessageW win7-64:PaintDesktop
-2077 vista-32:CopyAcceleratorTableW vista-64:CopyAcceleratorTableW win7-32:PhysicalToLogicalPoint win7-64:PaintMenuBar
-2078 vista-32:CopyIcon vista-64:CopyIcon win7-32:PostMessageA win7-64:PaintMonitor
-2079 vista-32:CopyImage vista-64:CopyImage win7-32:PostMessageW win7-64:PeekMessageA
-2080 vista-32:CopyRect vista-64:CopyRect win7-32:PostQuitMessage win7-64:PeekMessageW
-2081 vista-32:CountClipboardFormats vista-64:CountClipboardFormats win7-32:PostThreadMessageA win7-64:PhysicalToLogicalPoint
-2082 vista-32:CreateAcceleratorTableA vista-64:CreateAcceleratorTableA win7-32:PostThreadMessageW win7-64:PostMessageA
-2083 vista-32:CreateAcceleratorTableW vista-64:CreateAcceleratorTableW win7-32:PrintWindow win7-64:PostMessageW
-2084 vista-32:CreateCaret vista-64:CreateCaret win7-32:PrivateExtractIconExA win7-64:PostQuitMessage
-2085 vista-32:CreateCursor vista-64:CreateCursor win7-32:PrivateExtractIconExW win7-64:PostThreadMessageA
-2086 vista-32:CreateDesktopA vista-64:CreateDesktopA win7-32:PrivateExtractIconsA win7-64:PostThreadMessageW
-2087 vista-32:CreateDesktopExA vista-64:CreateDesktopExA win7-32:PrivateExtractIconsW win7-64:PrintWindow
-2088 vista-32:CreateDesktopExW vista-64:CreateDesktopExW win7-32:PrivateRegisterICSProc win7-64:PrivateExtractIconExA
-2089 vista-32:CreateDesktopW vista-64:CreateDesktopW win7-32:PtInRect win7-64:PrivateExtractIconExW
-2090 vista-32:CreateDialogIndirectParamA vista-64:CreateDialogIndirectParamA win7-32:QueryDisplayConfig win7-64:PrivateExtractIconsA
-2091 vista-32:CreateDialogIndirectParamAorW vista-64:CreateDialogIndirectParamAorW win7-32:QuerySendMessage win7-64:PrivateExtractIconsW
-2092 vista-32:CreateDialogIndirectParamW vista-64:CreateDialogIndirectParamW win7-32:RealChildWindowFromPoint win7-64:PrivateRegisterICSProc
-2093 vista-32:CreateDialogParamA vista-64:CreateDialogParamA win7-32:RealGetWindowClass win7-64:PtInRect
-2094 vista-32:CreateDialogParamW vista-64:CreateDialogParamW win7-32:RealGetWindowClassA win7-64:QueryDisplayConfig
-2095 vista-32:CreateIcon vista-64:CreateIcon win7-32:RealGetWindowClassW win7-64:QuerySendMessage
-2096 vista-32:CreateIconFromResource vista-64:CreateIconFromResource win7-32:ReasonCodeNeedsBugID win7-64:RealChildWindowFromPoint
-2097 vista-32:CreateIconFromResourceEx vista-64:CreateIconFromResourceEx win7-32:ReasonCodeNeedsComment win7-64:RealGetWindowClass
-2098 vista-32:CreateIconIndirect vista-64:CreateIconIndirect win7-32:RecordShutdownReason win7-64:RealGetWindowClassA
-2099 vista-32:CreateMDIWindowA vista-64:CreateMDIWindowA win7-32:RedrawWindow win7-64:RealGetWindowClassW
-2100 vista-32:CreateMDIWindowW vista-64:CreateMDIWindowW win7-32:RegisterClassA win7-64:ReasonCodeNeedsBugID
-2101 vista-32:CreateMenu vista-64:CreateMenu win7-32:RegisterClassExA win7-64:ReasonCodeNeedsComment
-2102 vista-32:CreatePopupMenu vista-64:CreatePopupMenu win7-32:RegisterClassExW win7-64:RecordShutdownReason
-2103 vista-32:CreateSystemThreads vista-64:CreateSystemThreads win7-32:RegisterClassW win7-64:RedrawWindow
-2104 vista-32:CreateWindowExA vista-64:CreateWindowExA win7-32:RegisterClipboardFormatA win7-64:RegisterClassA
-2105 vista-32:CreateWindowExW vista-64:CreateWindowExW win7-32:RegisterClipboardFormatW win7-64:RegisterClassExA
-2106 vista-32:CreateWindowStationA vista-64:CreateWindowStationA win7-32:RegisterDeviceNotificationA win7-64:RegisterClassExW
-2107 vista-32:CreateWindowStationW vista-64:CreateWindowStationW win7-32:RegisterDeviceNotificationW win7-64:RegisterClassW
-2108 vista-32:CsrBroadcastSystemMessageExW vista-64:CsrBroadcastSystemMessageExW win7-32:RegisterErrorReportingDialog win7-64:RegisterClipboardFormatA
-2109 vista-32:CtxInitUser32 vista-64:CtxInitUser32 win7-32:RegisterFrostWindow win7-64:RegisterClipboardFormatW
-2110 vista-32:DdeAbandonTransaction vista-64:DdeAbandonTransaction win7-32:RegisterGhostWindow win7-64:RegisterDeviceNotificationA
-2111 vista-32:DdeAccessData vista-64:DdeAccessData win7-32:RegisterHotKey win7-64:RegisterDeviceNotificationW
-2112 vista-32:DdeAddData vista-64:DdeAddData win7-32:RegisterLogonProcess win7-64:RegisterErrorReportingDialog
-2113 vista-32:DdeClientTransaction vista-64:DdeClientTransaction win7-32:RegisterMessagePumpHook win7-64:RegisterFrostWindow
-2114 vista-32:DdeCmpStringHandles vista-64:DdeCmpStringHandles win7-32:RegisterPowerSettingNotification win7-64:RegisterGhostWindow
-2115 vista-32:DdeConnect vista-64:DdeConnect win7-32:RegisterRawInputDevices win7-64:RegisterHotKey
-2116 vista-32:DdeConnectList vista-64:DdeConnectList win7-32:RegisterServicesProcess win7-64:RegisterLogonProcess
-2117 vista-32:DdeCreateDataHandle vista-64:DdeCreateDataHandle win7-32:RegisterSessionPort win7-64:RegisterMessagePumpHook
-2118 vista-32:DdeCreateStringHandleA vista-64:DdeCreateStringHandleA win7-32:RegisterShellHookWindow win7-64:RegisterPowerSettingNotification
-2119 vista-32:DdeCreateStringHandleW vista-64:DdeCreateStringHandleW win7-32:RegisterSystemThread win7-64:RegisterRawInputDevices
-2120 vista-32:DdeDisconnect vista-64:DdeDisconnect win7-32:RegisterTasklist win7-64:RegisterServicesProcess
-2121 vista-32:DdeDisconnectList vista-64:DdeDisconnectList win7-32:RegisterTouchWindow win7-64:RegisterSessionPort
-2122 vista-32:DdeEnableCallback vista-64:DdeEnableCallback win7-32:RegisterUserApiHook win7-64:RegisterShellHookWindow
-2123 vista-32:DdeFreeDataHandle vista-64:DdeFreeDataHandle win7-32:RegisterWindowMessageA win7-64:RegisterSystemThread
-2124 vista-32:DdeFreeStringHandle vista-64:DdeFreeStringHandle win7-32:RegisterWindowMessageW win7-64:RegisterTasklist
-2125 vista-32:DdeGetData vista-64:DdeGetData win7-32:ReleaseCapture win7-64:RegisterTouchWindow
-2126 vista-32:DdeGetLastError vista-64:DdeGetLastError win7-32:ReleaseDC win7-64:RegisterUserApiHook
-2127 vista-32:DdeGetQualityOfService vista-64:DdeGetQualityOfService win7-32:RemoveClipboardFormatListener win7-64:RegisterWindowMessageA
-2128 vista-32:DdeImpersonateClient vista-64:DdeImpersonateClient win7-32:RemoveMenu win7-64:RegisterWindowMessageW
-2129 vista-32:DdeInitializeA vista-64:DdeInitializeA win7-32:RemovePropA win7-64:ReleaseCapture
-2130 vista-32:DdeInitializeW vista-64:DdeInitializeW win7-32:RemovePropW win7-64:ReleaseDC
-2131 vista-32:DdeKeepStringHandle vista-64:DdeKeepStringHandle win7-32:ReplyMessage win7-64:RemoveClipboardFormatListener
-2132 vista-32:DdeNameService vista-64:DdeNameService win7-32:ResolveDesktopForWOW win7-64:RemoveMenu
-2133 vista-32:DdePostAdvise vista-64:DdePostAdvise win7-32:ReuseDDElParam win7-64:RemovePropA
-2134 vista-32:DdeQueryConvInfo vista-64:DdeQueryConvInfo win7-32:ScreenToClient win7-64:RemovePropW
-2135 vista-32:DdeQueryNextServer vista-64:DdeQueryNextServer win7-32:ScrollChildren win7-64:ReplyMessage
-2136 vista-32:DdeQueryStringA vista-64:DdeQueryStringA win7-32:ScrollDC win7-64:ResolveDesktopForWOW
-2137 vista-32:DdeQueryStringW vista-64:DdeQueryStringW win7-32:ScrollWindow win7-64:ReuseDDElParam
-2138 vista-32:DdeReconnect vista-64:DdeReconnect win7-32:ScrollWindowEx win7-64:ScreenToClient
-2139 vista-32:DdeSetQualityOfService vista-64:DdeSetQualityOfService win7-32:SendDlgItemMessageA win7-64:ScrollChildren
-2140 vista-32:DdeSetUserHandle vista-64:DdeSetUserHandle win7-32:SendDlgItemMessageW win7-64:ScrollDC
-2141 vista-32:DdeUnaccessData vista-64:DdeUnaccessData win7-32:SendIMEMessageExA win7-64:ScrollWindow
-2142 vista-32:DdeUninitialize vista-64:DdeUninitialize win7-32:SendIMEMessageExW win7-64:ScrollWindowEx
-2143 vista-32:DefDlgProcA vista-64:DefDlgProcA win7-32:SendInput win7-64:SendDlgItemMessageA
-2144 vista-32:DefDlgProcW vista-64:DefDlgProcW win7-32:SendMessageA win7-64:SendDlgItemMessageW
-2145 vista-32:DefFrameProcA vista-64:DefFrameProcA win7-32:SendMessageCallbackA win7-64:SendIMEMessageExA
-2146 vista-32:DefFrameProcW vista-64:DefFrameProcW win7-32:SendMessageCallbackW win7-64:SendIMEMessageExW
-2147 vista-32:DefMDIChildProcA vista-64:DefMDIChildProcA win7-32:SendMessageTimeoutA win7-64:SendInput
-2148 vista-32:DefMDIChildProcW vista-64:DefMDIChildProcW win7-32:SendMessageTimeoutW win7-64:SendMessageA
-2149 vista-32:DefRawInputProc vista-64:DefRawInputProc win7-32:SendMessageW win7-64:SendMessageCallbackA
-2150 vista-32:DefWindowProcA vista-64:DefWindowProcA win7-32:SendNotifyMessageA win7-64:SendMessageCallbackW
-2151 vista-32:DefWindowProcW vista-64:DefWindowProcW win7-32:SendNotifyMessageW win7-64:SendMessageTimeoutA
-2152 vista-32:DeferWindowPos vista-64:DeferWindowPos win7-32:SetActiveWindow win7-64:SendMessageTimeoutW
-2153 vista-32:DeleteMenu vista-64:DeleteMenu win7-32:SetCapture win7-64:SendMessageW
-2154 vista-32:DeregisterShellHookWindow vista-64:DeregisterShellHookWindow win7-32:SetCaretBlinkTime win7-64:SendNotifyMessageA
-2155 vista-32:DestroyAcceleratorTable vista-64:DestroyAcceleratorTable win7-32:SetCaretPos win7-64:SendNotifyMessageW
-2156 vista-32:DestroyCaret vista-64:DestroyCaret win7-32:SetClassLongA win7-64:SetActiveWindow
-2157 vista-32:DestroyCursor vista-64:DestroyCursor win7-32:SetClassLongW win7-64:SetCapture
-2158 vista-32:DestroyIcon vista-64:DestroyIcon win7-32:SetClassWord win7-64:SetCaretBlinkTime
-2159 vista-32:DestroyMenu vista-64:DestroyMenu win7-32:SetClipboardData win7-64:SetCaretPos
-2160 vista-32:DestroyReasons vista-64:DestroyReasons win7-32:SetClipboardViewer win7-64:SetClassLongA
-2161 vista-32:DestroyWindow vista-64:DestroyWindow win7-32:SetCursor win7-64:SetClassLongPtrA
-2162 vista-32:DeviceEventWorker vista-64:DeviceEventWorker win7-32:SetCursorContents win7-64:SetClassLongPtrW
-2163 vista-32:DialogBoxIndirectParamA vista-64:DialogBoxIndirectParamA win7-32:SetCursorPos win7-64:SetClassLongW
-2164 vista-32:DialogBoxIndirectParamAorW vista-64:DialogBoxIndirectParamAorW win7-32:SetDebugErrorLevel win7-64:SetClassWord
-2165 vista-32:DialogBoxIndirectParamW vista-64:DialogBoxIndirectParamW win7-32:SetDeskWallpaper win7-64:SetClipboardData
-2166 vista-32:DialogBoxParamA vista-64:DialogBoxParamA win7-32:SetDisplayConfig win7-64:SetClipboardViewer
-2167 vista-32:DialogBoxParamW vista-64:DialogBoxParamW win7-32:SetDlgItemInt win7-64:SetCursor
-2168 vista-32:DisableProcessWindowsGhosting vista-64:DisableProcessWindowsGhosting win7-32:SetDlgItemTextA win7-64:SetCursorContents
-2169 vista-32:DispatchMessageA vista-64:DispatchMessageA win7-32:SetDlgItemTextW win7-64:SetCursorPos
-2170 vista-32:DispatchMessageW vista-64:DispatchMessageW win7-32:SetDoubleClickTime win7-64:SetDebugErrorLevel
-2171 vista-32:DisplayExitWindowsWarnings vista-64:DisplayExitWindowsWarnings win7-32:SetFocus win7-64:SetDeskWallpaper
-2172 vista-32:DlgDirListA vista-64:DlgDirListA win7-32:SetForegroundWindow win7-64:SetDisplayConfig
-2173 vista-32:DlgDirListComboBoxA vista-64:DlgDirListComboBoxA win7-32:SetGestureConfig win7-64:SetDlgItemInt
-2174 vista-32:DlgDirListComboBoxW vista-64:DlgDirListComboBoxW win7-32:SetInternalWindowPos win7-64:SetDlgItemTextA
-2175 vista-32:DlgDirListW vista-64:DlgDirListW win7-32:SetKeyboardState win7-64:SetDlgItemTextW
-2176 vista-32:DlgDirSelectComboBoxExA vista-64:DlgDirSelectComboBoxExA win7-32:SetLastErrorEx win7-64:SetDoubleClickTime
-2177 vista-32:DlgDirSelectComboBoxExW vista-64:DlgDirSelectComboBoxExW win7-32:SetLayeredWindowAttributes win7-64:SetFocus
-2178 vista-32:DlgDirSelectExA vista-64:DlgDirSelectExA win7-32:SetMagnificationDesktopColorEffect win7-64:SetForegroundWindow
-2179 vista-32:DlgDirSelectExW vista-64:DlgDirSelectExW win7-32:SetMagnificationDesktopMagnification win7-64:SetGestureConfig
-2180 vista-32:DoSoundConnect vista-64:DoSoundConnect win7-32:SetMagnificationLensCtxInformation win7-64:SetInternalWindowPos
-2181 vista-32:DoSoundDisconnect vista-64:DoSoundDisconnect win7-32:SetMenu win7-64:SetKeyboardState
-2182 vista-32:DragDetect vista-64:DragDetect win7-32:SetMenuContextHelpId win7-64:SetLastErrorEx
-2183 vista-32:DragObject vista-64:DragObject win7-32:SetMenuDefaultItem win7-64:SetLayeredWindowAttributes
-2184 vista-32:DrawAnimatedRects vista-64:DrawAnimatedRects win7-32:SetMenuInfo win7-64:SetMagnificationDesktopColorEffect
-2185 vista-32:DrawCaption vista-64:DrawCaption win7-32:SetMenuItemBitmaps win7-64:SetMagnificationDesktopMagnification
-2186 vista-32:DrawCaptionTempA vista-64:DrawCaptionTempA win7-32:SetMenuItemInfoA win7-64:SetMagnificationLensCtxInformation
-2187 vista-32:DrawCaptionTempW vista-64:DrawCaptionTempW win7-32:SetMenuItemInfoW win7-64:SetMenu
-2188 vista-32:DrawEdge vista-64:DrawEdge win7-32:SetMessageExtraInfo win7-64:SetMenuContextHelpId
-2189 vista-32:DrawFocusRect vista-64:DrawFocusRect win7-32:SetMessageQueue win7-64:SetMenuDefaultItem
-2190 vista-32:DrawFrame vista-64:DrawFrame win7-32:SetMirrorRendering win7-64:SetMenuInfo
-2191 vista-32:DrawFrameControl vista-64:DrawFrameControl win7-32:SetParent win7-64:SetMenuItemBitmaps
-2192 vista-32:DrawIcon vista-64:DrawIcon win7-32:SetPhysicalCursorPos win7-64:SetMenuItemInfoA
-2193 vista-32:DrawIconEx vista-64:DrawIconEx win7-32:SetProcessDPIAware win7-64:SetMenuItemInfoW
-2194 vista-32:DrawMenuBar vista-64:DrawMenuBar win7-32:SetProcessDefaultLayout win7-64:SetMessageExtraInfo
-2195 vista-32:DrawMenuBarTemp vista-64:DrawMenuBarTemp win7-32:SetProcessWindowStation win7-64:SetMessageQueue
-2196 vista-32:DrawStateA vista-64:DrawStateA win7-32:SetProgmanWindow win7-64:SetMirrorRendering
-2197 vista-32:DrawStateW vista-64:DrawStateW win7-32:SetPropA win7-64:SetParent
-2198 vista-32:DrawTextA vista-64:DrawTextA win7-32:SetPropW win7-64:SetPhysicalCursorPos
-2199 vista-32:DrawTextExA vista-64:DrawTextExA win7-32:SetRect win7-64:SetProcessDPIAware
-2200 vista-32:DrawTextExW vista-64:DrawTextExW win7-32:SetRectEmpty win7-64:SetProcessDefaultLayout
-2201 vista-32:DrawTextW vista-64:DrawTextW win7-32:SetScrollInfo win7-64:SetProcessWindowStation
-2202 vista-32:DwmGetDxRgn vista-64:DwmGetDxRgn win7-32:SetScrollPos win7-64:SetProgmanWindow
-2203 vista-32:DwmHintDxUpdate vista-64:DwmHintDxUpdate win7-32:SetScrollRange win7-64:SetPropA
-2204 vista-32:DwmStartRedirection vista-64:DwmStartRedirection win7-32:SetShellWindow win7-64:SetPropW
-2205 vista-32:DwmStopRedirection vista-64:DwmStopRedirection win7-32:SetShellWindowEx win7-64:SetRect
-2206 vista-32:EditWndProc vista-64:EditWndProc win7-32:SetSysColors win7-64:SetRectEmpty
-2207 vista-32:EmptyClipboard vista-64:EmptyClipboard win7-32:SetSysColorsTemp win7-64:SetScrollInfo
-2208 vista-32:EnableMenuItem vista-64:EnableMenuItem win7-32:SetSystemCursor win7-64:SetScrollPos
-2209 vista-32:EnableScrollBar vista-64:EnableScrollBar win7-32:SetSystemMenu win7-64:SetScrollRange
-2210 vista-32:EnableWindow vista-64:EnableWindow win7-32:SetTaskmanWindow win7-64:SetShellWindow
-2211 vista-32:EndDeferWindowPos vista-64:EndDeferWindowPos win7-32:SetThreadDesktop win7-64:SetShellWindowEx
-2212 vista-32:EndDialog vista-64:EndDialog win7-32:SetTimer win7-64:SetSysColors
-2213 vista-32:EndMenu vista-64:EndMenu win7-32:SetUserObjectInformationA win7-64:SetSysColorsTemp
-2214 vista-32:EndPaint vista-64:EndPaint win7-32:SetUserObjectInformationW win7-64:SetSystemCursor
-2215 vista-32:EndTask vista-64:EndTask win7-32:SetUserObjectSecurity win7-64:SetSystemMenu
-2216 vista-32:EnterReaderModeHelper vista-64:EnterReaderModeHelper win7-32:SetWinEventHook win7-64:SetTaskmanWindow
-2217 vista-32:EnumChildWindows vista-64:EnumChildWindows win7-32:SetWindowCompositionAttribute win7-64:SetThreadDesktop
-2218 vista-32:EnumClipboardFormats vista-64:EnumClipboardFormats win7-32:SetWindowContextHelpId win7-64:SetTimer
-2219 vista-32:EnumDesktopWindows vista-64:EnumDesktopWindows win7-32:SetWindowDisplayAffinity win7-64:SetUserObjectInformationA
-2220 vista-32:EnumDesktopsA vista-64:EnumDesktopsA win7-32:SetWindowLongA win7-64:SetUserObjectInformationW
-2221 vista-32:EnumDesktopsW vista-64:EnumDesktopsW win7-32:SetWindowLongW win7-64:SetUserObjectSecurity
-2222 vista-32:EnumDisplayDevicesA vista-64:EnumDisplayDevicesA win7-32:SetWindowPlacement win7-64:SetWinEventHook
-2223 vista-32:EnumDisplayDevicesW vista-64:EnumDisplayDevicesW win7-32:SetWindowPos win7-64:SetWindowCompositionAttribute
-2224 vista-32:EnumDisplayMonitors vista-64:EnumDisplayMonitors win7-32:SetWindowRgn win7-64:SetWindowContextHelpId
-2225 vista-32:EnumDisplaySettingsA vista-64:EnumDisplaySettingsA win7-32:SetWindowRgnEx win7-64:SetWindowDisplayAffinity
-2226 vista-32:EnumDisplaySettingsExA vista-64:EnumDisplaySettingsExA win7-32:SetWindowStationUser win7-64:SetWindowLongA
-2227 vista-32:EnumDisplaySettingsExW vista-64:EnumDisplaySettingsExW win7-32:SetWindowTextA win7-64:SetWindowLongPtrA
-2228 vista-32:EnumDisplaySettingsW vista-64:EnumDisplaySettingsW win7-32:SetWindowTextW win7-64:SetWindowLongPtrW
-2229 vista-32:EnumPropsA vista-64:EnumPropsA win7-32:SetWindowWord win7-64:SetWindowLongW
-2230 vista-32:EnumPropsExA vista-64:EnumPropsExA win7-32:SetWindowsHookA win7-64:SetWindowPlacement
-2231 vista-32:EnumPropsExW vista-64:EnumPropsExW win7-32:SetWindowsHookExA win7-64:SetWindowPos
-2232 vista-32:EnumPropsW vista-64:EnumPropsW win7-32:SetWindowsHookExW win7-64:SetWindowRgn
-2233 vista-32:EnumThreadWindows vista-64:EnumThreadWindows win7-32:SetWindowsHookW win7-64:SetWindowRgnEx
-2234 vista-32:EnumWindowStationsA vista-64:EnumWindowStationsA win7-32:SfmDxBindSwapChain win7-64:SetWindowStationUser
-2235 vista-32:EnumWindowStationsW vista-64:EnumWindowStationsW win7-32:SfmDxGetSwapChainStats win7-64:SetWindowTextA
-2236 vista-32:EnumWindows vista-64:EnumWindows win7-32:SfmDxOpenSwapChain win7-64:SetWindowTextW
-2237 vista-32:EqualRect vista-64:EqualRect win7-32:SfmDxQuerySwapChainBindingStatus win7-64:SetWindowWord
-2238 vista-32:ExcludeUpdateRgn vista-64:ExcludeUpdateRgn win7-32:SfmDxReleaseSwapChain win7-64:SetWindowsHookA
-2239 vista-32:ExitWindowsEx vista-64:ExitWindowsEx win7-32:SfmDxReportPendingBindingsToDwm win7-64:SetWindowsHookExA
-2240 vista-32:FillRect vista-64:FillRect win7-32:SfmDxSetSwapChainBindingStatus win7-64:SetWindowsHookExW
-2241 vista-32:FindWindowA vista-64:FindWindowA win7-32:SfmDxSetSwapChainStats win7-64:SetWindowsHookW
-2242 vista-32:FindWindowExA vista-64:FindWindowExA win7-32:ShowCaret win7-64:SfmDxBindSwapChain
-2243 vista-32:FindWindowExW vista-64:FindWindowExW win7-32:ShowCursor win7-64:SfmDxGetSwapChainStats
-2244 vista-32:FindWindowW vista-64:FindWindowW win7-32:ShowOwnedPopups win7-64:SfmDxOpenSwapChain
-2245 vista-32:FlashWindow vista-64:FlashWindow win7-32:ShowScrollBar win7-64:SfmDxQuerySwapChainBindingStatus
-2246 vista-32:FlashWindowEx vista-64:FlashWindowEx win7-32:ShowStartGlass win7-64:SfmDxReleaseSwapChain
-2247 vista-32:FrameRect vista-64:FrameRect win7-32:ShowSystemCursor win7-64:SfmDxReportPendingBindingsToDwm
-2248 vista-32:FreeDDElParam vista-64:FreeDDElParam win7-32:ShowWindow win7-64:SfmDxSetSwapChainBindingStatus
-2249 vista-32:FrostCrashedWindow vista-64:FrostCrashedWindow win7-32:ShowWindowAsync win7-64:SfmDxSetSwapChainStats
-2250 vista-32:GetActiveWindow vista-64:GetActiveWindow win7-32:ShutdownBlockReasonCreate win7-64:ShowCaret
-2251 vista-32:GetAltTabInfo vista-64:GetAltTabInfo win7-32:ShutdownBlockReasonDestroy win7-64:ShowCursor
-2252 vista-32:GetAltTabInfoA vista-64:GetAltTabInfoA win7-32:ShutdownBlockReasonQuery win7-64:ShowOwnedPopups
-2253 vista-32:GetAltTabInfoW vista-64:GetAltTabInfoW win7-32:SoftModalMessageBox win7-64:ShowScrollBar
-2254 vista-32:GetAncestor vista-64:GetAncestor win7-32:SoundSentry win7-64:ShowStartGlass
-2255 vista-32:GetAppCompatFlags2 vista-64:GetAppCompatFlags win7-32:SubtractRect win7-64:ShowSystemCursor
-2256 vista-32:GetAppCompatFlags vista-64:GetAppCompatFlags2 win7-32:SwapMouseButton win7-64:ShowWindow
-2257 vista-32:GetAsyncKeyState vista-64:GetAsyncKeyState win7-32:SwitchDesktop win7-64:ShowWindowAsync
-2258 vista-32:GetCapture vista-64:GetCapture win7-32:SwitchDesktopWithFade win7-64:ShutdownBlockReasonCreate
-2259 vista-32:GetCaretBlinkTime vista-64:GetCaretBlinkTime win7-32:SwitchToThisWindow win7-64:ShutdownBlockReasonDestroy
-2260 vista-32:GetCaretPos vista-64:GetCaretPos win7-32:SystemParametersInfoA win7-64:ShutdownBlockReasonQuery
-2261 vista-32:GetClassInfoA vista-64:GetClassInfoA win7-32:SystemParametersInfoW win7-64:SoftModalMessageBox
-2262 vista-32:GetClassInfoExA vista-64:GetClassInfoExA win7-32:TabbedTextOutA win7-64:SoundSentry
-2263 vista-32:GetClassInfoExW vista-64:GetClassInfoExW win7-32:TabbedTextOutW win7-64:SubtractRect
-2264 vista-32:GetClassInfoW vista-64:GetClassInfoW win7-32:TileChildWindows win7-64:SwapMouseButton
-2265 vista-32:GetClassLongA vista-64:GetClassLongA win7-32:TileWindows win7-64:SwitchDesktop
-2266 vista-32:GetClassLongW vista-64:GetClassLongPtrA win7-32:ToAscii win7-64:SwitchDesktopWithFade
-2267 vista-32:GetClassNameA vista-64:GetClassLongPtrW win7-32:ToAsciiEx win7-64:SwitchToThisWindow
-2268 vista-32:GetClassNameW vista-64:GetClassLongW win7-32:ToUnicode win7-64:SystemParametersInfoA
-2269 vista-32:GetClassWord vista-64:GetClassNameA win7-32:ToUnicodeEx win7-64:SystemParametersInfoW
-2270 vista-32:GetClientRect vista-64:GetClassNameW win7-32:TrackMouseEvent win7-64:TabbedTextOutA
-2271 vista-32:GetClipCursor vista-64:GetClassWord win7-32:TrackPopupMenu win7-64:TabbedTextOutW
-2272 vista-32:GetClipboardData vista-64:GetClientRect win7-32:TrackPopupMenuEx win7-64:TileChildWindows
-2273 vista-32:GetClipboardFormatNameA vista-64:GetClipCursor win7-32:TranslateAccelerator win7-64:TileWindows
-2274 vista-32:GetClipboardFormatNameW vista-64:GetClipboardData win7-32:TranslateAcceleratorA win7-64:ToAscii
-2275 vista-32:GetClipboardOwner vista-64:GetClipboardFormatNameA win7-32:TranslateAcceleratorW win7-64:ToAsciiEx
-2276 vista-32:GetClipboardSequenceNumber vista-64:GetClipboardFormatNameW win7-32:TranslateMDISysAccel win7-64:ToUnicode
-2277 vista-32:GetClipboardViewer vista-64:GetClipboardOwner win7-32:TranslateMessage win7-64:ToUnicodeEx
-2278 vista-32:GetComboBoxInfo vista-64:GetClipboardSequenceNumber win7-32:TranslateMessageEx win7-64:TrackMouseEvent
-2279 vista-32:GetCursor vista-64:GetClipboardViewer win7-32:UnhookWinEvent win7-64:TrackPopupMenu
-2280 vista-32:GetCursorFrameInfo vista-64:GetComboBoxInfo win7-32:UnhookWindowsHook win7-64:TrackPopupMenuEx
-2281 vista-32:GetCursorInfo vista-64:GetCursor win7-32:UnhookWindowsHookEx win7-64:TranslateAccelerator
-2282 vista-32:GetCursorPos vista-64:GetCursorFrameInfo win7-32:UnionRect win7-64:TranslateAcceleratorA
-2283 vista-32:GetDC vista-64:GetCursorInfo win7-32:UnloadKeyboardLayout win7-64:TranslateAcceleratorW
-2284 vista-32:GetDCEx vista-64:GetCursorPos win7-32:UnlockWindowStation win7-64:TranslateMDISysAccel
-2285 vista-32:GetDesktopWindow vista-64:GetDC win7-32:UnpackDDElParam win7-64:TranslateMessage
-2286 vista-32:GetDialogBaseUnits vista-64:GetDCEx win7-32:UnregisterClassA win7-64:TranslateMessageEx
-2287 vista-32:GetDlgCtrlID vista-64:GetDesktopWindow win7-32:UnregisterClassW win7-64:UnhookWinEvent
-2288 vista-32:GetDlgItem vista-64:GetDialogBaseUnits win7-32:UnregisterDeviceNotification win7-64:UnhookWindowsHook
-2289 vista-32:GetDlgItemInt vista-64:GetDlgCtrlID win7-32:UnregisterHotKey win7-64:UnhookWindowsHookEx
-2290 vista-32:GetDlgItemTextA vista-64:GetDlgItem win7-32:UnregisterMessagePumpHook win7-64:UnionRect
-2291 vista-32:GetDlgItemTextW vista-64:GetDlgItemInt win7-32:UnregisterPowerSettingNotification win7-64:UnloadKeyboardLayout
-2292 vista-32:GetDoubleClickTime vista-64:GetDlgItemTextA win7-32:UnregisterSessionPort win7-64:UnlockWindowStation
-2293 vista-32:GetFocus vista-64:GetDlgItemTextW win7-32:UnregisterTouchWindow win7-64:UnpackDDElParam
-2294 vista-32:GetForegroundWindow vista-64:GetDoubleClickTime win7-32:UnregisterUserApiHook win7-64:UnregisterClassA
-2295 vista-32:GetGUIThreadInfo vista-64:GetFocus win7-32:UpdateLayeredWindow win7-64:UnregisterClassW
-2296 vista-32:GetGuiResources vista-64:GetForegroundWindow win7-32:UpdateLayeredWindowIndirect win7-64:UnregisterDeviceNotification
-2297 vista-32:GetIconInfo vista-64:GetGUIThreadInfo win7-32:UpdatePerUserSystemParameters win7-64:UnregisterHotKey
-2298 vista-32:GetIconInfoExA vista-64:GetGuiResources win7-32:UpdateWindow win7-64:UnregisterMessagePumpHook
-2299 vista-32:GetIconInfoExW vista-64:GetIconInfo win7-32:UpdateWindowTransform win7-64:UnregisterPowerSettingNotification
-2300 vista-32:GetInputDesktop vista-64:GetIconInfoExA win7-32:User32InitializeImmEntryTable win7-64:UnregisterSessionPort
-2301 vista-32:GetInputState vista-64:GetIconInfoExW win7-32:UserClientDllInitialize win7-64:UnregisterTouchWindow
-2302 vista-32:GetInternalWindowPos vista-64:GetInputDesktop win7-32:UserHandleGrantAccess win7-64:UnregisterUserApiHook
-2303 vista-32:GetKBCodePage vista-64:GetInputState win7-32:UserLpkPSMTextOut win7-64:UpdateLayeredWindow
-2304 vista-32:GetKeyNameTextA vista-64:GetInternalWindowPos win7-32:UserLpkTabbedTextOut win7-64:UpdateLayeredWindowIndirect
-2305 vista-32:GetKeyNameTextW vista-64:GetKBCodePage win7-32:UserRealizePalette win7-64:UpdatePerUserSystemParameters
-2306 vista-32:GetKeyState vista-64:GetKeyNameTextA win7-32:UserRegisterWowHandlers win7-64:UpdateWindow
-2307 vista-32:GetKeyboardLayout vista-64:GetKeyNameTextW win7-32:VRipOutput win7-64:UpdateWindowTransform
-2308 vista-32:GetKeyboardLayoutList vista-64:GetKeyState win7-32:VTagOutput win7-64:User32InitializeImmEntryTable
-2309 vista-32:GetKeyboardLayoutNameA vista-64:GetKeyboardLayout win7-32:ValidateRect win7-64:UserClientDllInitialize
-2310 vista-32:GetKeyboardLayoutNameW vista-64:GetKeyboardLayoutList win7-32:ValidateRgn win7-64:UserHandleGrantAccess
-2311 vista-32:GetKeyboardState vista-64:GetKeyboardLayoutNameA win7-32:VkKeyScanA win7-64:UserLpkPSMTextOut
-2312 vista-32:GetKeyboardType vista-64:GetKeyboardLayoutNameW win7-32:VkKeyScanExA win7-64:UserLpkTabbedTextOut
-2313 vista-32:GetLastActivePopup vista-64:GetKeyboardState win7-32:VkKeyScanExW win7-64:UserRealizePalette
-2314 vista-32:GetLastInputInfo vista-64:GetKeyboardType win7-32:VkKeyScanW win7-64:UserRegisterWowHandlers
-2315 vista-32:GetLayeredWindowAttributes vista-64:GetLastActivePopup win7-32:WCSToMBEx win7-64:VRipOutput
-2316 vista-32:GetListBoxInfo vista-64:GetLastInputInfo win7-32:WINNLSEnableIME win7-64:VTagOutput
-2317 vista-32:GetMenu vista-64:GetLayeredWindowAttributes win7-32:WINNLSGetEnableStatus win7-64:ValidateRect
-2318 vista-32:GetMenuBarInfo vista-64:GetListBoxInfo win7-32:WINNLSGetIMEHotkey win7-64:ValidateRgn
-2319 vista-32:GetMenuCheckMarkDimensions vista-64:GetMenu win7-32:WaitForInputIdle win7-64:VkKeyScanA
-2320 vista-32:GetMenuContextHelpId vista-64:GetMenuBarInfo win7-32:WaitMessage win7-64:VkKeyScanExA
-2321 vista-32:GetMenuDefaultItem vista-64:GetMenuCheckMarkDimensions win7-32:WinHelpA win7-64:VkKeyScanExW
-2322 vista-32:GetMenuInfo vista-64:GetMenuContextHelpId win7-32:WinHelpW win7-64:VkKeyScanW
-2323 vista-32:GetMenuItemCount vista-64:GetMenuDefaultItem win7-32:WindowFromDC win7-64:WCSToMBEx
-2324 vista-32:GetMenuItemID vista-64:GetMenuInfo win7-32:WindowFromPhysicalPoint win7-64:WINNLSEnableIME
-2325 vista-32:GetMenuItemInfoA vista-64:GetMenuItemCount win7-32:WindowFromPoint win7-64:WINNLSGetEnableStatus
-2326 vista-32:GetMenuItemInfoW vista-64:GetMenuItemID win7-32:_UserTestTokenForInteractive win7-64:WINNLSGetIMEHotkey
-2327 vista-32:GetMenuItemRect vista-64:GetMenuItemInfoA win7-32:gSharedInfo win7-64:WaitForInputIdle
-2328 vista-32:GetMenuState vista-64:GetMenuItemInfoW win7-32:gapfnScSendMessage win7-64:WaitMessage
-2329 vista-32:GetMenuStringA vista-64:GetMenuItemRect win7-32:keybd_event win7-64:WinHelpA
-2330 vista-32:GetMenuStringW vista-64:GetMenuState win7-32:mouse_event win7-64:WinHelpW
-2331 vista-32:GetMessageA vista-64:GetMenuStringA win7-32:wsprintfA win7-64:WindowFromDC
-2332 vista-32:GetMessageExtraInfo vista-64:GetMenuStringW win7-32:wsprintfW win7-64:WindowFromPhysicalPoint
-2333 vista-32:GetMessagePos vista-64:GetMessageA win7-32:wvsprintfA win7-64:WindowFromPoint
-2334 vista-32:GetMessageTime vista-64:GetMessageExtraInfo win7-32:wvsprintfW win7-64:_UserTestTokenForInteractive
-2335 vista-32:GetMessageW vista-64:GetMessagePos win7-64:gSharedInfo
-2336 vista-32:GetMonitorInfoA vista-64:GetMessageTime win7-64:gapfnScSendMessage
-2337 vista-32:GetMonitorInfoW vista-64:GetMessageW win7-64:keybd_event
-2338 vista-32:GetMouseMovePointsEx vista-64:GetMonitorInfoA win7-64:mouse_event
-2339 vista-32:GetNextDlgGroupItem vista-64:GetMonitorInfoW win7-64:wsprintfA
-2340 vista-32:GetNextDlgTabItem vista-64:GetMouseMovePointsEx win7-64:wsprintfW
-2341 vista-32:GetOpenClipboardWindow vista-64:GetNextDlgGroupItem win7-64:wvsprintfA
-2342 vista-32:GetParent vista-64:GetNextDlgTabItem win7-64:wvsprintfW
-2343 vista-32:GetPhysicalCursorPos vista-64:GetOpenClipboardWindow
-2344 vista-32:GetPriorityClipboardFormat vista-64:GetParent
-2345 vista-32:GetProcessDefaultLayout vista-64:GetPhysicalCursorPos
-2346 vista-32:GetProcessWindowStation vista-64:GetPriorityClipboardFormat
-2347 vista-32:GetProgmanWindow vista-64:GetProcessDefaultLayout
-2348 vista-32:GetPropA vista-64:GetProcessWindowStation
-2349 vista-32:GetPropW vista-64:GetProgmanWindow
-2350 vista-32:GetQueueStatus vista-64:GetPropA
-2351 vista-32:GetRawInputBuffer vista-64:GetPropW
-2352 vista-32:GetRawInputData vista-64:GetQueueStatus
-2353 vista-32:GetRawInputDeviceInfoA vista-64:GetRawInputBuffer
-2354 vista-32:GetRawInputDeviceInfoW vista-64:GetRawInputData
-2355 vista-32:GetRawInputDeviceList vista-64:GetRawInputDeviceInfoA
-2356 vista-32:GetReasonTitleFromReasonCode vista-64:GetRawInputDeviceInfoW
-2357 vista-32:GetRegisteredRawInputDevices vista-64:GetRawInputDeviceList
-2358 vista-32:GetScrollBarInfo vista-64:GetReasonTitleFromReasonCode
-2359 vista-32:GetScrollInfo vista-64:GetRegisteredRawInputDevices
-2360 vista-32:GetScrollPos vista-64:GetScrollBarInfo
-2361 vista-32:GetScrollRange vista-64:GetScrollInfo
-2362 vista-32:GetSendMessageReceiver vista-64:GetScrollPos
-2363 vista-32:GetShellWindow vista-64:GetScrollRange
-2364 vista-32:GetSubMenu vista-64:GetSendMessageReceiver
-2365 vista-32:GetSysColor vista-64:GetShellWindow
-2366 vista-32:GetSysColorBrush vista-64:GetSubMenu
-2367 vista-32:GetSystemMenu vista-64:GetSysColor
-2368 vista-32:GetSystemMetrics vista-64:GetSysColorBrush
-2369 vista-32:GetTabbedTextExtentA vista-64:GetSystemMenu
-2370 vista-32:GetTabbedTextExtentW vista-64:GetSystemMetrics
-2371 vista-32:GetTaskmanWindow vista-64:GetTabbedTextExtentA
-2372 vista-32:GetThreadDesktop vista-64:GetTabbedTextExtentW
-2373 vista-32:GetTitleBarInfo vista-64:GetTaskmanWindow
-2374 vista-32:GetTopWindow vista-64:GetThreadDesktop
-2375 vista-32:GetUpdateRect vista-64:GetTitleBarInfo
-2376 vista-32:GetUpdateRgn vista-64:GetTopWindow
-2377 vista-32:GetUpdatedClipboardFormats vista-64:GetUpdateRect
-2378 vista-32:GetUserObjectInformationA vista-64:GetUpdateRgn
-2379 vista-32:GetUserObjectInformationW vista-64:GetUpdatedClipboardFormats
-2380 vista-32:GetUserObjectSecurity vista-64:GetUserObjectInformationA
-2381 vista-32:GetWinStationInfo vista-64:GetUserObjectInformationW
-2382 vista-32:GetWindow vista-64:GetUserObjectSecurity
-2383 vista-32:GetWindowContextHelpId vista-64:GetWinStationInfo
-2384 vista-32:GetWindowDC vista-64:GetWindow
-2385 vista-32:GetWindowInfo vista-64:GetWindowContextHelpId
-2386 vista-32:GetWindowLongA vista-64:GetWindowDC
-2387 vista-32:GetWindowLongW vista-64:GetWindowInfo
-2388 vista-32:GetWindowMinimizeRect vista-64:GetWindowLongA
-2389 vista-32:GetWindowModuleFileName vista-64:GetWindowLongPtrA
-2390 vista-32:GetWindowModuleFileNameA vista-64:GetWindowLongPtrW
-2391 vista-32:GetWindowModuleFileNameW vista-64:GetWindowLongW
-2392 vista-32:GetWindowPlacement vista-64:GetWindowMinimizeRect
-2393 vista-32:GetWindowRect vista-64:GetWindowModuleFileName
-2394 vista-32:GetWindowRgn vista-64:GetWindowModuleFileNameA
-2395 vista-32:GetWindowRgnBox vista-64:GetWindowModuleFileNameW
-2396 vista-32:GetWindowRgnEx vista-64:GetWindowPlacement
-2397 vista-32:GetWindowTextA vista-64:GetWindowRect
-2398 vista-32:GetWindowTextLengthA vista-64:GetWindowRgn
-2399 vista-32:GetWindowTextLengthW vista-64:GetWindowRgnBox
-2400 vista-32:GetWindowTextW vista-64:GetWindowRgnEx
-2401 vista-32:GetWindowThreadProcessId vista-64:GetWindowTextA
-2402 vista-32:GetWindowWord vista-64:GetWindowTextLengthA
-2403 vista-32:GhostWindowFromHungWindow vista-64:GetWindowTextLengthW
-2404 vista-32:GrayStringA vista-64:GetWindowTextW
-2405 vista-32:GrayStringW vista-64:GetWindowThreadProcessId
-2406 vista-32:HideCaret vista-64:GetWindowWord
+1502 win7-32:ActivateKeyboardLayout win7-64:ActivateKeyboardLayout win8-32:- win8-64:-
+1503 win7-32:AddClipboardFormatListener win7-64:AddClipboardFormatListener win8-32:ActivateKeyboardLayout win8-64:ActivateKeyboardLayout
+1504 win7-32:AdjustWindowRect win7-64:AdjustWindowRect win8-32:AddClipboardFormatListener win8-64:AddClipboardFormatListener
+1505 win7-32:AdjustWindowRectEx win7-64:AdjustWindowRectEx win8-32:AdjustWindowRect win8-64:AdjustWindowRect
+1506 win7-32:AlignRects win7-64:AlignRects win8-32:AdjustWindowRectEx win8-64:AdjustWindowRectEx
+1507 win7-32:AllowForegroundActivation win7-64:AllowForegroundActivation win8-32:AlignRects win8-64:AlignRects
+1508 win7-32:AllowSetForegroundWindow win7-64:AllowSetForegroundWindow win8-32:AllowForegroundActivation win8-64:AllowForegroundActivation
+1509 win7-32:AnimateWindow win7-64:AnimateWindow win8-32:AllowSetForegroundWindow win8-64:AllowSetForegroundWindow
+1510 win7-32:AnyPopup win7-64:AnyPopup win8-32:AnimateWindow win8-64:AnimateWindow
+1511 win7-32:AppendMenuA win7-64:AppendMenuA win8-32:AnyPopup win8-64:AnyPopup
+1512 win7-32:AppendMenuW win7-64:AppendMenuW win8-32:AppendMenuA win8-64:AppendMenuA
+1513 win7-32:ArrangeIconicWindows win7-64:ArrangeIconicWindows win8-32:AppendMenuW win8-64:AppendMenuW
+1514 win7-32:AttachThreadInput win7-64:AttachThreadInput win8-32:ArrangeIconicWindows win8-64:ArrangeIconicWindows
+1515 win7-32:BeginDeferWindowPos win7-64:BeginDeferWindowPos win8-32:AttachThreadInput win8-64:AttachThreadInput
+1516 win7-32:BeginPaint win7-64:BeginPaint win8-32:BeginDeferWindowPos win8-64:BeginDeferWindowPos
+1517 win7-32:BlockInput win7-64:BlockInput win8-32:BeginPaint win8-64:BeginPaint
+1518 win7-32:BringWindowToTop win7-64:BringWindowToTop win8-32:BlockInput win8-64:BlockInput
+1519 win7-32:BroadcastSystemMessage win7-64:BroadcastSystemMessage win8-32:BringWindowToTop win8-64:BringWindowToTop
+1520 win7-32:BroadcastSystemMessageA win7-64:BroadcastSystemMessageA win8-32:BroadcastSystemMessage win8-64:BroadcastSystemMessage
+1521 win7-32:BroadcastSystemMessageExA win7-64:BroadcastSystemMessageExA win8-32:BroadcastSystemMessageA win8-64:BroadcastSystemMessageA
+1522 win7-32:BroadcastSystemMessageExW win7-64:BroadcastSystemMessageExW win8-32:BroadcastSystemMessageExA win8-64:BroadcastSystemMessageExA
+1523 win7-32:BroadcastSystemMessageW win7-64:BroadcastSystemMessageW win8-32:BroadcastSystemMessageExW win8-64:BroadcastSystemMessageExW
+1524 win7-32:BuildReasonArray win7-64:BuildReasonArray win8-32:BroadcastSystemMessageW win8-64:BroadcastSystemMessageW
+1525 win7-32:CalcMenuBar win7-64:CalcMenuBar win8-32:BuildReasonArray win8-64:BuildReasonArray
+1526 win7-32:CalculatePopupWindowPosition win7-64:CalculatePopupWindowPosition win8-32:CalcMenuBar win8-64:CalcMenuBar
+1527 win7-32:CallMsgFilter win7-64:CallMsgFilter win8-32:CalculatePopupWindowPosition win8-64:CalculatePopupWindowPosition
+1528 win7-32:CallMsgFilterA win7-64:CallMsgFilterA win8-32:CallMsgFilter win8-64:CallMsgFilter
+1529 win7-32:CallMsgFilterW win7-64:CallMsgFilterW win8-32:CallMsgFilterA win8-64:CallMsgFilterA
+1530 win7-32:CallNextHookEx win7-64:CallNextHookEx win8-32:CallMsgFilterW win8-64:CallMsgFilterW
+1531 win7-32:CallWindowProcA win7-64:CallWindowProcA win8-32:CallNextHookEx win8-64:CallNextHookEx
+1532 win7-32:CallWindowProcW win7-64:CallWindowProcW win8-32:CallWindowProcA win8-64:CallWindowProcA
+1533 win7-32:CancelShutdown win7-64:CancelShutdown win8-32:CallWindowProcW win8-64:CallWindowProcW
+1534 win7-32:CascadeChildWindows win7-64:CascadeChildWindows win8-32:CancelShutdown win8-64:CancelShutdown
+1535 win7-32:CascadeWindows win7-64:CascadeWindows win8-32:CascadeChildWindows win8-64:CascadeChildWindows
+1536 win7-32:ChangeClipboardChain win7-64:ChangeClipboardChain win8-32:CascadeWindows win8-64:CascadeWindows
+1537 win7-32:ChangeDisplaySettingsA win7-64:ChangeDisplaySettingsA win8-32:ChangeClipboardChain win8-64:ChangeClipboardChain
+1538 win7-32:ChangeDisplaySettingsExA win7-64:ChangeDisplaySettingsExA win8-32:ChangeDisplaySettingsA win8-64:ChangeDisplaySettingsA
+1539 win7-32:ChangeDisplaySettingsExW win7-64:ChangeDisplaySettingsExW win8-32:ChangeDisplaySettingsExA win8-64:ChangeDisplaySettingsExA
+1540 win7-32:ChangeDisplaySettingsW win7-64:ChangeDisplaySettingsW win8-32:ChangeDisplaySettingsExW win8-64:ChangeDisplaySettingsExW
+1541 win7-32:ChangeMenuA win7-64:ChangeMenuA win8-32:ChangeDisplaySettingsW win8-64:ChangeDisplaySettingsW
+1542 win7-32:ChangeMenuW win7-64:ChangeMenuW win8-32:ChangeMenuA win8-64:ChangeMenuA
+1543 win7-32:ChangeWindowMessageFilter win7-64:ChangeWindowMessageFilter win8-32:ChangeMenuW win8-64:ChangeMenuW
+1544 win7-32:ChangeWindowMessageFilterEx win7-64:ChangeWindowMessageFilterEx win8-32:ChangeWindowMessageFilter win8-64:ChangeWindowMessageFilter
+1545 win7-32:CharLowerA win7-64:CharLowerA win8-32:ChangeWindowMessageFilterEx win8-64:ChangeWindowMessageFilterEx
+1546 win7-32:CharLowerBuffA win7-64:CharLowerBuffA win8-32:CharLowerA win8-64:CharLowerA
+1547 win7-32:CharLowerBuffW win7-64:CharLowerBuffW win8-32:CharLowerBuffA win8-64:CharLowerBuffA
+1548 win7-32:CharLowerW win7-64:CharLowerW win8-32:CharLowerBuffW win8-64:CharLowerBuffW
+1549 win7-32:CharNextA win7-64:CharNextA win8-32:CharLowerW win8-64:CharLowerW
+1550 win7-32:- win7-64:- win8-32:- win8-64:-
+1551 win7-32:- win7-64:- win8-32:- win8-64:-
+1552 win7-32:- win7-64:- win8-32:- win8-64:-
+1553 win7-32:- win7-64:- win8-32:- win8-64:-
+1554 win7-32:- win7-64:- win8-32:- win8-64:-
+1555 win7-32:- win7-64:- win8-32:CharNextA win8-64:CharNextA
+1556 win7-32:- win7-64:- win8-32:CharNextExA win8-64:CharNextExA
+1557 win7-32:CharNextExA win7-64:CharNextExA win8-32:CharNextW win8-64:CharNextW
+1558 win7-32:CharNextW win7-64:CharNextW win8-32:CharPrevA win8-64:CharPrevA
+1559 win7-32:CharPrevA win7-64:CharPrevA win8-32:CharPrevExA win8-64:CharPrevExA
+1560 win7-32:CharPrevExA win7-64:CharPrevExA win8-32:CharPrevW win8-64:CharPrevW
+1561 win7-32:CharPrevW win7-64:CharPrevW win8-32:CharToOemA win8-64:CharToOemA
+1562 win7-32:CharToOemA win7-64:CharToOemA win8-32:CharToOemBuffA win8-64:CharToOemBuffA
+1563 win7-32:CharToOemBuffA win7-64:CharToOemBuffA win8-32:CharToOemBuffW win8-64:CharToOemBuffW
+1564 win7-32:CharToOemBuffW win7-64:CharToOemBuffW win8-32:CharToOemW win8-64:CharToOemW
+1565 win7-32:CharToOemW win7-64:CharToOemW win8-32:CharUpperA win8-64:CharUpperA
+1566 win7-32:CharUpperA win7-64:CharUpperA win8-32:CharUpperBuffA win8-64:CharUpperBuffA
+1567 win7-32:CharUpperBuffA win7-64:CharUpperBuffA win8-32:CharUpperBuffW win8-64:CharUpperBuffW
+1568 win7-32:CharUpperBuffW win7-64:CharUpperBuffW win8-32:CharUpperW win8-64:CharUpperW
+1569 win7-32:CharUpperW win7-64:CharUpperW win8-32:CheckDBCSEnabledExt win8-64:CheckDBCSEnabledExt
+1570 win7-32:CheckDesktopByThreadId win7-64:CheckDesktopByThreadId win8-32:CheckDlgButton win8-64:CheckDlgButton
+1571 win7-32:CheckDlgButton win7-64:CheckDlgButton win8-32:CheckMenuItem win8-64:CheckMenuItem
+1572 win7-32:CheckMenuItem win7-64:CheckMenuItem win8-32:CheckMenuRadioItem win8-64:CheckMenuRadioItem
+1573 win7-32:CheckMenuRadioItem win7-64:CheckMenuRadioItem win8-32:CheckProcessForClipboardAccess win8-64:CheckProcessForClipboardAccess
+1574 win7-32:CheckRadioButton win7-64:CheckRadioButton win8-32:CheckProcessSession win8-64:CheckProcessSession
+1575 win7-32:CheckWindowThreadDesktop win7-64:CheckWindowThreadDesktop win8-32:CheckRadioButton win8-64:CheckRadioButton
+1576 win7-32:ChildWindowFromPoint win7-64:ChildWindowFromPoint win8-32:CheckWindowThreadDesktop win8-64:CheckWindowThreadDesktop
+1577 win7-32:ChildWindowFromPointEx win7-64:ChildWindowFromPointEx win8-32:ChildWindowFromPoint win8-64:ChildWindowFromPoint
+1578 win7-32:CliImmSetHotKey win7-64:CliImmSetHotKey win8-32:ChildWindowFromPointEx win8-64:ChildWindowFromPointEx
+1579 win7-32:ClientThreadSetup win7-64:ClientThreadSetup win8-32:CliImmSetHotKey win8-64:CliImmSetHotKey
+1580 win7-32:ClientToScreen win7-64:ClientToScreen win8-32:ClientThreadSetup win8-64:ClientThreadSetup
+1581 win7-32:ClipCursor win7-64:ClipCursor win8-32:ClientToScreen win8-64:ClientToScreen
+1582 win7-32:CloseClipboard win7-64:CloseClipboard win8-32:ClipCursor win8-64:ClipCursor
+1583 win7-32:CloseDesktop win7-64:CloseDesktop win8-32:CloseClipboard win8-64:CloseClipboard
+1584 win7-32:CloseGestureInfoHandle win7-64:CloseGestureInfoHandle win8-32:CloseDesktop win8-64:CloseDesktop
+1585 win7-32:CloseTouchInputHandle win7-64:CloseTouchInputHandle win8-32:CloseGestureInfoHandle win8-64:CloseGestureInfoHandle
+1586 win7-32:CloseWindow win7-64:CloseWindow win8-32:CloseTouchInputHandle win8-64:CloseTouchInputHandle
+1587 win7-32:CloseWindowStation win7-64:CloseWindowStation win8-32:CloseWindow win8-64:CloseWindow
+1588 win7-32:ConsoleControl win7-64:ConsoleControl win8-32:CloseWindowStation win8-64:CloseWindowStation
+1589 win7-32:ControlMagnification win7-64:ControlMagnification win8-32:ConsoleControl win8-64:ConsoleControl
+1590 win7-32:CopyAcceleratorTableA win7-64:CopyAcceleratorTableA win8-32:ControlMagnification win8-64:ControlMagnification
+1591 win7-32:CopyAcceleratorTableW win7-64:CopyAcceleratorTableW win8-32:CopyAcceleratorTableA win8-64:CopyAcceleratorTableA
+1592 win7-32:CopyIcon win7-64:CopyIcon win8-32:CopyAcceleratorTableW win8-64:CopyAcceleratorTableW
+1593 win7-32:CopyImage win7-64:CopyImage win8-32:CopyIcon win8-64:CopyIcon
+1594 win7-32:CopyRect win7-64:CopyRect win8-32:CopyImage win8-64:CopyImage
+1595 win7-32:CountClipboardFormats win7-64:CountClipboardFormats win8-32:CopyRect win8-64:CopyRect
+1596 win7-32:CreateAcceleratorTableA win7-64:CreateAcceleratorTableA win8-32:CountClipboardFormats win8-64:CountClipboardFormats
+1597 win7-32:CreateAcceleratorTableW win7-64:CreateAcceleratorTableW win8-32:CreateAcceleratorTableA win8-64:CreateAcceleratorTableA
+1598 win7-32:CreateCaret win7-64:CreateCaret win8-32:CreateAcceleratorTableW win8-64:CreateAcceleratorTableW
+1599 win7-32:CreateCursor win7-64:CreateCursor win8-32:CreateCaret win8-64:CreateCaret
+1600 win7-32:CreateDesktopA win7-64:CreateDesktopA win8-32:CreateCursor win8-64:CreateCursor
+1601 win7-32:CreateDesktopExA win7-64:CreateDesktopExA win8-32:CreateDCompositionHwndTarget win8-64:CreateDCompositionHwndTarget
+1602 win7-32:CreateDesktopExW win7-64:CreateDesktopExW win8-32:CreateDesktopA win8-64:CreateDesktopA
+1603 win7-32:CreateDesktopW win7-64:CreateDesktopW win8-32:CreateDesktopExA win8-64:CreateDesktopExA
+1604 win7-32:CreateDialogIndirectParamA win7-64:CreateDialogIndirectParamA win8-32:CreateDesktopExW win8-64:CreateDesktopExW
+1605 win7-32:CreateDialogIndirectParamAorW win7-64:CreateDialogIndirectParamAorW win8-32:CreateDesktopW win8-64:CreateDesktopW
+1606 win7-32:CreateDialogIndirectParamW win7-64:CreateDialogIndirectParamW win8-32:CreateDialogIndirectParamA win8-64:CreateDialogIndirectParamA
+1607 win7-32:CreateDialogParamA win7-64:CreateDialogParamA win8-32:CreateDialogIndirectParamAorW win8-64:CreateDialogIndirectParamAorW
+1608 win7-32:CreateDialogParamW win7-64:CreateDialogParamW win8-32:CreateDialogIndirectParamW win8-64:CreateDialogIndirectParamW
+1609 win7-32:CreateIcon win7-64:CreateIcon win8-32:CreateDialogParamA win8-64:CreateDialogParamA
+1610 win7-32:CreateIconFromResource win7-64:CreateIconFromResource win8-32:CreateDialogParamW win8-64:CreateDialogParamW
+1611 win7-32:CreateIconFromResourceEx win7-64:CreateIconFromResourceEx win8-32:CreateIcon win8-64:CreateIcon
+1612 win7-32:CreateIconIndirect win7-64:CreateIconIndirect win8-32:CreateIconFromResource win8-64:CreateIconFromResource
+1613 win7-32:CreateMDIWindowA win7-64:CreateMDIWindowA win8-32:CreateIconFromResourceEx win8-64:CreateIconFromResourceEx
+1614 win7-32:CreateMDIWindowW win7-64:CreateMDIWindowW win8-32:CreateIconIndirect win8-64:CreateIconIndirect
+1615 win7-32:CreateMenu win7-64:CreateMenu win8-32:CreateMDIWindowA win8-64:CreateMDIWindowA
+1616 win7-32:CreatePopupMenu win7-64:CreatePopupMenu win8-32:CreateMDIWindowW win8-64:CreateMDIWindowW
+1617 win7-32:CreateSystemThreads win7-64:CreateSystemThreads win8-32:CreateMenu win8-64:CreateMenu
+1618 win7-32:CreateWindowExA win7-64:CreateWindowExA win8-32:CreatePopupMenu win8-64:CreatePopupMenu
+1619 win7-32:CreateWindowExW win7-64:CreateWindowExW win8-32:CreateSystemThreads win8-64:CreateSystemThreads
+1620 win7-32:CreateWindowStationA win7-64:CreateWindowStationA win8-32:CreateWindowExA win8-64:CreateWindowExA
+1621 win7-32:CreateWindowStationW win7-64:CreateWindowStationW win8-32:CreateWindowExW win8-64:CreateWindowExW
+1622 win7-32:CsrBroadcastSystemMessageExW win7-64:CsrBroadcastSystemMessageExW win8-32:CreateWindowInBand win8-64:CreateWindowInBand
+1623 win7-32:CtxInitUser32 win7-64:CtxInitUser32 win8-32:CreateWindowIndirect win8-64:CreateWindowIndirect
+1624 win7-32:DdeAbandonTransaction win7-64:DdeAbandonTransaction win8-32:CreateWindowStationA win8-64:CreateWindowStationA
+1625 win7-32:DdeAccessData win7-64:DdeAccessData win8-32:CreateWindowStationW win8-64:CreateWindowStationW
+1626 win7-32:DdeAddData win7-64:DdeAddData win8-32:CsrBroadcastSystemMessageExW win8-64:CsrBroadcastSystemMessageExW
+1627 win7-32:DdeClientTransaction win7-64:DdeClientTransaction win8-32:CtxInitUser32 win8-64:CtxInitUser32
+1628 win7-32:DdeCmpStringHandles win7-64:DdeCmpStringHandles win8-32:DdeAbandonTransaction win8-64:DdeAbandonTransaction
+1629 win7-32:DdeConnect win7-64:DdeConnect win8-32:DdeAccessData win8-64:DdeAccessData
+1630 win7-32:DdeConnectList win7-64:DdeConnectList win8-32:DdeAddData win8-64:DdeAddData
+1631 win7-32:DdeCreateDataHandle win7-64:DdeCreateDataHandle win8-32:DdeClientTransaction win8-64:DdeClientTransaction
+1632 win7-32:DdeCreateStringHandleA win7-64:DdeCreateStringHandleA win8-32:DdeCmpStringHandles win8-64:DdeCmpStringHandles
+1633 win7-32:DdeCreateStringHandleW win7-64:DdeCreateStringHandleW win8-32:DdeConnect win8-64:DdeConnect
+1634 win7-32:DdeDisconnect win7-64:DdeDisconnect win8-32:DdeConnectList win8-64:DdeConnectList
+1635 win7-32:DdeDisconnectList win7-64:DdeDisconnectList win8-32:DdeCreateDataHandle win8-64:DdeCreateDataHandle
+1636 win7-32:DdeEnableCallback win7-64:DdeEnableCallback win8-32:DdeCreateStringHandleA win8-64:DdeCreateStringHandleA
+1637 win7-32:DdeFreeDataHandle win7-64:DdeFreeDataHandle win8-32:DdeCreateStringHandleW win8-64:DdeCreateStringHandleW
+1638 win7-32:DdeFreeStringHandle win7-64:DdeFreeStringHandle win8-32:DdeDisconnect win8-64:DdeDisconnect
+1639 win7-32:DdeGetData win7-64:DdeGetData win8-32:DdeDisconnectList win8-64:DdeDisconnectList
+1640 win7-32:DdeGetLastError win7-64:DdeGetLastError win8-32:DdeEnableCallback win8-64:DdeEnableCallback
+1641 win7-32:DdeGetQualityOfService win7-64:DdeGetQualityOfService win8-32:DdeFreeDataHandle win8-64:DdeFreeDataHandle
+1642 win7-32:DdeImpersonateClient win7-64:DdeImpersonateClient win8-32:DdeFreeStringHandle win8-64:DdeFreeStringHandle
+1643 win7-32:DdeInitializeA win7-64:DdeInitializeA win8-32:DdeGetData win8-64:DdeGetData
+1644 win7-32:DdeInitializeW win7-64:DdeInitializeW win8-32:DdeGetLastError win8-64:DdeGetLastError
+1645 win7-32:DdeKeepStringHandle win7-64:DdeKeepStringHandle win8-32:DdeGetQualityOfService win8-64:DdeGetQualityOfService
+1646 win7-32:DdeNameService win7-64:DdeNameService win8-32:DdeImpersonateClient win8-64:DdeImpersonateClient
+1647 win7-32:DdePostAdvise win7-64:DdePostAdvise win8-32:DdeInitializeA win8-64:DdeInitializeA
+1648 win7-32:DdeQueryConvInfo win7-64:DdeQueryConvInfo win8-32:DdeInitializeW win8-64:DdeInitializeW
+1649 win7-32:DdeQueryNextServer win7-64:DdeQueryNextServer win8-32:DdeKeepStringHandle win8-64:DdeKeepStringHandle
+1650 win7-32:DdeQueryStringA win7-64:DdeQueryStringA win8-32:DdeNameService win8-64:DdeNameService
+1651 win7-32:DdeQueryStringW win7-64:DdeQueryStringW win8-32:DdePostAdvise win8-64:DdePostAdvise
+1652 win7-32:DdeReconnect win7-64:DdeReconnect win8-32:DdeQueryConvInfo win8-64:DdeQueryConvInfo
+1653 win7-32:DdeSetQualityOfService win7-64:DdeSetQualityOfService win8-32:DdeQueryNextServer win8-64:DdeQueryNextServer
+1654 win7-32:DdeSetUserHandle win7-64:DdeSetUserHandle win8-32:DdeQueryStringA win8-64:DdeQueryStringA
+1655 win7-32:DdeUnaccessData win7-64:DdeUnaccessData win8-32:DdeQueryStringW win8-64:DdeQueryStringW
+1656 win7-32:DdeUninitialize win7-64:DdeUninitialize win8-32:DdeReconnect win8-64:DdeReconnect
+1657 win7-32:DefDlgProcA win7-64:DefDlgProcA win8-32:DdeSetQualityOfService win8-64:DdeSetQualityOfService
+1658 win7-32:DefDlgProcW win7-64:DefDlgProcW win8-32:DdeSetUserHandle win8-64:DdeSetUserHandle
+1659 win7-32:DefFrameProcA win7-64:DefFrameProcA win8-32:DdeUnaccessData win8-64:DdeUnaccessData
+1660 win7-32:DefFrameProcW win7-64:DefFrameProcW win8-32:DdeUninitialize win8-64:DdeUninitialize
+1661 win7-32:DefMDIChildProcA win7-64:DefMDIChildProcA win8-32:DefDlgProcA win8-64:DefDlgProcA
+1662 win7-32:DefMDIChildProcW win7-64:DefMDIChildProcW win8-32:DefDlgProcW win8-64:DefDlgProcW
+1663 win7-32:DefRawInputProc win7-64:DefRawInputProc win8-32:DefFrameProcA win8-64:DefFrameProcA
+1664 win7-32:DefWindowProcA win7-64:DefWindowProcA win8-32:DefFrameProcW win8-64:DefFrameProcW
+1665 win7-32:DefWindowProcW win7-64:DefWindowProcW win8-32:DefMDIChildProcA win8-64:DefMDIChildProcA
+1666 win7-32:DeferWindowPos win7-64:DeferWindowPos win8-32:DefMDIChildProcW win8-64:DefMDIChildProcW
+1667 win7-32:DeleteMenu win7-64:DeleteMenu win8-32:DefRawInputProc win8-64:DefRawInputProc
+1668 win7-32:DeregisterShellHookWindow win7-64:DeregisterShellHookWindow win8-32:DefWindowProcA win8-64:DefWindowProcA
+1669 win7-32:DestroyAcceleratorTable win7-64:DestroyAcceleratorTable win8-32:DefWindowProcW win8-64:DefWindowProcW
+1670 win7-32:DestroyCaret win7-64:DestroyCaret win8-32:DeferWindowPos win8-64:DeferWindowPos
+1671 win7-32:DestroyCursor win7-64:DestroyCursor win8-32:DeferWindowPosAndBand win8-64:DeferWindowPosAndBand
+1672 win7-32:DestroyIcon win7-64:DestroyIcon win8-32:DeleteMenu win8-64:DeleteMenu
+1673 win7-32:DestroyMenu win7-64:DestroyMenu win8-32:DeregisterShellHookWindow win8-64:DeregisterShellHookWindow
+1674 win7-32:DestroyReasons win7-64:DestroyReasons win8-32:DestroyAcceleratorTable win8-64:DestroyAcceleratorTable
+1675 win7-32:DestroyWindow win7-64:DestroyWindow win8-32:DestroyCaret win8-64:DestroyCaret
+1676 win7-32:DeviceEventWorker win7-64:DeviceEventWorker win8-32:DestroyCursor win8-64:DestroyCursor
+1677 win7-32:DialogBoxIndirectParamA win7-64:DialogBoxIndirectParamA win8-32:DestroyDCompositionHwndTarget win8-64:DestroyDCompositionHwndTarget
+1678 win7-32:DialogBoxIndirectParamAorW win7-64:DialogBoxIndirectParamAorW win8-32:DestroyIcon win8-64:DestroyIcon
+1679 win7-32:DialogBoxIndirectParamW win7-64:DialogBoxIndirectParamW win8-32:DestroyMenu win8-64:DestroyMenu
+1680 win7-32:DialogBoxParamA win7-64:DialogBoxParamA win8-32:DestroyReasons win8-64:DestroyReasons
+1681 win7-32:DialogBoxParamW win7-64:DialogBoxParamW win8-32:DestroyWindow win8-64:DestroyWindow
+1682 win7-32:DisableProcessWindowsGhosting win7-64:DisableProcessWindowsGhosting win8-32:DeviceEventWorker win8-64:DeviceEventWorker
+1683 win7-32:DispatchMessageA win7-64:DispatchMessageA win8-32:DialogBoxIndirectParamA win8-64:DialogBoxIndirectParamA
+1684 win7-32:DispatchMessageW win7-64:DispatchMessageW win8-32:DialogBoxIndirectParamAorW win8-64:DialogBoxIndirectParamAorW
+1685 win7-32:DisplayConfigGetDeviceInfo win7-64:DisplayConfigGetDeviceInfo win8-32:DialogBoxIndirectParamW win8-64:DialogBoxIndirectParamW
+1686 win7-32:DisplayConfigSetDeviceInfo win7-64:DisplayConfigSetDeviceInfo win8-32:DialogBoxParamA win8-64:DialogBoxParamA
+1687 win7-32:DisplayExitWindowsWarnings win7-64:DisplayExitWindowsWarnings win8-32:DialogBoxParamW win8-64:DialogBoxParamW
+1688 win7-32:DlgDirListA win7-64:DlgDirListA win8-32:DisableProcessWindowsGhosting win8-64:DisableProcessWindowsGhosting
+1689 win7-32:DlgDirListComboBoxA win7-64:DlgDirListComboBoxA win8-32:DispatchMessageA win8-64:DispatchMessageA
+1690 win7-32:DlgDirListComboBoxW win7-64:DlgDirListComboBoxW win8-32:DispatchMessageW win8-64:DispatchMessageW
+1691 win7-32:DlgDirListW win7-64:DlgDirListW win8-32:DisplayConfigGetDeviceInfo win8-64:DisplayConfigGetDeviceInfo
+1692 win7-32:DlgDirSelectComboBoxExA win7-64:DlgDirSelectComboBoxExA win8-32:DisplayConfigSetDeviceInfo win8-64:DisplayConfigSetDeviceInfo
+1693 win7-32:DlgDirSelectComboBoxExW win7-64:DlgDirSelectComboBoxExW win8-32:DisplayExitWindowsWarnings win8-64:DisplayExitWindowsWarnings
+1694 win7-32:DlgDirSelectExA win7-64:DlgDirSelectExA win8-32:DlgDirListA win8-64:DlgDirListA
+1695 win7-32:DlgDirSelectExW win7-64:DlgDirSelectExW win8-32:DlgDirListComboBoxA win8-64:DlgDirListComboBoxA
+1696 win7-32:DoSoundConnect win7-64:DoSoundConnect win8-32:DlgDirListComboBoxW win8-64:DlgDirListComboBoxW
+1697 win7-32:DoSoundDisconnect win7-64:DoSoundDisconnect win8-32:DlgDirListW win8-64:DlgDirListW
+1698 win7-32:DragDetect win7-64:DragDetect win8-32:DlgDirSelectComboBoxExA win8-64:DlgDirSelectComboBoxExA
+1699 win7-32:DragObject win7-64:DragObject win8-32:DlgDirSelectComboBoxExW win8-64:DlgDirSelectComboBoxExW
+1700 win7-32:DrawAnimatedRects win7-64:DrawAnimatedRects win8-32:DlgDirSelectExA win8-64:DlgDirSelectExA
+1701 win7-32:DrawCaption win7-64:DrawCaption win8-32:DlgDirSelectExW win8-64:DlgDirSelectExW
+1702 win7-32:DrawCaptionTempA win7-64:DrawCaptionTempA win8-32:DoSoundConnect win8-64:DoSoundConnect
+1703 win7-32:DrawCaptionTempW win7-64:DrawCaptionTempW win8-32:DoSoundDisconnect win8-64:DoSoundDisconnect
+1704 win7-32:DrawEdge win7-64:DrawEdge win8-32:DragDetect win8-64:DragDetect
+1705 win7-32:DrawFocusRect win7-64:DrawFocusRect win8-32:DragObject win8-64:DragObject
+1706 win7-32:DrawFrame win7-64:DrawFrame win8-32:DrawAnimatedRects win8-64:DrawAnimatedRects
+1707 win7-32:DrawFrameControl win7-64:DrawFrameControl win8-32:DrawCaption win8-64:DrawCaption
+1708 win7-32:DrawIcon win7-64:DrawIcon win8-32:DrawCaptionTempA win8-64:DrawCaptionTempA
+1709 win7-32:DrawIconEx win7-64:DrawIconEx win8-32:DrawCaptionTempW win8-64:DrawCaptionTempW
+1710 win7-32:DrawMenuBar win7-64:DrawMenuBar win8-32:DrawEdge win8-64:DrawEdge
+1711 win7-32:DrawMenuBarTemp win7-64:DrawMenuBarTemp win8-32:DrawFocusRect win8-64:DrawFocusRect
+1712 win7-32:DrawStateA win7-64:DrawStateA win8-32:DrawFrame win8-64:DrawFrame
+1713 win7-32:DrawStateW win7-64:DrawStateW win8-32:DrawFrameControl win8-64:DrawFrameControl
+1714 win7-32:DrawTextA win7-64:DrawTextA win8-32:DrawIcon win8-64:DrawIcon
+1715 win7-32:DrawTextExA win7-64:DrawTextExA win8-32:DrawIconEx win8-64:DrawIconEx
+1716 win7-32:DrawTextExW win7-64:DrawTextExW win8-32:DrawMenuBar win8-64:DrawMenuBar
+1717 win7-32:DrawTextW win7-64:DrawTextW win8-32:DrawMenuBarTemp win8-64:DrawMenuBarTemp
+1718 win7-32:DwmGetDxSharedSurface win7-64:DwmGetDxSharedSurface win8-32:DrawStateA win8-64:DrawStateA
+1719 win7-32:DwmStartRedirection win7-64:DwmStartRedirection win8-32:DrawStateW win8-64:DrawStateW
+1720 win7-32:DwmStopRedirection win7-64:DwmStopRedirection win8-32:DrawTextA win8-64:DrawTextA
+1721 win7-32:EditWndProc win7-64:EditWndProc win8-32:DrawTextExA win8-64:DrawTextExA
+1722 win7-32:EmptyClipboard win7-64:EmptyClipboard win8-32:DrawTextExW win8-64:DrawTextExW
+1723 win7-32:EnableMenuItem win7-64:EnableMenuItem win8-32:DrawTextW win8-64:DrawTextW
+1724 win7-32:EnableScrollBar win7-64:EnableScrollBar win8-32:DwmGetDxSharedSurface win8-64:DwmGetDxSharedSurface
+1725 win7-32:EnableWindow win7-64:EnableWindow win8-32:DwmGetRemoteSessionOcclusionEvent win8-64:DwmGetRemoteSessionOcclusionEvent
+1726 win7-32:EndDeferWindowPos win7-64:EndDeferWindowPos win8-32:DwmGetRemoteSessionOcclusionState win8-64:DwmGetRemoteSessionOcclusionState
+1727 win7-32:EndDialog win7-64:EndDialog win8-32:DwmLockScreenUpdates win8-64:DwmLockScreenUpdates
+1728 win7-32:EndMenu win7-64:EndMenu win8-32:DwmStartRedirection win8-64:DwmStartRedirection
+1729 win7-32:EndPaint win7-64:EndPaint win8-32:DwmStopRedirection win8-64:DwmStopRedirection
+1730 win7-32:EndTask win7-64:EndTask win8-32:DwmValidateWindow win8-64:DwmValidateWindow
+1731 win7-32:EnterReaderModeHelper win7-64:EnterReaderModeHelper win8-32:EditWndProc win8-64:EditWndProc
+1732 win7-32:EnumChildWindows win7-64:EnumChildWindows win8-32:EmptyClipboard win8-64:EmptyClipboard
+1733 win7-32:EnumClipboardFormats win7-64:EnumClipboardFormats win8-32:EnableMenuItem win8-64:EnableMenuItem
+1734 win7-32:EnumDesktopWindows win7-64:EnumDesktopWindows win8-32:EnableMouseInPointer win8-64:EnableMouseInPointer
+1735 win7-32:EnumDesktopsA win7-64:EnumDesktopsA win8-32:EnableScrollBar win8-64:EnableScrollBar
+1736 win7-32:EnumDesktopsW win7-64:EnumDesktopsW win8-32:EnableSessionForMMCSS win8-64:EnableSessionForMMCSS
+1737 win7-32:EnumDisplayDevicesA win7-64:EnumDisplayDevicesA win8-32:EnableWindow win8-64:EnableWindow
+1738 win7-32:EnumDisplayDevicesW win7-64:EnumDisplayDevicesW win8-32:EndDeferWindowPos win8-64:EndDeferWindowPos
+1739 win7-32:EnumDisplayMonitors win7-64:EnumDisplayMonitors win8-32:EndDeferWindowPosEx win8-64:EndDeferWindowPosEx
+1740 win7-32:EnumDisplaySettingsA win7-64:EnumDisplaySettingsA win8-32:EndDialog win8-64:EndDialog
+1741 win7-32:EnumDisplaySettingsExA win7-64:EnumDisplaySettingsExA win8-32:EndMenu win8-64:EndMenu
+1742 win7-32:EnumDisplaySettingsExW win7-64:EnumDisplaySettingsExW win8-32:EndPaint win8-64:EndPaint
+1743 win7-32:EnumDisplaySettingsW win7-64:EnumDisplaySettingsW win8-32:EndTask win8-64:EndTask
+1744 win7-32:EnumPropsA win7-64:EnumPropsA win8-32:EnterReaderModeHelper win8-64:EnterReaderModeHelper
+1745 win7-32:EnumPropsExA win7-64:EnumPropsExA win8-32:EnumChildWindows win8-64:EnumChildWindows
+1746 win7-32:EnumPropsExW win7-64:EnumPropsExW win8-32:EnumClipboardFormats win8-64:EnumClipboardFormats
+1747 win7-32:EnumPropsW win7-64:EnumPropsW win8-32:EnumDesktopWindows win8-64:EnumDesktopWindows
+1748 win7-32:EnumThreadWindows win7-64:EnumThreadWindows win8-32:EnumDesktopsA win8-64:EnumDesktopsA
+1749 win7-32:EnumWindowStationsA win7-64:EnumWindowStationsA win8-32:EnumDesktopsW win8-64:EnumDesktopsW
+1750 win7-32:EnumWindowStationsW win7-64:EnumWindowStationsW win8-32:EnumDisplayDevicesA win8-64:EnumDisplayDevicesA
+1751 win7-32:EnumWindows win7-64:EnumWindows win8-32:EnumDisplayDevicesW win8-64:EnumDisplayDevicesW
+1752 win7-32:EqualRect win7-64:EqualRect win8-32:EnumDisplayMonitors win8-64:EnumDisplayMonitors
+1753 win7-32:ExcludeUpdateRgn win7-64:ExcludeUpdateRgn win8-32:EnumDisplaySettingsA win8-64:EnumDisplaySettingsA
+1754 win7-32:ExitWindowsEx win7-64:ExitWindowsEx win8-32:EnumDisplaySettingsExA win8-64:EnumDisplaySettingsExA
+1755 win7-32:FillRect win7-64:FillRect win8-32:EnumDisplaySettingsExW win8-64:EnumDisplaySettingsExW
+1756 win7-32:FindWindowA win7-64:FindWindowA win8-32:EnumDisplaySettingsW win8-64:EnumDisplaySettingsW
+1757 win7-32:FindWindowExA win7-64:FindWindowExA win8-32:EnumPropsA win8-64:EnumPropsA
+1758 win7-32:FindWindowExW win7-64:FindWindowExW win8-32:EnumPropsExA win8-64:EnumPropsExA
+1759 win7-32:FindWindowW win7-64:FindWindowW win8-32:EnumPropsExW win8-64:EnumPropsExW
+1760 win7-32:FlashWindow win7-64:FlashWindow win8-32:EnumPropsW win8-64:EnumPropsW
+1761 win7-32:FlashWindowEx win7-64:FlashWindowEx win8-32:EnumThreadWindows win8-64:EnumThreadWindows
+1762 win7-32:FrameRect win7-64:FrameRect win8-32:EnumWindowStationsA win8-64:EnumWindowStationsA
+1763 win7-32:FreeDDElParam win7-64:FreeDDElParam win8-32:EnumWindowStationsW win8-64:EnumWindowStationsW
+1764 win7-32:FrostCrashedWindow win7-64:FrostCrashedWindow win8-32:EnumWindows win8-64:EnumWindows
+1765 win7-32:GetActiveWindow win7-64:GetActiveWindow win8-32:EqualRect win8-64:EqualRect
+1766 win7-32:GetAltTabInfo win7-64:GetAltTabInfo win8-32:EvaluateProximityToPolygon win8-64:EvaluateProximityToPolygon
+1767 win7-32:GetAltTabInfoA win7-64:GetAltTabInfoA win8-32:EvaluateProximityToRect win8-64:EvaluateProximityToRect
+1768 win7-32:GetAltTabInfoW win7-64:GetAltTabInfoW win8-32:ExcludeUpdateRgn win8-64:ExcludeUpdateRgn
+1769 win7-32:GetAncestor win7-64:GetAncestor win8-32:ExitWindowsEx win8-64:ExitWindowsEx
+1770 win7-32:GetAppCompatFlags2 win7-64:GetAppCompatFlags win8-32:FillRect win8-64:FillRect
+1771 win7-32:GetAppCompatFlags win7-64:GetAppCompatFlags2 win8-32:FindWindowA win8-64:FindWindowA
+1772 win7-32:GetAsyncKeyState win7-64:GetAsyncKeyState win8-32:FindWindowExA win8-64:FindWindowExA
+1773 win7-32:GetCapture win7-64:GetCapture win8-32:FindWindowExW win8-64:FindWindowExW
+1774 win7-32:GetCaretBlinkTime win7-64:GetCaretBlinkTime win8-32:FindWindowW win8-64:FindWindowW
+1775 win7-32:GetCaretPos win7-64:GetCaretPos win8-32:FlashWindow win8-64:FlashWindow
+1776 win7-32:GetClassInfoA win7-64:GetClassInfoA win8-32:FlashWindowEx win8-64:FlashWindowEx
+1777 win7-32:GetClassInfoExA win7-64:GetClassInfoExA win8-32:FrameRect win8-64:FrameRect
+1778 win7-32:GetClassInfoExW win7-64:GetClassInfoExW win8-32:FreeDDElParam win8-64:FreeDDElParam
+1779 win7-32:GetClassInfoW win7-64:GetClassInfoW win8-32:FrostCrashedWindow win8-64:FrostCrashedWindow
+1780 win7-32:GetClassLongA win7-64:GetClassLongA win8-32:GetActiveWindow win8-64:GetActiveWindow
+1781 win7-32:GetClassLongW win7-64:GetClassLongPtrA win8-32:GetAltTabInfo win8-64:GetAltTabInfo
+1782 win7-32:GetClassNameA win7-64:GetClassLongPtrW win8-32:GetAltTabInfoA win8-64:GetAltTabInfoA
+1783 win7-32:GetClassNameW win7-64:GetClassLongW win8-32:GetAltTabInfoW win8-64:GetAltTabInfoW
+1784 win7-32:GetClassWord win7-64:GetClassNameA win8-32:GetAncestor win8-64:GetAncestor
+1785 win7-32:GetClientRect win7-64:GetClassNameW win8-32:GetAppCompatFlags2 win8-64:GetAppCompatFlags
+1786 win7-32:GetClipCursor win7-64:GetClassWord win8-32:GetAppCompatFlags win8-64:GetAppCompatFlags2
+1787 win7-32:GetClipboardData win7-64:GetClientRect win8-32:GetAsyncKeyState win8-64:GetAsyncKeyState
+1788 win7-32:GetClipboardFormatNameA win7-64:GetClipCursor win8-32:GetAutoRotationState win8-64:GetAutoRotationState
+1789 win7-32:GetClipboardFormatNameW win7-64:GetClipboardData win8-32:GetCIMSSM win8-64:GetCIMSSM
+1790 win7-32:GetClipboardOwner win7-64:GetClipboardFormatNameA win8-32:GetCapture win8-64:GetCapture
+1791 win7-32:GetClipboardSequenceNumber win7-64:GetClipboardFormatNameW win8-32:GetCaretBlinkTime win8-64:GetCaretBlinkTime
+1792 win7-32:GetClipboardViewer win7-64:GetClipboardOwner win8-32:GetCaretPos win8-64:GetCaretPos
+1793 win7-32:GetComboBoxInfo win7-64:GetClipboardSequenceNumber win8-32:GetClassInfoA win8-64:GetClassInfoA
+1794 win7-32:GetCursor win7-64:GetClipboardViewer win8-32:GetClassInfoExA win8-64:GetClassInfoExA
+1795 win7-32:GetCursorFrameInfo win7-64:GetComboBoxInfo win8-32:GetClassInfoExW win8-64:GetClassInfoExW
+1796 win7-32:GetCursorInfo win7-64:GetCursor win8-32:GetClassInfoW win8-64:GetClassInfoW
+1797 win7-32:GetCursorPos win7-64:GetCursorFrameInfo win8-32:GetClassLongA win8-64:GetClassLongA
+1798 win7-32:GetDC win7-64:GetCursorInfo win8-32:GetClassLongW win8-64:GetClassLongPtrA
+1799 win7-32:GetDCEx win7-64:GetCursorPos win8-32:GetClassNameA win8-64:GetClassLongPtrW
+1800 win7-32:GetDesktopWindow win7-64:GetDC win8-32:GetClassNameW win8-64:GetClassLongW
+1801 win7-32:GetDialogBaseUnits win7-64:GetDCEx win8-32:GetClassWord win8-64:GetClassNameA
+1802 win7-32:GetDisplayConfigBufferSizes win7-64:GetDesktopWindow win8-32:GetClientRect win8-64:GetClassNameW
+1803 win7-32:GetDlgCtrlID win7-64:GetDialogBaseUnits win8-32:GetClipCursor win8-64:GetClassWord
+1804 win7-32:GetDlgItem win7-64:GetDisplayConfigBufferSizes win8-32:GetClipboardAccessToken win8-64:GetClientRect
+1805 win7-32:GetDlgItemInt win7-64:GetDlgCtrlID win8-32:GetClipboardData win8-64:GetClipCursor
+1806 win7-32:GetDlgItemTextA win7-64:GetDlgItem win8-32:GetClipboardFormatNameA win8-64:GetClipboardAccessToken
+1807 win7-32:GetDlgItemTextW win7-64:GetDlgItemInt win8-32:GetClipboardFormatNameW win8-64:GetClipboardData
+1808 win7-32:GetDoubleClickTime win7-64:GetDlgItemTextA win8-32:GetClipboardOwner win8-64:GetClipboardFormatNameA
+1809 win7-32:GetFocus win7-64:GetDlgItemTextW win8-32:GetClipboardSequenceNumber win8-64:GetClipboardFormatNameW
+1810 win7-32:GetForegroundWindow win7-64:GetDoubleClickTime win8-32:GetClipboardViewer win8-64:GetClipboardOwner
+1811 win7-32:GetGUIThreadInfo win7-64:GetFocus win8-32:GetComboBoxInfo win8-64:GetClipboardSequenceNumber
+1812 win7-32:GetGestureConfig win7-64:GetForegroundWindow win8-32:GetCurrentInputMessageSource win8-64:GetClipboardViewer
+1813 win7-32:GetGestureExtraArgs win7-64:GetGUIThreadInfo win8-32:GetCursor win8-64:GetComboBoxInfo
+1814 win7-32:GetGestureInfo win7-64:GetGestureConfig win8-32:GetCursorFrameInfo win8-64:GetCurrentInputMessageSource
+1815 win7-32:GetGuiResources win7-64:GetGestureExtraArgs win8-32:GetCursorInfo win8-64:GetCursor
+1816 win7-32:GetIconInfo win7-64:GetGestureInfo win8-32:GetCursorPos win8-64:GetCursorFrameInfo
+1817 win7-32:GetIconInfoExA win7-64:GetGuiResources win8-32:GetDC win8-64:GetCursorInfo
+1818 win7-32:GetIconInfoExW win7-64:GetIconInfo win8-32:GetDCEx win8-64:GetCursorPos
+1819 win7-32:GetInputDesktop win7-64:GetIconInfoExA win8-32:GetDesktopID win8-64:GetDC
+1820 win7-32:GetInputLocaleInfo win7-64:GetIconInfoExW win8-32:GetDesktopWindow win8-64:GetDCEx
+1821 win7-32:GetInputState win7-64:GetInputDesktop win8-32:GetDialogBaseUnits win8-64:GetDesktopID
+1822 win7-32:GetInternalWindowPos win7-64:GetInputLocaleInfo win8-32:GetDisplayAutoRotationPreferences win8-64:GetDesktopWindow
+1823 win7-32:GetKBCodePage win7-64:GetInputState win8-32:GetDisplayConfigBufferSizes win8-64:GetDialogBaseUnits
+1824 win7-32:GetKeyNameTextA win7-64:GetInternalWindowPos win8-32:GetDlgCtrlID win8-64:GetDisplayAutoRotationPreferences
+1825 win7-32:GetKeyNameTextW win7-64:GetKBCodePage win8-32:GetDlgItem win8-64:GetDisplayConfigBufferSizes
+1826 win7-32:GetKeyState win7-64:GetKeyNameTextA win8-32:GetDlgItemInt win8-64:GetDlgCtrlID
+1827 win7-32:GetKeyboardLayout win7-64:GetKeyNameTextW win8-32:GetDlgItemTextA win8-64:GetDlgItem
+1828 win7-32:GetKeyboardLayoutList win7-64:GetKeyState win8-32:GetDlgItemTextW win8-64:GetDlgItemInt
+1829 win7-32:GetKeyboardLayoutNameA win7-64:GetKeyboardLayout win8-32:GetDoubleClickTime win8-64:GetDlgItemTextA
+1830 win7-32:GetKeyboardLayoutNameW win7-64:GetKeyboardLayoutList win8-32:GetFocus win8-64:GetDlgItemTextW
+1831 win7-32:GetKeyboardState win7-64:GetKeyboardLayoutNameA win8-32:GetForegroundWindow win8-64:GetDoubleClickTime
+1832 win7-32:GetKeyboardType win7-64:GetKeyboardLayoutNameW win8-32:GetGUIThreadInfo win8-64:GetFocus
+1833 win7-32:GetLastActivePopup win7-64:GetKeyboardState win8-32:GetGestureConfig win8-64:GetForegroundWindow
+1834 win7-32:GetLastInputInfo win7-64:GetKeyboardType win8-32:GetGestureExtraArgs win8-64:GetGUIThreadInfo
+1835 win7-32:GetLayeredWindowAttributes win7-64:GetLastActivePopup win8-32:GetGestureInfo win8-64:GetGestureConfig
+1836 win7-32:GetListBoxInfo win7-64:GetLastInputInfo win8-32:GetGuiResources win8-64:GetGestureExtraArgs
+1837 win7-32:GetMagnificationDesktopColorEffect win7-64:GetLayeredWindowAttributes win8-32:GetIconInfo win8-64:GetGestureInfo
+1838 win7-32:GetMagnificationDesktopMagnification win7-64:GetListBoxInfo win8-32:GetIconInfoExA win8-64:GetGuiResources
+1839 win7-32:GetMagnificationLensCtxInformation win7-64:GetMagnificationDesktopColorEffect win8-32:GetIconInfoExW win8-64:GetIconInfo
+1840 win7-32:GetMenu win7-64:GetMagnificationDesktopMagnification win8-32:GetInputDesktop win8-64:GetIconInfoExA
+1841 win7-32:GetMenuBarInfo win7-64:GetMagnificationLensCtxInformation win8-32:GetInputLocaleInfo win8-64:GetIconInfoExW
+1842 win7-32:GetMenuCheckMarkDimensions win7-64:GetMenu win8-32:GetInputState win8-64:GetInputDesktop
+1843 win7-32:GetMenuContextHelpId win7-64:GetMenuBarInfo win8-32:GetInternalWindowPos win8-64:GetInputLocaleInfo
+1844 win7-32:GetMenuDefaultItem win7-64:GetMenuCheckMarkDimensions win8-32:GetKBCodePage win8-64:GetInputState
+1845 win7-32:GetMenuInfo win7-64:GetMenuContextHelpId win8-32:GetKeyNameTextA win8-64:GetInternalWindowPos
+1846 win7-32:GetMenuItemCount win7-64:GetMenuDefaultItem win8-32:GetKeyNameTextW win8-64:GetKBCodePage
+1847 win7-32:GetMenuItemID win7-64:GetMenuInfo win8-32:GetKeyState win8-64:GetKeyNameTextA
+1848 win7-32:GetMenuItemInfoA win7-64:GetMenuItemCount win8-32:GetKeyboardLayout win8-64:GetKeyNameTextW
+1849 win7-32:GetMenuItemInfoW win7-64:GetMenuItemID win8-32:GetKeyboardLayoutList win8-64:GetKeyState
+1850 win7-32:GetMenuItemRect win7-64:GetMenuItemInfoA win8-32:GetKeyboardLayoutNameA win8-64:GetKeyboardLayout
+1851 win7-32:GetMenuState win7-64:GetMenuItemInfoW win8-32:GetKeyboardLayoutNameW win8-64:GetKeyboardLayoutList
+1852 win7-32:GetMenuStringA win7-64:GetMenuItemRect win8-32:GetKeyboardState win8-64:GetKeyboardLayoutNameA
+1853 win7-32:GetMenuStringW win7-64:GetMenuState win8-32:GetKeyboardType win8-64:GetKeyboardLayoutNameW
+1854 win7-32:GetMessageA win7-64:GetMenuStringA win8-32:GetLastActivePopup win8-64:GetKeyboardState
+1855 win7-32:GetMessageExtraInfo win7-64:GetMenuStringW win8-32:GetLastInputInfo win8-64:GetKeyboardType
+1856 win7-32:GetMessagePos win7-64:GetMessageA win8-32:GetLayeredWindowAttributes win8-64:GetLastActivePopup
+1857 win7-32:GetMessageTime win7-64:GetMessageExtraInfo win8-32:GetListBoxInfo win8-64:GetLastInputInfo
+1858 win7-32:GetMessageW win7-64:GetMessagePos win8-32:GetMagnificationDesktopColorEffect win8-64:GetLayeredWindowAttributes
+1859 win7-32:GetMonitorInfoA win7-64:GetMessageTime win8-32:GetMagnificationDesktopMagnification win8-64:GetListBoxInfo
+1860 win7-32:GetMonitorInfoW win7-64:GetMessageW win8-32:GetMagnificationLensCtxInformation win8-64:GetMagnificationDesktopColorEffect
+1861 win7-32:GetMouseMovePointsEx win7-64:GetMonitorInfoA win8-32:GetMenu win8-64:GetMagnificationDesktopMagnification
+1862 win7-32:GetNextDlgGroupItem win7-64:GetMonitorInfoW win8-32:GetMenuBarInfo win8-64:GetMagnificationLensCtxInformation
+1863 win7-32:GetNextDlgTabItem win7-64:GetMouseMovePointsEx win8-32:GetMenuCheckMarkDimensions win8-64:GetMenu
+1864 win7-32:GetOpenClipboardWindow win7-64:GetNextDlgGroupItem win8-32:GetMenuContextHelpId win8-64:GetMenuBarInfo
+1865 win7-32:GetParent win7-64:GetNextDlgTabItem win8-32:GetMenuDefaultItem win8-64:GetMenuCheckMarkDimensions
+1866 win7-32:GetPhysicalCursorPos win7-64:GetOpenClipboardWindow win8-32:GetMenuInfo win8-64:GetMenuContextHelpId
+1867 win7-32:GetPriorityClipboardFormat win7-64:GetParent win8-32:GetMenuItemCount win8-64:GetMenuDefaultItem
+1868 win7-32:GetProcessDefaultLayout win7-64:GetPhysicalCursorPos win8-32:GetMenuItemID win8-64:GetMenuInfo
+1869 win7-32:GetProcessWindowStation win7-64:GetPriorityClipboardFormat win8-32:GetMenuItemInfoA win8-64:GetMenuItemCount
+1870 win7-32:GetProgmanWindow win7-64:GetProcessDefaultLayout win8-32:GetMenuItemInfoW win8-64:GetMenuItemID
+1871 win7-32:GetPropA win7-64:GetProcessWindowStation win8-32:GetMenuItemRect win8-64:GetMenuItemInfoA
+1872 win7-32:GetPropW win7-64:GetProgmanWindow win8-32:GetMenuState win8-64:GetMenuItemInfoW
+1873 win7-32:GetQueueStatus win7-64:GetPropA win8-32:GetMenuStringA win8-64:GetMenuItemRect
+1874 win7-32:GetRawInputBuffer win7-64:GetPropW win8-32:GetMenuStringW win8-64:GetMenuState
+1875 win7-32:GetRawInputData win7-64:GetQueueStatus win8-32:GetMessageA win8-64:GetMenuStringA
+1876 win7-32:GetRawInputDeviceInfoA win7-64:GetRawInputBuffer win8-32:GetMessageExtraInfo win8-64:GetMenuStringW
+1877 win7-32:GetRawInputDeviceInfoW win7-64:GetRawInputData win8-32:GetMessagePos win8-64:GetMessageA
+1878 win7-32:GetRawInputDeviceList win7-64:GetRawInputDeviceInfoA win8-32:GetMessageTime win8-64:GetMessageExtraInfo
+1879 win7-32:GetReasonTitleFromReasonCode win7-64:GetRawInputDeviceInfoW win8-32:GetMessageW win8-64:GetMessagePos
+1880 win7-32:GetRegisteredRawInputDevices win7-64:GetRawInputDeviceList win8-32:GetMonitorInfoA win8-64:GetMessageTime
+1881 win7-32:GetScrollBarInfo win7-64:GetReasonTitleFromReasonCode win8-32:GetMonitorInfoW win8-64:GetMessageW
+1882 win7-32:GetScrollInfo win7-64:GetRegisteredRawInputDevices win8-32:GetMouseMovePointsEx win8-64:GetMonitorInfoA
+1883 win7-32:GetScrollPos win7-64:GetScrollBarInfo win8-32:GetNextDlgGroupItem win8-64:GetMonitorInfoW
+1884 win7-32:GetScrollRange win7-64:GetScrollInfo win8-32:GetNextDlgTabItem win8-64:GetMouseMovePointsEx
+1885 win7-32:GetSendMessageReceiver win7-64:GetScrollPos win8-32:GetOpenClipboardWindow win8-64:GetNextDlgGroupItem
+1886 win7-32:GetShellWindow win7-64:GetScrollRange win8-32:GetParent win8-64:GetNextDlgTabItem
+1887 win7-32:GetSubMenu win7-64:GetSendMessageReceiver win8-32:GetPhysicalCursorPos win8-64:GetOpenClipboardWindow
+1888 win7-32:GetSysColor win7-64:GetShellWindow win8-32:GetPointerCursorId win8-64:GetParent
+1889 win7-32:GetSysColorBrush win7-64:GetSubMenu win8-32:GetPointerDevice win8-64:GetPhysicalCursorPos
+1890 win7-32:GetSystemMenu win7-64:GetSysColor win8-32:GetPointerDeviceCursors win8-64:GetPointerCursorId
+1891 win7-32:GetSystemMetrics win7-64:GetSysColorBrush win8-32:GetPointerDeviceProperties win8-64:GetPointerDevice
+1892 win7-32:GetTabbedTextExtentA win7-64:GetSystemMenu win8-32:GetPointerDeviceRects win8-64:GetPointerDeviceCursors
+1893 win7-32:GetTabbedTextExtentW win7-64:GetSystemMetrics win8-32:GetPointerDevices win8-64:GetPointerDeviceProperties
+1894 win7-32:GetTaskmanWindow win7-64:GetTabbedTextExtentA win8-32:GetPointerFrameInfo win8-64:GetPointerDeviceRects
+1895 win7-32:GetThreadDesktop win7-64:GetTabbedTextExtentW win8-32:GetPointerFrameInfoHistory win8-64:GetPointerDevices
+1896 win7-32:GetTitleBarInfo win7-64:GetTaskmanWindow win8-32:GetPointerFramePenInfo win8-64:GetPointerFrameInfo
+1897 win7-32:GetTopLevelWindow win7-64:GetThreadDesktop win8-32:GetPointerFramePenInfoHistory win8-64:GetPointerFrameInfoHistory
+1898 win7-32:GetTopWindow win7-64:GetTitleBarInfo win8-32:GetPointerFrameTouchInfo win8-64:GetPointerFramePenInfo
+1899 win7-32:GetTouchInputInfo win7-64:GetTopLevelWindow win8-32:GetPointerFrameTouchInfoHistory win8-64:GetPointerFramePenInfoHistory
+1900 win7-32:GetUpdateRect win7-64:GetTopWindow win8-32:GetPointerInfo win8-64:GetPointerFrameTouchInfo
+1901 win7-32:GetUpdateRgn win7-64:GetTouchInputInfo win8-32:GetPointerInfoHistory win8-64:GetPointerFrameTouchInfoHistory
+1902 win7-32:GetUpdatedClipboardFormats win7-64:GetUpdateRect win8-32:GetPointerPenInfo win8-64:GetPointerInfo
+1903 win7-32:GetUserObjectInformationA win7-64:GetUpdateRgn win8-32:GetPointerPenInfoHistory win8-64:GetPointerInfoHistory
+1904 win7-32:GetUserObjectInformationW win7-64:GetUpdatedClipboardFormats win8-32:GetPointerTouchInfo win8-64:GetPointerPenInfo
+1905 win7-32:GetUserObjectSecurity win7-64:GetUserObjectInformationA win8-32:GetPointerTouchInfoHistory win8-64:GetPointerPenInfoHistory
+1906 win7-32:GetWinStationInfo win7-64:GetUserObjectInformationW win8-32:GetPointerType win8-64:GetPointerTouchInfo
+1907 win7-32:GetWindow win7-64:GetUserObjectSecurity win8-32:GetPriorityClipboardFormat win8-64:GetPointerTouchInfoHistory
+1908 win7-32:GetWindowCompositionAttribute win7-64:GetWinStationInfo win8-32:GetProcessDefaultLayout win8-64:GetPointerType
+1909 win7-32:GetWindowCompositionInfo win7-64:GetWindow win8-32:GetProcessWindowStation win8-64:GetPriorityClipboardFormat
+1910 win7-32:GetWindowContextHelpId win7-64:GetWindowCompositionAttribute win8-32:GetProgmanWindow win8-64:GetProcessDefaultLayout
+1911 win7-32:GetWindowDC win7-64:GetWindowCompositionInfo win8-32:GetPropA win8-64:GetProcessWindowStation
+1912 win7-32:GetWindowDisplayAffinity win7-64:GetWindowContextHelpId win8-32:GetPropW win8-64:GetProgmanWindow
+1913 win7-32:GetWindowInfo win7-64:GetWindowDC win8-32:GetQueueStatus win8-64:GetPropA
+1914 win7-32:GetWindowLongA win7-64:GetWindowDisplayAffinity win8-32:GetRawInputBuffer win8-64:GetPropW
+1915 win7-32:GetWindowLongW win7-64:GetWindowInfo win8-32:GetRawInputData win8-64:GetQueueStatus
+1916 win7-32:GetWindowMinimizeRect win7-64:GetWindowLongA win8-32:GetRawInputDeviceInfoA win8-64:GetRawInputBuffer
+1917 win7-32:GetWindowModuleFileName win7-64:GetWindowLongPtrA win8-32:GetRawInputDeviceInfoW win8-64:GetRawInputData
+1918 win7-32:GetWindowModuleFileNameA win7-64:GetWindowLongPtrW win8-32:GetRawInputDeviceList win8-64:GetRawInputDeviceInfoA
+1919 win7-32:GetWindowModuleFileNameW win7-64:GetWindowLongW win8-32:GetRawPointerDeviceData win8-64:GetRawInputDeviceInfoW
+1920 win7-32:GetWindowPlacement win7-64:GetWindowMinimizeRect win8-32:GetReasonTitleFromReasonCode win8-64:GetRawInputDeviceList
+1921 win7-32:GetWindowRect win7-64:GetWindowModuleFileName win8-32:GetRegisteredRawInputDevices win8-64:GetRawPointerDeviceData
+1922 win7-32:GetWindowRgn win7-64:GetWindowModuleFileNameA win8-32:GetScrollBarInfo win8-64:GetReasonTitleFromReasonCode
+1923 win7-32:GetWindowRgnBox win7-64:GetWindowModuleFileNameW win8-32:GetScrollInfo win8-64:GetRegisteredRawInputDevices
+1924 win7-32:GetWindowRgnEx win7-64:GetWindowPlacement win8-32:GetScrollPos win8-64:GetScrollBarInfo
+1925 win7-32:GetWindowTextA win7-64:GetWindowRect win8-32:GetScrollRange win8-64:GetScrollInfo
+1926 win7-32:GetWindowTextLengthA win7-64:GetWindowRgn win8-32:GetSendMessageReceiver win8-64:GetScrollPos
+1927 win7-32:GetWindowTextLengthW win7-64:GetWindowRgnBox win8-32:GetShellWindow win8-64:GetScrollRange
+1928 win7-32:GetWindowTextW win7-64:GetWindowRgnEx win8-32:GetSubMenu win8-64:GetSendMessageReceiver
+1929 win7-32:GetWindowThreadProcessId win7-64:GetWindowTextA win8-32:GetSysColor win8-64:GetShellWindow
+1930 win7-32:GetWindowWord win7-64:GetWindowTextLengthA win8-32:GetSysColorBrush win8-64:GetSubMenu
+1931 win7-32:GhostWindowFromHungWindow win7-64:GetWindowTextLengthW win8-32:GetSystemMenu win8-64:GetSysColor
+1932 win7-32:GrayStringA win7-64:GetWindowTextW win8-32:GetSystemMetrics win8-64:GetSysColorBrush
+1933 win7-32:GrayStringW win7-64:GetWindowThreadProcessId win8-32:GetTabbedTextExtentA win8-64:GetSystemMenu
+1934 win7-32:HideCaret win7-64:GetWindowWord win8-32:GetTabbedTextExtentW win8-64:GetSystemMetrics
+1935 win7-32:HiliteMenuItem win7-64:GhostWindowFromHungWindow win8-32:GetTaskmanWindow win8-64:GetTabbedTextExtentA
+1936 win7-32:HungWindowFromGhostWindow win7-64:GrayStringA win8-32:GetThreadDesktop win8-64:GetTabbedTextExtentW
+1937 win7-32:IMPGetIMEA win7-64:GrayStringW win8-32:GetTitleBarInfo win8-64:GetTaskmanWindow
+1938 win7-32:IMPGetIMEW win7-64:HideCaret win8-32:GetTopLevelWindow win8-64:GetThreadDesktop
+1939 win7-32:IMPQueryIMEA win7-64:HiliteMenuItem win8-32:GetTopWindow win8-64:GetTitleBarInfo
+1940 win7-32:IMPQueryIMEW win7-64:HungWindowFromGhostWindow win8-32:GetTouchInputInfo win8-64:GetTopLevelWindow
+1941 win7-32:IMPSetIMEA win7-64:IMPGetIMEA win8-32:GetUnpredictedMessagePos win8-64:GetTopWindow
+1942 win7-32:IMPSetIMEW win7-64:IMPGetIMEW win8-32:GetUpdateRect win8-64:GetTouchInputInfo
+1943 win7-32:ImpersonateDdeClientWindow win7-64:IMPQueryIMEA win8-32:GetUpdateRgn win8-64:GetUnpredictedMessagePos
+1944 win7-32:InSendMessage win7-64:IMPQueryIMEW win8-32:GetUpdatedClipboardFormats win8-64:GetUpdateRect
+1945 win7-32:InSendMessageEx win7-64:IMPSetIMEA win8-32:GetUserObjectInformationA win8-64:GetUpdateRgn
+1946 win7-32:InflateRect win7-64:IMPSetIMEW win8-32:GetUserObjectInformationW win8-64:GetUpdatedClipboardFormats
+1947 win7-32:InitializeLpkHooks win7-64:ImpersonateDdeClientWindow win8-32:GetUserObjectSecurity win8-64:GetUserObjectInformationA
+1948 win7-32:InsertMenuA win7-64:InSendMessage win8-32:GetWinStationInfo win8-64:GetUserObjectInformationW
+1949 win7-32:InsertMenuItemA win7-64:InSendMessageEx win8-32:GetWindow win8-64:GetUserObjectSecurity
+1950 win7-32:InsertMenuItemW win7-64:InflateRect win8-32:GetWindowBand win8-64:GetWinStationInfo
+1951 win7-32:InsertMenuW win7-64:InitializeLpkHooks win8-32:GetWindowCompositionAttribute win8-64:GetWindow
+1952 win7-32:InternalGetWindowIcon win7-64:InsertMenuA win8-32:GetWindowCompositionInfo win8-64:GetWindowBand
+1953 win7-32:InternalGetWindowText win7-64:InsertMenuItemA win8-32:GetWindowContextHelpId win8-64:GetWindowCompositionAttribute
+1954 win7-32:IntersectRect win7-64:InsertMenuItemW win8-32:GetWindowDC win8-64:GetWindowCompositionInfo
+1955 win7-32:InvalidateRect win7-64:InsertMenuW win8-32:GetWindowDisplayAffinity win8-64:GetWindowContextHelpId
+1956 win7-32:InvalidateRgn win7-64:InternalGetWindowIcon win8-32:GetWindowFeedbackSetting win8-64:GetWindowDC
+1957 win7-32:InvertRect win7-64:InternalGetWindowText win8-32:GetWindowInfo win8-64:GetWindowDisplayAffinity
+1958 win7-32:IsCharAlphaA win7-64:IntersectRect win8-32:GetWindowLongA win8-64:GetWindowFeedbackSetting
+1959 win7-32:IsCharAlphaNumericA win7-64:InvalidateRect win8-32:GetWindowLongW win8-64:GetWindowInfo
+1960 win7-32:IsCharAlphaNumericW win7-64:InvalidateRgn win8-32:GetWindowMinimizeRect win8-64:GetWindowLongA
+1961 win7-32:IsCharAlphaW win7-64:InvertRect win8-32:GetWindowModuleFileName win8-64:GetWindowLongPtrA
+1962 win7-32:IsCharLowerA win7-64:IsCharAlphaA win8-32:GetWindowModuleFileNameA win8-64:GetWindowLongPtrW
+1963 win7-32:IsCharLowerW win7-64:IsCharAlphaNumericA win8-32:GetWindowModuleFileNameW win8-64:GetWindowLongW
+1964 win7-32:IsCharUpperA win7-64:IsCharAlphaNumericW win8-32:GetWindowPlacement win8-64:GetWindowMinimizeRect
+1965 win7-32:IsCharUpperW win7-64:IsCharAlphaW win8-32:GetWindowRect win8-64:GetWindowModuleFileName
+1966 win7-32:IsChild win7-64:IsCharLowerA win8-32:GetWindowRgn win8-64:GetWindowModuleFileNameA
+1967 win7-32:IsClipboardFormatAvailable win7-64:IsCharLowerW win8-32:GetWindowRgnBox win8-64:GetWindowModuleFileNameW
+1968 win7-32:IsDialogMessage win7-64:IsCharUpperA win8-32:GetWindowRgnEx win8-64:GetWindowPlacement
+1969 win7-32:IsDialogMessageA win7-64:IsCharUpperW win8-32:GetWindowTextA win8-64:GetWindowRect
+1970 win7-32:IsDialogMessageW win7-64:IsChild win8-32:GetWindowTextLengthA win8-64:GetWindowRgn
+1971 win7-32:IsDlgButtonChecked win7-64:IsClipboardFormatAvailable win8-32:GetWindowTextLengthW win8-64:GetWindowRgnBox
+1972 win7-32:IsGUIThread win7-64:IsDialogMessage win8-32:GetWindowTextW win8-64:GetWindowRgnEx
+1973 win7-32:IsHungAppWindow win7-64:IsDialogMessageA win8-32:GetWindowThreadProcessId win8-64:GetWindowTextA
+1974 win7-32:IsIconic win7-64:IsDialogMessageW win8-32:GetWindowWord win8-64:GetWindowTextLengthA
+1975 win7-32:IsMenu win7-64:IsDlgButtonChecked win8-32:GhostWindowFromHungWindow win8-64:GetWindowTextLengthW
+1976 win7-32:IsProcessDPIAware win7-64:IsGUIThread win8-32:GrayStringA win8-64:GetWindowTextW
+1977 win7-32:IsRectEmpty win7-64:IsHungAppWindow win8-32:GrayStringW win8-64:GetWindowThreadProcessId
+1978 win7-32:IsSETEnabled win7-64:IsIconic win8-32:HideCaret win8-64:GetWindowWord
+1979 win7-32:IsServerSideWindow win7-64:IsMenu win8-32:HiliteMenuItem win8-64:GhostWindowFromHungWindow
+1980 win7-32:IsThreadDesktopComposited win7-64:IsProcessDPIAware win8-32:HungWindowFromGhostWindow win8-64:GrayStringA
+1981 win7-32:IsTopLevelWindow win7-64:IsRectEmpty win8-32:IMPGetIMEA win8-64:GrayStringW
+1982 win7-32:IsTouchWindow win7-64:IsSETEnabled win8-32:IMPGetIMEW win8-64:HideCaret
+1983 win7-32:IsWinEventHookInstalled win7-64:IsServerSideWindow win8-32:IMPQueryIMEA win8-64:HiliteMenuItem
+1984 win7-32:IsWindow win7-64:IsThreadDesktopComposited win8-32:IMPQueryIMEW win8-64:HungWindowFromGhostWindow
+1985 win7-32:IsWindowEnabled win7-64:IsTopLevelWindow win8-32:IMPSetIMEA win8-64:IMPGetIMEA
+1986 win7-32:IsWindowInDestroy win7-64:IsTouchWindow win8-32:IMPSetIMEW win8-64:IMPGetIMEW
+1987 win7-32:IsWindowRedirectedForPrint win7-64:IsWinEventHookInstalled win8-32:ImpersonateDdeClientWindow win8-64:IMPQueryIMEA
+1988 win7-32:IsWindowUnicode win7-64:IsWindow win8-32:InSendMessage win8-64:IMPQueryIMEW
+1989 win7-32:IsWindowVisible win7-64:IsWindowEnabled win8-32:InSendMessageEx win8-64:IMPSetIMEA
+1990 win7-32:IsWow64Message win7-64:IsWindowInDestroy win8-32:InflateRect win8-64:IMPSetIMEW
+1991 win7-32:IsZoomed win7-64:IsWindowRedirectedForPrint win8-32:InitializeLpkHooks win8-64:ImpersonateDdeClientWindow
+1992 win7-32:KillTimer win7-64:IsWindowUnicode win8-32:InitializeTouchInjection win8-64:InSendMessage
+1993 win7-32:LoadAcceleratorsA win7-64:IsWindowVisible win8-32:InjectTouchInput win8-64:InSendMessageEx
+1994 win7-32:LoadAcceleratorsW win7-64:IsWow64Message win8-32:InsertMenuA win8-64:InflateRect
+1995 win7-32:LoadBitmapA win7-64:IsZoomed win8-32:InsertMenuItemA win8-64:InitializeLpkHooks
+1996 win7-32:LoadBitmapW win7-64:KillTimer win8-32:InsertMenuItemW win8-64:InitializeTouchInjection
+1997 win7-32:LoadCursorA win7-64:LoadAcceleratorsA win8-32:InsertMenuW win8-64:InjectTouchInput
+1998 win7-32:LoadCursorFromFileA win7-64:LoadAcceleratorsW win8-32:InternalGetWindowIcon win8-64:InsertMenuA
+1999 win7-32:LoadCursorFromFileW win7-64:LoadBitmapA win8-32:InternalGetWindowText win8-64:InsertMenuItemA
+2000 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:IntersectRect win8-64:InsertMenuItemW
+2001 vista-32:ActivateKeyboardLayout vista-64:ActivateKeyboardLayout win7-32:- win7-64:- win8-32:- win8-64:-
+2002 vista-32:AddClipboardFormatListener vista-64:AddClipboardFormatListener win7-32:- win7-64:- win8-32:- win8-64:-
+2003 vista-32:AdjustWindowRect vista-64:AdjustWindowRect win7-32:LoadCursorW win7-64:LoadBitmapW win8-32:InvalidateRect win8-64:InsertMenuW
+2004 vista-32:AdjustWindowRectEx vista-64:AdjustWindowRectEx win7-32:LoadIconA win7-64:LoadCursorA win8-32:InvalidateRgn win8-64:InternalGetWindowIcon
+2005 vista-32:AlignRects vista-64:AlignRects win7-32:- win7-64:- win8-32:- win8-64:-
+2006 vista-32:AllowForegroundActivation vista-64:AllowForegroundActivation win7-32:LoadIconW win7-64:LoadCursorFromFileA win8-32:InvertRect win8-64:InternalGetWindowText
+2007 vista-32:AllowSetForegroundWindow vista-64:AllowSetForegroundWindow win7-32:LoadImageA win7-64:LoadCursorFromFileW win8-32:IsCharAlphaA win8-64:IntersectRect
+2008 vista-32:AnimateWindow vista-64:AnimateWindow win7-32:LoadImageW win7-64:LoadCursorW win8-32:IsCharAlphaNumericA win8-64:InvalidateRect
+2009 vista-32:AnyPopup vista-64:AnyPopup win7-32:LoadKeyboardLayoutA win7-64:LoadIconA win8-32:IsCharAlphaNumericW win8-64:InvalidateRgn
+2010 vista-32:AppendMenuA vista-64:AppendMenuA win7-32:LoadKeyboardLayoutEx win7-64:LoadIconW win8-32:- win8-64:-
+2011 vista-32:AppendMenuW vista-64:AppendMenuW win7-32:LoadKeyboardLayoutW win7-64:LoadImageA win8-32:IsCharAlphaW win8-64:InvertRect
+2012 vista-32:ArrangeIconicWindows vista-64:ArrangeIconicWindows win7-32:LoadLocalFonts win7-64:LoadImageW win8-32:IsCharLowerA win8-64:IsCharAlphaA
+2013 vista-32:AttachThreadInput vista-64:AttachThreadInput win7-32:LoadMenuA win7-64:LoadKeyboardLayoutA win8-32:IsCharLowerW win8-64:IsCharAlphaNumericA
+2014 vista-32:BeginDeferWindowPos vista-64:BeginDeferWindowPos win7-32:LoadMenuIndirectA win7-64:LoadKeyboardLayoutEx win8-32:IsCharUpperA win8-64:IsCharAlphaNumericW
+2015 vista-32:BeginPaint vista-64:BeginPaint win7-32:LoadMenuIndirectW win7-64:LoadKeyboardLayoutW win8-32:IsCharUpperW win8-64:IsCharAlphaW
+2016 vista-32:BlockInput vista-64:BlockInput win7-32:LoadMenuW win7-64:LoadLocalFonts win8-32:IsChild win8-64:IsCharLowerA
+2017 vista-32:BringWindowToTop vista-64:BringWindowToTop win7-32:LoadRemoteFonts win7-64:LoadMenuA win8-32:IsClipboardFormatAvailable win8-64:IsCharLowerW
+2018 vista-32:BroadcastSystemMessage vista-64:BroadcastSystemMessage win7-32:LoadStringA win7-64:LoadMenuIndirectA win8-32:IsDialogMessage win8-64:IsCharUpperA
+2019 vista-32:BroadcastSystemMessageA vista-64:BroadcastSystemMessageA win7-32:LoadStringW win7-64:LoadMenuIndirectW win8-32:IsDialogMessageA win8-64:IsCharUpperW
+2020 vista-32:BroadcastSystemMessageExA vista-64:BroadcastSystemMessageExA win7-32:LockSetForegroundWindow win7-64:LoadMenuW win8-32:IsDialogMessageW win8-64:IsChild
+2021 vista-32:BroadcastSystemMessageExW vista-64:BroadcastSystemMessageExW win7-32:LockWindowStation win7-64:LoadRemoteFonts win8-32:IsDlgButtonChecked win8-64:IsClipboardFormatAvailable
+2022 vista-32:BroadcastSystemMessageW vista-64:BroadcastSystemMessageW win7-32:LockWindowUpdate win7-64:LoadStringA win8-32:IsGUIThread win8-64:IsDialogMessage
+2023 vista-32:BuildReasonArray vista-64:BuildReasonArray win7-32:LockWorkStation win7-64:LoadStringW win8-32:IsHungAppWindow win8-64:IsDialogMessageA
+2024 vista-32:CalcMenuBar vista-64:CalcMenuBar win7-32:LogicalToPhysicalPoint win7-64:LockSetForegroundWindow win8-32:IsIconic win8-64:IsDialogMessageW
+2025 vista-32:CallMsgFilter vista-64:CallMsgFilter win7-32:LookupIconIdFromDirectory win7-64:LockWindowStation win8-32:IsImmersiveProcess win8-64:IsDlgButtonChecked
+2026 vista-32:CallMsgFilterA vista-64:CallMsgFilterA win7-32:LookupIconIdFromDirectoryEx win7-64:LockWindowUpdate win8-32:IsInDesktopWindowBand win8-64:IsGUIThread
+2027 vista-32:CallMsgFilterW vista-64:CallMsgFilterW win7-32:MBToWCSEx win7-64:LockWorkStation win8-32:IsMenu win8-64:IsHungAppWindow
+2028 vista-32:CallNextHookEx vista-64:CallNextHookEx win7-32:MB_GetString win7-64:LogicalToPhysicalPoint win8-32:IsMouseInPointerEnabled win8-64:IsIconic
+2029 vista-32:CallWindowProcA vista-64:CallWindowProcA win7-32:MapDialogRect win7-64:LookupIconIdFromDirectory win8-32:IsProcessDPIAware win8-64:IsImmersiveProcess
+2030 vista-32:CallWindowProcW vista-64:CallWindowProcW win7-32:MapVirtualKeyA win7-64:LookupIconIdFromDirectoryEx win8-32:IsQueueAttached win8-64:IsInDesktopWindowBand
+2031 vista-32:CancelShutdown vista-64:CancelShutdown win7-32:MapVirtualKeyExA win7-64:MBToWCSEx win8-32:IsRectEmpty win8-64:IsMenu
+2032 vista-32:CascadeChildWindows vista-64:CascadeChildWindows win7-32:MapVirtualKeyExW win7-64:MB_GetString win8-32:IsSETEnabled win8-64:IsMouseInPointerEnabled
+2033 vista-32:CascadeWindows vista-64:CascadeWindows win7-32:MapVirtualKeyW win7-64:MapDialogRect win8-32:IsServerSideWindow win8-64:IsProcessDPIAware
+2034 vista-32:ChangeClipboardChain vista-64:ChangeClipboardChain win7-32:MapWindowPoints win7-64:MapVirtualKeyA win8-32:IsThreadDesktopComposited win8-64:IsQueueAttached
+2035 vista-32:ChangeDisplaySettingsA vista-64:ChangeDisplaySettingsA win7-32:MenuItemFromPoint win7-64:MapVirtualKeyExA win8-32:IsTopLevelWindow win8-64:IsRectEmpty
+2036 vista-32:ChangeDisplaySettingsExA vista-64:ChangeDisplaySettingsExA win7-32:MenuWindowProcA win7-64:MapVirtualKeyExW win8-32:IsTouchWindow win8-64:IsSETEnabled
+2037 vista-32:ChangeDisplaySettingsExW vista-64:ChangeDisplaySettingsExW win7-32:MenuWindowProcW win7-64:MapVirtualKeyW win8-32:IsWinEventHookInstalled win8-64:IsServerSideWindow
+2038 vista-32:ChangeDisplaySettingsW vista-64:ChangeDisplaySettingsW win7-32:MessageBeep win7-64:MapWindowPoints win8-32:IsWindow win8-64:IsThreadDesktopComposited
+2039 vista-32:ChangeMenuA vista-64:ChangeMenuA win7-32:MessageBoxA win7-64:MenuItemFromPoint win8-32:IsWindowEnabled win8-64:IsTopLevelWindow
+2040 vista-32:ChangeMenuW vista-64:ChangeMenuW win7-32:MessageBoxExA win7-64:MenuWindowProcA win8-32:IsWindowInDestroy win8-64:IsTouchWindow
+2041 vista-32:ChangeWindowMessageFilter vista-64:ChangeWindowMessageFilter win7-32:MessageBoxExW win7-64:MenuWindowProcW win8-32:IsWindowRedirectedForPrint win8-64:IsWinEventHookInstalled
+2042 vista-32:CharLowerA vista-64:CharLowerA win7-32:MessageBoxIndirectA win7-64:MessageBeep win8-32:IsWindowUnicode win8-64:IsWindow
+2043 vista-32:CharLowerBuffA vista-64:CharLowerBuffA win7-32:MessageBoxIndirectW win7-64:MessageBoxA win8-32:IsWindowVisible win8-64:IsWindowEnabled
+2044 vista-32:CharLowerBuffW vista-64:CharLowerBuffW win7-32:MessageBoxTimeoutA win7-64:MessageBoxExA win8-32:IsWow64Message win8-64:IsWindowInDestroy
+2045 vista-32:CharLowerW vista-64:CharLowerW win7-32:MessageBoxTimeoutW win7-64:MessageBoxExW win8-32:IsZoomed win8-64:IsWindowRedirectedForPrint
+2046 vista-32:CharNextA vista-64:CharNextA win7-32:MessageBoxW win7-64:MessageBoxIndirectA win8-32:KillTimer win8-64:IsWindowUnicode
+2047 vista-32:CharNextExA vista-64:CharNextExA win7-32:ModifyMenuA win7-64:MessageBoxIndirectW win8-32:LoadAcceleratorsA win8-64:IsWindowVisible
+2048 vista-32:CharNextW vista-64:CharNextW win7-32:ModifyMenuW win7-64:MessageBoxTimeoutA win8-32:LoadAcceleratorsW win8-64:IsWow64Message
+2049 vista-32:CharPrevA vista-64:CharPrevA win7-32:MonitorFromPoint win7-64:MessageBoxTimeoutW win8-32:LoadBitmapA win8-64:IsZoomed
+2050 vista-32:CharPrevExA vista-64:CharPrevExA win7-32:MonitorFromRect win7-64:MessageBoxW win8-32:LoadBitmapW win8-64:KillTimer
+2051 vista-32:CharPrevW vista-64:CharPrevW win7-32:MonitorFromWindow win7-64:ModifyMenuA win8-32:LoadCursorA win8-64:LoadAcceleratorsA
+2052 vista-32:CharToOemA vista-64:CharToOemA win7-32:MoveWindow win7-64:ModifyMenuW win8-32:LoadCursorFromFileA win8-64:LoadAcceleratorsW
+2053 vista-32:CharToOemBuffA vista-64:CharToOemBuffA win7-32:MsgWaitForMultipleObjects win7-64:MonitorFromPoint win8-32:LoadCursorFromFileW win8-64:LoadBitmapA
+2054 vista-32:CharToOemBuffW vista-64:CharToOemBuffW win7-32:MsgWaitForMultipleObjectsEx win7-64:MonitorFromRect win8-32:LoadCursorW win8-64:LoadBitmapW
+2055 vista-32:CharToOemW vista-64:CharToOemW win7-32:NotifyOverlayWindow win7-64:MonitorFromWindow win8-32:LoadIconA win8-64:LoadCursorA
+2056 vista-32:CharUpperA vista-64:CharUpperA win7-32:NotifyWinEvent win7-64:MoveWindow win8-32:LoadIconW win8-64:LoadCursorFromFileA
+2057 vista-32:CharUpperBuffA vista-64:CharUpperBuffA win7-32:OemKeyScan win7-64:MsgWaitForMultipleObjects win8-32:LoadImageA win8-64:LoadCursorFromFileW
+2058 vista-32:CharUpperBuffW vista-64:CharUpperBuffW win7-32:OemToCharA win7-64:MsgWaitForMultipleObjectsEx win8-32:LoadImageW win8-64:LoadCursorW
+2059 vista-32:CharUpperW vista-64:CharUpperW win7-32:OemToCharBuffA win7-64:NotifyOverlayWindow win8-32:LoadKeyboardLayoutA win8-64:LoadIconA
+2060 vista-32:CheckDesktopByThreadId vista-64:CheckDesktopByThreadId win7-32:OemToCharBuffW win7-64:NotifyWinEvent win8-32:LoadKeyboardLayoutEx win8-64:LoadIconW
+2061 vista-32:CheckDlgButton vista-64:CheckDlgButton win7-32:OemToCharW win7-64:OemKeyScan win8-32:LoadKeyboardLayoutW win8-64:LoadImageA
+2062 vista-32:CheckMenuItem vista-64:CheckMenuItem win7-32:OffsetRect win7-64:OemToCharA win8-32:LoadLocalFonts win8-64:LoadImageW
+2063 vista-32:CheckMenuRadioItem vista-64:CheckMenuRadioItem win7-32:OpenClipboard win7-64:OemToCharBuffA win8-32:LoadMenuA win8-64:LoadKeyboardLayoutA
+2064 vista-32:CheckRadioButton vista-64:CheckRadioButton win7-32:OpenDesktopA win7-64:OemToCharBuffW win8-32:LoadMenuIndirectA win8-64:LoadKeyboardLayoutEx
+2065 vista-32:CheckWindowThreadDesktop vista-64:CheckWindowThreadDesktop win7-32:OpenDesktopW win7-64:OemToCharW win8-32:LoadMenuIndirectW win8-64:LoadKeyboardLayoutW
+2066 vista-32:ChildWindowFromPoint vista-64:ChildWindowFromPoint win7-32:OpenIcon win7-64:OffsetRect win8-32:LoadMenuW win8-64:LoadLocalFonts
+2067 vista-32:ChildWindowFromPointEx vista-64:ChildWindowFromPointEx win7-32:OpenInputDesktop win7-64:OpenClipboard win8-32:LoadRemoteFonts win8-64:LoadMenuA
+2068 vista-32:CliImmSetHotKey vista-64:CliImmSetHotKey win7-32:OpenThreadDesktop win7-64:OpenDesktopA win8-32:LoadStringA win8-64:LoadMenuIndirectA
+2069 vista-32:ClientThreadSetup vista-64:ClientThreadSetup win7-32:OpenWindowStationA win7-64:OpenDesktopW win8-32:LoadStringW win8-64:LoadMenuIndirectW
+2070 vista-32:ClientToScreen vista-64:ClientToScreen win7-32:OpenWindowStationW win7-64:OpenIcon win8-32:LockSetForegroundWindow win8-64:LoadMenuW
+2071 vista-32:ClipCursor vista-64:ClipCursor win7-32:PackDDElParam win7-64:OpenInputDesktop win8-32:LockWindowStation win8-64:LoadRemoteFonts
+2072 vista-32:CloseClipboard vista-64:CloseClipboard win7-32:PaintDesktop win7-64:OpenThreadDesktop win8-32:LockWindowUpdate win8-64:LoadStringA
+2073 vista-32:CloseDesktop vista-64:CloseDesktop win7-32:PaintMenuBar win7-64:OpenWindowStationA win8-32:LockWorkStation win8-64:LoadStringW
+2074 vista-32:CloseWindow vista-64:CloseWindow win7-32:PaintMonitor win7-64:OpenWindowStationW win8-32:LogicalToPhysicalPoint win8-64:LockSetForegroundWindow
+2075 vista-32:CloseWindowStation vista-64:CloseWindowStation win7-32:PeekMessageA win7-64:PackDDElParam win8-32:LookupIconIdFromDirectory win8-64:LockWindowStation
+2076 vista-32:CopyAcceleratorTableA vista-64:CopyAcceleratorTableA win7-32:PeekMessageW win7-64:PaintDesktop win8-32:LookupIconIdFromDirectoryEx win8-64:LockWindowUpdate
+2077 vista-32:CopyAcceleratorTableW vista-64:CopyAcceleratorTableW win7-32:PhysicalToLogicalPoint win7-64:PaintMenuBar win8-32:MBToWCSEx win8-64:LockWorkStation
+2078 vista-32:CopyIcon vista-64:CopyIcon win7-32:PostMessageA win7-64:PaintMonitor win8-32:MBToWCSExt win8-64:LogicalToPhysicalPoint
+2079 vista-32:CopyImage vista-64:CopyImage win7-32:PostMessageW win7-64:PeekMessageA win8-32:MB_GetString win8-64:LookupIconIdFromDirectory
+2080 vista-32:CopyRect vista-64:CopyRect win7-32:PostQuitMessage win7-64:PeekMessageW win8-32:MapDialogRect win8-64:LookupIconIdFromDirectoryEx
+2081 vista-32:CountClipboardFormats vista-64:CountClipboardFormats win7-32:PostThreadMessageA win7-64:PhysicalToLogicalPoint win8-32:MapVirtualKeyA win8-64:MBToWCSEx
+2082 vista-32:CreateAcceleratorTableA vista-64:CreateAcceleratorTableA win7-32:PostThreadMessageW win7-64:PostMessageA win8-32:MapVirtualKeyExA win8-64:MBToWCSExt
+2083 vista-32:CreateAcceleratorTableW vista-64:CreateAcceleratorTableW win7-32:PrintWindow win7-64:PostMessageW win8-32:MapVirtualKeyExW win8-64:MB_GetString
+2084 vista-32:CreateCaret vista-64:CreateCaret win7-32:PrivateExtractIconExA win7-64:PostQuitMessage win8-32:MapVirtualKeyW win8-64:MapDialogRect
+2085 vista-32:CreateCursor vista-64:CreateCursor win7-32:PrivateExtractIconExW win7-64:PostThreadMessageA win8-32:MapWindowPoints win8-64:MapVirtualKeyA
+2086 vista-32:CreateDesktopA vista-64:CreateDesktopA win7-32:PrivateExtractIconsA win7-64:PostThreadMessageW win8-32:MenuItemFromPoint win8-64:MapVirtualKeyExA
+2087 vista-32:CreateDesktopExA vista-64:CreateDesktopExA win7-32:PrivateExtractIconsW win7-64:PrintWindow win8-32:MenuWindowProcA win8-64:MapVirtualKeyExW
+2088 vista-32:CreateDesktopExW vista-64:CreateDesktopExW win7-32:PrivateRegisterICSProc win7-64:PrivateExtractIconExA win8-32:MenuWindowProcW win8-64:MapVirtualKeyW
+2089 vista-32:CreateDesktopW vista-64:CreateDesktopW win7-32:PtInRect win7-64:PrivateExtractIconExW win8-32:MessageBeep win8-64:MapWindowPoints
+2090 vista-32:CreateDialogIndirectParamA vista-64:CreateDialogIndirectParamA win7-32:QueryDisplayConfig win7-64:PrivateExtractIconsA win8-32:MessageBoxA win8-64:MenuItemFromPoint
+2091 vista-32:CreateDialogIndirectParamAorW vista-64:CreateDialogIndirectParamAorW win7-32:QuerySendMessage win7-64:PrivateExtractIconsW win8-32:MessageBoxExA win8-64:MenuWindowProcA
+2092 vista-32:CreateDialogIndirectParamW vista-64:CreateDialogIndirectParamW win7-32:RealChildWindowFromPoint win7-64:PrivateRegisterICSProc win8-32:MessageBoxExW win8-64:MenuWindowProcW
+2093 vista-32:CreateDialogParamA vista-64:CreateDialogParamA win7-32:RealGetWindowClass win7-64:PtInRect win8-32:MessageBoxIndirectA win8-64:MessageBeep
+2094 vista-32:CreateDialogParamW vista-64:CreateDialogParamW win7-32:RealGetWindowClassA win7-64:QueryDisplayConfig win8-32:MessageBoxIndirectW win8-64:MessageBoxA
+2095 vista-32:CreateIcon vista-64:CreateIcon win7-32:RealGetWindowClassW win7-64:QuerySendMessage win8-32:MessageBoxTimeoutA win8-64:MessageBoxExA
+2096 vista-32:CreateIconFromResource vista-64:CreateIconFromResource win7-32:ReasonCodeNeedsBugID win7-64:RealChildWindowFromPoint win8-32:MessageBoxTimeoutW win8-64:MessageBoxExW
+2097 vista-32:CreateIconFromResourceEx vista-64:CreateIconFromResourceEx win7-32:ReasonCodeNeedsComment win7-64:RealGetWindowClass win8-32:MessageBoxW win8-64:MessageBoxIndirectA
+2098 vista-32:CreateIconIndirect vista-64:CreateIconIndirect win7-32:RecordShutdownReason win7-64:RealGetWindowClassA win8-32:ModifyMenuA win8-64:MessageBoxIndirectW
+2099 vista-32:CreateMDIWindowA vista-64:CreateMDIWindowA win7-32:RedrawWindow win7-64:RealGetWindowClassW win8-32:ModifyMenuW win8-64:MessageBoxTimeoutA
+2100 vista-32:CreateMDIWindowW vista-64:CreateMDIWindowW win7-32:RegisterClassA win7-64:ReasonCodeNeedsBugID win8-32:MonitorFromPoint win8-64:MessageBoxTimeoutW
+2101 vista-32:CreateMenu vista-64:CreateMenu win7-32:RegisterClassExA win7-64:ReasonCodeNeedsComment win8-32:MonitorFromRect win8-64:MessageBoxW
+2102 vista-32:CreatePopupMenu vista-64:CreatePopupMenu win7-32:RegisterClassExW win7-64:RecordShutdownReason win8-32:MonitorFromWindow win8-64:ModifyMenuA
+2103 vista-32:CreateSystemThreads vista-64:CreateSystemThreads win7-32:RegisterClassW win7-64:RedrawWindow win8-32:MoveWindow win8-64:ModifyMenuW
+2104 vista-32:CreateWindowExA vista-64:CreateWindowExA win7-32:RegisterClipboardFormatA win7-64:RegisterClassA win8-32:MsgWaitForMultipleObjects win8-64:MonitorFromPoint
+2105 vista-32:CreateWindowExW vista-64:CreateWindowExW win7-32:RegisterClipboardFormatW win7-64:RegisterClassExA win8-32:MsgWaitForMultipleObjectsEx win8-64:MonitorFromRect
+2106 vista-32:CreateWindowStationA vista-64:CreateWindowStationA win7-32:RegisterDeviceNotificationA win7-64:RegisterClassExW win8-32:NotifyOverlayWindow win8-64:MonitorFromWindow
+2107 vista-32:CreateWindowStationW vista-64:CreateWindowStationW win7-32:RegisterDeviceNotificationW win7-64:RegisterClassW win8-32:NotifyWinEvent win8-64:MoveWindow
+2108 vista-32:CsrBroadcastSystemMessageExW vista-64:CsrBroadcastSystemMessageExW win7-32:RegisterErrorReportingDialog win7-64:RegisterClipboardFormatA win8-32:OemKeyScan win8-64:MsgWaitForMultipleObjects
+2109 vista-32:CtxInitUser32 vista-64:CtxInitUser32 win7-32:RegisterFrostWindow win7-64:RegisterClipboardFormatW win8-32:OemToCharA win8-64:MsgWaitForMultipleObjectsEx
+2110 vista-32:DdeAbandonTransaction vista-64:DdeAbandonTransaction win7-32:RegisterGhostWindow win7-64:RegisterDeviceNotificationA win8-32:OemToCharBuffA win8-64:NotifyOverlayWindow
+2111 vista-32:DdeAccessData vista-64:DdeAccessData win7-32:RegisterHotKey win7-64:RegisterDeviceNotificationW win8-32:OemToCharBuffW win8-64:NotifyWinEvent
+2112 vista-32:DdeAddData vista-64:DdeAddData win7-32:RegisterLogonProcess win7-64:RegisterErrorReportingDialog win8-32:OemToCharW win8-64:OemKeyScan
+2113 vista-32:DdeClientTransaction vista-64:DdeClientTransaction win7-32:RegisterMessagePumpHook win7-64:RegisterFrostWindow win8-32:OffsetRect win8-64:OemToCharA
+2114 vista-32:DdeCmpStringHandles vista-64:DdeCmpStringHandles win7-32:RegisterPowerSettingNotification win7-64:RegisterGhostWindow win8-32:OpenClipboard win8-64:OemToCharBuffA
+2115 vista-32:DdeConnect vista-64:DdeConnect win7-32:RegisterRawInputDevices win7-64:RegisterHotKey win8-32:OpenDesktopA win8-64:OemToCharBuffW
+2116 vista-32:DdeConnectList vista-64:DdeConnectList win7-32:RegisterServicesProcess win7-64:RegisterLogonProcess win8-32:OpenDesktopW win8-64:OemToCharW
+2117 vista-32:DdeCreateDataHandle vista-64:DdeCreateDataHandle win7-32:RegisterSessionPort win7-64:RegisterMessagePumpHook win8-32:OpenIcon win8-64:OffsetRect
+2118 vista-32:DdeCreateStringHandleA vista-64:DdeCreateStringHandleA win7-32:RegisterShellHookWindow win7-64:RegisterPowerSettingNotification win8-32:OpenInputDesktop win8-64:OpenClipboard
+2119 vista-32:DdeCreateStringHandleW vista-64:DdeCreateStringHandleW win7-32:RegisterSystemThread win7-64:RegisterRawInputDevices win8-32:OpenThreadDesktop win8-64:OpenDesktopA
+2120 vista-32:DdeDisconnect vista-64:DdeDisconnect win7-32:RegisterTasklist win7-64:RegisterServicesProcess win8-32:OpenWindowStationA win8-64:OpenDesktopW
+2121 vista-32:DdeDisconnectList vista-64:DdeDisconnectList win7-32:RegisterTouchWindow win7-64:RegisterSessionPort win8-32:OpenWindowStationW win8-64:OpenIcon
+2122 vista-32:DdeEnableCallback vista-64:DdeEnableCallback win7-32:RegisterUserApiHook win7-64:RegisterShellHookWindow win8-32:PackDDElParam win8-64:OpenInputDesktop
+2123 vista-32:DdeFreeDataHandle vista-64:DdeFreeDataHandle win7-32:RegisterWindowMessageA win7-64:RegisterSystemThread win8-32:PackTouchHitTestingProximityEvaluation win8-64:OpenThreadDesktop
+2124 vista-32:DdeFreeStringHandle vista-64:DdeFreeStringHandle win7-32:RegisterWindowMessageW win7-64:RegisterTasklist win8-32:PaintDesktop win8-64:OpenWindowStationA
+2125 vista-32:DdeGetData vista-64:DdeGetData win7-32:ReleaseCapture win7-64:RegisterTouchWindow win8-32:PaintMenuBar win8-64:OpenWindowStationW
+2126 vista-32:DdeGetLastError vista-64:DdeGetLastError win7-32:ReleaseDC win7-64:RegisterUserApiHook win8-32:PaintMonitor win8-64:PackDDElParam
+2127 vista-32:DdeGetQualityOfService vista-64:DdeGetQualityOfService win7-32:RemoveClipboardFormatListener win7-64:RegisterWindowMessageA win8-32:PeekMessageA win8-64:PackTouchHitTestingProximityEvaluation
+2128 vista-32:DdeImpersonateClient vista-64:DdeImpersonateClient win7-32:RemoveMenu win7-64:RegisterWindowMessageW win8-32:PeekMessageW win8-64:PaintDesktop
+2129 vista-32:DdeInitializeA vista-64:DdeInitializeA win7-32:RemovePropA win7-64:ReleaseCapture win8-32:PhysicalToLogicalPoint win8-64:PaintMenuBar
+2130 vista-32:DdeInitializeW vista-64:DdeInitializeW win7-32:RemovePropW win7-64:ReleaseDC win8-32:PostMessageA win8-64:PaintMonitor
+2131 vista-32:DdeKeepStringHandle vista-64:DdeKeepStringHandle win7-32:ReplyMessage win7-64:RemoveClipboardFormatListener win8-32:PostMessageW win8-64:PeekMessageA
+2132 vista-32:DdeNameService vista-64:DdeNameService win7-32:ResolveDesktopForWOW win7-64:RemoveMenu win8-32:PostQuitMessage win8-64:PeekMessageW
+2133 vista-32:DdePostAdvise vista-64:DdePostAdvise win7-32:ReuseDDElParam win7-64:RemovePropA win8-32:PostThreadMessageA win8-64:PhysicalToLogicalPoint
+2134 vista-32:DdeQueryConvInfo vista-64:DdeQueryConvInfo win7-32:ScreenToClient win7-64:RemovePropW win8-32:PostThreadMessageW win8-64:PostMessageA
+2135 vista-32:DdeQueryNextServer vista-64:DdeQueryNextServer win7-32:ScrollChildren win7-64:ReplyMessage win8-32:PrintWindow win8-64:PostMessageW
+2136 vista-32:DdeQueryStringA vista-64:DdeQueryStringA win7-32:ScrollDC win7-64:ResolveDesktopForWOW win8-32:PrivateExtractIconExA win8-64:PostQuitMessage
+2137 vista-32:DdeQueryStringW vista-64:DdeQueryStringW win7-32:ScrollWindow win7-64:ReuseDDElParam win8-32:PrivateExtractIconExW win8-64:PostThreadMessageA
+2138 vista-32:DdeReconnect vista-64:DdeReconnect win7-32:ScrollWindowEx win7-64:ScreenToClient win8-32:PrivateExtractIconsA win8-64:PostThreadMessageW
+2139 vista-32:DdeSetQualityOfService vista-64:DdeSetQualityOfService win7-32:SendDlgItemMessageA win7-64:ScrollChildren win8-32:PrivateExtractIconsW win8-64:PrintWindow
+2140 vista-32:DdeSetUserHandle vista-64:DdeSetUserHandle win7-32:SendDlgItemMessageW win7-64:ScrollDC win8-32:PrivateRegisterICSProc win8-64:PrivateExtractIconExA
+2141 vista-32:DdeUnaccessData vista-64:DdeUnaccessData win7-32:SendIMEMessageExA win7-64:ScrollWindow win8-32:PtInRect win8-64:PrivateExtractIconExW
+2142 vista-32:DdeUninitialize vista-64:DdeUninitialize win7-32:SendIMEMessageExW win7-64:ScrollWindowEx win8-32:QueryBSDRWindow win8-64:PrivateExtractIconsA
+2143 vista-32:DefDlgProcA vista-64:DefDlgProcA win7-32:SendInput win7-64:SendDlgItemMessageA win8-32:QueryDisplayConfig win8-64:PrivateExtractIconsW
+2144 vista-32:DefDlgProcW vista-64:DefDlgProcW win7-32:SendMessageA win7-64:SendDlgItemMessageW win8-32:QuerySendMessage win8-64:PrivateRegisterICSProc
+2145 vista-32:DefFrameProcA vista-64:DefFrameProcA win7-32:SendMessageCallbackA win7-64:SendIMEMessageExA win8-32:RealChildWindowFromPoint win8-64:PtInRect
+2146 vista-32:DefFrameProcW vista-64:DefFrameProcW win7-32:SendMessageCallbackW win7-64:SendIMEMessageExW win8-32:RealGetWindowClass win8-64:QueryBSDRWindow
+2147 vista-32:DefMDIChildProcA vista-64:DefMDIChildProcA win7-32:SendMessageTimeoutA win7-64:SendInput win8-32:RealGetWindowClassA win8-64:QueryDisplayConfig
+2148 vista-32:DefMDIChildProcW vista-64:DefMDIChildProcW win7-32:SendMessageTimeoutW win7-64:SendMessageA win8-32:RealGetWindowClassW win8-64:QuerySendMessage
+2149 vista-32:DefRawInputProc vista-64:DefRawInputProc win7-32:SendMessageW win7-64:SendMessageCallbackA win8-32:ReasonCodeNeedsBugID win8-64:RealChildWindowFromPoint
+2150 vista-32:DefWindowProcA vista-64:DefWindowProcA win7-32:SendNotifyMessageA win7-64:SendMessageCallbackW win8-32:ReasonCodeNeedsComment win8-64:RealGetWindowClass
+2151 vista-32:DefWindowProcW vista-64:DefWindowProcW win7-32:SendNotifyMessageW win7-64:SendMessageTimeoutA win8-32:RecordShutdownReason win8-64:RealGetWindowClassA
+2152 vista-32:DeferWindowPos vista-64:DeferWindowPos win7-32:SetActiveWindow win7-64:SendMessageTimeoutW win8-32:RedrawWindow win8-64:RealGetWindowClassW
+2153 vista-32:DeleteMenu vista-64:DeleteMenu win7-32:SetCapture win7-64:SendMessageW win8-32:RegisterBSDRWindow win8-64:ReasonCodeNeedsBugID
+2154 vista-32:DeregisterShellHookWindow vista-64:DeregisterShellHookWindow win7-32:SetCaretBlinkTime win7-64:SendNotifyMessageA win8-32:RegisterClassA win8-64:ReasonCodeNeedsComment
+2155 vista-32:DestroyAcceleratorTable vista-64:DestroyAcceleratorTable win7-32:SetCaretPos win7-64:SendNotifyMessageW win8-32:RegisterClassExA win8-64:RecordShutdownReason
+2156 vista-32:DestroyCaret vista-64:DestroyCaret win7-32:SetClassLongA win7-64:SetActiveWindow win8-32:RegisterClassExW win8-64:RedrawWindow
+2157 vista-32:DestroyCursor vista-64:DestroyCursor win7-32:SetClassLongW win7-64:SetCapture win8-32:RegisterClassW win8-64:RegisterBSDRWindow
+2158 vista-32:DestroyIcon vista-64:DestroyIcon win7-32:SetClassWord win7-64:SetCaretBlinkTime win8-32:RegisterClipboardFormatA win8-64:RegisterClassA
+2159 vista-32:DestroyMenu vista-64:DestroyMenu win7-32:SetClipboardData win7-64:SetCaretPos win8-32:RegisterClipboardFormatW win8-64:RegisterClassExA
+2160 vista-32:DestroyReasons vista-64:DestroyReasons win7-32:SetClipboardViewer win7-64:SetClassLongA win8-32:RegisterDeviceNotificationA win8-64:RegisterClassExW
+2161 vista-32:DestroyWindow vista-64:DestroyWindow win7-32:SetCursor win7-64:SetClassLongPtrA win8-32:RegisterDeviceNotificationW win8-64:RegisterClassW
+2162 vista-32:DeviceEventWorker vista-64:DeviceEventWorker win7-32:SetCursorContents win7-64:SetClassLongPtrW win8-32:RegisterErrorReportingDialog win8-64:RegisterClipboardFormatA
+2163 vista-32:DialogBoxIndirectParamA vista-64:DialogBoxIndirectParamA win7-32:SetCursorPos win7-64:SetClassLongW win8-32:RegisterFrostWindow win8-64:RegisterClipboardFormatW
+2164 vista-32:DialogBoxIndirectParamAorW vista-64:DialogBoxIndirectParamAorW win7-32:SetDebugErrorLevel win7-64:SetClassWord win8-32:RegisterGhostWindow win8-64:RegisterDeviceNotificationA
+2165 vista-32:DialogBoxIndirectParamW vista-64:DialogBoxIndirectParamW win7-32:SetDeskWallpaper win7-64:SetClipboardData win8-32:RegisterHotKey win8-64:RegisterDeviceNotificationW
+2166 vista-32:DialogBoxParamA vista-64:DialogBoxParamA win7-32:SetDisplayConfig win7-64:SetClipboardViewer win8-32:RegisterLogonProcess win8-64:RegisterErrorReportingDialog
+2167 vista-32:DialogBoxParamW vista-64:DialogBoxParamW win7-32:SetDlgItemInt win7-64:SetCursor win8-32:RegisterMessagePumpHook win8-64:RegisterFrostWindow
+2168 vista-32:DisableProcessWindowsGhosting vista-64:DisableProcessWindowsGhosting win7-32:SetDlgItemTextA win7-64:SetCursorContents win8-32:RegisterPointerDeviceNotifications win8-64:RegisterGhostWindow
+2169 vista-32:DispatchMessageA vista-64:DispatchMessageA win7-32:SetDlgItemTextW win7-64:SetCursorPos win8-32:RegisterPointerInputTarget win8-64:RegisterHotKey
+2170 vista-32:DispatchMessageW vista-64:DispatchMessageW win7-32:SetDoubleClickTime win7-64:SetDebugErrorLevel win8-32:RegisterPowerSettingNotification win8-64:RegisterLogonProcess
+2171 vista-32:DisplayExitWindowsWarnings vista-64:DisplayExitWindowsWarnings win7-32:SetFocus win7-64:SetDeskWallpaper win8-32:RegisterRawInputDevices win8-64:RegisterMessagePumpHook
+2172 vista-32:DlgDirListA vista-64:DlgDirListA win7-32:SetForegroundWindow win7-64:SetDisplayConfig win8-32:RegisterServicesProcess win8-64:RegisterPointerDeviceNotifications
+2173 vista-32:DlgDirListComboBoxA vista-64:DlgDirListComboBoxA win7-32:SetGestureConfig win7-64:SetDlgItemInt win8-32:RegisterSessionPort win8-64:RegisterPointerInputTarget
+2174 vista-32:DlgDirListComboBoxW vista-64:DlgDirListComboBoxW win7-32:SetInternalWindowPos win7-64:SetDlgItemTextA win8-32:RegisterShellHookWindow win8-64:RegisterPowerSettingNotification
+2175 vista-32:DlgDirListW vista-64:DlgDirListW win7-32:SetKeyboardState win7-64:SetDlgItemTextW win8-32:RegisterSuspendResumeNotification win8-64:RegisterRawInputDevices
+2176 vista-32:DlgDirSelectComboBoxExA vista-64:DlgDirSelectComboBoxExA win7-32:SetLastErrorEx win7-64:SetDoubleClickTime win8-32:RegisterSystemThread win8-64:RegisterServicesProcess
+2177 vista-32:DlgDirSelectComboBoxExW vista-64:DlgDirSelectComboBoxExW win7-32:SetLayeredWindowAttributes win7-64:SetFocus win8-32:RegisterTasklist win8-64:RegisterSessionPort
+2178 vista-32:DlgDirSelectExA vista-64:DlgDirSelectExA win7-32:SetMagnificationDesktopColorEffect win7-64:SetForegroundWindow win8-32:RegisterTouchHitTestingWindow win8-64:RegisterShellHookWindow
+2179 vista-32:DlgDirSelectExW vista-64:DlgDirSelectExW win7-32:SetMagnificationDesktopMagnification win7-64:SetGestureConfig win8-32:RegisterTouchWindow win8-64:RegisterSuspendResumeNotification
+2180 vista-32:DoSoundConnect vista-64:DoSoundConnect win7-32:SetMagnificationLensCtxInformation win7-64:SetInternalWindowPos win8-32:RegisterUserApiHook win8-64:RegisterSystemThread
+2181 vista-32:DoSoundDisconnect vista-64:DoSoundDisconnect win7-32:SetMenu win7-64:SetKeyboardState win8-32:RegisterWindowMessageA win8-64:RegisterTasklist
+2182 vista-32:DragDetect vista-64:DragDetect win7-32:SetMenuContextHelpId win7-64:SetLastErrorEx win8-32:RegisterWindowMessageW win8-64:RegisterTouchHitTestingWindow
+2183 vista-32:DragObject vista-64:DragObject win7-32:SetMenuDefaultItem win7-64:SetLayeredWindowAttributes win8-32:ReleaseCapture win8-64:RegisterTouchWindow
+2184 vista-32:DrawAnimatedRects vista-64:DrawAnimatedRects win7-32:SetMenuInfo win7-64:SetMagnificationDesktopColorEffect win8-32:ReleaseDC win8-64:RegisterUserApiHook
+2185 vista-32:DrawCaption vista-64:DrawCaption win7-32:SetMenuItemBitmaps win7-64:SetMagnificationDesktopMagnification win8-32:RemoveClipboardFormatListener win8-64:RegisterWindowMessageA
+2186 vista-32:DrawCaptionTempA vista-64:DrawCaptionTempA win7-32:SetMenuItemInfoA win7-64:SetMagnificationLensCtxInformation win8-32:RemoveMenu win8-64:RegisterWindowMessageW
+2187 vista-32:DrawCaptionTempW vista-64:DrawCaptionTempW win7-32:SetMenuItemInfoW win7-64:SetMenu win8-32:RemovePropA win8-64:ReleaseCapture
+2188 vista-32:DrawEdge vista-64:DrawEdge win7-32:SetMessageExtraInfo win7-64:SetMenuContextHelpId win8-32:RemovePropW win8-64:ReleaseDC
+2189 vista-32:DrawFocusRect vista-64:DrawFocusRect win7-32:SetMessageQueue win7-64:SetMenuDefaultItem win8-32:ReplyMessage win8-64:RemoveClipboardFormatListener
+2190 vista-32:DrawFrame vista-64:DrawFrame win7-32:SetMirrorRendering win7-64:SetMenuInfo win8-32:ResolveDesktopForWOW win8-64:RemoveMenu
+2191 vista-32:DrawFrameControl vista-64:DrawFrameControl win7-32:SetParent win7-64:SetMenuItemBitmaps win8-32:ReuseDDElParam win8-64:RemovePropA
+2192 vista-32:DrawIcon vista-64:DrawIcon win7-32:SetPhysicalCursorPos win7-64:SetMenuItemInfoA win8-32:ScreenToClient win8-64:RemovePropW
+2193 vista-32:DrawIconEx vista-64:DrawIconEx win7-32:SetProcessDPIAware win7-64:SetMenuItemInfoW win8-32:ScrollChildren win8-64:ReplyMessage
+2194 vista-32:DrawMenuBar vista-64:DrawMenuBar win7-32:SetProcessDefaultLayout win7-64:SetMessageExtraInfo win8-32:ScrollDC win8-64:ResolveDesktopForWOW
+2195 vista-32:DrawMenuBarTemp vista-64:DrawMenuBarTemp win7-32:SetProcessWindowStation win7-64:SetMessageQueue win8-32:ScrollWindow win8-64:ReuseDDElParam
+2196 vista-32:DrawStateA vista-64:DrawStateA win7-32:SetProgmanWindow win7-64:SetMirrorRendering win8-32:ScrollWindowEx win8-64:ScreenToClient
+2197 vista-32:DrawStateW vista-64:DrawStateW win7-32:SetPropA win7-64:SetParent win8-32:SendDlgItemMessageA win8-64:ScrollChildren
+2198 vista-32:DrawTextA vista-64:DrawTextA win7-32:SetPropW win7-64:SetPhysicalCursorPos win8-32:SendDlgItemMessageW win8-64:ScrollDC
+2199 vista-32:DrawTextExA vista-64:DrawTextExA win7-32:SetRect win7-64:SetProcessDPIAware win8-32:SendIMEMessageExA win8-64:ScrollWindow
+2200 vista-32:DrawTextExW vista-64:DrawTextExW win7-32:SetRectEmpty win7-64:SetProcessDefaultLayout win8-32:SendIMEMessageExW win8-64:ScrollWindowEx
+2201 vista-32:DrawTextW vista-64:DrawTextW win7-32:SetScrollInfo win7-64:SetProcessWindowStation win8-32:SendInput win8-64:SendDlgItemMessageA
+2202 vista-32:DwmGetDxRgn vista-64:DwmGetDxRgn win7-32:SetScrollPos win7-64:SetProgmanWindow win8-32:SendMessageA win8-64:SendDlgItemMessageW
+2203 vista-32:DwmHintDxUpdate vista-64:DwmHintDxUpdate win7-32:SetScrollRange win7-64:SetPropA win8-32:SendMessageCallbackA win8-64:SendIMEMessageExA
+2204 vista-32:DwmStartRedirection vista-64:DwmStartRedirection win7-32:SetShellWindow win7-64:SetPropW win8-32:SendMessageCallbackW win8-64:SendIMEMessageExW
+2205 vista-32:DwmStopRedirection vista-64:DwmStopRedirection win7-32:SetShellWindowEx win7-64:SetRect win8-32:SendMessageTimeoutA win8-64:SendInput
+2206 vista-32:EditWndProc vista-64:EditWndProc win7-32:SetSysColors win7-64:SetRectEmpty win8-32:SendMessageTimeoutW win8-64:SendMessageA
+2207 vista-32:EmptyClipboard vista-64:EmptyClipboard win7-32:SetSysColorsTemp win7-64:SetScrollInfo win8-32:SendMessageW win8-64:SendMessageCallbackA
+2208 vista-32:EnableMenuItem vista-64:EnableMenuItem win7-32:SetSystemCursor win7-64:SetScrollPos win8-32:SendNotifyMessageA win8-64:SendMessageCallbackW
+2209 vista-32:EnableScrollBar vista-64:EnableScrollBar win7-32:SetSystemMenu win7-64:SetScrollRange win8-32:SendNotifyMessageW win8-64:SendMessageTimeoutA
+2210 vista-32:EnableWindow vista-64:EnableWindow win7-32:SetTaskmanWindow win7-64:SetShellWindow win8-32:SetActiveWindow win8-64:SendMessageTimeoutW
+2211 vista-32:EndDeferWindowPos vista-64:EndDeferWindowPos win7-32:SetThreadDesktop win7-64:SetShellWindowEx win8-32:SetCapture win8-64:SendMessageW
+2212 vista-32:EndDialog vista-64:EndDialog win7-32:SetTimer win7-64:SetSysColors win8-32:SetCaretBlinkTime win8-64:SendNotifyMessageA
+2213 vista-32:EndMenu vista-64:EndMenu win7-32:SetUserObjectInformationA win7-64:SetSysColorsTemp win8-32:SetCaretPos win8-64:SendNotifyMessageW
+2214 vista-32:EndPaint vista-64:EndPaint win7-32:SetUserObjectInformationW win7-64:SetSystemCursor win8-32:SetClassLongA win8-64:SetActiveWindow
+2215 vista-32:EndTask vista-64:EndTask win7-32:SetUserObjectSecurity win7-64:SetSystemMenu win8-32:SetClassLongW win8-64:SetCapture
+2216 vista-32:EnterReaderModeHelper vista-64:EnterReaderModeHelper win7-32:SetWinEventHook win7-64:SetTaskmanWindow win8-32:SetClassWord win8-64:SetCaretBlinkTime
+2217 vista-32:EnumChildWindows vista-64:EnumChildWindows win7-32:SetWindowCompositionAttribute win7-64:SetThreadDesktop win8-32:SetClipboardData win8-64:SetCaretPos
+2218 vista-32:EnumClipboardFormats vista-64:EnumClipboardFormats win7-32:SetWindowContextHelpId win7-64:SetTimer win8-32:SetClipboardViewer win8-64:SetClassLongA
+2219 vista-32:EnumDesktopWindows vista-64:EnumDesktopWindows win7-32:SetWindowDisplayAffinity win7-64:SetUserObjectInformationA win8-32:SetCoalescableTimer win8-64:SetClassLongPtrA
+2220 vista-32:EnumDesktopsA vista-64:EnumDesktopsA win7-32:SetWindowLongA win7-64:SetUserObjectInformationW win8-32:SetCursor win8-64:SetClassLongPtrW
+2221 vista-32:EnumDesktopsW vista-64:EnumDesktopsW win7-32:SetWindowLongW win7-64:SetUserObjectSecurity win8-32:SetCursorContents win8-64:SetClassLongW
+2222 vista-32:EnumDisplayDevicesA vista-64:EnumDisplayDevicesA win7-32:SetWindowPlacement win7-64:SetWinEventHook win8-32:SetCursorPos win8-64:SetClassWord
+2223 vista-32:EnumDisplayDevicesW vista-64:EnumDisplayDevicesW win7-32:SetWindowPos win7-64:SetWindowCompositionAttribute win8-32:SetDebugErrorLevel win8-64:SetClipboardData
+2224 vista-32:EnumDisplayMonitors vista-64:EnumDisplayMonitors win7-32:SetWindowRgn win7-64:SetWindowContextHelpId win8-32:SetDeskWallpaper win8-64:SetClipboardViewer
+2225 vista-32:EnumDisplaySettingsA vista-64:EnumDisplaySettingsA win7-32:SetWindowRgnEx win7-64:SetWindowDisplayAffinity win8-32:SetDisplayAutoRotationPreferences win8-64:SetCoalescableTimer
+2226 vista-32:EnumDisplaySettingsExA vista-64:EnumDisplaySettingsExA win7-32:SetWindowStationUser win7-64:SetWindowLongA win8-32:SetDisplayConfig win8-64:SetCursor
+2227 vista-32:EnumDisplaySettingsExW vista-64:EnumDisplaySettingsExW win7-32:SetWindowTextA win7-64:SetWindowLongPtrA win8-32:SetDlgItemInt win8-64:SetCursorContents
+2228 vista-32:EnumDisplaySettingsW vista-64:EnumDisplaySettingsW win7-32:SetWindowTextW win7-64:SetWindowLongPtrW win8-32:SetDlgItemTextA win8-64:SetCursorPos
+2229 vista-32:EnumPropsA vista-64:EnumPropsA win7-32:SetWindowWord win7-64:SetWindowLongW win8-32:SetDlgItemTextW win8-64:SetDebugErrorLevel
+2230 vista-32:EnumPropsExA vista-64:EnumPropsExA win7-32:SetWindowsHookA win7-64:SetWindowPlacement win8-32:SetDoubleClickTime win8-64:SetDeskWallpaper
+2231 vista-32:EnumPropsExW vista-64:EnumPropsExW win7-32:SetWindowsHookExA win7-64:SetWindowPos win8-32:SetFocus win8-64:SetDisplayAutoRotationPreferences
+2232 vista-32:EnumPropsW vista-64:EnumPropsW win7-32:SetWindowsHookExW win7-64:SetWindowRgn win8-32:SetForegroundWindow win8-64:SetDisplayConfig
+2233 vista-32:EnumThreadWindows vista-64:EnumThreadWindows win7-32:SetWindowsHookW win7-64:SetWindowRgnEx win8-32:SetGestureConfig win8-64:SetDlgItemInt
+2234 vista-32:EnumWindowStationsA vista-64:EnumWindowStationsA win7-32:SfmDxBindSwapChain win7-64:SetWindowStationUser win8-32:SetImmersiveBackgroundWindow win8-64:SetDlgItemTextA
+2235 vista-32:EnumWindowStationsW vista-64:EnumWindowStationsW win7-32:SfmDxGetSwapChainStats win7-64:SetWindowTextA win8-32:SetInternalWindowPos win8-64:SetDlgItemTextW
+2236 vista-32:EnumWindows vista-64:EnumWindows win7-32:SfmDxOpenSwapChain win7-64:SetWindowTextW win8-32:SetKeyboardState win8-64:SetDoubleClickTime
+2237 vista-32:EqualRect vista-64:EqualRect win7-32:SfmDxQuerySwapChainBindingStatus win7-64:SetWindowWord win8-32:SetLastErrorEx win8-64:SetFocus
+2238 vista-32:ExcludeUpdateRgn vista-64:ExcludeUpdateRgn win7-32:SfmDxReleaseSwapChain win7-64:SetWindowsHookA win8-32:SetLayeredWindowAttributes win8-64:SetForegroundWindow
+2239 vista-32:ExitWindowsEx vista-64:ExitWindowsEx win7-32:SfmDxReportPendingBindingsToDwm win7-64:SetWindowsHookExA win8-32:SetMagnificationDesktopColorEffect win8-64:SetGestureConfig
+2240 vista-32:FillRect vista-64:FillRect win7-32:SfmDxSetSwapChainBindingStatus win7-64:SetWindowsHookExW win8-32:SetMagnificationDesktopMagnification win8-64:SetImmersiveBackgroundWindow
+2241 vista-32:FindWindowA vista-64:FindWindowA win7-32:SfmDxSetSwapChainStats win7-64:SetWindowsHookW win8-32:SetMagnificationLensCtxInformation win8-64:SetInternalWindowPos
+2242 vista-32:FindWindowExA vista-64:FindWindowExA win7-32:ShowCaret win7-64:SfmDxBindSwapChain win8-32:SetMenu win8-64:SetKeyboardState
+2243 vista-32:FindWindowExW vista-64:FindWindowExW win7-32:ShowCursor win7-64:SfmDxGetSwapChainStats win8-32:SetMenuContextHelpId win8-64:SetLastErrorEx
+2244 vista-32:FindWindowW vista-64:FindWindowW win7-32:ShowOwnedPopups win7-64:SfmDxOpenSwapChain win8-32:SetMenuDefaultItem win8-64:SetLayeredWindowAttributes
+2245 vista-32:FlashWindow vista-64:FlashWindow win7-32:ShowScrollBar win7-64:SfmDxQuerySwapChainBindingStatus win8-32:SetMenuInfo win8-64:SetMagnificationDesktopColorEffect
+2246 vista-32:FlashWindowEx vista-64:FlashWindowEx win7-32:ShowStartGlass win7-64:SfmDxReleaseSwapChain win8-32:SetMenuItemBitmaps win8-64:SetMagnificationDesktopMagnification
+2247 vista-32:FrameRect vista-64:FrameRect win7-32:ShowSystemCursor win7-64:SfmDxReportPendingBindingsToDwm win8-32:SetMenuItemInfoA win8-64:SetMagnificationLensCtxInformation
+2248 vista-32:FreeDDElParam vista-64:FreeDDElParam win7-32:ShowWindow win7-64:SfmDxSetSwapChainBindingStatus win8-32:SetMenuItemInfoW win8-64:SetMenu
+2249 vista-32:FrostCrashedWindow vista-64:FrostCrashedWindow win7-32:ShowWindowAsync win7-64:SfmDxSetSwapChainStats win8-32:SetMessageExtraInfo win8-64:SetMenuContextHelpId
+2250 vista-32:GetActiveWindow vista-64:GetActiveWindow win7-32:ShutdownBlockReasonCreate win7-64:ShowCaret win8-32:SetMessageQueue win8-64:SetMenuDefaultItem
+2251 vista-32:GetAltTabInfo vista-64:GetAltTabInfo win7-32:ShutdownBlockReasonDestroy win7-64:ShowCursor win8-32:SetMirrorRendering win8-64:SetMenuInfo
+2252 vista-32:GetAltTabInfoA vista-64:GetAltTabInfoA win7-32:ShutdownBlockReasonQuery win7-64:ShowOwnedPopups win8-32:SetParent win8-64:SetMenuItemBitmaps
+2253 vista-32:GetAltTabInfoW vista-64:GetAltTabInfoW win7-32:SoftModalMessageBox win7-64:ShowScrollBar win8-32:SetPhysicalCursorPos win8-64:SetMenuItemInfoA
+2254 vista-32:GetAncestor vista-64:GetAncestor win7-32:SoundSentry win7-64:ShowStartGlass win8-32:SetProcessDPIAware win8-64:SetMenuItemInfoW
+2255 vista-32:GetAppCompatFlags2 vista-64:GetAppCompatFlags win7-32:SubtractRect win7-64:ShowSystemCursor win8-32:SetProcessDefaultLayout win8-64:SetMessageExtraInfo
+2256 vista-32:GetAppCompatFlags vista-64:GetAppCompatFlags2 win7-32:SwapMouseButton win7-64:ShowWindow win8-32:SetProcessRestrictionExemption win8-64:SetMessageQueue
+2257 vista-32:GetAsyncKeyState vista-64:GetAsyncKeyState win7-32:SwitchDesktop win7-64:ShowWindowAsync win8-32:SetProcessWindowStation win8-64:SetMirrorRendering
+2258 vista-32:GetCapture vista-64:GetCapture win7-32:SwitchDesktopWithFade win7-64:ShutdownBlockReasonCreate win8-32:SetProgmanWindow win8-64:SetParent
+2259 vista-32:GetCaretBlinkTime vista-64:GetCaretBlinkTime win7-32:SwitchToThisWindow win7-64:ShutdownBlockReasonDestroy win8-32:SetPropA win8-64:SetPhysicalCursorPos
+2260 vista-32:GetCaretPos vista-64:GetCaretPos win7-32:SystemParametersInfoA win7-64:ShutdownBlockReasonQuery win8-32:SetPropW win8-64:SetProcessDPIAware
+2261 vista-32:GetClassInfoA vista-64:GetClassInfoA win7-32:SystemParametersInfoW win7-64:SoftModalMessageBox win8-32:SetRect win8-64:SetProcessDefaultLayout
+2262 vista-32:GetClassInfoExA vista-64:GetClassInfoExA win7-32:TabbedTextOutA win7-64:SoundSentry win8-32:SetRectEmpty win8-64:SetProcessRestrictionExemption
+2263 vista-32:GetClassInfoExW vista-64:GetClassInfoExW win7-32:TabbedTextOutW win7-64:SubtractRect win8-32:SetScrollInfo win8-64:SetProcessWindowStation
+2264 vista-32:GetClassInfoW vista-64:GetClassInfoW win7-32:TileChildWindows win7-64:SwapMouseButton win8-32:SetScrollPos win8-64:SetProgmanWindow
+2265 vista-32:GetClassLongA vista-64:GetClassLongA win7-32:TileWindows win7-64:SwitchDesktop win8-32:SetScrollRange win8-64:SetPropA
+2266 vista-32:GetClassLongW vista-64:GetClassLongPtrA win7-32:ToAscii win7-64:SwitchDesktopWithFade win8-32:SetShellWindow win8-64:SetPropW
+2267 vista-32:GetClassNameA vista-64:GetClassLongPtrW win7-32:ToAsciiEx win7-64:SwitchToThisWindow win8-32:SetShellWindowEx win8-64:SetRect
+2268 vista-32:GetClassNameW vista-64:GetClassLongW win7-32:ToUnicode win7-64:SystemParametersInfoA win8-32:SetSysColors win8-64:SetRectEmpty
+2269 vista-32:GetClassWord vista-64:GetClassNameA win7-32:ToUnicodeEx win7-64:SystemParametersInfoW win8-32:SetSysColorsTemp win8-64:SetScrollInfo
+2270 vista-32:GetClientRect vista-64:GetClassNameW win7-32:TrackMouseEvent win7-64:TabbedTextOutA win8-32:SetSystemCursor win8-64:SetScrollPos
+2271 vista-32:GetClipCursor vista-64:GetClassWord win7-32:TrackPopupMenu win7-64:TabbedTextOutW win8-32:SetSystemMenu win8-64:SetScrollRange
+2272 vista-32:GetClipboardData vista-64:GetClientRect win7-32:TrackPopupMenuEx win7-64:TileChildWindows win8-32:SetTaskmanWindow win8-64:SetShellWindow
+2273 vista-32:GetClipboardFormatNameA vista-64:GetClipCursor win7-32:TranslateAccelerator win7-64:TileWindows win8-32:SetThreadDesktop win8-64:SetShellWindowEx
+2274 vista-32:GetClipboardFormatNameW vista-64:GetClipboardData win7-32:TranslateAcceleratorA win7-64:ToAscii win8-32:SetThreadInputBlocked win8-64:SetSysColors
+2275 vista-32:GetClipboardOwner vista-64:GetClipboardFormatNameA win7-32:TranslateAcceleratorW win7-64:ToAsciiEx win8-32:SetTimer win8-64:SetSysColorsTemp
+2276 vista-32:GetClipboardSequenceNumber vista-64:GetClipboardFormatNameW win7-32:TranslateMDISysAccel win7-64:ToUnicode win8-32:SetUserObjectInformationA win8-64:SetSystemCursor
+2277 vista-32:GetClipboardViewer vista-64:GetClipboardOwner win7-32:TranslateMessage win7-64:ToUnicodeEx win8-32:SetUserObjectInformationW win8-64:SetSystemMenu
+2278 vista-32:GetComboBoxInfo vista-64:GetClipboardSequenceNumber win7-32:TranslateMessageEx win7-64:TrackMouseEvent win8-32:SetUserObjectSecurity win8-64:SetTaskmanWindow
+2279 vista-32:GetCursor vista-64:GetClipboardViewer win7-32:UnhookWinEvent win7-64:TrackPopupMenu win8-32:SetWinEventHook win8-64:SetThreadDesktop
+2280 vista-32:GetCursorFrameInfo vista-64:GetComboBoxInfo win7-32:UnhookWindowsHook win7-64:TrackPopupMenuEx win8-32:SetWindowBand win8-64:SetThreadInputBlocked
+2281 vista-32:GetCursorInfo vista-64:GetCursor win7-32:UnhookWindowsHookEx win7-64:TranslateAccelerator win8-32:SetWindowCompositionAttribute win8-64:SetTimer
+2282 vista-32:GetCursorPos vista-64:GetCursorFrameInfo win7-32:UnionRect win7-64:TranslateAcceleratorA win8-32:SetWindowCompositionTransition win8-64:SetUserObjectInformationA
+2283 vista-32:GetDC vista-64:GetCursorInfo win7-32:UnloadKeyboardLayout win7-64:TranslateAcceleratorW win8-32:SetWindowContextHelpId win8-64:SetUserObjectInformationW
+2284 vista-32:GetDCEx vista-64:GetCursorPos win7-32:UnlockWindowStation win7-64:TranslateMDISysAccel win8-32:SetWindowDisplayAffinity win8-64:SetUserObjectSecurity
+2285 vista-32:GetDesktopWindow vista-64:GetDC win7-32:UnpackDDElParam win7-64:TranslateMessage win8-32:SetWindowFeedbackSetting win8-64:SetWinEventHook
+2286 vista-32:GetDialogBaseUnits vista-64:GetDCEx win7-32:UnregisterClassA win7-64:TranslateMessageEx win8-32:SetWindowLongA win8-64:SetWindowBand
+2287 vista-32:GetDlgCtrlID vista-64:GetDesktopWindow win7-32:UnregisterClassW win7-64:UnhookWinEvent win8-32:SetWindowLongW win8-64:SetWindowCompositionAttribute
+2288 vista-32:GetDlgItem vista-64:GetDialogBaseUnits win7-32:UnregisterDeviceNotification win7-64:UnhookWindowsHook win8-32:SetWindowPlacement win8-64:SetWindowCompositionTransition
+2289 vista-32:GetDlgItemInt vista-64:GetDlgCtrlID win7-32:UnregisterHotKey win7-64:UnhookWindowsHookEx win8-32:SetWindowPos win8-64:SetWindowContextHelpId
+2290 vista-32:GetDlgItemTextA vista-64:GetDlgItem win7-32:UnregisterMessagePumpHook win7-64:UnionRect win8-32:SetWindowRgn win8-64:SetWindowDisplayAffinity
+2291 vista-32:GetDlgItemTextW vista-64:GetDlgItemInt win7-32:UnregisterPowerSettingNotification win7-64:UnloadKeyboardLayout win8-32:SetWindowRgnEx win8-64:SetWindowFeedbackSetting
+2292 vista-32:GetDoubleClickTime vista-64:GetDlgItemTextA win7-32:UnregisterSessionPort win7-64:UnlockWindowStation win8-32:SetWindowStationUser win8-64:SetWindowLongA
+2293 vista-32:GetFocus vista-64:GetDlgItemTextW win7-32:UnregisterTouchWindow win7-64:UnpackDDElParam win8-32:SetWindowTextA win8-64:SetWindowLongPtrA
+2294 vista-32:GetForegroundWindow vista-64:GetDoubleClickTime win7-32:UnregisterUserApiHook win7-64:UnregisterClassA win8-32:SetWindowTextW win8-64:SetWindowLongPtrW
+2295 vista-32:GetGUIThreadInfo vista-64:GetFocus win7-32:UpdateLayeredWindow win7-64:UnregisterClassW win8-32:SetWindowWord win8-64:SetWindowLongW
+2296 vista-32:GetGuiResources vista-64:GetForegroundWindow win7-32:UpdateLayeredWindowIndirect win7-64:UnregisterDeviceNotification win8-32:SetWindowsHookA win8-64:SetWindowPlacement
+2297 vista-32:GetIconInfo vista-64:GetGUIThreadInfo win7-32:UpdatePerUserSystemParameters win7-64:UnregisterHotKey win8-32:SetWindowsHookExA win8-64:SetWindowPos
+2298 vista-32:GetIconInfoExA vista-64:GetGuiResources win7-32:UpdateWindow win7-64:UnregisterMessagePumpHook win8-32:SetWindowsHookExW win8-64:SetWindowRgn
+2299 vista-32:GetIconInfoExW vista-64:GetIconInfo win7-32:UpdateWindowTransform win7-64:UnregisterPowerSettingNotification win8-32:SetWindowsHookW win8-64:SetWindowRgnEx
+2300 vista-32:GetInputDesktop vista-64:GetIconInfoExA win7-32:User32InitializeImmEntryTable win7-64:UnregisterSessionPort win8-32:ShowCaret win8-64:SetWindowStationUser
+2301 vista-32:GetInputState vista-64:GetIconInfoExW win7-32:UserClientDllInitialize win7-64:UnregisterTouchWindow win8-32:ShowCursor win8-64:SetWindowTextA
+2302 vista-32:GetInternalWindowPos vista-64:GetInputDesktop win7-32:UserHandleGrantAccess win7-64:UnregisterUserApiHook win8-32:ShowOwnedPopups win8-64:SetWindowTextW
+2303 vista-32:GetKBCodePage vista-64:GetInputState win7-32:UserLpkPSMTextOut win7-64:UpdateLayeredWindow win8-32:ShowScrollBar win8-64:SetWindowWord
+2304 vista-32:GetKeyNameTextA vista-64:GetInternalWindowPos win7-32:UserLpkTabbedTextOut win7-64:UpdateLayeredWindowIndirect win8-32:ShowStartGlass win8-64:SetWindowsHookA
+2305 vista-32:GetKeyNameTextW vista-64:GetKBCodePage win7-32:UserRealizePalette win7-64:UpdatePerUserSystemParameters win8-32:ShowSystemCursor win8-64:SetWindowsHookExA
+2306 vista-32:GetKeyState vista-64:GetKeyNameTextA win7-32:UserRegisterWowHandlers win7-64:UpdateWindow win8-32:ShowWindow win8-64:SetWindowsHookExW
+2307 vista-32:GetKeyboardLayout vista-64:GetKeyNameTextW win7-32:VRipOutput win7-64:UpdateWindowTransform win8-32:ShowWindowAsync win8-64:SetWindowsHookW
+2308 vista-32:GetKeyboardLayoutList vista-64:GetKeyState win7-32:VTagOutput win7-64:User32InitializeImmEntryTable win8-32:ShutdownBlockReasonCreate win8-64:ShowCaret
+2309 vista-32:GetKeyboardLayoutNameA vista-64:GetKeyboardLayout win7-32:ValidateRect win7-64:UserClientDllInitialize win8-32:ShutdownBlockReasonDestroy win8-64:ShowCursor
+2310 vista-32:GetKeyboardLayoutNameW vista-64:GetKeyboardLayoutList win7-32:ValidateRgn win7-64:UserHandleGrantAccess win8-32:ShutdownBlockReasonQuery win8-64:ShowOwnedPopups
+2311 vista-32:GetKeyboardState vista-64:GetKeyboardLayoutNameA win7-32:VkKeyScanA win7-64:UserLpkPSMTextOut win8-32:SignalRedirectionStartComplete win8-64:ShowScrollBar
+2312 vista-32:GetKeyboardType vista-64:GetKeyboardLayoutNameW win7-32:VkKeyScanExA win7-64:UserLpkTabbedTextOut win8-32:SkipPointerFrameMessages win8-64:ShowStartGlass
+2313 vista-32:GetLastActivePopup vista-64:GetKeyboardState win7-32:VkKeyScanExW win7-64:UserRealizePalette win8-32:SoftModalMessageBox win8-64:ShowSystemCursor
+2314 vista-32:GetLastInputInfo vista-64:GetKeyboardType win7-32:VkKeyScanW win7-64:UserRegisterWowHandlers win8-32:SoundSentry win8-64:ShowWindow
+2315 vista-32:GetLayeredWindowAttributes vista-64:GetLastActivePopup win7-32:WCSToMBEx win7-64:VRipOutput win8-32:SubtractRect win8-64:ShowWindowAsync
+2316 vista-32:GetListBoxInfo vista-64:GetLastInputInfo win7-32:WINNLSEnableIME win7-64:VTagOutput win8-32:SwapMouseButton win8-64:ShutdownBlockReasonCreate
+2317 vista-32:GetMenu vista-64:GetLayeredWindowAttributes win7-32:WINNLSGetEnableStatus win7-64:ValidateRect win8-32:SwitchDesktop win8-64:ShutdownBlockReasonDestroy
+2318 vista-32:GetMenuBarInfo vista-64:GetListBoxInfo win7-32:WINNLSGetIMEHotkey win7-64:ValidateRgn win8-32:SwitchDesktopWithFade win8-64:ShutdownBlockReasonQuery
+2319 vista-32:GetMenuCheckMarkDimensions vista-64:GetMenu win7-32:WaitForInputIdle win7-64:VkKeyScanA win8-32:SwitchToThisWindow win8-64:SignalRedirectionStartComplete
+2320 vista-32:GetMenuContextHelpId vista-64:GetMenuBarInfo win7-32:WaitMessage win7-64:VkKeyScanExA win8-32:SystemParametersInfoA win8-64:SkipPointerFrameMessages
+2321 vista-32:GetMenuDefaultItem vista-64:GetMenuCheckMarkDimensions win7-32:WinHelpA win7-64:VkKeyScanExW win8-32:SystemParametersInfoW win8-64:SoftModalMessageBox
+2322 vista-32:GetMenuInfo vista-64:GetMenuContextHelpId win7-32:WinHelpW win7-64:VkKeyScanW win8-32:TabbedTextOutA win8-64:SoundSentry
+2323 vista-32:GetMenuItemCount vista-64:GetMenuDefaultItem win7-32:WindowFromDC win7-64:WCSToMBEx win8-32:TabbedTextOutW win8-64:SubtractRect
+2324 vista-32:GetMenuItemID vista-64:GetMenuInfo win7-32:WindowFromPhysicalPoint win7-64:WINNLSEnableIME win8-32:TileChildWindows win8-64:SwapMouseButton
+2325 vista-32:GetMenuItemInfoA vista-64:GetMenuItemCount win7-32:WindowFromPoint win7-64:WINNLSGetEnableStatus win8-32:TileWindows win8-64:SwitchDesktop
+2326 vista-32:GetMenuItemInfoW vista-64:GetMenuItemID win7-32:_UserTestTokenForInteractive win7-64:WINNLSGetIMEHotkey win8-32:ToAscii win8-64:SwitchDesktopWithFade
+2327 vista-32:GetMenuItemRect vista-64:GetMenuItemInfoA win7-32:gSharedInfo win7-64:WaitForInputIdle win8-32:ToAsciiEx win8-64:SwitchToThisWindow
+2328 vista-32:GetMenuState vista-64:GetMenuItemInfoW win7-32:gapfnScSendMessage win7-64:WaitMessage win8-32:ToUnicode win8-64:SystemParametersInfoA
+2329 vista-32:GetMenuStringA vista-64:GetMenuItemRect win7-32:keybd_event win7-64:WinHelpA win8-32:ToUnicodeEx win8-64:SystemParametersInfoW
+2330 vista-32:GetMenuStringW vista-64:GetMenuState win7-32:mouse_event win7-64:WinHelpW win8-32:TrackMouseEvent win8-64:TabbedTextOutA
+2331 vista-32:GetMessageA vista-64:GetMenuStringA win7-32:wsprintfA win7-64:WindowFromDC win8-32:TrackPopupMenu win8-64:TabbedTextOutW
+2332 vista-32:GetMessageExtraInfo vista-64:GetMenuStringW win7-32:wsprintfW win7-64:WindowFromPhysicalPoint win8-32:TrackPopupMenuEx win8-64:TileChildWindows
+2333 vista-32:GetMessagePos vista-64:GetMessageA win7-32:wvsprintfA win7-64:WindowFromPoint win8-32:TranslateAccelerator win8-64:TileWindows
+2334 vista-32:GetMessageTime vista-64:GetMessageExtraInfo win7-32:wvsprintfW win7-64:_UserTestTokenForInteractive win8-32:TranslateAcceleratorA win8-64:ToAscii
+2335 vista-32:GetMessageW vista-64:GetMessagePos win7-64:gSharedInfo win8-32:TranslateAcceleratorW win8-64:ToAsciiEx
+2336 vista-32:GetMonitorInfoA vista-64:GetMessageTime win7-64:gapfnScSendMessage win8-32:TranslateMDISysAccel win8-64:ToUnicode
+2337 vista-32:GetMonitorInfoW vista-64:GetMessageW win7-64:keybd_event win8-32:TranslateMessage win8-64:ToUnicodeEx
+2338 vista-32:GetMouseMovePointsEx vista-64:GetMonitorInfoA win7-64:mouse_event win8-32:TranslateMessageEx win8-64:TrackMouseEvent
+2339 vista-32:GetNextDlgGroupItem vista-64:GetMonitorInfoW win7-64:wsprintfA win8-32:UnhookWinEvent win8-64:TrackPopupMenu
+2340 vista-32:GetNextDlgTabItem vista-64:GetMouseMovePointsEx win7-64:wsprintfW win8-32:UnhookWindowsHook win8-64:TrackPopupMenuEx
+2341 vista-32:GetOpenClipboardWindow vista-64:GetNextDlgGroupItem win7-64:wvsprintfA win8-32:UnhookWindowsHookEx win8-64:TranslateAccelerator
+2342 vista-32:GetParent vista-64:GetNextDlgTabItem win7-64:wvsprintfW win8-32:UnionRect win8-64:TranslateAcceleratorA
+2343 vista-32:GetPhysicalCursorPos vista-64:GetOpenClipboardWindow win8-32:UnloadKeyboardLayout win8-64:TranslateAcceleratorW
+2344 vista-32:GetPriorityClipboardFormat vista-64:GetParent win8-32:UnlockWindowStation win8-64:TranslateMDISysAccel
+2345 vista-32:GetProcessDefaultLayout vista-64:GetPhysicalCursorPos win8-32:UnpackDDElParam win8-64:TranslateMessage
+2346 vista-32:GetProcessWindowStation vista-64:GetPriorityClipboardFormat win8-32:UnregisterClassA win8-64:TranslateMessageEx
+2347 vista-32:GetProgmanWindow vista-64:GetProcessDefaultLayout win8-32:UnregisterClassW win8-64:UnhookWinEvent
+2348 vista-32:GetPropA vista-64:GetProcessWindowStation win8-32:UnregisterDeviceNotification win8-64:UnhookWindowsHook
+2349 vista-32:GetPropW vista-64:GetProgmanWindow win8-32:UnregisterHotKey win8-64:UnhookWindowsHookEx
+2350 vista-32:GetQueueStatus vista-64:GetPropA win8-32:UnregisterMessagePumpHook win8-64:UnionRect
+2351 vista-32:GetRawInputBuffer vista-64:GetPropW win8-32:UnregisterPointerInputTarget win8-64:UnloadKeyboardLayout
+2352 vista-32:GetRawInputData vista-64:GetQueueStatus win8-32:UnregisterPowerSettingNotification win8-64:UnlockWindowStation
+2353 vista-32:GetRawInputDeviceInfoA vista-64:GetRawInputBuffer win8-32:UnregisterSessionPort win8-64:UnpackDDElParam
+2354 vista-32:GetRawInputDeviceInfoW vista-64:GetRawInputData win8-32:UnregisterSuspendResumeNotification win8-64:UnregisterClassA
+2355 vista-32:GetRawInputDeviceList vista-64:GetRawInputDeviceInfoA win8-32:UnregisterTouchWindow win8-64:UnregisterClassW
+2356 vista-32:GetReasonTitleFromReasonCode vista-64:GetRawInputDeviceInfoW win8-32:UnregisterUserApiHook win8-64:UnregisterDeviceNotification
+2357 vista-32:GetRegisteredRawInputDevices vista-64:GetRawInputDeviceList win8-32:UpdateDefaultDesktopThumbnail win8-64:UnregisterHotKey
+2358 vista-32:GetScrollBarInfo vista-64:GetReasonTitleFromReasonCode win8-32:UpdateLayeredWindow win8-64:UnregisterMessagePumpHook
+2359 vista-32:GetScrollInfo vista-64:GetRegisteredRawInputDevices win8-32:UpdateLayeredWindowIndirect win8-64:UnregisterPointerInputTarget
+2360 vista-32:GetScrollPos vista-64:GetScrollBarInfo win8-32:UpdatePerUserSystemParameters win8-64:UnregisterPowerSettingNotification
+2361 vista-32:GetScrollRange vista-64:GetScrollInfo win8-32:UpdateWindow win8-64:UnregisterSessionPort
+2362 vista-32:GetSendMessageReceiver vista-64:GetScrollPos win8-32:UpdateWindowTransform win8-64:UnregisterSuspendResumeNotification
+2363 vista-32:GetShellWindow vista-64:GetScrollRange win8-32:User32InitializeImmEntryTable win8-64:UnregisterTouchWindow
+2364 vista-32:GetSubMenu vista-64:GetSendMessageReceiver win8-32:UserClientDllInitialize win8-64:UnregisterUserApiHook
+2365 vista-32:GetSysColor vista-64:GetShellWindow win8-32:UserHandleGrantAccess win8-64:UpdateDefaultDesktopThumbnail
+2366 vista-32:GetSysColorBrush vista-64:GetSubMenu win8-32:UserLpkPSMTextOut win8-64:UpdateLayeredWindow
+2367 vista-32:GetSystemMenu vista-64:GetSysColor win8-32:UserLpkTabbedTextOut win8-64:UpdateLayeredWindowIndirect
+2368 vista-32:GetSystemMetrics vista-64:GetSysColorBrush win8-32:UserRealizePalette win8-64:UpdatePerUserSystemParameters
+2369 vista-32:GetTabbedTextExtentA vista-64:GetSystemMenu win8-32:UserRegisterWowHandlers win8-64:UpdateWindow
+2370 vista-32:GetTabbedTextExtentW vista-64:GetSystemMetrics win8-32:VRipOutput win8-64:UpdateWindowTransform
+2371 vista-32:GetTaskmanWindow vista-64:GetTabbedTextExtentA win8-32:VTagOutput win8-64:User32InitializeImmEntryTable
+2372 vista-32:GetThreadDesktop vista-64:GetTabbedTextExtentW win8-32:ValidateRect win8-64:UserClientDllInitialize
+2373 vista-32:GetTitleBarInfo vista-64:GetTaskmanWindow win8-32:ValidateRgn win8-64:UserHandleGrantAccess
+2374 vista-32:GetTopWindow vista-64:GetThreadDesktop win8-32:VkKeyScanA win8-64:UserLpkPSMTextOut
+2375 vista-32:GetUpdateRect vista-64:GetTitleBarInfo win8-32:VkKeyScanExA win8-64:UserLpkTabbedTextOut
+2376 vista-32:GetUpdateRgn vista-64:GetTopWindow win8-32:VkKeyScanExW win8-64:UserRealizePalette
+2377 vista-32:GetUpdatedClipboardFormats vista-64:GetUpdateRect win8-32:VkKeyScanW win8-64:UserRegisterWowHandlers
+2378 vista-32:GetUserObjectInformationA vista-64:GetUpdateRgn win8-32:WCSToMBEx win8-64:VRipOutput
+2379 vista-32:GetUserObjectInformationW vista-64:GetUpdatedClipboardFormats win8-32:WINNLSEnableIME win8-64:VTagOutput
+2380 vista-32:GetUserObjectSecurity vista-64:GetUserObjectInformationA win8-32:WINNLSGetEnableStatus win8-64:ValidateRect
+2381 vista-32:GetWinStationInfo vista-64:GetUserObjectInformationW win8-32:WINNLSGetIMEHotkey win8-64:ValidateRgn
+2382 vista-32:GetWindow vista-64:GetUserObjectSecurity win8-32:WaitForInputIdle win8-64:VkKeyScanA
+2383 vista-32:GetWindowContextHelpId vista-64:GetWinStationInfo win8-32:WaitForRedirectionStartComplete win8-64:VkKeyScanExA
+2384 vista-32:GetWindowDC vista-64:GetWindow win8-32:WaitMessage win8-64:VkKeyScanExW
+2385 vista-32:GetWindowInfo vista-64:GetWindowContextHelpId win8-32:WinHelpA win8-64:VkKeyScanW
+2386 vista-32:GetWindowLongA vista-64:GetWindowDC win8-32:WinHelpW win8-64:WCSToMBEx
+2387 vista-32:GetWindowLongW vista-64:GetWindowInfo win8-32:WindowFromDC win8-64:WINNLSEnableIME
+2388 vista-32:GetWindowMinimizeRect vista-64:GetWindowLongA win8-32:WindowFromPhysicalPoint win8-64:WINNLSGetEnableStatus
+2389 vista-32:GetWindowModuleFileName vista-64:GetWindowLongPtrA win8-32:WindowFromPoint win8-64:WINNLSGetIMEHotkey
+2390 vista-32:GetWindowModuleFileNameA vista-64:GetWindowLongPtrW win8-32:_UserTestTokenForInteractive win8-64:WaitForInputIdle
+2391 vista-32:GetWindowModuleFileNameW vista-64:GetWindowLongW win8-32:gSharedInfo win8-64:WaitForRedirectionStartComplete
+2392 vista-32:GetWindowPlacement vista-64:GetWindowMinimizeRect win8-32:gapfnScSendMessage win8-64:WaitMessage
+2393 vista-32:GetWindowRect vista-64:GetWindowModuleFileName win8-32:keybd_event win8-64:WinHelpA
+2394 vista-32:GetWindowRgn vista-64:GetWindowModuleFileNameA win8-32:mouse_event win8-64:WinHelpW
+2395 vista-32:GetWindowRgnBox vista-64:GetWindowModuleFileNameW win8-32:wsprintfA win8-64:WindowFromDC
+2396 vista-32:GetWindowRgnEx vista-64:GetWindowPlacement win8-32:wsprintfW win8-64:WindowFromPhysicalPoint
+2397 vista-32:GetWindowTextA vista-64:GetWindowRect win8-32:wvsprintfA win8-64:WindowFromPoint
+2398 vista-32:GetWindowTextLengthA vista-64:GetWindowRgn win8-32:wvsprintfW win8-64:_UserTestTokenForInteractive
+2399 vista-32:GetWindowTextLengthW vista-64:GetWindowRgnBox win8-64:gSharedInfo
+2400 vista-32:GetWindowTextW vista-64:GetWindowRgnEx win8-64:gapfnScSendMessage
+2401 vista-32:GetWindowThreadProcessId vista-64:GetWindowTextA win8-64:keybd_event
+2402 vista-32:GetWindowWord vista-64:GetWindowTextLengthA win8-64:mouse_event
+2403 vista-32:GhostWindowFromHungWindow vista-64:GetWindowTextLengthW win8-64:wsprintfA
+2404 vista-32:GrayStringA vista-64:GetWindowTextW win8-64:wsprintfW
+2405 vista-32:GrayStringW vista-64:GetWindowThreadProcessId win8-64:wvsprintfA
+2406 vista-32:HideCaret vista-64:GetWindowWord win8-64:wvsprintfW
 2407 vista-32:HiliteMenuItem vista-64:GhostWindowFromHungWindow
 2408 vista-32:HungWindowFromGhostWindow vista-64:GrayStringA
 2409 vista-32:IMPGetIMEA vista-64:GrayStringW
@@ -1003,45 +1003,45 @@
 2500 vista-32:MapWindowPoints vista-64:MapVirtualKeyA win7-32:- win7-64:-
 2501 vista-32:MenuItemFromPoint vista-64:MapVirtualKeyExA win7-32:- win7-64:-
 2502 vista-32:MenuWindowProcA vista-64:MapVirtualKeyExW win7-32:- win7-64:-
-2503 vista-32:MenuWindowProcW vista-64:MapVirtualKeyW
-2504 vista-32:MessageBeep vista-64:MapWindowPoints
-2505 vista-32:MessageBoxA vista-64:MenuItemFromPoint
-2506 vista-32:MessageBoxExA vista-64:MenuWindowProcA
-2507 vista-32:MessageBoxExW vista-64:MenuWindowProcW
-2508 vista-32:MessageBoxIndirectA vista-64:MessageBeep
-2509 vista-32:MessageBoxIndirectW vista-64:MessageBoxA
-2510 vista-32:MessageBoxTimeoutA vista-64:MessageBoxExA
-2511 vista-32:MessageBoxTimeoutW vista-64:MessageBoxExW
-2512 vista-32:MessageBoxW vista-64:MessageBoxIndirectA
-2513 vista-32:ModifyMenuA vista-64:MessageBoxIndirectW
-2514 vista-32:ModifyMenuW vista-64:MessageBoxTimeoutA
-2515 vista-32:MonitorFromPoint vista-64:MessageBoxTimeoutW
-2516 vista-32:MonitorFromRect vista-64:MessageBoxW
-2517 vista-32:MonitorFromWindow vista-64:ModifyMenuA
-2518 vista-32:MoveWindow vista-64:ModifyMenuW
-2519 vista-32:MsgWaitForMultipleObjects vista-64:MonitorFromPoint
-2520 vista-32:MsgWaitForMultipleObjectsEx vista-64:MonitorFromRect
-2521 vista-32:NotifyWinEvent vista-64:MonitorFromWindow
-2522 vista-32:OemKeyScan vista-64:MoveWindow
-2523 vista-32:OemToCharA vista-64:MsgWaitForMultipleObjects
-2524 vista-32:OemToCharBuffA vista-64:MsgWaitForMultipleObjectsEx
-2525 vista-32:OemToCharBuffW vista-64:NotifyWinEvent
-2526 vista-32:OemToCharW vista-64:OemKeyScan
-2527 vista-32:OffsetRect vista-64:OemToCharA
-2528 vista-32:OpenClipboard vista-64:OemToCharBuffA
-2529 vista-32:OpenDesktopA vista-64:OemToCharBuffW
-2530 vista-32:OpenDesktopW vista-64:OemToCharW
-2531 vista-32:OpenIcon vista-64:OffsetRect
-2532 vista-32:OpenInputDesktop vista-64:OpenClipboard
-2533 vista-32:OpenThreadDesktop vista-64:OpenDesktopA
-2534 vista-32:OpenWindowStationA vista-64:OpenDesktopW
-2535 vista-32:OpenWindowStationW vista-64:OpenIcon
-2536 vista-32:PackDDElParam vista-64:OpenInputDesktop
-2537 vista-32:PaintDesktop vista-64:OpenThreadDesktop
-2538 vista-32:PaintMenuBar vista-64:OpenWindowStationA
-2539 vista-32:PaintMonitor vista-64:OpenWindowStationW
-2540 vista-32:PeekMessageA vista-64:PackDDElParam
-2541 vista-32:PeekMessageW vista-64:PaintDesktop
+2503 vista-32:MenuWindowProcW vista-64:MapVirtualKeyW win8-32:- win8-64:-
+2504 vista-32:MessageBeep vista-64:MapWindowPoints win8-32:- win8-64:-
+2505 vista-32:MessageBoxA vista-64:MenuItemFromPoint win8-32:- win8-64:-
+2506 vista-32:MessageBoxExA vista-64:MenuWindowProcA win8-32:- win8-64:-
+2507 vista-32:MessageBoxExW vista-64:MenuWindowProcW win8-32:- win8-64:-
+2508 vista-32:MessageBoxIndirectA vista-64:MessageBeep win8-32:- win8-64:-
+2509 vista-32:MessageBoxIndirectW vista-64:MessageBoxA win8-32:- win8-64:-
+2510 vista-32:MessageBoxTimeoutA vista-64:MessageBoxExA win8-32:- win8-64:-
+2511 vista-32:MessageBoxTimeoutW vista-64:MessageBoxExW win8-32:- win8-64:-
+2512 vista-32:MessageBoxW vista-64:MessageBoxIndirectA win8-32:- win8-64:-
+2513 vista-32:ModifyMenuA vista-64:MessageBoxIndirectW win8-32:- win8-64:-
+2514 vista-32:ModifyMenuW vista-64:MessageBoxTimeoutA win8-32:- win8-64:-
+2515 vista-32:MonitorFromPoint vista-64:MessageBoxTimeoutW win8-32:- win8-64:-
+2516 vista-32:MonitorFromRect vista-64:MessageBoxW win8-32:- win8-64:-
+2517 vista-32:MonitorFromWindow vista-64:ModifyMenuA win8-32:- win8-64:-
+2518 vista-32:MoveWindow vista-64:ModifyMenuW win8-32:- win8-64:-
+2519 vista-32:MsgWaitForMultipleObjects vista-64:MonitorFromPoint win8-32:- win8-64:-
+2520 vista-32:MsgWaitForMultipleObjectsEx vista-64:MonitorFromRect win8-32:- win8-64:-
+2521 vista-32:NotifyWinEvent vista-64:MonitorFromWindow win8-32:GetProcessUIContextInformation win8-64:GetProcessUIContextInformation
+2522 vista-32:OemKeyScan vista-64:MoveWindow win8-32:- win8-64:-
+2523 vista-32:OemToCharA vista-64:MsgWaitForMultipleObjects win8-32:- win8-64:-
+2524 vista-32:OemToCharBuffA vista-64:MsgWaitForMultipleObjectsEx win8-32:- win8-64:-
+2525 vista-32:OemToCharBuffW vista-64:NotifyWinEvent win8-32:- win8-64:-
+2526 vista-32:OemToCharW vista-64:OemKeyScan win8-32:- win8-64:-
+2527 vista-32:OffsetRect vista-64:OemToCharA win8-32:- win8-64:-
+2528 vista-32:OpenClipboard vista-64:OemToCharBuffA win8-32:IsThreadMessageQueueAttached win8-64:IsThreadMessageQueueAttached
+2529 vista-32:OpenDesktopA vista-64:OemToCharBuffW win8-32:- win8-64:-
+2530 vista-32:OpenDesktopW vista-64:OemToCharW win8-32:- win8-64:-
+2531 vista-32:OpenIcon vista-64:OffsetRect win8-32:- win8-64:-
+2532 vista-32:OpenInputDesktop vista-64:OpenClipboard win8-32:- win8-64:-
+2533 vista-32:OpenThreadDesktop vista-64:OpenDesktopA win8-32:- win8-64:-
+2534 vista-32:OpenWindowStationA vista-64:OpenDesktopW win8-32:- win8-64:-
+2535 vista-32:OpenWindowStationW vista-64:OpenIcon win8-32:- win8-64:-
+2536 vista-32:PackDDElParam vista-64:OpenInputDesktop win8-32:- win8-64:-
+2537 vista-32:PaintDesktop vista-64:OpenThreadDesktop win8-32:- win8-64:-
+2538 vista-32:PaintMenuBar vista-64:OpenWindowStationA win8-32:- win8-64:-
+2539 vista-32:PaintMonitor vista-64:OpenWindowStationW win8-32:- win8-64:-
+2540 vista-32:PeekMessageA vista-64:PackDDElParam win8-32:- win8-64:-
+2541 vista-32:PeekMessageW vista-64:PaintDesktop win8-32:- win8-64:-
 2542 vista-32:PhysicalToLogicalPoint vista-64:PaintMenuBar
 2543 vista-32:PostMessageA vista-64:PaintMonitor
 2544 vista-32:PostMessageW vista-64:PeekMessageA

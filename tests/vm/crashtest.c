@@ -3,6 +3,7 @@
  * way Chromium does on a failed check: a formatted "FATAL" line on the stack,
  * then a breakpoint. VistaExt's crash window should then explain it.
  *   crashtest [/av]    /av: a memory access violation instead
+ *   crashtest /stay    keeps running without crashing (until it is killed)
  *   crashtest /helper  starts itself as a helper process (as multi-process
  *                      programs do), the helper crashes, this one ends
  *                      normally: no crash window should appear */
@@ -24,6 +25,14 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
     volatile LONG v = 0;
     LONG zero = 0;
     OSVERSIONINFOW vi;
+    {   /* /stay: just keep running (tests/vm/perf.cmd: the crash window's cost) */
+        const WCHAR *c = GetCommandLineW();
+        for (; *c; c++) if (c[0] == '/' && c[1] == 's' && c[2] == 't' && c[3] == 'a' && c[4] == 'y') {
+            MSG m;
+            while (GetMessageW(&m, NULL, 0, 0) > 0) DispatchMessageW(&m);
+            return 0;
+        }
+    }
     vi.dwOSVersionInfoSize = sizeof(vi);
     /* restarted from the crash window told Windows 10: say so and end normally */
     if (GetVersionExW(&vi) && vi.dwMajorVersion == 10) {

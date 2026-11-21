@@ -1,4 +1,4 @@
-# advapi32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# advapi32.dll export ordinals: vista-32, vista-64, win7-32, win7-64, win8-32, win8-64.
 # Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
 1 vista-32:I_ScGetCurrentGroupStateW vista-64:I_ScGetCurrentGroupStateW
 2 vista-32:A_SHAFinal vista-64:A_SHAFinal
@@ -799,809 +799,856 @@
 797 vista-32:WmiSetSingleItemW vista-64:WmiSetSingleItemW
 798 vista-32:Wow64Win32ApiEntry vista-64:Wow64Win32ApiEntry
 799 vista-32:WriteEncryptedFileRaw vista-64:WriteEncryptedFileRaw
-1000 win7-32:- win7-64:-
-1001 win7-32:I_ScGetCurrentGroupStateW win7-64:I_ScGetCurrentGroupStateW
-1002 win7-32:A_SHAFinal win7-64:A_SHAFinal
-1003 win7-32:A_SHAInit win7-64:A_SHAInit
-1004 win7-32:A_SHAUpdate win7-64:A_SHAUpdate
-1005 win7-32:AbortSystemShutdownA win7-64:AbortSystemShutdownA
-1006 win7-32:AbortSystemShutdownW win7-64:AbortSystemShutdownW
-1007 win7-32:AccessCheck win7-64:AccessCheck
-1008 win7-32:AccessCheckAndAuditAlarmA win7-64:AccessCheckAndAuditAlarmA
-1009 win7-32:AccessCheckAndAuditAlarmW win7-64:AccessCheckAndAuditAlarmW
-1010 win7-32:AccessCheckByType win7-64:AccessCheckByType
-1011 win7-32:AccessCheckByTypeAndAuditAlarmA win7-64:AccessCheckByTypeAndAuditAlarmA
-1012 win7-32:AccessCheckByTypeAndAuditAlarmW win7-64:AccessCheckByTypeAndAuditAlarmW
-1013 win7-32:AccessCheckByTypeResultList win7-64:AccessCheckByTypeResultList
-1014 win7-32:AccessCheckByTypeResultListAndAuditAlarmA win7-64:AccessCheckByTypeResultListAndAuditAlarmA
-1015 win7-32:AccessCheckByTypeResultListAndAuditAlarmByHandleA win7-64:AccessCheckByTypeResultListAndAuditAlarmByHandleA
-1016 win7-32:AccessCheckByTypeResultListAndAuditAlarmByHandleW win7-64:AccessCheckByTypeResultListAndAuditAlarmByHandleW
-1017 win7-32:AccessCheckByTypeResultListAndAuditAlarmW win7-64:AccessCheckByTypeResultListAndAuditAlarmW
-1018 win7-32:AddAccessAllowedAce win7-64:AddAccessAllowedAce
-1019 win7-32:AddAccessAllowedAceEx win7-64:AddAccessAllowedAceEx
-1020 win7-32:AddAccessAllowedObjectAce win7-64:AddAccessAllowedObjectAce
-1021 win7-32:AddAccessDeniedAce win7-64:AddAccessDeniedAce
-1022 win7-32:AddAccessDeniedAceEx win7-64:AddAccessDeniedAceEx
-1023 win7-32:AddAccessDeniedObjectAce win7-64:AddAccessDeniedObjectAce
-1024 win7-32:AddAce win7-64:AddAce
-1025 win7-32:AddAuditAccessAce win7-64:AddAuditAccessAce
-1026 win7-32:AddAuditAccessAceEx win7-64:AddAuditAccessAceEx
-1027 win7-32:AddAuditAccessObjectAce win7-64:AddAuditAccessObjectAce
-1028 win7-32:AddConditionalAce win7-64:AddConditionalAce
-1029 win7-32:AddMandatoryAce win7-64:AddMandatoryAce
-1030 win7-32:AddUsersToEncryptedFile win7-64:AddUsersToEncryptedFile
-1031 win7-32:AddUsersToEncryptedFileEx win7-64:AddUsersToEncryptedFileEx
-1032 win7-32:AdjustTokenGroups win7-64:AdjustTokenGroups
-1033 win7-32:AdjustTokenPrivileges win7-64:AdjustTokenPrivileges
-1034 win7-32:AllocateAndInitializeSid win7-64:AllocateAndInitializeSid
-1035 win7-32:AllocateLocallyUniqueId win7-64:AllocateLocallyUniqueId
-1036 win7-32:AreAllAccessesGranted win7-64:AreAllAccessesGranted
-1037 win7-32:AreAnyAccessesGranted win7-64:AreAnyAccessesGranted
-1038 win7-32:AuditComputeEffectivePolicyBySid win7-64:AuditComputeEffectivePolicyBySid
-1039 win7-32:AuditComputeEffectivePolicyByToken win7-64:AuditComputeEffectivePolicyByToken
-1040 win7-32:AuditEnumerateCategories win7-64:AuditEnumerateCategories
-1041 win7-32:AuditEnumeratePerUserPolicy win7-64:AuditEnumeratePerUserPolicy
-1042 win7-32:AuditEnumerateSubCategories win7-64:AuditEnumerateSubCategories
-1043 win7-32:AuditFree win7-64:AuditFree
-1044 win7-32:AuditLookupCategoryGuidFromCategoryId win7-64:AuditLookupCategoryGuidFromCategoryId
-1045 win7-32:AuditLookupCategoryIdFromCategoryGuid win7-64:AuditLookupCategoryIdFromCategoryGuid
-1046 win7-32:AuditLookupCategoryNameA win7-64:AuditLookupCategoryNameA
-1047 win7-32:AuditLookupCategoryNameW win7-64:AuditLookupCategoryNameW
-1048 win7-32:AuditLookupSubCategoryNameA win7-64:AuditLookupSubCategoryNameA
-1049 win7-32:AuditLookupSubCategoryNameW win7-64:AuditLookupSubCategoryNameW
-1050 win7-32:AuditQueryGlobalSaclA win7-64:AuditQueryGlobalSaclA
-1051 win7-32:AuditQueryGlobalSaclW win7-64:AuditQueryGlobalSaclW
-1052 win7-32:AuditQueryPerUserPolicy win7-64:AuditQueryPerUserPolicy
-1053 win7-32:AuditQuerySecurity win7-64:AuditQuerySecurity
-1054 win7-32:AuditQuerySystemPolicy win7-64:AuditQuerySystemPolicy
-1055 win7-32:AuditSetGlobalSaclA win7-64:AuditSetGlobalSaclA
-1056 win7-32:AuditSetGlobalSaclW win7-64:AuditSetGlobalSaclW
-1057 win7-32:AuditSetPerUserPolicy win7-64:AuditSetPerUserPolicy
-1058 win7-32:AuditSetSecurity win7-64:AuditSetSecurity
-1059 win7-32:AuditSetSystemPolicy win7-64:AuditSetSystemPolicy
-1060 win7-32:BackupEventLogA win7-64:BackupEventLogA
-1061 win7-32:BackupEventLogW win7-64:BackupEventLogW
-1062 win7-32:BuildExplicitAccessWithNameA win7-64:BuildExplicitAccessWithNameA
-1063 win7-32:BuildExplicitAccessWithNameW win7-64:BuildExplicitAccessWithNameW
-1064 win7-32:BuildImpersonateExplicitAccessWithNameA win7-64:BuildImpersonateExplicitAccessWithNameA
-1065 win7-32:BuildImpersonateExplicitAccessWithNameW win7-64:BuildImpersonateExplicitAccessWithNameW
-1066 win7-32:BuildImpersonateTrusteeA win7-64:BuildImpersonateTrusteeA
-1067 win7-32:BuildImpersonateTrusteeW win7-64:BuildImpersonateTrusteeW
-1068 win7-32:BuildSecurityDescriptorA win7-64:BuildSecurityDescriptorA
-1069 win7-32:BuildSecurityDescriptorW win7-64:BuildSecurityDescriptorW
-1070 win7-32:BuildTrusteeWithNameA win7-64:BuildTrusteeWithNameA
-1071 win7-32:BuildTrusteeWithNameW win7-64:BuildTrusteeWithNameW
-1072 win7-32:BuildTrusteeWithObjectsAndNameA win7-64:BuildTrusteeWithObjectsAndNameA
-1073 win7-32:BuildTrusteeWithObjectsAndNameW win7-64:BuildTrusteeWithObjectsAndNameW
-1074 win7-32:BuildTrusteeWithObjectsAndSidA win7-64:BuildTrusteeWithObjectsAndSidA
-1075 win7-32:BuildTrusteeWithObjectsAndSidW win7-64:BuildTrusteeWithObjectsAndSidW
-1076 win7-32:BuildTrusteeWithSidA win7-64:BuildTrusteeWithSidA
-1077 win7-32:BuildTrusteeWithSidW win7-64:BuildTrusteeWithSidW
-1078 win7-32:CancelOverlappedAccess win7-64:CancelOverlappedAccess
-1079 win7-32:ChangeServiceConfig2A win7-64:ChangeServiceConfig2A
-1080 win7-32:ChangeServiceConfig2W win7-64:ChangeServiceConfig2W
-1081 win7-32:ChangeServiceConfigA win7-64:ChangeServiceConfigA
-1082 win7-32:ChangeServiceConfigW win7-64:ChangeServiceConfigW
-1083 win7-32:CheckTokenMembership win7-64:CheckTokenMembership
-1084 win7-32:ClearEventLogA win7-64:ClearEventLogA
-1085 win7-32:ClearEventLogW win7-64:ClearEventLogW
-1086 win7-32:CloseCodeAuthzLevel win7-64:CloseCodeAuthzLevel
-1087 win7-32:CloseEncryptedFileRaw win7-64:CloseEncryptedFileRaw
-1088 win7-32:CloseEventLog win7-64:CloseEventLog
-1089 win7-32:CloseServiceHandle win7-64:CloseServiceHandle
-1090 win7-32:CloseThreadWaitChainSession win7-64:CloseThreadWaitChainSession
-1091 win7-32:CloseTrace win7-64:CloseTrace
-1092 win7-32:CommandLineFromMsiDescriptor win7-64:CommandLineFromMsiDescriptor
-1093 win7-32:ComputeAccessTokenFromCodeAuthzLevel win7-64:ComputeAccessTokenFromCodeAuthzLevel
-1094 win7-32:ControlService win7-64:ControlService
-1095 win7-32:ControlServiceExA win7-64:ControlServiceExA
-1096 win7-32:ControlServiceExW win7-64:ControlServiceExW
-1097 win7-32:ControlTraceA win7-64:ControlTraceA
-1098 win7-32:ControlTraceW win7-64:ControlTraceW
-1099 win7-32:ConvertAccessToSecurityDescriptorA win7-64:ConvertAccessToSecurityDescriptorA
-1100 win7-32:ConvertAccessToSecurityDescriptorW win7-64:ConvertAccessToSecurityDescriptorW
-1101 win7-32:ConvertSDToStringSDRootDomainA win7-64:ConvertSDToStringSDRootDomainA
-1102 win7-32:ConvertSDToStringSDRootDomainW win7-64:ConvertSDToStringSDRootDomainW
-1103 win7-32:ConvertSecurityDescriptorToAccessA win7-64:ConvertSecurityDescriptorToAccessA
-1104 win7-32:ConvertSecurityDescriptorToAccessNamedA win7-64:ConvertSecurityDescriptorToAccessNamedA
-1105 win7-32:ConvertSecurityDescriptorToAccessNamedW win7-64:ConvertSecurityDescriptorToAccessNamedW
-1106 win7-32:ConvertSecurityDescriptorToAccessW win7-64:ConvertSecurityDescriptorToAccessW
-1107 win7-32:ConvertSecurityDescriptorToStringSecurityDescriptorA win7-64:ConvertSecurityDescriptorToStringSecurityDescriptorA
-1108 win7-32:ConvertSecurityDescriptorToStringSecurityDescriptorW win7-64:ConvertSecurityDescriptorToStringSecurityDescriptorW
-1109 win7-32:ConvertSidToStringSidA win7-64:ConvertSidToStringSidA
-1110 win7-32:ConvertSidToStringSidW win7-64:ConvertSidToStringSidW
-1111 win7-32:ConvertStringSDToSDDomainA win7-64:ConvertStringSDToSDDomainA
-1112 win7-32:ConvertStringSDToSDDomainW win7-64:ConvertStringSDToSDDomainW
-1113 win7-32:ConvertStringSDToSDRootDomainA win7-64:ConvertStringSDToSDRootDomainA
-1114 win7-32:ConvertStringSDToSDRootDomainW win7-64:ConvertStringSDToSDRootDomainW
-1115 win7-32:ConvertStringSecurityDescriptorToSecurityDescriptorA win7-64:ConvertStringSecurityDescriptorToSecurityDescriptorA
-1116 win7-32:ConvertStringSecurityDescriptorToSecurityDescriptorW win7-64:ConvertStringSecurityDescriptorToSecurityDescriptorW
-1117 win7-32:ConvertStringSidToSidA win7-64:ConvertStringSidToSidA
-1118 win7-32:ConvertStringSidToSidW win7-64:ConvertStringSidToSidW
-1119 win7-32:ConvertToAutoInheritPrivateObjectSecurity win7-64:ConvertToAutoInheritPrivateObjectSecurity
-1120 win7-32:CopySid win7-64:CopySid
-1121 win7-32:CreateCodeAuthzLevel win7-64:CreateCodeAuthzLevel
-1122 win7-32:CreatePrivateObjectSecurity win7-64:CreatePrivateObjectSecurity
-1123 win7-32:CreatePrivateObjectSecurityEx win7-64:CreatePrivateObjectSecurityEx
-1124 win7-32:CreatePrivateObjectSecurityWithMultipleInheritance win7-64:CreatePrivateObjectSecurityWithMultipleInheritance
-1125 win7-32:CreateProcessAsUserA win7-64:CreateProcessAsUserA
-1126 win7-32:CreateProcessAsUserW win7-64:CreateProcessAsUserW
-1127 win7-32:CreateProcessWithLogonW win7-64:CreateProcessWithLogonW
-1128 win7-32:CreateProcessWithTokenW win7-64:CreateProcessWithTokenW
-1129 win7-32:CreateRestrictedToken win7-64:CreateRestrictedToken
-1130 win7-32:CreateServiceA win7-64:CreateServiceA
-1131 win7-32:CreateServiceW win7-64:CreateServiceW
-1132 win7-32:CreateTraceInstanceId win7-64:CreateTraceInstanceId
-1133 win7-32:CreateWellKnownSid win7-64:CreateWellKnownSid
-1134 win7-32:CredBackupCredentials win7-64:CredBackupCredentials
-1135 win7-32:CredDeleteA win7-64:CredDeleteA
-1136 win7-32:CredDeleteW win7-64:CredDeleteW
-1137 win7-32:CredEncryptAndMarshalBinaryBlob win7-64:CredEncryptAndMarshalBinaryBlob
-1138 win7-32:CredEnumerateA win7-64:CredEnumerateA
-1139 win7-32:CredEnumerateW win7-64:CredEnumerateW
-1140 win7-32:CredFindBestCredentialA win7-64:CredFindBestCredentialA
-1141 win7-32:CredFindBestCredentialW win7-64:CredFindBestCredentialW
-1142 win7-32:CredFree win7-64:CredFree
-1143 win7-32:CredGetSessionTypes win7-64:CredGetSessionTypes
-1144 win7-32:CredGetTargetInfoA win7-64:CredGetTargetInfoA
-1145 win7-32:CredGetTargetInfoW win7-64:CredGetTargetInfoW
-1146 win7-32:CredIsMarshaledCredentialA win7-64:CredIsMarshaledCredentialA
-1147 win7-32:CredIsMarshaledCredentialW win7-64:CredIsMarshaledCredentialW
-1148 win7-32:CredIsProtectedA win7-64:CredIsProtectedA
-1149 win7-32:CredIsProtectedW win7-64:CredIsProtectedW
-1150 win7-32:CredMarshalCredentialA win7-64:CredMarshalCredentialA
-1151 win7-32:CredMarshalCredentialW win7-64:CredMarshalCredentialW
-1152 win7-32:CredProfileLoaded win7-64:CredProfileLoaded
-1153 win7-32:CredProfileUnloaded win7-64:CredProfileUnloaded
-1154 win7-32:CredProtectA win7-64:CredProtectA
-1155 win7-32:CredProtectW win7-64:CredProtectW
-1156 win7-32:CredReadA win7-64:CredReadA
-1157 win7-32:CredReadByTokenHandle win7-64:CredReadByTokenHandle
-1158 win7-32:CredReadDomainCredentialsA win7-64:CredReadDomainCredentialsA
-1159 win7-32:CredReadDomainCredentialsW win7-64:CredReadDomainCredentialsW
-1160 win7-32:CredReadW win7-64:CredReadW
-1161 win7-32:CredRenameA win7-64:CredRenameA
-1162 win7-32:CredRenameW win7-64:CredRenameW
-1163 win7-32:CredRestoreCredentials win7-64:CredRestoreCredentials
-1164 win7-32:CredUnmarshalCredentialA win7-64:CredUnmarshalCredentialA
-1165 win7-32:CredUnmarshalCredentialW win7-64:CredUnmarshalCredentialW
-1166 win7-32:CredUnprotectA win7-64:CredUnprotectA
-1167 win7-32:CredUnprotectW win7-64:CredUnprotectW
-1168 win7-32:CredWriteA win7-64:CredWriteA
-1169 win7-32:CredWriteDomainCredentialsA win7-64:CredWriteDomainCredentialsA
-1170 win7-32:CredWriteDomainCredentialsW win7-64:CredWriteDomainCredentialsW
-1171 win7-32:CredWriteW win7-64:CredWriteW
-1172 win7-32:CredpConvertCredential win7-64:CredpConvertCredential
-1173 win7-32:CredpConvertOneCredentialSize win7-64:CredpConvertOneCredentialSize
-1174 win7-32:CredpConvertTargetInfo win7-64:CredpConvertTargetInfo
-1175 win7-32:CredpDecodeCredential win7-64:CredpDecodeCredential
-1176 win7-32:CredpEncodeCredential win7-64:CredpEncodeCredential
-1177 win7-32:CredpEncodeSecret win7-64:CredpEncodeSecret
-1178 win7-32:CryptAcquireContextA win7-64:CryptAcquireContextA
-1179 win7-32:CryptAcquireContextW win7-64:CryptAcquireContextW
-1180 win7-32:CryptContextAddRef win7-64:CryptContextAddRef
-1181 win7-32:CryptCreateHash win7-64:CryptCreateHash
-1182 win7-32:CryptDecrypt win7-64:CryptDecrypt
-1183 win7-32:CryptDeriveKey win7-64:CryptDeriveKey
-1184 win7-32:CryptDestroyHash win7-64:CryptDestroyHash
-1185 win7-32:CryptDestroyKey win7-64:CryptDestroyKey
-1186 win7-32:CryptDuplicateHash win7-64:CryptDuplicateHash
-1187 win7-32:CryptDuplicateKey win7-64:CryptDuplicateKey
-1188 win7-32:CryptEncrypt win7-64:CryptEncrypt
-1189 win7-32:CryptEnumProviderTypesA win7-64:CryptEnumProviderTypesA
-1190 win7-32:CryptEnumProviderTypesW win7-64:CryptEnumProviderTypesW
-1191 win7-32:CryptEnumProvidersA win7-64:CryptEnumProvidersA
-1192 win7-32:CryptEnumProvidersW win7-64:CryptEnumProvidersW
-1193 win7-32:CryptExportKey win7-64:CryptExportKey
-1194 win7-32:CryptGenKey win7-64:CryptGenKey
-1195 win7-32:CryptGenRandom win7-64:CryptGenRandom
-1196 win7-32:CryptGetDefaultProviderA win7-64:CryptGetDefaultProviderA
-1197 win7-32:CryptGetDefaultProviderW win7-64:CryptGetDefaultProviderW
-1198 win7-32:CryptGetHashParam win7-64:CryptGetHashParam
-1199 win7-32:CryptGetKeyParam win7-64:CryptGetKeyParam
-1200 win7-32:CryptGetProvParam win7-64:CryptGetProvParam
-1201 win7-32:CryptGetUserKey win7-64:CryptGetUserKey
-1202 win7-32:CryptHashData win7-64:CryptHashData
-1203 win7-32:CryptHashSessionKey win7-64:CryptHashSessionKey
-1204 win7-32:CryptImportKey win7-64:CryptImportKey
-1205 win7-32:CryptReleaseContext win7-64:CryptReleaseContext
-1206 win7-32:CryptSetHashParam win7-64:CryptSetHashParam
-1207 win7-32:CryptSetKeyParam win7-64:CryptSetKeyParam
-1208 win7-32:CryptSetProvParam win7-64:CryptSetProvParam
-1209 win7-32:CryptSetProviderA win7-64:CryptSetProviderA
-1210 win7-32:CryptSetProviderExA win7-64:CryptSetProviderExA
-1211 win7-32:CryptSetProviderExW win7-64:CryptSetProviderExW
-1212 win7-32:CryptSetProviderW win7-64:CryptSetProviderW
-1213 win7-32:CryptSignHashA win7-64:CryptSignHashA
-1214 win7-32:CryptSignHashW win7-64:CryptSignHashW
-1215 win7-32:CryptVerifySignatureA win7-64:CryptVerifySignatureA
-1216 win7-32:CryptVerifySignatureW win7-64:CryptVerifySignatureW
-1217 win7-32:DecryptFileA win7-64:DecryptFileA
-1218 win7-32:DecryptFileW win7-64:DecryptFileW
-1219 win7-32:DeleteAce win7-64:DeleteAce
-1220 win7-32:DeleteService win7-64:DeleteService
-1221 win7-32:DeregisterEventSource win7-64:DeregisterEventSource
-1222 win7-32:DestroyPrivateObjectSecurity win7-64:DestroyPrivateObjectSecurity
-1223 win7-32:DuplicateEncryptionInfoFile win7-64:DuplicateEncryptionInfoFile
-1224 win7-32:DuplicateToken win7-64:DuplicateToken
-1225 win7-32:DuplicateTokenEx win7-64:DuplicateTokenEx
-1226 win7-32:ElfBackupEventLogFileA win7-64:ElfBackupEventLogFileA
-1227 win7-32:ElfBackupEventLogFileW win7-64:ElfBackupEventLogFileW
-1228 win7-32:ElfChangeNotify win7-64:ElfChangeNotify
-1229 win7-32:ElfClearEventLogFileA win7-64:ElfClearEventLogFileA
-1230 win7-32:ElfClearEventLogFileW win7-64:ElfClearEventLogFileW
-1231 win7-32:ElfCloseEventLog win7-64:ElfCloseEventLog
-1232 win7-32:ElfDeregisterEventSource win7-64:ElfDeregisterEventSource
-1233 win7-32:ElfFlushEventLog win7-64:ElfFlushEventLog
-1234 win7-32:ElfNumberOfRecords win7-64:ElfNumberOfRecords
-1235 win7-32:ElfOldestRecord win7-64:ElfOldestRecord
-1236 win7-32:ElfOpenBackupEventLogA win7-64:ElfOpenBackupEventLogA
-1237 win7-32:ElfOpenBackupEventLogW win7-64:ElfOpenBackupEventLogW
-1238 win7-32:ElfOpenEventLogA win7-64:ElfOpenEventLogA
-1239 win7-32:ElfOpenEventLogW win7-64:ElfOpenEventLogW
-1240 win7-32:ElfReadEventLogA win7-64:ElfReadEventLogA
-1241 win7-32:ElfReadEventLogW win7-64:ElfReadEventLogW
-1242 win7-32:ElfRegisterEventSourceA win7-64:ElfRegisterEventSourceA
-1243 win7-32:ElfRegisterEventSourceW win7-64:ElfRegisterEventSourceW
-1244 win7-32:ElfReportEventA win7-64:ElfReportEventA
-1245 win7-32:ElfReportEventAndSourceW win7-64:ElfReportEventAndSourceW
-1246 win7-32:ElfReportEventW win7-64:ElfReportEventW
-1247 win7-32:EnableTrace win7-64:EnableTrace
-1248 win7-32:EnableTraceEx2 win7-64:EnableTraceEx
-1249 win7-32:EnableTraceEx win7-64:EnableTraceEx2
-1250 win7-32:EncryptFileA win7-64:EncryptFileA
-1251 win7-32:EncryptFileW win7-64:EncryptFileW
-1252 win7-32:EncryptedFileKeyInfo win7-64:EncryptedFileKeyInfo
-1253 win7-32:EncryptionDisable win7-64:EncryptionDisable
-1254 win7-32:EnumDependentServicesA win7-64:EnumDependentServicesA
-1255 win7-32:EnumDependentServicesW win7-64:EnumDependentServicesW
-1256 win7-32:EnumServiceGroupW win7-64:EnumServiceGroupW
-1257 win7-32:EnumServicesStatusA win7-64:EnumServicesStatusA
-1258 win7-32:EnumServicesStatusExA win7-64:EnumServicesStatusExA
-1259 win7-32:EnumServicesStatusExW win7-64:EnumServicesStatusExW
-1260 win7-32:EnumServicesStatusW win7-64:EnumServicesStatusW
-1261 win7-32:EnumerateTraceGuids win7-64:EnumerateTraceGuids
-1262 win7-32:EnumerateTraceGuidsEx win7-64:EnumerateTraceGuidsEx
-1263 win7-32:EqualDomainSid win7-64:EqualDomainSid
-1264 win7-32:EqualPrefixSid win7-64:EqualPrefixSid
-1265 win7-32:EqualSid win7-64:EqualSid
-1266 win7-32:EventAccessControl win7-64:EventAccessControl
-1267 win7-32:EventAccessQuery win7-64:EventAccessQuery
-1268 win7-32:EventAccessRemove win7-64:EventAccessRemove
-1269 win7-32:EventActivityIdControl win7-64:EventActivityIdControl
-1270 win7-32:EventEnabled win7-64:EventEnabled
-1271 win7-32:EventProviderEnabled win7-64:EventProviderEnabled
-1272 win7-32:EventRegister win7-64:EventRegister
-1273 win7-32:EventUnregister win7-64:EventUnregister
-1274 win7-32:EventWrite win7-64:EventWrite
-1275 win7-32:EventWriteEndScenario win7-64:EventWriteEndScenario
-1276 win7-32:EventWriteEx win7-64:EventWriteEx
-1277 win7-32:EventWriteStartScenario win7-64:EventWriteStartScenario
-1278 win7-32:EventWriteString win7-64:EventWriteString
-1279 win7-32:EventWriteTransfer win7-64:EventWriteTransfer
-1280 win7-32:FileEncryptionStatusA win7-64:FileEncryptionStatusA
-1281 win7-32:FileEncryptionStatusW win7-64:FileEncryptionStatusW
-1282 win7-32:FindFirstFreeAce win7-64:FindFirstFreeAce
-1283 win7-32:FlushEfsCache win7-64:FlushEfsCache
-1284 win7-32:FlushTraceA win7-64:FlushTraceA
-1285 win7-32:FlushTraceW win7-64:FlushTraceW
-1286 win7-32:FreeEncryptedFileKeyInfo win7-64:FreeEncryptedFileKeyInfo
-1287 win7-32:FreeEncryptedFileMetadata win7-64:FreeEncryptedFileMetadata
-1288 win7-32:FreeEncryptionCertificateHashList win7-64:FreeEncryptionCertificateHashList
-1289 win7-32:FreeInheritedFromArray win7-64:FreeInheritedFromArray
-1290 win7-32:FreeSid win7-64:FreeSid
-1291 win7-32:GetAccessPermissionsForObjectA win7-64:GetAccessPermissionsForObjectA
-1292 win7-32:GetAccessPermissionsForObjectW win7-64:GetAccessPermissionsForObjectW
-1293 win7-32:GetAce win7-64:GetAce
-1294 win7-32:GetAclInformation win7-64:GetAclInformation
-1295 win7-32:GetAuditedPermissionsFromAclA win7-64:GetAuditedPermissionsFromAclA
-1296 win7-32:GetAuditedPermissionsFromAclW win7-64:GetAuditedPermissionsFromAclW
-1297 win7-32:GetCurrentHwProfileA win7-64:GetCurrentHwProfileA
-1298 win7-32:GetCurrentHwProfileW win7-64:GetCurrentHwProfileW
-1299 win7-32:GetEffectiveRightsFromAclA win7-64:GetEffectiveRightsFromAclA
-1300 win7-32:GetEffectiveRightsFromAclW win7-64:GetEffectiveRightsFromAclW
-1301 win7-32:GetEncryptedFileMetadata win7-64:GetEncryptedFileMetadata
-1302 win7-32:GetEventLogInformation win7-64:GetEventLogInformation
-1303 win7-32:GetExplicitEntriesFromAclA win7-64:GetExplicitEntriesFromAclA
-1304 win7-32:GetExplicitEntriesFromAclW win7-64:GetExplicitEntriesFromAclW
-1305 win7-32:GetFileSecurityA win7-64:GetFileSecurityA
-1306 win7-32:GetFileSecurityW win7-64:GetFileSecurityW
-1307 win7-32:GetInformationCodeAuthzLevelW win7-64:GetInformationCodeAuthzLevelW
-1308 win7-32:GetInformationCodeAuthzPolicyW win7-64:GetInformationCodeAuthzPolicyW
-1309 win7-32:GetInheritanceSourceA win7-64:GetInheritanceSourceA
-1310 win7-32:GetInheritanceSourceW win7-64:GetInheritanceSourceW
-1311 win7-32:GetKernelObjectSecurity win7-64:GetKernelObjectSecurity
-1312 win7-32:GetLengthSid win7-64:GetLengthSid
-1313 win7-32:GetLocalManagedApplicationData win7-64:GetLocalManagedApplicationData
-1314 win7-32:GetLocalManagedApplications win7-64:GetLocalManagedApplications
-1315 win7-32:GetManagedApplicationCategories win7-64:GetManagedApplicationCategories
-1316 win7-32:GetManagedApplications win7-64:GetManagedApplications
-1317 win7-32:GetMultipleTrusteeA win7-64:GetMultipleTrusteeA
-1318 win7-32:GetMultipleTrusteeOperationA win7-64:GetMultipleTrusteeOperationA
-1319 win7-32:GetMultipleTrusteeOperationW win7-64:GetMultipleTrusteeOperationW
-1320 win7-32:GetMultipleTrusteeW win7-64:GetMultipleTrusteeW
-1321 win7-32:GetNamedSecurityInfoA win7-64:GetNamedSecurityInfoA
-1322 win7-32:GetNamedSecurityInfoExA win7-64:GetNamedSecurityInfoExA
-1323 win7-32:GetNamedSecurityInfoExW win7-64:GetNamedSecurityInfoExW
-1324 win7-32:GetNamedSecurityInfoW win7-64:GetNamedSecurityInfoW
-1325 win7-32:GetNumberOfEventLogRecords win7-64:GetNumberOfEventLogRecords
-1326 win7-32:GetOldestEventLogRecord win7-64:GetOldestEventLogRecord
-1327 win7-32:GetOverlappedAccessResults win7-64:GetOverlappedAccessResults
-1328 win7-32:GetPrivateObjectSecurity win7-64:GetPrivateObjectSecurity
-1329 win7-32:GetSecurityDescriptorControl win7-64:GetSecurityDescriptorControl
-1330 win7-32:GetSecurityDescriptorDacl win7-64:GetSecurityDescriptorDacl
-1331 win7-32:GetSecurityDescriptorGroup win7-64:GetSecurityDescriptorGroup
-1332 win7-32:GetSecurityDescriptorLength win7-64:GetSecurityDescriptorLength
-1333 win7-32:GetSecurityDescriptorOwner win7-64:GetSecurityDescriptorOwner
-1334 win7-32:GetSecurityDescriptorRMControl win7-64:GetSecurityDescriptorRMControl
-1335 win7-32:GetSecurityDescriptorSacl win7-64:GetSecurityDescriptorSacl
-1336 win7-32:GetSecurityInfo win7-64:GetSecurityInfo
-1337 win7-32:GetSecurityInfoExA win7-64:GetSecurityInfoExA
-1338 win7-32:GetSecurityInfoExW win7-64:GetSecurityInfoExW
-1339 win7-32:GetServiceDisplayNameA win7-64:GetServiceDisplayNameA
-1340 win7-32:GetServiceDisplayNameW win7-64:GetServiceDisplayNameW
-1341 win7-32:GetServiceKeyNameA win7-64:GetServiceKeyNameA
-1342 win7-32:GetServiceKeyNameW win7-64:GetServiceKeyNameW
-1343 win7-32:GetSidIdentifierAuthority win7-64:GetSidIdentifierAuthority
-1344 win7-32:GetSidLengthRequired win7-64:GetSidLengthRequired
-1345 win7-32:GetSidSubAuthority win7-64:GetSidSubAuthority
-1346 win7-32:GetSidSubAuthorityCount win7-64:GetSidSubAuthorityCount
-1347 win7-32:GetThreadWaitChain win7-64:GetThreadWaitChain
-1348 win7-32:GetTokenInformation win7-64:GetTokenInformation
-1349 win7-32:GetTraceEnableFlags win7-64:GetTraceEnableFlags
-1350 win7-32:GetTraceEnableLevel win7-64:GetTraceEnableLevel
-1351 win7-32:GetTraceLoggerHandle win7-64:GetTraceLoggerHandle
-1352 win7-32:GetTrusteeFormA win7-64:GetTrusteeFormA
-1353 win7-32:GetTrusteeFormW win7-64:GetTrusteeFormW
-1354 win7-32:GetTrusteeNameA win7-64:GetTrusteeNameA
-1355 win7-32:GetTrusteeNameW win7-64:GetTrusteeNameW
-1356 win7-32:GetTrusteeTypeA win7-64:GetTrusteeTypeA
-1357 win7-32:GetTrusteeTypeW win7-64:GetTrusteeTypeW
-1358 win7-32:GetUserNameA win7-64:GetUserNameA
-1359 win7-32:GetUserNameW win7-64:GetUserNameW
-1360 win7-32:GetWindowsAccountDomainSid win7-64:GetWindowsAccountDomainSid
-1361 win7-32:I_QueryTagInformation win7-64:I_QueryTagInformation
-1362 win7-32:I_ScIsSecurityProcess win7-64:I_ScIsSecurityProcess
-1363 win7-32:I_ScPnPGetServiceName win7-64:I_ScPnPGetServiceName
-1364 win7-32:I_ScQueryServiceConfig win7-64:I_ScQueryServiceConfig
-1365 win7-32:I_ScSendPnPMessage win7-64:I_ScSendPnPMessage
-1366 win7-32:I_ScSendTSMessage win7-64:I_ScSendTSMessage
-1367 win7-32:I_ScSetServiceBitsA win7-64:I_ScSetServiceBitsA
-1368 win7-32:I_ScSetServiceBitsW win7-64:I_ScSetServiceBitsW
-1369 win7-32:I_ScValidatePnPService win7-64:I_ScValidatePnPService
-1370 win7-32:IdentifyCodeAuthzLevelW win7-64:IdentifyCodeAuthzLevelW
-1371 win7-32:ImpersonateAnonymousToken win7-64:ImpersonateAnonymousToken
-1372 win7-32:ImpersonateLoggedOnUser win7-64:ImpersonateLoggedOnUser
-1373 win7-32:ImpersonateNamedPipeClient win7-64:ImpersonateNamedPipeClient
-1374 win7-32:ImpersonateSelf win7-64:ImpersonateSelf
-1375 win7-32:InitializeAcl win7-64:InitializeAcl
-1376 win7-32:InitializeSecurityDescriptor win7-64:InitializeSecurityDescriptor
-1377 win7-32:InitializeSid win7-64:InitializeSid
-1378 win7-32:InitiateShutdownA win7-64:InitiateShutdownA
-1379 win7-32:InitiateShutdownW win7-64:InitiateShutdownW
-1380 win7-32:InitiateSystemShutdownA win7-64:InitiateSystemShutdownA
-1381 win7-32:InitiateSystemShutdownExA win7-64:InitiateSystemShutdownExA
-1382 win7-32:InitiateSystemShutdownExW win7-64:InitiateSystemShutdownExW
-1383 win7-32:InitiateSystemShutdownW win7-64:InitiateSystemShutdownW
-1384 win7-32:InstallApplication win7-64:InstallApplication
-1385 win7-32:IsTextUnicode win7-64:IsTextUnicode
-1386 win7-32:IsTokenRestricted win7-64:IsTokenRestricted
-1387 win7-32:IsTokenUntrusted win7-64:IsTokenUntrusted
-1388 win7-32:IsValidAcl win7-64:IsValidAcl
-1389 win7-32:IsValidRelativeSecurityDescriptor win7-64:IsValidRelativeSecurityDescriptor
-1390 win7-32:IsValidSecurityDescriptor win7-64:IsValidSecurityDescriptor
-1391 win7-32:IsValidSid win7-64:IsValidSid
-1392 win7-32:IsWellKnownSid win7-64:IsWellKnownSid
-1393 win7-32:LockServiceDatabase win7-64:LockServiceDatabase
-1394 win7-32:LogonUserA win7-64:LogonUserA
-1395 win7-32:LogonUserExA win7-64:LogonUserExA
-1396 win7-32:LogonUserExExW win7-64:LogonUserExExW
-1397 win7-32:LogonUserExW win7-64:LogonUserExW
-1398 win7-32:LogonUserW win7-64:LogonUserW
-1399 win7-32:LookupAccountNameA win7-64:LookupAccountNameA
-1400 win7-32:LookupAccountNameW win7-64:LookupAccountNameW
-1401 win7-32:LookupAccountSidA win7-64:LookupAccountSidA
-1402 win7-32:LookupAccountSidW win7-64:LookupAccountSidW
-1403 win7-32:LookupPrivilegeDisplayNameA win7-64:LookupPrivilegeDisplayNameA
-1404 win7-32:LookupPrivilegeDisplayNameW win7-64:LookupPrivilegeDisplayNameW
-1405 win7-32:LookupPrivilegeNameA win7-64:LookupPrivilegeNameA
-1406 win7-32:LookupPrivilegeNameW win7-64:LookupPrivilegeNameW
-1407 win7-32:LookupPrivilegeValueA win7-64:LookupPrivilegeValueA
-1408 win7-32:LookupPrivilegeValueW win7-64:LookupPrivilegeValueW
-1409 win7-32:LookupSecurityDescriptorPartsA win7-64:LookupSecurityDescriptorPartsA
-1410 win7-32:LookupSecurityDescriptorPartsW win7-64:LookupSecurityDescriptorPartsW
-1411 win7-32:LsaAddAccountRights win7-64:LsaAddAccountRights
-1412 win7-32:LsaAddPrivilegesToAccount win7-64:LsaAddPrivilegesToAccount
-1413 win7-32:LsaClearAuditLog win7-64:LsaClearAuditLog
-1414 win7-32:LsaClose win7-64:LsaClose
-1415 win7-32:LsaCreateAccount win7-64:LsaCreateAccount
-1416 win7-32:LsaCreateSecret win7-64:LsaCreateSecret
-1417 win7-32:LsaCreateTrustedDomain win7-64:LsaCreateTrustedDomain
-1418 win7-32:LsaCreateTrustedDomainEx win7-64:LsaCreateTrustedDomainEx
-1419 win7-32:LsaDelete win7-64:LsaDelete
-1420 win7-32:LsaDeleteTrustedDomain win7-64:LsaDeleteTrustedDomain
-1421 win7-32:LsaEnumerateAccountRights win7-64:LsaEnumerateAccountRights
-1422 win7-32:LsaEnumerateAccounts win7-64:LsaEnumerateAccounts
-1423 win7-32:LsaEnumerateAccountsWithUserRight win7-64:LsaEnumerateAccountsWithUserRight
-1424 win7-32:LsaEnumeratePrivileges win7-64:LsaEnumeratePrivileges
-1425 win7-32:LsaEnumeratePrivilegesOfAccount win7-64:LsaEnumeratePrivilegesOfAccount
-1426 win7-32:LsaEnumerateTrustedDomains win7-64:LsaEnumerateTrustedDomains
-1427 win7-32:LsaEnumerateTrustedDomainsEx win7-64:LsaEnumerateTrustedDomainsEx
-1428 win7-32:LsaFreeMemory win7-64:LsaFreeMemory
-1429 win7-32:LsaGetQuotasForAccount win7-64:LsaGetQuotasForAccount
-1430 win7-32:LsaGetRemoteUserName win7-64:LsaGetRemoteUserName
-1431 win7-32:LsaGetSystemAccessAccount win7-64:LsaGetSystemAccessAccount
-1432 win7-32:LsaGetUserName win7-64:LsaGetUserName
-1433 win7-32:LsaICLookupNames win7-64:LsaICLookupNames
-1434 win7-32:LsaICLookupNamesWithCreds win7-64:LsaICLookupNamesWithCreds
-1435 win7-32:LsaICLookupSids win7-64:LsaICLookupSids
-1436 win7-32:LsaICLookupSidsWithCreds win7-64:LsaICLookupSidsWithCreds
-1437 win7-32:LsaLookupNames2 win7-64:LsaLookupNames
-1438 win7-32:LsaLookupNames win7-64:LsaLookupNames2
-1439 win7-32:LsaLookupPrivilegeDisplayName win7-64:LsaLookupPrivilegeDisplayName
-1440 win7-32:LsaLookupPrivilegeName win7-64:LsaLookupPrivilegeName
-1441 win7-32:LsaLookupPrivilegeValue win7-64:LsaLookupPrivilegeValue
-1442 win7-32:LsaLookupSids win7-64:LsaLookupSids
-1443 win7-32:LsaManageSidNameMapping win7-64:LsaManageSidNameMapping
-1444 win7-32:LsaNtStatusToWinError win7-64:LsaNtStatusToWinError
-1445 win7-32:LsaOpenAccount win7-64:LsaOpenAccount
-1446 win7-32:LsaOpenPolicy win7-64:LsaOpenPolicy
-1447 win7-32:LsaOpenPolicySce win7-64:LsaOpenPolicySce
-1448 win7-32:LsaOpenSecret win7-64:LsaOpenSecret
-1449 win7-32:LsaOpenTrustedDomain win7-64:LsaOpenTrustedDomain
-1450 win7-32:LsaOpenTrustedDomainByName win7-64:LsaOpenTrustedDomainByName
-1451 win7-32:LsaQueryDomainInformationPolicy win7-64:LsaQueryDomainInformationPolicy
-1452 win7-32:LsaQueryForestTrustInformation win7-64:LsaQueryForestTrustInformation
-1453 win7-32:LsaQueryInfoTrustedDomain win7-64:LsaQueryInfoTrustedDomain
-1454 win7-32:LsaQueryInformationPolicy win7-64:LsaQueryInformationPolicy
-1455 win7-32:LsaQuerySecret win7-64:LsaQuerySecret
-1456 win7-32:LsaQuerySecurityObject win7-64:LsaQuerySecurityObject
-1457 win7-32:LsaQueryTrustedDomainInfo win7-64:LsaQueryTrustedDomainInfo
-1458 win7-32:LsaQueryTrustedDomainInfoByName win7-64:LsaQueryTrustedDomainInfoByName
-1459 win7-32:LsaRemoveAccountRights win7-64:LsaRemoveAccountRights
-1460 win7-32:LsaRemovePrivilegesFromAccount win7-64:LsaRemovePrivilegesFromAccount
-1461 win7-32:LsaRetrievePrivateData win7-64:LsaRetrievePrivateData
-1462 win7-32:LsaSetDomainInformationPolicy win7-64:LsaSetDomainInformationPolicy
-1463 win7-32:LsaSetForestTrustInformation win7-64:LsaSetForestTrustInformation
-1464 win7-32:LsaSetInformationPolicy win7-64:LsaSetInformationPolicy
-1465 win7-32:LsaSetInformationTrustedDomain win7-64:LsaSetInformationTrustedDomain
-1466 win7-32:LsaSetQuotasForAccount win7-64:LsaSetQuotasForAccount
-1467 win7-32:LsaSetSecret win7-64:LsaSetSecret
-1468 win7-32:LsaSetSecurityObject win7-64:LsaSetSecurityObject
-1469 win7-32:LsaSetSystemAccessAccount win7-64:LsaSetSystemAccessAccount
-1470 win7-32:LsaSetTrustedDomainInfoByName win7-64:LsaSetTrustedDomainInfoByName
-1471 win7-32:LsaSetTrustedDomainInformation win7-64:LsaSetTrustedDomainInformation
-1472 win7-32:LsaStorePrivateData win7-64:LsaStorePrivateData
-1473 win7-32:MD4Final win7-64:MD4Final
-1474 win7-32:MD4Init win7-64:MD4Init
-1475 win7-32:MD4Update win7-64:MD4Update
-1476 win7-32:MD5Final win7-64:MD5Final
-1477 win7-32:MD5Init win7-64:MD5Init
-1478 win7-32:MD5Update win7-64:MD5Update
-1479 win7-32:MSChapSrvChangePassword2 win7-64:MSChapSrvChangePassword
-1480 win7-32:MSChapSrvChangePassword win7-64:MSChapSrvChangePassword2
-1481 win7-32:MakeAbsoluteSD2 win7-64:MakeAbsoluteSD
-1482 win7-32:MakeAbsoluteSD win7-64:MakeAbsoluteSD2
-1483 win7-32:MakeSelfRelativeSD win7-64:MakeSelfRelativeSD
-1484 win7-32:MapGenericMask win7-64:MapGenericMask
-1485 win7-32:NotifyBootConfigStatus win7-64:NotifyBootConfigStatus
-1486 win7-32:NotifyChangeEventLog win7-64:NotifyChangeEventLog
-1487 win7-32:NotifyServiceStatusChange win7-64:NotifyServiceStatusChange
-1488 win7-32:NotifyServiceStatusChangeA win7-64:NotifyServiceStatusChangeA
-1489 win7-32:NotifyServiceStatusChangeW win7-64:NotifyServiceStatusChangeW
-1490 win7-32:ObjectCloseAuditAlarmA win7-64:ObjectCloseAuditAlarmA
-1491 win7-32:ObjectCloseAuditAlarmW win7-64:ObjectCloseAuditAlarmW
-1492 win7-32:ObjectDeleteAuditAlarmA win7-64:ObjectDeleteAuditAlarmA
-1493 win7-32:ObjectDeleteAuditAlarmW win7-64:ObjectDeleteAuditAlarmW
-1494 win7-32:ObjectOpenAuditAlarmA win7-64:ObjectOpenAuditAlarmA
-1495 win7-32:ObjectOpenAuditAlarmW win7-64:ObjectOpenAuditAlarmW
-1496 win7-32:ObjectPrivilegeAuditAlarmA win7-64:ObjectPrivilegeAuditAlarmA
-1497 win7-32:ObjectPrivilegeAuditAlarmW win7-64:ObjectPrivilegeAuditAlarmW
-1498 win7-32:OpenBackupEventLogA win7-64:OpenBackupEventLogA
-1499 win7-32:OpenBackupEventLogW win7-64:OpenBackupEventLogW
-1500 win7-32:OpenEncryptedFileRawA win7-64:OpenEncryptedFileRawA
-1501 win7-32:OpenEncryptedFileRawW win7-64:OpenEncryptedFileRawW
-1502 win7-32:OpenEventLogA win7-64:OpenEventLogA
-1503 win7-32:OpenEventLogW win7-64:OpenEventLogW
-1504 win7-32:OpenProcessToken win7-64:OpenProcessToken
-1505 win7-32:OpenSCManagerA win7-64:OpenSCManagerA
-1506 win7-32:OpenSCManagerW win7-64:OpenSCManagerW
-1507 win7-32:OpenServiceA win7-64:OpenServiceA
-1508 win7-32:OpenServiceW win7-64:OpenServiceW
-1509 win7-32:OpenThreadToken win7-64:OpenThreadToken
-1510 win7-32:OpenThreadWaitChainSession win7-64:OpenThreadWaitChainSession
-1511 win7-32:OpenTraceA win7-64:OpenTraceA
-1512 win7-32:OpenTraceW win7-64:OpenTraceW
-1513 win7-32:PerfAddCounters win7-64:PerfAddCounters
-1514 win7-32:PerfCloseQueryHandle win7-64:PerfCloseQueryHandle
-1515 win7-32:PerfCreateInstance win7-64:PerfCreateInstance
-1516 win7-32:PerfDecrementULongCounterValue win7-64:PerfDecrementULongCounterValue
-1517 win7-32:PerfDecrementULongLongCounterValue win7-64:PerfDecrementULongLongCounterValue
-1518 win7-32:PerfDeleteCounters win7-64:PerfDeleteCounters
-1519 win7-32:PerfDeleteInstance win7-64:PerfDeleteInstance
-1520 win7-32:PerfEnumerateCounterSet win7-64:PerfEnumerateCounterSet
-1521 win7-32:PerfEnumerateCounterSetInstances win7-64:PerfEnumerateCounterSetInstances
-1522 win7-32:PerfIncrementULongCounterValue win7-64:PerfIncrementULongCounterValue
-1523 win7-32:PerfIncrementULongLongCounterValue win7-64:PerfIncrementULongLongCounterValue
-1524 win7-32:PerfOpenQueryHandle win7-64:PerfOpenQueryHandle
-1525 win7-32:PerfQueryCounterData win7-64:PerfQueryCounterData
-1526 win7-32:PerfQueryCounterInfo win7-64:PerfQueryCounterInfo
-1527 win7-32:PerfQueryCounterSetRegistrationInfo win7-64:PerfQueryCounterSetRegistrationInfo
-1528 win7-32:PerfQueryInstance win7-64:PerfQueryInstance
-1529 win7-32:PerfSetCounterRefValue win7-64:PerfSetCounterRefValue
-1530 win7-32:PerfSetCounterSetInfo win7-64:PerfSetCounterSetInfo
-1531 win7-32:PerfSetULongCounterValue win7-64:PerfSetULongCounterValue
-1532 win7-32:PerfSetULongLongCounterValue win7-64:PerfSetULongLongCounterValue
-1533 win7-32:PerfStartProvider win7-64:PerfStartProvider
-1534 win7-32:PerfStartProviderEx win7-64:PerfStartProviderEx
-1535 win7-32:PerfStopProvider win7-64:PerfStopProvider
-1536 win7-32:PrivilegeCheck win7-64:PrivilegeCheck
-1537 win7-32:PrivilegedServiceAuditAlarmA win7-64:PrivilegedServiceAuditAlarmA
-1538 win7-32:PrivilegedServiceAuditAlarmW win7-64:PrivilegedServiceAuditAlarmW
-1539 win7-32:ProcessIdleTasks win7-64:ProcessIdleTasks
-1540 win7-32:ProcessIdleTasksW win7-64:ProcessIdleTasksW
-1541 win7-32:ProcessTrace win7-64:ProcessTrace
-1542 win7-32:QueryAllTracesA win7-64:QueryAllTracesA
-1543 win7-32:QueryAllTracesW win7-64:QueryAllTracesW
-1544 win7-32:QueryRecoveryAgentsOnEncryptedFile win7-64:QueryRecoveryAgentsOnEncryptedFile
-1545 win7-32:QuerySecurityAccessMask win7-64:QuerySecurityAccessMask
-1546 win7-32:QueryServiceConfig2A win7-64:QueryServiceConfig2A
-1547 win7-32:QueryServiceConfig2W win7-64:QueryServiceConfig2W
-1548 win7-32:QueryServiceConfigA win7-64:QueryServiceConfigA
-1549 win7-32:QueryServiceConfigW win7-64:QueryServiceConfigW
-1550 win7-32:QueryServiceLockStatusA win7-64:QueryServiceLockStatusA
-1551 win7-32:QueryServiceLockStatusW win7-64:QueryServiceLockStatusW
-1552 win7-32:QueryServiceObjectSecurity win7-64:QueryServiceObjectSecurity
-1553 win7-32:QueryServiceStatus win7-64:QueryServiceStatus
-1554 win7-32:QueryServiceStatusEx win7-64:QueryServiceStatusEx
-1555 win7-32:QueryTraceA win7-64:QueryTraceA
-1556 win7-32:QueryTraceW win7-64:QueryTraceW
-1557 win7-32:QueryUsersOnEncryptedFile win7-64:QueryUsersOnEncryptedFile
-1558 win7-32:ReadEncryptedFileRaw win7-64:ReadEncryptedFileRaw
-1559 win7-32:ReadEventLogA win7-64:ReadEventLogA
-1560 win7-32:ReadEventLogW win7-64:ReadEventLogW
-1561 win7-32:RegCloseKey win7-64:RegCloseKey
-1562 win7-32:RegConnectRegistryA win7-64:RegConnectRegistryA
-1563 win7-32:RegConnectRegistryExA win7-64:RegConnectRegistryExA
-1564 win7-32:RegConnectRegistryExW win7-64:RegConnectRegistryExW
-1565 win7-32:RegConnectRegistryW win7-64:RegConnectRegistryW
-1566 win7-32:RegCopyTreeA win7-64:RegCopyTreeA
-1567 win7-32:RegCopyTreeW win7-64:RegCopyTreeW
-1568 win7-32:RegCreateKeyA win7-64:RegCreateKeyA
-1569 win7-32:RegCreateKeyExA win7-64:RegCreateKeyExA
-1570 win7-32:RegCreateKeyExW win7-64:RegCreateKeyExW
-1571 win7-32:RegCreateKeyTransactedA win7-64:RegCreateKeyTransactedA
-1572 win7-32:RegCreateKeyTransactedW win7-64:RegCreateKeyTransactedW
-1573 win7-32:RegCreateKeyW win7-64:RegCreateKeyW
-1574 win7-32:RegDeleteKeyA win7-64:RegDeleteKeyA
-1575 win7-32:RegDeleteKeyExA win7-64:RegDeleteKeyExA
-1576 win7-32:RegDeleteKeyExW win7-64:RegDeleteKeyExW
-1577 win7-32:RegDeleteKeyTransactedA win7-64:RegDeleteKeyTransactedA
-1578 win7-32:RegDeleteKeyTransactedW win7-64:RegDeleteKeyTransactedW
-1579 win7-32:RegDeleteKeyValueA win7-64:RegDeleteKeyValueA
-1580 win7-32:RegDeleteKeyValueW win7-64:RegDeleteKeyValueW
-1581 win7-32:RegDeleteKeyW win7-64:RegDeleteKeyW
-1582 win7-32:RegDeleteTreeA win7-64:RegDeleteTreeA
-1583 win7-32:RegDeleteTreeW win7-64:RegDeleteTreeW
-1584 win7-32:RegDeleteValueA win7-64:RegDeleteValueA
-1585 win7-32:RegDeleteValueW win7-64:RegDeleteValueW
-1586 win7-32:RegDisablePredefinedCache win7-64:RegDisablePredefinedCache
-1587 win7-32:RegDisablePredefinedCacheEx win7-64:RegDisablePredefinedCacheEx
-1588 win7-32:RegDisableReflectionKey win7-64:RegDisableReflectionKey
-1589 win7-32:RegEnableReflectionKey win7-64:RegEnableReflectionKey
-1590 win7-32:RegEnumKeyA win7-64:RegEnumKeyA
-1591 win7-32:RegEnumKeyExA win7-64:RegEnumKeyExA
-1592 win7-32:RegEnumKeyExW win7-64:RegEnumKeyExW
-1593 win7-32:RegEnumKeyW win7-64:RegEnumKeyW
-1594 win7-32:RegEnumValueA win7-64:RegEnumValueA
-1595 win7-32:RegEnumValueW win7-64:RegEnumValueW
-1596 win7-32:RegFlushKey win7-64:RegFlushKey
-1597 win7-32:RegGetKeySecurity win7-64:RegGetKeySecurity
-1598 win7-32:RegGetValueA win7-64:RegGetValueA
-1599 win7-32:RegGetValueW win7-64:RegGetValueW
-1600 win7-32:RegLoadAppKeyA win7-64:RegLoadAppKeyA
-1601 win7-32:RegLoadAppKeyW win7-64:RegLoadAppKeyW
-1602 win7-32:RegLoadKeyA win7-64:RegLoadKeyA
-1603 win7-32:RegLoadKeyW win7-64:RegLoadKeyW
-1604 win7-32:RegLoadMUIStringA win7-64:RegLoadMUIStringA
-1605 win7-32:RegLoadMUIStringW win7-64:RegLoadMUIStringW
-1606 win7-32:RegNotifyChangeKeyValue win7-64:RegNotifyChangeKeyValue
-1607 win7-32:RegOpenCurrentUser win7-64:RegOpenCurrentUser
-1608 win7-32:RegOpenKeyA win7-64:RegOpenKeyA
-1609 win7-32:RegOpenKeyExA win7-64:RegOpenKeyExA
-1610 win7-32:RegOpenKeyExW win7-64:RegOpenKeyExW
-1611 win7-32:RegOpenKeyTransactedA win7-64:RegOpenKeyTransactedA
-1612 win7-32:RegOpenKeyTransactedW win7-64:RegOpenKeyTransactedW
-1613 win7-32:RegOpenKeyW win7-64:RegOpenKeyW
-1614 win7-32:RegOpenUserClassesRoot win7-64:RegOpenUserClassesRoot
-1615 win7-32:RegOverridePredefKey win7-64:RegOverridePredefKey
-1616 win7-32:RegQueryInfoKeyA win7-64:RegQueryInfoKeyA
-1617 win7-32:RegQueryInfoKeyW win7-64:RegQueryInfoKeyW
-1618 win7-32:RegQueryMultipleValuesA win7-64:RegQueryMultipleValuesA
-1619 win7-32:RegQueryMultipleValuesW win7-64:RegQueryMultipleValuesW
-1620 win7-32:RegQueryReflectionKey win7-64:RegQueryReflectionKey
-1621 win7-32:RegQueryValueA win7-64:RegQueryValueA
-1622 win7-32:RegQueryValueExA win7-64:RegQueryValueExA
-1623 win7-32:RegQueryValueExW win7-64:RegQueryValueExW
-1624 win7-32:RegQueryValueW win7-64:RegQueryValueW
-1625 win7-32:RegRenameKey win7-64:RegRenameKey
-1626 win7-32:RegReplaceKeyA win7-64:RegReplaceKeyA
-1627 win7-32:RegReplaceKeyW win7-64:RegReplaceKeyW
-1628 win7-32:RegRestoreKeyA win7-64:RegRestoreKeyA
-1629 win7-32:RegRestoreKeyW win7-64:RegRestoreKeyW
-1630 win7-32:RegSaveKeyA win7-64:RegSaveKeyA
-1631 win7-32:RegSaveKeyExA win7-64:RegSaveKeyExA
-1632 win7-32:RegSaveKeyExW win7-64:RegSaveKeyExW
-1633 win7-32:RegSaveKeyW win7-64:RegSaveKeyW
-1634 win7-32:RegSetKeySecurity win7-64:RegSetKeySecurity
-1635 win7-32:RegSetKeyValueA win7-64:RegSetKeyValueA
-1636 win7-32:RegSetKeyValueW win7-64:RegSetKeyValueW
-1637 win7-32:RegSetValueA win7-64:RegSetValueA
-1638 win7-32:RegSetValueExA win7-64:RegSetValueExA
-1639 win7-32:RegSetValueExW win7-64:RegSetValueExW
-1640 win7-32:RegSetValueW win7-64:RegSetValueW
-1641 win7-32:RegUnLoadKeyA win7-64:RegUnLoadKeyA
-1642 win7-32:RegUnLoadKeyW win7-64:RegUnLoadKeyW
-1643 win7-32:RegisterEventSourceA win7-64:RegisterEventSourceA
-1644 win7-32:RegisterEventSourceW win7-64:RegisterEventSourceW
-1645 win7-32:RegisterIdleTask win7-64:RegisterIdleTask
-1646 win7-32:RegisterServiceCtrlHandlerA win7-64:RegisterServiceCtrlHandlerA
-1647 win7-32:RegisterServiceCtrlHandlerExA win7-64:RegisterServiceCtrlHandlerExA
-1648 win7-32:RegisterServiceCtrlHandlerExW win7-64:RegisterServiceCtrlHandlerExW
-1649 win7-32:RegisterServiceCtrlHandlerW win7-64:RegisterServiceCtrlHandlerW
-1650 win7-32:RegisterTraceGuidsA win7-64:RegisterTraceGuidsA
-1651 win7-32:RegisterTraceGuidsW win7-64:RegisterTraceGuidsW
-1652 win7-32:RegisterWaitChainCOMCallback win7-64:RegisterWaitChainCOMCallback
-1653 win7-32:RemoveTraceCallback win7-64:RemoveTraceCallback
-1654 win7-32:RemoveUsersFromEncryptedFile win7-64:RemoveUsersFromEncryptedFile
-1655 win7-32:ReportEventA win7-64:ReportEventA
-1656 win7-32:ReportEventW win7-64:ReportEventW
-1657 win7-32:RevertToSelf win7-64:RevertToSelf
-1658 win7-32:SaferCloseLevel win7-64:SaferCloseLevel
-1659 win7-32:SaferComputeTokenFromLevel win7-64:SaferComputeTokenFromLevel
-1660 win7-32:SaferCreateLevel win7-64:SaferCreateLevel
-1661 win7-32:SaferGetLevelInformation win7-64:SaferGetLevelInformation
-1662 win7-32:SaferGetPolicyInformation win7-64:SaferGetPolicyInformation
-1663 win7-32:SaferIdentifyLevel win7-64:SaferIdentifyLevel
-1664 win7-32:SaferRecordEventLogEntry win7-64:SaferRecordEventLogEntry
-1665 win7-32:SaferSetLevelInformation win7-64:SaferSetLevelInformation
-1666 win7-32:SaferSetPolicyInformation win7-64:SaferSetPolicyInformation
-1667 win7-32:SaferiChangeRegistryScope win7-64:SaferiChangeRegistryScope
-1668 win7-32:SaferiCompareTokenLevels win7-64:SaferiCompareTokenLevels
-1669 win7-32:SaferiIsDllAllowed win7-64:SaferiIsDllAllowed
-1670 win7-32:SaferiIsExecutableFileType win7-64:SaferiIsExecutableFileType
-1671 win7-32:SaferiPopulateDefaultsInRegistry win7-64:SaferiPopulateDefaultsInRegistry
-1672 win7-32:SaferiRecordEventLogEntry win7-64:SaferiRecordEventLogEntry
-1673 win7-32:SaferiSearchMatchingHashRules win7-64:SaferiSearchMatchingHashRules
-1674 win7-32:SetAclInformation win7-64:SetAclInformation
-1675 win7-32:SetEncryptedFileMetadata win7-64:SetEncryptedFileMetadata
-1676 win7-32:SetEntriesInAccessListA win7-64:SetEntriesInAccessListA
-1677 win7-32:SetEntriesInAccessListW win7-64:SetEntriesInAccessListW
-1678 win7-32:SetEntriesInAclA win7-64:SetEntriesInAclA
-1679 win7-32:SetEntriesInAclW win7-64:SetEntriesInAclW
-1680 win7-32:SetEntriesInAuditListA win7-64:SetEntriesInAuditListA
-1681 win7-32:SetEntriesInAuditListW win7-64:SetEntriesInAuditListW
-1682 win7-32:SetFileSecurityA win7-64:SetFileSecurityA
-1683 win7-32:SetFileSecurityW win7-64:SetFileSecurityW
-1684 win7-32:SetInformationCodeAuthzLevelW win7-64:SetInformationCodeAuthzLevelW
-1685 win7-32:SetInformationCodeAuthzPolicyW win7-64:SetInformationCodeAuthzPolicyW
-1686 win7-32:SetKernelObjectSecurity win7-64:SetKernelObjectSecurity
-1687 win7-32:SetNamedSecurityInfoA win7-64:SetNamedSecurityInfoA
-1688 win7-32:SetNamedSecurityInfoExA win7-64:SetNamedSecurityInfoExA
-1689 win7-32:SetNamedSecurityInfoExW win7-64:SetNamedSecurityInfoExW
-1690 win7-32:SetNamedSecurityInfoW win7-64:SetNamedSecurityInfoW
-1691 win7-32:SetPrivateObjectSecurity win7-64:SetPrivateObjectSecurity
-1692 win7-32:SetPrivateObjectSecurityEx win7-64:SetPrivateObjectSecurityEx
-1693 win7-32:SetSecurityAccessMask win7-64:SetSecurityAccessMask
-1694 win7-32:SetSecurityDescriptorControl win7-64:SetSecurityDescriptorControl
-1695 win7-32:SetSecurityDescriptorDacl win7-64:SetSecurityDescriptorDacl
-1696 win7-32:SetSecurityDescriptorGroup win7-64:SetSecurityDescriptorGroup
-1697 win7-32:SetSecurityDescriptorOwner win7-64:SetSecurityDescriptorOwner
-1698 win7-32:SetSecurityDescriptorRMControl win7-64:SetSecurityDescriptorRMControl
-1699 win7-32:SetSecurityDescriptorSacl win7-64:SetSecurityDescriptorSacl
-1700 win7-32:SetSecurityInfo win7-64:SetSecurityInfo
-1701 win7-32:SetSecurityInfoExA win7-64:SetSecurityInfoExA
-1702 win7-32:SetSecurityInfoExW win7-64:SetSecurityInfoExW
-1703 win7-32:SetServiceBits win7-64:SetServiceBits
-1704 win7-32:SetServiceObjectSecurity win7-64:SetServiceObjectSecurity
-1705 win7-32:SetServiceStatus win7-64:SetServiceStatus
-1706 win7-32:SetThreadToken win7-64:SetThreadToken
-1707 win7-32:SetTokenInformation win7-64:SetTokenInformation
-1708 win7-32:SetTraceCallback win7-64:SetTraceCallback
-1709 win7-32:SetUserFileEncryptionKey win7-64:SetUserFileEncryptionKey
-1710 win7-32:SetUserFileEncryptionKeyEx win7-64:SetUserFileEncryptionKeyEx
-1711 win7-32:StartServiceA win7-64:StartServiceA
-1712 win7-32:StartServiceCtrlDispatcherA win7-64:StartServiceCtrlDispatcherA
-1713 win7-32:StartServiceCtrlDispatcherW win7-64:StartServiceCtrlDispatcherW
-1714 win7-32:StartServiceW win7-64:StartServiceW
-1715 win7-32:StartTraceA win7-64:StartTraceA
-1716 win7-32:StartTraceW win7-64:StartTraceW
-1717 win7-32:StopTraceA win7-64:StopTraceA
-1718 win7-32:StopTraceW win7-64:StopTraceW
-1719 win7-32:SystemFunction001 win7-64:SystemFunction001
-1720 win7-32:SystemFunction002 win7-64:SystemFunction002
-1721 win7-32:SystemFunction003 win7-64:SystemFunction003
-1722 win7-32:SystemFunction004 win7-64:SystemFunction004
-1723 win7-32:SystemFunction005 win7-64:SystemFunction005
-1724 win7-32:SystemFunction006 win7-64:SystemFunction006
-1725 win7-32:SystemFunction007 win7-64:SystemFunction007
-1726 win7-32:SystemFunction008 win7-64:SystemFunction008
-1727 win7-32:SystemFunction009 win7-64:SystemFunction009
-1728 win7-32:SystemFunction010 win7-64:SystemFunction010
-1729 win7-32:SystemFunction011 win7-64:SystemFunction011
-1730 win7-32:SystemFunction012 win7-64:SystemFunction012
-1731 win7-32:SystemFunction013 win7-64:SystemFunction013
-1732 win7-32:SystemFunction014 win7-64:SystemFunction014
-1733 win7-32:SystemFunction015 win7-64:SystemFunction015
-1734 win7-32:SystemFunction016 win7-64:SystemFunction016
-1735 win7-32:SystemFunction017 win7-64:SystemFunction017
-1736 win7-32:SystemFunction018 win7-64:SystemFunction018
-1737 win7-32:SystemFunction019 win7-64:SystemFunction019
-1738 win7-32:SystemFunction020 win7-64:SystemFunction020
-1739 win7-32:SystemFunction021 win7-64:SystemFunction021
-1740 win7-32:SystemFunction022 win7-64:SystemFunction022
-1741 win7-32:SystemFunction023 win7-64:SystemFunction023
-1742 win7-32:SystemFunction024 win7-64:SystemFunction024
-1743 win7-32:SystemFunction025 win7-64:SystemFunction025
-1744 win7-32:SystemFunction026 win7-64:SystemFunction026
-1745 win7-32:SystemFunction027 win7-64:SystemFunction027
-1746 win7-32:SystemFunction028 win7-64:SystemFunction028
-1747 win7-32:SystemFunction029 win7-64:SystemFunction029
-1748 win7-32:SystemFunction030 win7-64:SystemFunction030
-1749 win7-32:SystemFunction031 win7-64:SystemFunction031
-1750 win7-32:SystemFunction032 win7-64:SystemFunction032
-1751 win7-32:SystemFunction033 win7-64:SystemFunction033
-1752 win7-32:SystemFunction034 win7-64:SystemFunction034
-1753 win7-32:SystemFunction035 win7-64:SystemFunction035
-1754 win7-32:SystemFunction036 win7-64:SystemFunction036
-1755 win7-32:SystemFunction040 win7-64:SystemFunction040
-1756 win7-32:SystemFunction041 win7-64:SystemFunction041
-1757 win7-32:TraceEvent win7-64:TraceEvent
-1758 win7-32:TraceEventInstance win7-64:TraceEventInstance
-1759 win7-32:TraceMessage win7-64:TraceMessage
-1760 win7-32:TraceMessageVa win7-64:TraceMessageVa
-1761 win7-32:TraceSetInformation win7-64:TraceSetInformation
-1762 win7-32:TreeResetNamedSecurityInfoA win7-64:TreeResetNamedSecurityInfoA
-1763 win7-32:TreeResetNamedSecurityInfoW win7-64:TreeResetNamedSecurityInfoW
-1764 win7-32:TreeSetNamedSecurityInfoA win7-64:TreeSetNamedSecurityInfoA
-1765 win7-32:TreeSetNamedSecurityInfoW win7-64:TreeSetNamedSecurityInfoW
-1766 win7-32:TrusteeAccessToObjectA win7-64:TrusteeAccessToObjectA
-1767 win7-32:TrusteeAccessToObjectW win7-64:TrusteeAccessToObjectW
-1768 win7-32:UninstallApplication win7-64:UninstallApplication
-1769 win7-32:UnlockServiceDatabase win7-64:UnlockServiceDatabase
-1770 win7-32:UnregisterIdleTask win7-64:UnregisterIdleTask
-1771 win7-32:UnregisterTraceGuids win7-64:UnregisterTraceGuids
-1772 win7-32:UpdateTraceA win7-64:UpdateTraceA
-1773 win7-32:UpdateTraceW win7-64:UpdateTraceW
-1774 win7-32:UsePinForEncryptedFilesA win7-64:UsePinForEncryptedFilesA
-1775 win7-32:UsePinForEncryptedFilesW win7-64:UsePinForEncryptedFilesW
-1776 win7-32:WmiCloseBlock win7-64:WmiCloseBlock
-1777 win7-32:WmiDevInstToInstanceNameA win7-64:WmiDevInstToInstanceNameA
-1778 win7-32:WmiDevInstToInstanceNameW win7-64:WmiDevInstToInstanceNameW
-1779 win7-32:WmiEnumerateGuids win7-64:WmiEnumerateGuids
-1780 win7-32:WmiExecuteMethodA win7-64:WmiExecuteMethodA
-1781 win7-32:WmiExecuteMethodW win7-64:WmiExecuteMethodW
-1782 win7-32:WmiFileHandleToInstanceNameA win7-64:WmiFileHandleToInstanceNameA
-1783 win7-32:WmiFileHandleToInstanceNameW win7-64:WmiFileHandleToInstanceNameW
-1784 win7-32:WmiFreeBuffer win7-64:WmiFreeBuffer
-1785 win7-32:WmiMofEnumerateResourcesA win7-64:WmiMofEnumerateResourcesA
-1786 win7-32:WmiMofEnumerateResourcesW win7-64:WmiMofEnumerateResourcesW
-1787 win7-32:WmiNotificationRegistrationA win7-64:WmiNotificationRegistrationA
-1788 win7-32:WmiNotificationRegistrationW win7-64:WmiNotificationRegistrationW
-1789 win7-32:WmiOpenBlock win7-64:WmiOpenBlock
-1790 win7-32:WmiQueryAllDataA win7-64:WmiQueryAllDataA
-1791 win7-32:WmiQueryAllDataMultipleA win7-64:WmiQueryAllDataMultipleA
-1792 win7-32:WmiQueryAllDataMultipleW win7-64:WmiQueryAllDataMultipleW
-1793 win7-32:WmiQueryAllDataW win7-64:WmiQueryAllDataW
-1794 win7-32:WmiQueryGuidInformation win7-64:WmiQueryGuidInformation
-1795 win7-32:WmiQuerySingleInstanceA win7-64:WmiQuerySingleInstanceA
-1796 win7-32:WmiQuerySingleInstanceMultipleA win7-64:WmiQuerySingleInstanceMultipleA
-1797 win7-32:WmiQuerySingleInstanceMultipleW win7-64:WmiQuerySingleInstanceMultipleW
-1798 win7-32:WmiQuerySingleInstanceW win7-64:WmiQuerySingleInstanceW
-1799 win7-32:WmiReceiveNotificationsA win7-64:WmiReceiveNotificationsA
-1800 win7-32:WmiReceiveNotificationsW win7-64:WmiReceiveNotificationsW
-1801 win7-32:WmiSetSingleInstanceA win7-64:WmiSetSingleInstanceA
-1802 win7-32:WmiSetSingleInstanceW win7-64:WmiSetSingleInstanceW
-1803 win7-32:WmiSetSingleItemA win7-64:WmiSetSingleItemA
-1804 win7-32:WmiSetSingleItemW win7-64:WmiSetSingleItemW
-1805 win7-32:WriteEncryptedFileRaw win7-64:WriteEncryptedFileRaw
+1000 win7-32:- win7-64:- win8-32:- win8-64:-
+1001 win7-32:I_ScGetCurrentGroupStateW win7-64:I_ScGetCurrentGroupStateW win8-32:I_ScGetCurrentGroupStateW win8-64:I_ScGetCurrentGroupStateW
+1002 win7-32:A_SHAFinal win7-64:A_SHAFinal win8-32:A_SHAFinal win8-64:A_SHAFinal
+1003 win7-32:A_SHAInit win7-64:A_SHAInit win8-32:A_SHAInit win8-64:A_SHAInit
+1004 win7-32:A_SHAUpdate win7-64:A_SHAUpdate win8-32:A_SHAUpdate win8-64:A_SHAUpdate
+1005 win7-32:AbortSystemShutdownA win7-64:AbortSystemShutdownA win8-32:AbortSystemShutdownA win8-64:AbortSystemShutdownA
+1006 win7-32:AbortSystemShutdownW win7-64:AbortSystemShutdownW win8-32:AbortSystemShutdownW win8-64:AbortSystemShutdownW
+1007 win7-32:AccessCheck win7-64:AccessCheck win8-32:AccessCheck win8-64:AccessCheck
+1008 win7-32:AccessCheckAndAuditAlarmA win7-64:AccessCheckAndAuditAlarmA win8-32:AccessCheckAndAuditAlarmA win8-64:AccessCheckAndAuditAlarmA
+1009 win7-32:AccessCheckAndAuditAlarmW win7-64:AccessCheckAndAuditAlarmW win8-32:AccessCheckAndAuditAlarmW win8-64:AccessCheckAndAuditAlarmW
+1010 win7-32:AccessCheckByType win7-64:AccessCheckByType win8-32:AccessCheckByType win8-64:AccessCheckByType
+1011 win7-32:AccessCheckByTypeAndAuditAlarmA win7-64:AccessCheckByTypeAndAuditAlarmA win8-32:AccessCheckByTypeAndAuditAlarmA win8-64:AccessCheckByTypeAndAuditAlarmA
+1012 win7-32:AccessCheckByTypeAndAuditAlarmW win7-64:AccessCheckByTypeAndAuditAlarmW win8-32:AccessCheckByTypeAndAuditAlarmW win8-64:AccessCheckByTypeAndAuditAlarmW
+1013 win7-32:AccessCheckByTypeResultList win7-64:AccessCheckByTypeResultList win8-32:AccessCheckByTypeResultList win8-64:AccessCheckByTypeResultList
+1014 win7-32:AccessCheckByTypeResultListAndAuditAlarmA win7-64:AccessCheckByTypeResultListAndAuditAlarmA win8-32:AccessCheckByTypeResultListAndAuditAlarmA win8-64:AccessCheckByTypeResultListAndAuditAlarmA
+1015 win7-32:AccessCheckByTypeResultListAndAuditAlarmByHandleA win7-64:AccessCheckByTypeResultListAndAuditAlarmByHandleA win8-32:AccessCheckByTypeResultListAndAuditAlarmByHandleA win8-64:AccessCheckByTypeResultListAndAuditAlarmByHandleA
+1016 win7-32:AccessCheckByTypeResultListAndAuditAlarmByHandleW win7-64:AccessCheckByTypeResultListAndAuditAlarmByHandleW win8-32:AccessCheckByTypeResultListAndAuditAlarmByHandleW win8-64:AccessCheckByTypeResultListAndAuditAlarmByHandleW
+1017 win7-32:AccessCheckByTypeResultListAndAuditAlarmW win7-64:AccessCheckByTypeResultListAndAuditAlarmW win8-32:AccessCheckByTypeResultListAndAuditAlarmW win8-64:AccessCheckByTypeResultListAndAuditAlarmW
+1018 win7-32:AddAccessAllowedAce win7-64:AddAccessAllowedAce win8-32:AddAccessAllowedAce win8-64:AddAccessAllowedAce
+1019 win7-32:AddAccessAllowedAceEx win7-64:AddAccessAllowedAceEx win8-32:AddAccessAllowedAceEx win8-64:AddAccessAllowedAceEx
+1020 win7-32:AddAccessAllowedObjectAce win7-64:AddAccessAllowedObjectAce win8-32:AddAccessAllowedObjectAce win8-64:AddAccessAllowedObjectAce
+1021 win7-32:AddAccessDeniedAce win7-64:AddAccessDeniedAce win8-32:AddAccessDeniedAce win8-64:AddAccessDeniedAce
+1022 win7-32:AddAccessDeniedAceEx win7-64:AddAccessDeniedAceEx win8-32:AddAccessDeniedAceEx win8-64:AddAccessDeniedAceEx
+1023 win7-32:AddAccessDeniedObjectAce win7-64:AddAccessDeniedObjectAce win8-32:AddAccessDeniedObjectAce win8-64:AddAccessDeniedObjectAce
+1024 win7-32:AddAce win7-64:AddAce win8-32:AddAce win8-64:AddAce
+1025 win7-32:AddAuditAccessAce win7-64:AddAuditAccessAce win8-32:AddAuditAccessAce win8-64:AddAuditAccessAce
+1026 win7-32:AddAuditAccessAceEx win7-64:AddAuditAccessAceEx win8-32:AddAuditAccessAceEx win8-64:AddAuditAccessAceEx
+1027 win7-32:AddAuditAccessObjectAce win7-64:AddAuditAccessObjectAce win8-32:AddAuditAccessObjectAce win8-64:AddAuditAccessObjectAce
+1028 win7-32:AddConditionalAce win7-64:AddConditionalAce win8-32:AddConditionalAce win8-64:AddConditionalAce
+1029 win7-32:AddMandatoryAce win7-64:AddMandatoryAce win8-32:AddMandatoryAce win8-64:AddMandatoryAce
+1030 win7-32:AddUsersToEncryptedFile win7-64:AddUsersToEncryptedFile win8-32:AddUsersToEncryptedFile win8-64:AddUsersToEncryptedFile
+1031 win7-32:AddUsersToEncryptedFileEx win7-64:AddUsersToEncryptedFileEx win8-32:AddUsersToEncryptedFileEx win8-64:AddUsersToEncryptedFileEx
+1032 win7-32:AdjustTokenGroups win7-64:AdjustTokenGroups win8-32:AdjustTokenGroups win8-64:AdjustTokenGroups
+1033 win7-32:AdjustTokenPrivileges win7-64:AdjustTokenPrivileges win8-32:AdjustTokenPrivileges win8-64:AdjustTokenPrivileges
+1034 win7-32:AllocateAndInitializeSid win7-64:AllocateAndInitializeSid win8-32:AllocateAndInitializeSid win8-64:AllocateAndInitializeSid
+1035 win7-32:AllocateLocallyUniqueId win7-64:AllocateLocallyUniqueId win8-32:AllocateLocallyUniqueId win8-64:AllocateLocallyUniqueId
+1036 win7-32:AreAllAccessesGranted win7-64:AreAllAccessesGranted win8-32:AreAllAccessesGranted win8-64:AreAllAccessesGranted
+1037 win7-32:AreAnyAccessesGranted win7-64:AreAnyAccessesGranted win8-32:AreAnyAccessesGranted win8-64:AreAnyAccessesGranted
+1038 win7-32:AuditComputeEffectivePolicyBySid win7-64:AuditComputeEffectivePolicyBySid win8-32:AuditComputeEffectivePolicyBySid win8-64:AuditComputeEffectivePolicyBySid
+1039 win7-32:AuditComputeEffectivePolicyByToken win7-64:AuditComputeEffectivePolicyByToken win8-32:AuditComputeEffectivePolicyByToken win8-64:AuditComputeEffectivePolicyByToken
+1040 win7-32:AuditEnumerateCategories win7-64:AuditEnumerateCategories win8-32:AuditEnumerateCategories win8-64:AuditEnumerateCategories
+1041 win7-32:AuditEnumeratePerUserPolicy win7-64:AuditEnumeratePerUserPolicy win8-32:AuditEnumeratePerUserPolicy win8-64:AuditEnumeratePerUserPolicy
+1042 win7-32:AuditEnumerateSubCategories win7-64:AuditEnumerateSubCategories win8-32:AuditEnumerateSubCategories win8-64:AuditEnumerateSubCategories
+1043 win7-32:AuditFree win7-64:AuditFree win8-32:AuditFree win8-64:AuditFree
+1044 win7-32:AuditLookupCategoryGuidFromCategoryId win7-64:AuditLookupCategoryGuidFromCategoryId win8-32:AuditLookupCategoryGuidFromCategoryId win8-64:AuditLookupCategoryGuidFromCategoryId
+1045 win7-32:AuditLookupCategoryIdFromCategoryGuid win7-64:AuditLookupCategoryIdFromCategoryGuid win8-32:AuditLookupCategoryIdFromCategoryGuid win8-64:AuditLookupCategoryIdFromCategoryGuid
+1046 win7-32:AuditLookupCategoryNameA win7-64:AuditLookupCategoryNameA win8-32:AuditLookupCategoryNameA win8-64:AuditLookupCategoryNameA
+1047 win7-32:AuditLookupCategoryNameW win7-64:AuditLookupCategoryNameW win8-32:AuditLookupCategoryNameW win8-64:AuditLookupCategoryNameW
+1048 win7-32:AuditLookupSubCategoryNameA win7-64:AuditLookupSubCategoryNameA win8-32:AuditLookupSubCategoryNameA win8-64:AuditLookupSubCategoryNameA
+1049 win7-32:AuditLookupSubCategoryNameW win7-64:AuditLookupSubCategoryNameW win8-32:AuditLookupSubCategoryNameW win8-64:AuditLookupSubCategoryNameW
+1050 win7-32:AuditQueryGlobalSaclA win7-64:AuditQueryGlobalSaclA win8-32:AuditQueryGlobalSaclA win8-64:AuditQueryGlobalSaclA
+1051 win7-32:AuditQueryGlobalSaclW win7-64:AuditQueryGlobalSaclW win8-32:AuditQueryGlobalSaclW win8-64:AuditQueryGlobalSaclW
+1052 win7-32:AuditQueryPerUserPolicy win7-64:AuditQueryPerUserPolicy win8-32:AuditQueryPerUserPolicy win8-64:AuditQueryPerUserPolicy
+1053 win7-32:AuditQuerySecurity win7-64:AuditQuerySecurity win8-32:AuditQuerySecurity win8-64:AuditQuerySecurity
+1054 win7-32:AuditQuerySystemPolicy win7-64:AuditQuerySystemPolicy win8-32:AuditQuerySystemPolicy win8-64:AuditQuerySystemPolicy
+1055 win7-32:AuditSetGlobalSaclA win7-64:AuditSetGlobalSaclA win8-32:AuditSetGlobalSaclA win8-64:AuditSetGlobalSaclA
+1056 win7-32:AuditSetGlobalSaclW win7-64:AuditSetGlobalSaclW win8-32:AuditSetGlobalSaclW win8-64:AuditSetGlobalSaclW
+1057 win7-32:AuditSetPerUserPolicy win7-64:AuditSetPerUserPolicy win8-32:AuditSetPerUserPolicy win8-64:AuditSetPerUserPolicy
+1058 win7-32:AuditSetSecurity win7-64:AuditSetSecurity win8-32:AuditSetSecurity win8-64:AuditSetSecurity
+1059 win7-32:AuditSetSystemPolicy win7-64:AuditSetSystemPolicy win8-32:AuditSetSystemPolicy win8-64:AuditSetSystemPolicy
+1060 win7-32:BackupEventLogA win7-64:BackupEventLogA win8-32:BackupEventLogA win8-64:BackupEventLogA
+1061 win7-32:BackupEventLogW win7-64:BackupEventLogW win8-32:BackupEventLogW win8-64:BackupEventLogW
+1062 win7-32:BuildExplicitAccessWithNameA win7-64:BuildExplicitAccessWithNameA win8-32:BaseRegCloseKey win8-64:BaseRegCloseKey
+1063 win7-32:BuildExplicitAccessWithNameW win7-64:BuildExplicitAccessWithNameW win8-32:BaseRegCreateKey win8-64:BaseRegCreateKey
+1064 win7-32:BuildImpersonateExplicitAccessWithNameA win7-64:BuildImpersonateExplicitAccessWithNameA win8-32:BaseRegDeleteKeyEx win8-64:BaseRegDeleteKeyEx
+1065 win7-32:BuildImpersonateExplicitAccessWithNameW win7-64:BuildImpersonateExplicitAccessWithNameW win8-32:BaseRegDeleteValue win8-64:BaseRegDeleteValue
+1066 win7-32:BuildImpersonateTrusteeA win7-64:BuildImpersonateTrusteeA win8-32:BaseRegFlushKey win8-64:BaseRegFlushKey
+1067 win7-32:BuildImpersonateTrusteeW win7-64:BuildImpersonateTrusteeW win8-32:BaseRegGetVersion win8-64:BaseRegGetVersion
+1068 win7-32:BuildSecurityDescriptorA win7-64:BuildSecurityDescriptorA win8-32:BaseRegLoadKey win8-64:BaseRegLoadKey
+1069 win7-32:BuildSecurityDescriptorW win7-64:BuildSecurityDescriptorW win8-32:BaseRegOpenKey win8-64:BaseRegOpenKey
+1070 win7-32:BuildTrusteeWithNameA win7-64:BuildTrusteeWithNameA win8-32:BaseRegRestoreKey win8-64:BaseRegRestoreKey
+1071 win7-32:BuildTrusteeWithNameW win7-64:BuildTrusteeWithNameW win8-32:BaseRegSaveKeyEx win8-64:BaseRegSaveKeyEx
+1072 win7-32:BuildTrusteeWithObjectsAndNameA win7-64:BuildTrusteeWithObjectsAndNameA win8-32:BaseRegSetKeySecurity win8-64:BaseRegSetKeySecurity
+1073 win7-32:BuildTrusteeWithObjectsAndNameW win7-64:BuildTrusteeWithObjectsAndNameW win8-32:BaseRegSetValue win8-64:BaseRegSetValue
+1074 win7-32:BuildTrusteeWithObjectsAndSidA win7-64:BuildTrusteeWithObjectsAndSidA win8-32:BaseRegUnLoadKey win8-64:BaseRegUnLoadKey
+1075 win7-32:BuildTrusteeWithObjectsAndSidW win7-64:BuildTrusteeWithObjectsAndSidW win8-32:BuildExplicitAccessWithNameA win8-64:BuildExplicitAccessWithNameA
+1076 win7-32:BuildTrusteeWithSidA win7-64:BuildTrusteeWithSidA win8-32:BuildExplicitAccessWithNameW win8-64:BuildExplicitAccessWithNameW
+1077 win7-32:BuildTrusteeWithSidW win7-64:BuildTrusteeWithSidW win8-32:BuildImpersonateExplicitAccessWithNameA win8-64:BuildImpersonateExplicitAccessWithNameA
+1078 win7-32:CancelOverlappedAccess win7-64:CancelOverlappedAccess win8-32:BuildImpersonateExplicitAccessWithNameW win8-64:BuildImpersonateExplicitAccessWithNameW
+1079 win7-32:ChangeServiceConfig2A win7-64:ChangeServiceConfig2A win8-32:BuildImpersonateTrusteeA win8-64:BuildImpersonateTrusteeA
+1080 win7-32:ChangeServiceConfig2W win7-64:ChangeServiceConfig2W win8-32:BuildImpersonateTrusteeW win8-64:BuildImpersonateTrusteeW
+1081 win7-32:ChangeServiceConfigA win7-64:ChangeServiceConfigA win8-32:BuildSecurityDescriptorA win8-64:BuildSecurityDescriptorA
+1082 win7-32:ChangeServiceConfigW win7-64:ChangeServiceConfigW win8-32:BuildSecurityDescriptorW win8-64:BuildSecurityDescriptorW
+1083 win7-32:CheckTokenMembership win7-64:CheckTokenMembership win8-32:BuildTrusteeWithNameA win8-64:BuildTrusteeWithNameA
+1084 win7-32:ClearEventLogA win7-64:ClearEventLogA win8-32:BuildTrusteeWithNameW win8-64:BuildTrusteeWithNameW
+1085 win7-32:ClearEventLogW win7-64:ClearEventLogW win8-32:BuildTrusteeWithObjectsAndNameA win8-64:BuildTrusteeWithObjectsAndNameA
+1086 win7-32:CloseCodeAuthzLevel win7-64:CloseCodeAuthzLevel win8-32:BuildTrusteeWithObjectsAndNameW win8-64:BuildTrusteeWithObjectsAndNameW
+1087 win7-32:CloseEncryptedFileRaw win7-64:CloseEncryptedFileRaw win8-32:BuildTrusteeWithObjectsAndSidA win8-64:BuildTrusteeWithObjectsAndSidA
+1088 win7-32:CloseEventLog win7-64:CloseEventLog win8-32:BuildTrusteeWithObjectsAndSidW win8-64:BuildTrusteeWithObjectsAndSidW
+1089 win7-32:CloseServiceHandle win7-64:CloseServiceHandle win8-32:BuildTrusteeWithSidA win8-64:BuildTrusteeWithSidA
+1090 win7-32:CloseThreadWaitChainSession win7-64:CloseThreadWaitChainSession win8-32:BuildTrusteeWithSidW win8-64:BuildTrusteeWithSidW
+1091 win7-32:CloseTrace win7-64:CloseTrace win8-32:CancelOverlappedAccess win8-64:CancelOverlappedAccess
+1092 win7-32:CommandLineFromMsiDescriptor win7-64:CommandLineFromMsiDescriptor win8-32:ChangeServiceConfig2A win8-64:ChangeServiceConfig2A
+1093 win7-32:ComputeAccessTokenFromCodeAuthzLevel win7-64:ComputeAccessTokenFromCodeAuthzLevel win8-32:ChangeServiceConfig2W win8-64:ChangeServiceConfig2W
+1094 win7-32:ControlService win7-64:ControlService win8-32:ChangeServiceConfigA win8-64:ChangeServiceConfigA
+1095 win7-32:ControlServiceExA win7-64:ControlServiceExA win8-32:ChangeServiceConfigW win8-64:ChangeServiceConfigW
+1096 win7-32:ControlServiceExW win7-64:ControlServiceExW win8-32:CheckForHiberboot win8-64:CheckForHiberboot
+1097 win7-32:ControlTraceA win7-64:ControlTraceA win8-32:CheckTokenMembership win8-64:CheckTokenMembership
+1098 win7-32:ControlTraceW win7-64:ControlTraceW win8-32:ClearEventLogA win8-64:ClearEventLogA
+1099 win7-32:ConvertAccessToSecurityDescriptorA win7-64:ConvertAccessToSecurityDescriptorA win8-32:ClearEventLogW win8-64:ClearEventLogW
+1100 win7-32:ConvertAccessToSecurityDescriptorW win7-64:ConvertAccessToSecurityDescriptorW win8-32:CloseCodeAuthzLevel win8-64:CloseCodeAuthzLevel
+1101 win7-32:ConvertSDToStringSDRootDomainA win7-64:ConvertSDToStringSDRootDomainA win8-32:CloseEncryptedFileRaw win8-64:CloseEncryptedFileRaw
+1102 win7-32:ConvertSDToStringSDRootDomainW win7-64:ConvertSDToStringSDRootDomainW win8-32:CloseEventLog win8-64:CloseEventLog
+1103 win7-32:ConvertSecurityDescriptorToAccessA win7-64:ConvertSecurityDescriptorToAccessA win8-32:CloseServiceHandle win8-64:CloseServiceHandle
+1104 win7-32:ConvertSecurityDescriptorToAccessNamedA win7-64:ConvertSecurityDescriptorToAccessNamedA win8-32:CloseThreadWaitChainSession win8-64:CloseThreadWaitChainSession
+1105 win7-32:ConvertSecurityDescriptorToAccessNamedW win7-64:ConvertSecurityDescriptorToAccessNamedW win8-32:CloseTrace win8-64:CloseTrace
+1106 win7-32:ConvertSecurityDescriptorToAccessW win7-64:ConvertSecurityDescriptorToAccessW win8-32:CommandLineFromMsiDescriptor win8-64:CommandLineFromMsiDescriptor
+1107 win7-32:ConvertSecurityDescriptorToStringSecurityDescriptorA win7-64:ConvertSecurityDescriptorToStringSecurityDescriptorA win8-32:ComputeAccessTokenFromCodeAuthzLevel win8-64:ComputeAccessTokenFromCodeAuthzLevel
+1108 win7-32:ConvertSecurityDescriptorToStringSecurityDescriptorW win7-64:ConvertSecurityDescriptorToStringSecurityDescriptorW win8-32:ControlService win8-64:ControlService
+1109 win7-32:ConvertSidToStringSidA win7-64:ConvertSidToStringSidA win8-32:ControlServiceExA win8-64:ControlServiceExA
+1110 win7-32:ConvertSidToStringSidW win7-64:ConvertSidToStringSidW win8-32:ControlServiceExW win8-64:ControlServiceExW
+1111 win7-32:ConvertStringSDToSDDomainA win7-64:ConvertStringSDToSDDomainA win8-32:ControlTraceA win8-64:ControlTraceA
+1112 win7-32:ConvertStringSDToSDDomainW win7-64:ConvertStringSDToSDDomainW win8-32:ControlTraceW win8-64:ControlTraceW
+1113 win7-32:ConvertStringSDToSDRootDomainA win7-64:ConvertStringSDToSDRootDomainA win8-32:ConvertAccessToSecurityDescriptorA win8-64:ConvertAccessToSecurityDescriptorA
+1114 win7-32:ConvertStringSDToSDRootDomainW win7-64:ConvertStringSDToSDRootDomainW win8-32:ConvertAccessToSecurityDescriptorW win8-64:ConvertAccessToSecurityDescriptorW
+1115 win7-32:ConvertStringSecurityDescriptorToSecurityDescriptorA win7-64:ConvertStringSecurityDescriptorToSecurityDescriptorA win8-32:ConvertSDToStringSDDomainW win8-64:ConvertSDToStringSDDomainW
+1116 win7-32:ConvertStringSecurityDescriptorToSecurityDescriptorW win7-64:ConvertStringSecurityDescriptorToSecurityDescriptorW win8-32:ConvertSDToStringSDRootDomainA win8-64:ConvertSDToStringSDRootDomainA
+1117 win7-32:ConvertStringSidToSidA win7-64:ConvertStringSidToSidA win8-32:ConvertSDToStringSDRootDomainW win8-64:ConvertSDToStringSDRootDomainW
+1118 win7-32:ConvertStringSidToSidW win7-64:ConvertStringSidToSidW win8-32:ConvertSecurityDescriptorToAccessA win8-64:ConvertSecurityDescriptorToAccessA
+1119 win7-32:ConvertToAutoInheritPrivateObjectSecurity win7-64:ConvertToAutoInheritPrivateObjectSecurity win8-32:ConvertSecurityDescriptorToAccessNamedA win8-64:ConvertSecurityDescriptorToAccessNamedA
+1120 win7-32:CopySid win7-64:CopySid win8-32:ConvertSecurityDescriptorToAccessNamedW win8-64:ConvertSecurityDescriptorToAccessNamedW
+1121 win7-32:CreateCodeAuthzLevel win7-64:CreateCodeAuthzLevel win8-32:ConvertSecurityDescriptorToAccessW win8-64:ConvertSecurityDescriptorToAccessW
+1122 win7-32:CreatePrivateObjectSecurity win7-64:CreatePrivateObjectSecurity win8-32:ConvertSecurityDescriptorToStringSecurityDescriptorA win8-64:ConvertSecurityDescriptorToStringSecurityDescriptorA
+1123 win7-32:CreatePrivateObjectSecurityEx win7-64:CreatePrivateObjectSecurityEx win8-32:ConvertSecurityDescriptorToStringSecurityDescriptorW win8-64:ConvertSecurityDescriptorToStringSecurityDescriptorW
+1124 win7-32:CreatePrivateObjectSecurityWithMultipleInheritance win7-64:CreatePrivateObjectSecurityWithMultipleInheritance win8-32:ConvertSidToStringSidA win8-64:ConvertSidToStringSidA
+1125 win7-32:CreateProcessAsUserA win7-64:CreateProcessAsUserA win8-32:ConvertSidToStringSidW win8-64:ConvertSidToStringSidW
+1126 win7-32:CreateProcessAsUserW win7-64:CreateProcessAsUserW win8-32:ConvertStringSDToSDDomainA win8-64:ConvertStringSDToSDDomainA
+1127 win7-32:CreateProcessWithLogonW win7-64:CreateProcessWithLogonW win8-32:ConvertStringSDToSDDomainW win8-64:ConvertStringSDToSDDomainW
+1128 win7-32:CreateProcessWithTokenW win7-64:CreateProcessWithTokenW win8-32:ConvertStringSDToSDRootDomainA win8-64:ConvertStringSDToSDRootDomainA
+1129 win7-32:CreateRestrictedToken win7-64:CreateRestrictedToken win8-32:ConvertStringSDToSDRootDomainW win8-64:ConvertStringSDToSDRootDomainW
+1130 win7-32:CreateServiceA win7-64:CreateServiceA win8-32:ConvertStringSecurityDescriptorToSecurityDescriptorA win8-64:ConvertStringSecurityDescriptorToSecurityDescriptorA
+1131 win7-32:CreateServiceW win7-64:CreateServiceW win8-32:ConvertStringSecurityDescriptorToSecurityDescriptorW win8-64:ConvertStringSecurityDescriptorToSecurityDescriptorW
+1132 win7-32:CreateTraceInstanceId win7-64:CreateTraceInstanceId win8-32:ConvertStringSidToSidA win8-64:ConvertStringSidToSidA
+1133 win7-32:CreateWellKnownSid win7-64:CreateWellKnownSid win8-32:ConvertStringSidToSidW win8-64:ConvertStringSidToSidW
+1134 win7-32:CredBackupCredentials win7-64:CredBackupCredentials win8-32:ConvertToAutoInheritPrivateObjectSecurity win8-64:ConvertToAutoInheritPrivateObjectSecurity
+1135 win7-32:CredDeleteA win7-64:CredDeleteA win8-32:CopySid win8-64:CopySid
+1136 win7-32:CredDeleteW win7-64:CredDeleteW win8-32:CreateCodeAuthzLevel win8-64:CreateCodeAuthzLevel
+1137 win7-32:CredEncryptAndMarshalBinaryBlob win7-64:CredEncryptAndMarshalBinaryBlob win8-32:CreatePrivateObjectSecurity win8-64:CreatePrivateObjectSecurity
+1138 win7-32:CredEnumerateA win7-64:CredEnumerateA win8-32:CreatePrivateObjectSecurityEx win8-64:CreatePrivateObjectSecurityEx
+1139 win7-32:CredEnumerateW win7-64:CredEnumerateW win8-32:CreatePrivateObjectSecurityWithMultipleInheritance win8-64:CreatePrivateObjectSecurityWithMultipleInheritance
+1140 win7-32:CredFindBestCredentialA win7-64:CredFindBestCredentialA win8-32:CreateProcessAsUserA win8-64:CreateProcessAsUserA
+1141 win7-32:CredFindBestCredentialW win7-64:CredFindBestCredentialW win8-32:CreateProcessAsUserW win8-64:CreateProcessAsUserW
+1142 win7-32:CredFree win7-64:CredFree win8-32:CreateProcessWithLogonW win8-64:CreateProcessWithLogonW
+1143 win7-32:CredGetSessionTypes win7-64:CredGetSessionTypes win8-32:CreateProcessWithTokenW win8-64:CreateProcessWithTokenW
+1144 win7-32:CredGetTargetInfoA win7-64:CredGetTargetInfoA win8-32:CreateRestrictedToken win8-64:CreateRestrictedToken
+1145 win7-32:CredGetTargetInfoW win7-64:CredGetTargetInfoW win8-32:CreateServiceA win8-64:CreateServiceA
+1146 win7-32:CredIsMarshaledCredentialA win7-64:CredIsMarshaledCredentialA win8-32:CreateServiceW win8-64:CreateServiceW
+1147 win7-32:CredIsMarshaledCredentialW win7-64:CredIsMarshaledCredentialW win8-32:CreateTraceInstanceId win8-64:CreateTraceInstanceId
+1148 win7-32:CredIsProtectedA win7-64:CredIsProtectedA win8-32:CreateWellKnownSid win8-64:CreateWellKnownSid
+1149 win7-32:CredIsProtectedW win7-64:CredIsProtectedW win8-32:CredBackupCredentials win8-64:CredBackupCredentials
+1150 win7-32:CredMarshalCredentialA win7-64:CredMarshalCredentialA win8-32:CredDeleteA win8-64:CredDeleteA
+1151 win7-32:CredMarshalCredentialW win7-64:CredMarshalCredentialW win8-32:CredDeleteW win8-64:CredDeleteW
+1152 win7-32:CredProfileLoaded win7-64:CredProfileLoaded win8-32:CredEncryptAndMarshalBinaryBlob win8-64:CredEncryptAndMarshalBinaryBlob
+1153 win7-32:CredProfileUnloaded win7-64:CredProfileUnloaded win8-32:CredEnumerateA win8-64:CredEnumerateA
+1154 win7-32:CredProtectA win7-64:CredProtectA win8-32:CredEnumerateW win8-64:CredEnumerateW
+1155 win7-32:CredProtectW win7-64:CredProtectW win8-32:CredFindBestCredentialA win8-64:CredFindBestCredentialA
+1156 win7-32:CredReadA win7-64:CredReadA win8-32:CredFindBestCredentialW win8-64:CredFindBestCredentialW
+1157 win7-32:CredReadByTokenHandle win7-64:CredReadByTokenHandle win8-32:CredFree win8-64:CredFree
+1158 win7-32:CredReadDomainCredentialsA win7-64:CredReadDomainCredentialsA win8-32:CredGetSessionTypes win8-64:CredGetSessionTypes
+1159 win7-32:CredReadDomainCredentialsW win7-64:CredReadDomainCredentialsW win8-32:CredGetTargetInfoA win8-64:CredGetTargetInfoA
+1160 win7-32:CredReadW win7-64:CredReadW win8-32:CredGetTargetInfoW win8-64:CredGetTargetInfoW
+1161 win7-32:CredRenameA win7-64:CredRenameA win8-32:CredIsMarshaledCredentialA win8-64:CredIsMarshaledCredentialA
+1162 win7-32:CredRenameW win7-64:CredRenameW win8-32:CredIsMarshaledCredentialW win8-64:CredIsMarshaledCredentialW
+1163 win7-32:CredRestoreCredentials win7-64:CredRestoreCredentials win8-32:CredIsProtectedA win8-64:CredIsProtectedA
+1164 win7-32:CredUnmarshalCredentialA win7-64:CredUnmarshalCredentialA win8-32:CredIsProtectedW win8-64:CredIsProtectedW
+1165 win7-32:CredUnmarshalCredentialW win7-64:CredUnmarshalCredentialW win8-32:CredMarshalCredentialA win8-64:CredMarshalCredentialA
+1166 win7-32:CredUnprotectA win7-64:CredUnprotectA win8-32:CredMarshalCredentialW win8-64:CredMarshalCredentialW
+1167 win7-32:CredUnprotectW win7-64:CredUnprotectW win8-32:CredProfileLoaded win8-64:CredProfileLoaded
+1168 win7-32:CredWriteA win7-64:CredWriteA win8-32:CredProfileLoadedEx win8-64:CredProfileLoadedEx
+1169 win7-32:CredWriteDomainCredentialsA win7-64:CredWriteDomainCredentialsA win8-32:CredProfileUnloaded win8-64:CredProfileUnloaded
+1170 win7-32:CredWriteDomainCredentialsW win7-64:CredWriteDomainCredentialsW win8-32:CredProtectA win8-64:CredProtectA
+1171 win7-32:CredWriteW win7-64:CredWriteW win8-32:CredProtectW win8-64:CredProtectW
+1172 win7-32:CredpConvertCredential win7-64:CredpConvertCredential win8-32:CredReadA win8-64:CredReadA
+1173 win7-32:CredpConvertOneCredentialSize win7-64:CredpConvertOneCredentialSize win8-32:CredReadByTokenHandle win8-64:CredReadByTokenHandle
+1174 win7-32:CredpConvertTargetInfo win7-64:CredpConvertTargetInfo win8-32:CredReadDomainCredentialsA win8-64:CredReadDomainCredentialsA
+1175 win7-32:CredpDecodeCredential win7-64:CredpDecodeCredential win8-32:CredReadDomainCredentialsW win8-64:CredReadDomainCredentialsW
+1176 win7-32:CredpEncodeCredential win7-64:CredpEncodeCredential win8-32:CredReadW win8-64:CredReadW
+1177 win7-32:CredpEncodeSecret win7-64:CredpEncodeSecret win8-32:CredRenameA win8-64:CredRenameA
+1178 win7-32:CryptAcquireContextA win7-64:CryptAcquireContextA win8-32:CredRenameW win8-64:CredRenameW
+1179 win7-32:CryptAcquireContextW win7-64:CryptAcquireContextW win8-32:CredRestoreCredentials win8-64:CredRestoreCredentials
+1180 win7-32:CryptContextAddRef win7-64:CryptContextAddRef win8-32:CredUnmarshalCredentialA win8-64:CredUnmarshalCredentialA
+1181 win7-32:CryptCreateHash win7-64:CryptCreateHash win8-32:CredUnmarshalCredentialW win8-64:CredUnmarshalCredentialW
+1182 win7-32:CryptDecrypt win7-64:CryptDecrypt win8-32:CredUnprotectA win8-64:CredUnprotectA
+1183 win7-32:CryptDeriveKey win7-64:CryptDeriveKey win8-32:CredUnprotectW win8-64:CredUnprotectW
+1184 win7-32:CryptDestroyHash win7-64:CryptDestroyHash win8-32:CredWriteA win8-64:CredWriteA
+1185 win7-32:CryptDestroyKey win7-64:CryptDestroyKey win8-32:CredWriteDomainCredentialsA win8-64:CredWriteDomainCredentialsA
+1186 win7-32:CryptDuplicateHash win7-64:CryptDuplicateHash win8-32:CredWriteDomainCredentialsW win8-64:CredWriteDomainCredentialsW
+1187 win7-32:CryptDuplicateKey win7-64:CryptDuplicateKey win8-32:CredWriteW win8-64:CredWriteW
+1188 win7-32:CryptEncrypt win7-64:CryptEncrypt win8-32:CredpConvertCredential win8-64:CredpConvertCredential
+1189 win7-32:CryptEnumProviderTypesA win7-64:CryptEnumProviderTypesA win8-32:CredpConvertOneCredentialSize win8-64:CredpConvertOneCredentialSize
+1190 win7-32:CryptEnumProviderTypesW win7-64:CryptEnumProviderTypesW win8-32:CredpConvertTargetInfo win8-64:CredpConvertTargetInfo
+1191 win7-32:CryptEnumProvidersA win7-64:CryptEnumProvidersA win8-32:CredpDecodeCredential win8-64:CredpDecodeCredential
+1192 win7-32:CryptEnumProvidersW win7-64:CryptEnumProvidersW win8-32:CredpEncodeCredential win8-64:CredpEncodeCredential
+1193 win7-32:CryptExportKey win7-64:CryptExportKey win8-32:CredpEncodeSecret win8-64:CredpEncodeSecret
+1194 win7-32:CryptGenKey win7-64:CryptGenKey win8-32:CryptAcquireContextA win8-64:CryptAcquireContextA
+1195 win7-32:CryptGenRandom win7-64:CryptGenRandom win8-32:CryptAcquireContextW win8-64:CryptAcquireContextW
+1196 win7-32:CryptGetDefaultProviderA win7-64:CryptGetDefaultProviderA win8-32:CryptContextAddRef win8-64:CryptContextAddRef
+1197 win7-32:CryptGetDefaultProviderW win7-64:CryptGetDefaultProviderW win8-32:CryptCreateHash win8-64:CryptCreateHash
+1198 win7-32:CryptGetHashParam win7-64:CryptGetHashParam win8-32:CryptDecrypt win8-64:CryptDecrypt
+1199 win7-32:CryptGetKeyParam win7-64:CryptGetKeyParam win8-32:CryptDeriveKey win8-64:CryptDeriveKey
+1200 win7-32:CryptGetProvParam win7-64:CryptGetProvParam win8-32:CryptDestroyHash win8-64:CryptDestroyHash
+1201 win7-32:CryptGetUserKey win7-64:CryptGetUserKey win8-32:CryptDestroyKey win8-64:CryptDestroyKey
+1202 win7-32:CryptHashData win7-64:CryptHashData win8-32:CryptDuplicateHash win8-64:CryptDuplicateHash
+1203 win7-32:CryptHashSessionKey win7-64:CryptHashSessionKey win8-32:CryptDuplicateKey win8-64:CryptDuplicateKey
+1204 win7-32:CryptImportKey win7-64:CryptImportKey win8-32:CryptEncrypt win8-64:CryptEncrypt
+1205 win7-32:CryptReleaseContext win7-64:CryptReleaseContext win8-32:CryptEnumProviderTypesA win8-64:CryptEnumProviderTypesA
+1206 win7-32:CryptSetHashParam win7-64:CryptSetHashParam win8-32:CryptEnumProviderTypesW win8-64:CryptEnumProviderTypesW
+1207 win7-32:CryptSetKeyParam win7-64:CryptSetKeyParam win8-32:CryptEnumProvidersA win8-64:CryptEnumProvidersA
+1208 win7-32:CryptSetProvParam win7-64:CryptSetProvParam win8-32:CryptEnumProvidersW win8-64:CryptEnumProvidersW
+1209 win7-32:CryptSetProviderA win7-64:CryptSetProviderA win8-32:CryptExportKey win8-64:CryptExportKey
+1210 win7-32:CryptSetProviderExA win7-64:CryptSetProviderExA win8-32:CryptGenKey win8-64:CryptGenKey
+1211 win7-32:CryptSetProviderExW win7-64:CryptSetProviderExW win8-32:CryptGenRandom win8-64:CryptGenRandom
+1212 win7-32:CryptSetProviderW win7-64:CryptSetProviderW win8-32:CryptGetDefaultProviderA win8-64:CryptGetDefaultProviderA
+1213 win7-32:CryptSignHashA win7-64:CryptSignHashA win8-32:CryptGetDefaultProviderW win8-64:CryptGetDefaultProviderW
+1214 win7-32:CryptSignHashW win7-64:CryptSignHashW win8-32:CryptGetHashParam win8-64:CryptGetHashParam
+1215 win7-32:CryptVerifySignatureA win7-64:CryptVerifySignatureA win8-32:CryptGetKeyParam win8-64:CryptGetKeyParam
+1216 win7-32:CryptVerifySignatureW win7-64:CryptVerifySignatureW win8-32:CryptGetProvParam win8-64:CryptGetProvParam
+1217 win7-32:DecryptFileA win7-64:DecryptFileA win8-32:CryptGetUserKey win8-64:CryptGetUserKey
+1218 win7-32:DecryptFileW win7-64:DecryptFileW win8-32:CryptHashData win8-64:CryptHashData
+1219 win7-32:DeleteAce win7-64:DeleteAce win8-32:CryptHashSessionKey win8-64:CryptHashSessionKey
+1220 win7-32:DeleteService win7-64:DeleteService win8-32:CryptImportKey win8-64:CryptImportKey
+1221 win7-32:DeregisterEventSource win7-64:DeregisterEventSource win8-32:CryptReleaseContext win8-64:CryptReleaseContext
+1222 win7-32:DestroyPrivateObjectSecurity win7-64:DestroyPrivateObjectSecurity win8-32:CryptSetHashParam win8-64:CryptSetHashParam
+1223 win7-32:DuplicateEncryptionInfoFile win7-64:DuplicateEncryptionInfoFile win8-32:CryptSetKeyParam win8-64:CryptSetKeyParam
+1224 win7-32:DuplicateToken win7-64:DuplicateToken win8-32:CryptSetProvParam win8-64:CryptSetProvParam
+1225 win7-32:DuplicateTokenEx win7-64:DuplicateTokenEx win8-32:CryptSetProviderA win8-64:CryptSetProviderA
+1226 win7-32:ElfBackupEventLogFileA win7-64:ElfBackupEventLogFileA win8-32:CryptSetProviderExA win8-64:CryptSetProviderExA
+1227 win7-32:ElfBackupEventLogFileW win7-64:ElfBackupEventLogFileW win8-32:CryptSetProviderExW win8-64:CryptSetProviderExW
+1228 win7-32:ElfChangeNotify win7-64:ElfChangeNotify win8-32:CryptSetProviderW win8-64:CryptSetProviderW
+1229 win7-32:ElfClearEventLogFileA win7-64:ElfClearEventLogFileA win8-32:CryptSignHashA win8-64:CryptSignHashA
+1230 win7-32:ElfClearEventLogFileW win7-64:ElfClearEventLogFileW win8-32:CryptSignHashW win8-64:CryptSignHashW
+1231 win7-32:ElfCloseEventLog win7-64:ElfCloseEventLog win8-32:CryptVerifySignatureA win8-64:CryptVerifySignatureA
+1232 win7-32:ElfDeregisterEventSource win7-64:ElfDeregisterEventSource win8-32:CryptVerifySignatureW win8-64:CryptVerifySignatureW
+1233 win7-32:ElfFlushEventLog win7-64:ElfFlushEventLog win8-32:DecryptFileA win8-64:DecryptFileA
+1234 win7-32:ElfNumberOfRecords win7-64:ElfNumberOfRecords win8-32:DecryptFileW win8-64:DecryptFileW
+1235 win7-32:ElfOldestRecord win7-64:ElfOldestRecord win8-32:DeleteAce win8-64:DeleteAce
+1236 win7-32:ElfOpenBackupEventLogA win7-64:ElfOpenBackupEventLogA win8-32:DeleteService win8-64:DeleteService
+1237 win7-32:ElfOpenBackupEventLogW win7-64:ElfOpenBackupEventLogW win8-32:DeregisterEventSource win8-64:DeregisterEventSource
+1238 win7-32:ElfOpenEventLogA win7-64:ElfOpenEventLogA win8-32:DestroyPrivateObjectSecurity win8-64:DestroyPrivateObjectSecurity
+1239 win7-32:ElfOpenEventLogW win7-64:ElfOpenEventLogW win8-32:DuplicateEncryptionInfoFile win8-64:DuplicateEncryptionInfoFile
+1240 win7-32:ElfReadEventLogA win7-64:ElfReadEventLogA win8-32:DuplicateToken win8-64:DuplicateToken
+1241 win7-32:ElfReadEventLogW win7-64:ElfReadEventLogW win8-32:DuplicateTokenEx win8-64:DuplicateTokenEx
+1242 win7-32:ElfRegisterEventSourceA win7-64:ElfRegisterEventSourceA win8-32:ElfBackupEventLogFileA win8-64:ElfBackupEventLogFileA
+1243 win7-32:ElfRegisterEventSourceW win7-64:ElfRegisterEventSourceW win8-32:ElfBackupEventLogFileW win8-64:ElfBackupEventLogFileW
+1244 win7-32:ElfReportEventA win7-64:ElfReportEventA win8-32:ElfChangeNotify win8-64:ElfChangeNotify
+1245 win7-32:ElfReportEventAndSourceW win7-64:ElfReportEventAndSourceW win8-32:ElfClearEventLogFileA win8-64:ElfClearEventLogFileA
+1246 win7-32:ElfReportEventW win7-64:ElfReportEventW win8-32:ElfClearEventLogFileW win8-64:ElfClearEventLogFileW
+1247 win7-32:EnableTrace win7-64:EnableTrace win8-32:ElfCloseEventLog win8-64:ElfCloseEventLog
+1248 win7-32:EnableTraceEx2 win7-64:EnableTraceEx win8-32:ElfDeregisterEventSource win8-64:ElfDeregisterEventSource
+1249 win7-32:EnableTraceEx win7-64:EnableTraceEx2 win8-32:ElfFlushEventLog win8-64:ElfFlushEventLog
+1250 win7-32:EncryptFileA win7-64:EncryptFileA win8-32:ElfNumberOfRecords win8-64:ElfNumberOfRecords
+1251 win7-32:EncryptFileW win7-64:EncryptFileW win8-32:ElfOldestRecord win8-64:ElfOldestRecord
+1252 win7-32:EncryptedFileKeyInfo win7-64:EncryptedFileKeyInfo win8-32:ElfOpenBackupEventLogA win8-64:ElfOpenBackupEventLogA
+1253 win7-32:EncryptionDisable win7-64:EncryptionDisable win8-32:ElfOpenBackupEventLogW win8-64:ElfOpenBackupEventLogW
+1254 win7-32:EnumDependentServicesA win7-64:EnumDependentServicesA win8-32:ElfOpenEventLogA win8-64:ElfOpenEventLogA
+1255 win7-32:EnumDependentServicesW win7-64:EnumDependentServicesW win8-32:ElfOpenEventLogW win8-64:ElfOpenEventLogW
+1256 win7-32:EnumServiceGroupW win7-64:EnumServiceGroupW win8-32:ElfReadEventLogA win8-64:ElfReadEventLogA
+1257 win7-32:EnumServicesStatusA win7-64:EnumServicesStatusA win8-32:ElfReadEventLogW win8-64:ElfReadEventLogW
+1258 win7-32:EnumServicesStatusExA win7-64:EnumServicesStatusExA win8-32:ElfRegisterEventSourceA win8-64:ElfRegisterEventSourceA
+1259 win7-32:EnumServicesStatusExW win7-64:EnumServicesStatusExW win8-32:ElfRegisterEventSourceW win8-64:ElfRegisterEventSourceW
+1260 win7-32:EnumServicesStatusW win7-64:EnumServicesStatusW win8-32:ElfReportEventA win8-64:ElfReportEventA
+1261 win7-32:EnumerateTraceGuids win7-64:EnumerateTraceGuids win8-32:ElfReportEventAndSourceW win8-64:ElfReportEventAndSourceW
+1262 win7-32:EnumerateTraceGuidsEx win7-64:EnumerateTraceGuidsEx win8-32:ElfReportEventW win8-64:ElfReportEventW
+1263 win7-32:EqualDomainSid win7-64:EqualDomainSid win8-32:EnableTrace win8-64:EnableTrace
+1264 win7-32:EqualPrefixSid win7-64:EqualPrefixSid win8-32:EnableTraceEx2 win8-64:EnableTraceEx
+1265 win7-32:EqualSid win7-64:EqualSid win8-32:EnableTraceEx win8-64:EnableTraceEx2
+1266 win7-32:EventAccessControl win7-64:EventAccessControl win8-32:EncryptFileA win8-64:EncryptFileA
+1267 win7-32:EventAccessQuery win7-64:EventAccessQuery win8-32:EncryptFileW win8-64:EncryptFileW
+1268 win7-32:EventAccessRemove win7-64:EventAccessRemove win8-32:EncryptedFileKeyInfo win8-64:EncryptedFileKeyInfo
+1269 win7-32:EventActivityIdControl win7-64:EventActivityIdControl win8-32:EncryptionDisable win8-64:EncryptionDisable
+1270 win7-32:EventEnabled win7-64:EventEnabled win8-32:EnumDependentServicesA win8-64:EnumDependentServicesA
+1271 win7-32:EventProviderEnabled win7-64:EventProviderEnabled win8-32:EnumDependentServicesW win8-64:EnumDependentServicesW
+1272 win7-32:EventRegister win7-64:EventRegister win8-32:EnumDynamicTimeZoneInformation win8-64:EnumDynamicTimeZoneInformation
+1273 win7-32:EventUnregister win7-64:EventUnregister win8-32:EnumServiceGroupW win8-64:EnumServiceGroupW
+1274 win7-32:EventWrite win7-64:EventWrite win8-32:EnumServicesStatusA win8-64:EnumServicesStatusA
+1275 win7-32:EventWriteEndScenario win7-64:EventWriteEndScenario win8-32:EnumServicesStatusExA win8-64:EnumServicesStatusExA
+1276 win7-32:EventWriteEx win7-64:EventWriteEx win8-32:EnumServicesStatusExW win8-64:EnumServicesStatusExW
+1277 win7-32:EventWriteStartScenario win7-64:EventWriteStartScenario win8-32:EnumServicesStatusW win8-64:EnumServicesStatusW
+1278 win7-32:EventWriteString win7-64:EventWriteString win8-32:EnumerateTraceGuids win8-64:EnumerateTraceGuids
+1279 win7-32:EventWriteTransfer win7-64:EventWriteTransfer win8-32:EnumerateTraceGuidsEx win8-64:EnumerateTraceGuidsEx
+1280 win7-32:FileEncryptionStatusA win7-64:FileEncryptionStatusA win8-32:EqualDomainSid win8-64:EqualDomainSid
+1281 win7-32:FileEncryptionStatusW win7-64:FileEncryptionStatusW win8-32:EqualPrefixSid win8-64:EqualPrefixSid
+1282 win7-32:FindFirstFreeAce win7-64:FindFirstFreeAce win8-32:EqualSid win8-64:EqualSid
+1283 win7-32:FlushEfsCache win7-64:FlushEfsCache win8-32:EtwLogSysConfigExtension win8-64:EtwLogSysConfigExtension
+1284 win7-32:FlushTraceA win7-64:FlushTraceA win8-32:EventAccessControl win8-64:EventAccessControl
+1285 win7-32:FlushTraceW win7-64:FlushTraceW win8-32:EventAccessQuery win8-64:EventAccessQuery
+1286 win7-32:FreeEncryptedFileKeyInfo win7-64:FreeEncryptedFileKeyInfo win8-32:EventAccessRemove win8-64:EventAccessRemove
+1287 win7-32:FreeEncryptedFileMetadata win7-64:FreeEncryptedFileMetadata win8-32:EventActivityIdControl win8-64:EventActivityIdControl
+1288 win7-32:FreeEncryptionCertificateHashList win7-64:FreeEncryptionCertificateHashList win8-32:EventEnabled win8-64:EventEnabled
+1289 win7-32:FreeInheritedFromArray win7-64:FreeInheritedFromArray win8-32:EventProviderEnabled win8-64:EventProviderEnabled
+1290 win7-32:FreeSid win7-64:FreeSid win8-32:EventRegister win8-64:EventRegister
+1291 win7-32:GetAccessPermissionsForObjectA win7-64:GetAccessPermissionsForObjectA win8-32:EventSetInformation win8-64:EventSetInformation
+1292 win7-32:GetAccessPermissionsForObjectW win7-64:GetAccessPermissionsForObjectW win8-32:EventUnregister win8-64:EventUnregister
+1293 win7-32:GetAce win7-64:GetAce win8-32:EventWrite win8-64:EventWrite
+1294 win7-32:GetAclInformation win7-64:GetAclInformation win8-32:EventWriteEndScenario win8-64:EventWriteEndScenario
+1295 win7-32:GetAuditedPermissionsFromAclA win7-64:GetAuditedPermissionsFromAclA win8-32:EventWriteEx win8-64:EventWriteEx
+1296 win7-32:GetAuditedPermissionsFromAclW win7-64:GetAuditedPermissionsFromAclW win8-32:EventWriteStartScenario win8-64:EventWriteStartScenario
+1297 win7-32:GetCurrentHwProfileA win7-64:GetCurrentHwProfileA win8-32:EventWriteString win8-64:EventWriteString
+1298 win7-32:GetCurrentHwProfileW win7-64:GetCurrentHwProfileW win8-32:EventWriteTransfer win8-64:EventWriteTransfer
+1299 win7-32:GetEffectiveRightsFromAclA win7-64:GetEffectiveRightsFromAclA win8-32:FileEncryptionStatusA win8-64:FileEncryptionStatusA
+1300 win7-32:GetEffectiveRightsFromAclW win7-64:GetEffectiveRightsFromAclW win8-32:FileEncryptionStatusW win8-64:FileEncryptionStatusW
+1301 win7-32:GetEncryptedFileMetadata win7-64:GetEncryptedFileMetadata win8-32:FindFirstFreeAce win8-64:FindFirstFreeAce
+1302 win7-32:GetEventLogInformation win7-64:GetEventLogInformation win8-32:FlushEfsCache win8-64:FlushEfsCache
+1303 win7-32:GetExplicitEntriesFromAclA win7-64:GetExplicitEntriesFromAclA win8-32:FlushTraceA win8-64:FlushTraceA
+1304 win7-32:GetExplicitEntriesFromAclW win7-64:GetExplicitEntriesFromAclW win8-32:FlushTraceW win8-64:FlushTraceW
+1305 win7-32:GetFileSecurityA win7-64:GetFileSecurityA win8-32:FreeEncryptedFileKeyInfo win8-64:FreeEncryptedFileKeyInfo
+1306 win7-32:GetFileSecurityW win7-64:GetFileSecurityW win8-32:FreeEncryptedFileMetadata win8-64:FreeEncryptedFileMetadata
+1307 win7-32:GetInformationCodeAuthzLevelW win7-64:GetInformationCodeAuthzLevelW win8-32:FreeEncryptionCertificateHashList win8-64:FreeEncryptionCertificateHashList
+1308 win7-32:GetInformationCodeAuthzPolicyW win7-64:GetInformationCodeAuthzPolicyW win8-32:FreeInheritedFromArray win8-64:FreeInheritedFromArray
+1309 win7-32:GetInheritanceSourceA win7-64:GetInheritanceSourceA win8-32:FreeSid win8-64:FreeSid
+1310 win7-32:GetInheritanceSourceW win7-64:GetInheritanceSourceW win8-32:GetAccessPermissionsForObjectA win8-64:GetAccessPermissionsForObjectA
+1311 win7-32:GetKernelObjectSecurity win7-64:GetKernelObjectSecurity win8-32:GetAccessPermissionsForObjectW win8-64:GetAccessPermissionsForObjectW
+1312 win7-32:GetLengthSid win7-64:GetLengthSid win8-32:GetAce win8-64:GetAce
+1313 win7-32:GetLocalManagedApplicationData win7-64:GetLocalManagedApplicationData win8-32:GetAclInformation win8-64:GetAclInformation
+1314 win7-32:GetLocalManagedApplications win7-64:GetLocalManagedApplications win8-32:GetAuditedPermissionsFromAclA win8-64:GetAuditedPermissionsFromAclA
+1315 win7-32:GetManagedApplicationCategories win7-64:GetManagedApplicationCategories win8-32:GetAuditedPermissionsFromAclW win8-64:GetAuditedPermissionsFromAclW
+1316 win7-32:GetManagedApplications win7-64:GetManagedApplications win8-32:GetCurrentHwProfileA win8-64:GetCurrentHwProfileA
+1317 win7-32:GetMultipleTrusteeA win7-64:GetMultipleTrusteeA win8-32:GetCurrentHwProfileW win8-64:GetCurrentHwProfileW
+1318 win7-32:GetMultipleTrusteeOperationA win7-64:GetMultipleTrusteeOperationA win8-32:GetDynamicTimeZoneInformationEffectiveYears win8-64:GetDynamicTimeZoneInformationEffectiveYears
+1319 win7-32:GetMultipleTrusteeOperationW win7-64:GetMultipleTrusteeOperationW win8-32:GetEffectiveRightsFromAclA win8-64:GetEffectiveRightsFromAclA
+1320 win7-32:GetMultipleTrusteeW win7-64:GetMultipleTrusteeW win8-32:GetEffectiveRightsFromAclW win8-64:GetEffectiveRightsFromAclW
+1321 win7-32:GetNamedSecurityInfoA win7-64:GetNamedSecurityInfoA win8-32:GetEncryptedFileMetadata win8-64:GetEncryptedFileMetadata
+1322 win7-32:GetNamedSecurityInfoExA win7-64:GetNamedSecurityInfoExA win8-32:GetEventLogInformation win8-64:GetEventLogInformation
+1323 win7-32:GetNamedSecurityInfoExW win7-64:GetNamedSecurityInfoExW win8-32:GetExplicitEntriesFromAclA win8-64:GetExplicitEntriesFromAclA
+1324 win7-32:GetNamedSecurityInfoW win7-64:GetNamedSecurityInfoW win8-32:GetExplicitEntriesFromAclW win8-64:GetExplicitEntriesFromAclW
+1325 win7-32:GetNumberOfEventLogRecords win7-64:GetNumberOfEventLogRecords win8-32:GetFileSecurityA win8-64:GetFileSecurityA
+1326 win7-32:GetOldestEventLogRecord win7-64:GetOldestEventLogRecord win8-32:GetFileSecurityW win8-64:GetFileSecurityW
+1327 win7-32:GetOverlappedAccessResults win7-64:GetOverlappedAccessResults win8-32:GetInformationCodeAuthzLevelW win8-64:GetInformationCodeAuthzLevelW
+1328 win7-32:GetPrivateObjectSecurity win7-64:GetPrivateObjectSecurity win8-32:GetInformationCodeAuthzPolicyW win8-64:GetInformationCodeAuthzPolicyW
+1329 win7-32:GetSecurityDescriptorControl win7-64:GetSecurityDescriptorControl win8-32:GetInheritanceSourceA win8-64:GetInheritanceSourceA
+1330 win7-32:GetSecurityDescriptorDacl win7-64:GetSecurityDescriptorDacl win8-32:GetInheritanceSourceW win8-64:GetInheritanceSourceW
+1331 win7-32:GetSecurityDescriptorGroup win7-64:GetSecurityDescriptorGroup win8-32:GetKernelObjectSecurity win8-64:GetKernelObjectSecurity
+1332 win7-32:GetSecurityDescriptorLength win7-64:GetSecurityDescriptorLength win8-32:GetLengthSid win8-64:GetLengthSid
+1333 win7-32:GetSecurityDescriptorOwner win7-64:GetSecurityDescriptorOwner win8-32:GetLocalManagedApplicationData win8-64:GetLocalManagedApplicationData
+1334 win7-32:GetSecurityDescriptorRMControl win7-64:GetSecurityDescriptorRMControl win8-32:GetLocalManagedApplications win8-64:GetLocalManagedApplications
+1335 win7-32:GetSecurityDescriptorSacl win7-64:GetSecurityDescriptorSacl win8-32:GetManagedApplicationCategories win8-64:GetManagedApplicationCategories
+1336 win7-32:GetSecurityInfo win7-64:GetSecurityInfo win8-32:GetManagedApplications win8-64:GetManagedApplications
+1337 win7-32:GetSecurityInfoExA win7-64:GetSecurityInfoExA win8-32:GetMultipleTrusteeA win8-64:GetMultipleTrusteeA
+1338 win7-32:GetSecurityInfoExW win7-64:GetSecurityInfoExW win8-32:GetMultipleTrusteeOperationA win8-64:GetMultipleTrusteeOperationA
+1339 win7-32:GetServiceDisplayNameA win7-64:GetServiceDisplayNameA win8-32:GetMultipleTrusteeOperationW win8-64:GetMultipleTrusteeOperationW
+1340 win7-32:GetServiceDisplayNameW win7-64:GetServiceDisplayNameW win8-32:GetMultipleTrusteeW win8-64:GetMultipleTrusteeW
+1341 win7-32:GetServiceKeyNameA win7-64:GetServiceKeyNameA win8-32:GetNamedSecurityInfoA win8-64:GetNamedSecurityInfoA
+1342 win7-32:GetServiceKeyNameW win7-64:GetServiceKeyNameW win8-32:GetNamedSecurityInfoExA win8-64:GetNamedSecurityInfoExA
+1343 win7-32:GetSidIdentifierAuthority win7-64:GetSidIdentifierAuthority win8-32:GetNamedSecurityInfoExW win8-64:GetNamedSecurityInfoExW
+1344 win7-32:GetSidLengthRequired win7-64:GetSidLengthRequired win8-32:GetNamedSecurityInfoW win8-64:GetNamedSecurityInfoW
+1345 win7-32:GetSidSubAuthority win7-64:GetSidSubAuthority win8-32:GetNumberOfEventLogRecords win8-64:GetNumberOfEventLogRecords
+1346 win7-32:GetSidSubAuthorityCount win7-64:GetSidSubAuthorityCount win8-32:GetOldestEventLogRecord win8-64:GetOldestEventLogRecord
+1347 win7-32:GetThreadWaitChain win7-64:GetThreadWaitChain win8-32:GetOverlappedAccessResults win8-64:GetOverlappedAccessResults
+1348 win7-32:GetTokenInformation win7-64:GetTokenInformation win8-32:GetPrivateObjectSecurity win8-64:GetPrivateObjectSecurity
+1349 win7-32:GetTraceEnableFlags win7-64:GetTraceEnableFlags win8-32:GetSecurityDescriptorControl win8-64:GetSecurityDescriptorControl
+1350 win7-32:GetTraceEnableLevel win7-64:GetTraceEnableLevel win8-32:GetSecurityDescriptorDacl win8-64:GetSecurityDescriptorDacl
+1351 win7-32:GetTraceLoggerHandle win7-64:GetTraceLoggerHandle win8-32:GetSecurityDescriptorGroup win8-64:GetSecurityDescriptorGroup
+1352 win7-32:GetTrusteeFormA win7-64:GetTrusteeFormA win8-32:GetSecurityDescriptorLength win8-64:GetSecurityDescriptorLength
+1353 win7-32:GetTrusteeFormW win7-64:GetTrusteeFormW win8-32:GetSecurityDescriptorOwner win8-64:GetSecurityDescriptorOwner
+1354 win7-32:GetTrusteeNameA win7-64:GetTrusteeNameA win8-32:GetSecurityDescriptorRMControl win8-64:GetSecurityDescriptorRMControl
+1355 win7-32:GetTrusteeNameW win7-64:GetTrusteeNameW win8-32:GetSecurityDescriptorSacl win8-64:GetSecurityDescriptorSacl
+1356 win7-32:GetTrusteeTypeA win7-64:GetTrusteeTypeA win8-32:GetSecurityInfo win8-64:GetSecurityInfo
+1357 win7-32:GetTrusteeTypeW win7-64:GetTrusteeTypeW win8-32:GetSecurityInfoExA win8-64:GetSecurityInfoExA
+1358 win7-32:GetUserNameA win7-64:GetUserNameA win8-32:GetSecurityInfoExW win8-64:GetSecurityInfoExW
+1359 win7-32:GetUserNameW win7-64:GetUserNameW win8-32:GetServiceDisplayNameA win8-64:GetServiceDisplayNameA
+1360 win7-32:GetWindowsAccountDomainSid win7-64:GetWindowsAccountDomainSid win8-32:GetServiceDisplayNameW win8-64:GetServiceDisplayNameW
+1361 win7-32:I_QueryTagInformation win7-64:I_QueryTagInformation win8-32:GetServiceKeyNameA win8-64:GetServiceKeyNameA
+1362 win7-32:I_ScIsSecurityProcess win7-64:I_ScIsSecurityProcess win8-32:GetServiceKeyNameW win8-64:GetServiceKeyNameW
+1363 win7-32:I_ScPnPGetServiceName win7-64:I_ScPnPGetServiceName win8-32:GetSidIdentifierAuthority win8-64:GetSidIdentifierAuthority
+1364 win7-32:I_ScQueryServiceConfig win7-64:I_ScQueryServiceConfig win8-32:GetSidLengthRequired win8-64:GetSidLengthRequired
+1365 win7-32:I_ScSendPnPMessage win7-64:I_ScSendPnPMessage win8-32:GetSidSubAuthority win8-64:GetSidSubAuthority
+1366 win7-32:I_ScSendTSMessage win7-64:I_ScSendTSMessage win8-32:GetSidSubAuthorityCount win8-64:GetSidSubAuthorityCount
+1367 win7-32:I_ScSetServiceBitsA win7-64:I_ScSetServiceBitsA win8-32:GetStringConditionFromBinary win8-64:GetStringConditionFromBinary
+1368 win7-32:I_ScSetServiceBitsW win7-64:I_ScSetServiceBitsW win8-32:GetThreadWaitChain win8-64:GetThreadWaitChain
+1369 win7-32:I_ScValidatePnPService win7-64:I_ScValidatePnPService win8-32:GetTokenInformation win8-64:GetTokenInformation
+1370 win7-32:IdentifyCodeAuthzLevelW win7-64:IdentifyCodeAuthzLevelW win8-32:GetTraceEnableFlags win8-64:GetTraceEnableFlags
+1371 win7-32:ImpersonateAnonymousToken win7-64:ImpersonateAnonymousToken win8-32:GetTraceEnableLevel win8-64:GetTraceEnableLevel
+1372 win7-32:ImpersonateLoggedOnUser win7-64:ImpersonateLoggedOnUser win8-32:GetTraceLoggerHandle win8-64:GetTraceLoggerHandle
+1373 win7-32:ImpersonateNamedPipeClient win7-64:ImpersonateNamedPipeClient win8-32:GetTrusteeFormA win8-64:GetTrusteeFormA
+1374 win7-32:ImpersonateSelf win7-64:ImpersonateSelf win8-32:GetTrusteeFormW win8-64:GetTrusteeFormW
+1375 win7-32:InitializeAcl win7-64:InitializeAcl win8-32:GetTrusteeNameA win8-64:GetTrusteeNameA
+1376 win7-32:InitializeSecurityDescriptor win7-64:InitializeSecurityDescriptor win8-32:GetTrusteeNameW win8-64:GetTrusteeNameW
+1377 win7-32:InitializeSid win7-64:InitializeSid win8-32:GetTrusteeTypeA win8-64:GetTrusteeTypeA
+1378 win7-32:InitiateShutdownA win7-64:InitiateShutdownA win8-32:GetTrusteeTypeW win8-64:GetTrusteeTypeW
+1379 win7-32:InitiateShutdownW win7-64:InitiateShutdownW win8-32:GetUserNameA win8-64:GetUserNameA
+1380 win7-32:InitiateSystemShutdownA win7-64:InitiateSystemShutdownA win8-32:GetUserNameW win8-64:GetUserNameW
+1381 win7-32:InitiateSystemShutdownExA win7-64:InitiateSystemShutdownExA win8-32:GetWindowsAccountDomainSid win8-64:GetWindowsAccountDomainSid
+1382 win7-32:InitiateSystemShutdownExW win7-64:InitiateSystemShutdownExW win8-32:I_QueryTagInformation win8-64:I_QueryTagInformation
+1383 win7-32:InitiateSystemShutdownW win7-64:InitiateSystemShutdownW win8-32:I_ScIsSecurityProcess win8-64:I_ScIsSecurityProcess
+1384 win7-32:InstallApplication win7-64:InstallApplication win8-32:I_ScPnPGetServiceName win8-64:I_ScPnPGetServiceName
+1385 win7-32:IsTextUnicode win7-64:IsTextUnicode win8-32:I_ScQueryServiceConfig win8-64:I_ScQueryServiceConfig
+1386 win7-32:IsTokenRestricted win7-64:IsTokenRestricted win8-32:I_ScRegisterPreshutdownRestart win8-64:I_ScRegisterPreshutdownRestart
+1387 win7-32:IsTokenUntrusted win7-64:IsTokenUntrusted win8-32:I_ScSendPnPMessage win8-64:I_ScSendPnPMessage
+1388 win7-32:IsValidAcl win7-64:IsValidAcl win8-32:I_ScSendTSMessage win8-64:I_ScSendTSMessage
+1389 win7-32:IsValidRelativeSecurityDescriptor win7-64:IsValidRelativeSecurityDescriptor win8-32:I_ScSetServiceBitsA win8-64:I_ScSetServiceBitsA
+1390 win7-32:IsValidSecurityDescriptor win7-64:IsValidSecurityDescriptor win8-32:I_ScSetServiceBitsW win8-64:I_ScSetServiceBitsW
+1391 win7-32:IsValidSid win7-64:IsValidSid win8-32:I_ScValidatePnPService win8-64:I_ScValidatePnPService
+1392 win7-32:IsWellKnownSid win7-64:IsWellKnownSid win8-32:IdentifyCodeAuthzLevelW win8-64:IdentifyCodeAuthzLevelW
+1393 win7-32:LockServiceDatabase win7-64:LockServiceDatabase win8-32:ImpersonateAnonymousToken win8-64:ImpersonateAnonymousToken
+1394 win7-32:LogonUserA win7-64:LogonUserA win8-32:ImpersonateLoggedOnUser win8-64:ImpersonateLoggedOnUser
+1395 win7-32:LogonUserExA win7-64:LogonUserExA win8-32:ImpersonateNamedPipeClient win8-64:ImpersonateNamedPipeClient
+1396 win7-32:LogonUserExExW win7-64:LogonUserExExW win8-32:ImpersonateSelf win8-64:ImpersonateSelf
+1397 win7-32:LogonUserExW win7-64:LogonUserExW win8-32:InitializeAcl win8-64:InitializeAcl
+1398 win7-32:LogonUserW win7-64:LogonUserW win8-32:InitializeSecurityDescriptor win8-64:InitializeSecurityDescriptor
+1399 win7-32:LookupAccountNameA win7-64:LookupAccountNameA win8-32:InitializeSid win8-64:InitializeSid
+1400 win7-32:LookupAccountNameW win7-64:LookupAccountNameW win8-32:InitiateShutdownA win8-64:InitiateShutdownA
+1401 win7-32:LookupAccountSidA win7-64:LookupAccountSidA win8-32:InitiateShutdownW win8-64:InitiateShutdownW
+1402 win7-32:LookupAccountSidW win7-64:LookupAccountSidW win8-32:InitiateSystemShutdownA win8-64:InitiateSystemShutdownA
+1403 win7-32:LookupPrivilegeDisplayNameA win7-64:LookupPrivilegeDisplayNameA win8-32:InitiateSystemShutdownExA win8-64:InitiateSystemShutdownExA
+1404 win7-32:LookupPrivilegeDisplayNameW win7-64:LookupPrivilegeDisplayNameW win8-32:InitiateSystemShutdownExW win8-64:InitiateSystemShutdownExW
+1405 win7-32:LookupPrivilegeNameA win7-64:LookupPrivilegeNameA win8-32:InitiateSystemShutdownW win8-64:InitiateSystemShutdownW
+1406 win7-32:LookupPrivilegeNameW win7-64:LookupPrivilegeNameW win8-32:InstallApplication win8-64:InstallApplication
+1407 win7-32:LookupPrivilegeValueA win7-64:LookupPrivilegeValueA win8-32:IsTextUnicode win8-64:IsTextUnicode
+1408 win7-32:LookupPrivilegeValueW win7-64:LookupPrivilegeValueW win8-32:IsTokenRestricted win8-64:IsTokenRestricted
+1409 win7-32:LookupSecurityDescriptorPartsA win7-64:LookupSecurityDescriptorPartsA win8-32:IsTokenUntrusted win8-64:IsTokenUntrusted
+1410 win7-32:LookupSecurityDescriptorPartsW win7-64:LookupSecurityDescriptorPartsW win8-32:IsValidAcl win8-64:IsValidAcl
+1411 win7-32:LsaAddAccountRights win7-64:LsaAddAccountRights win8-32:IsValidRelativeSecurityDescriptor win8-64:IsValidRelativeSecurityDescriptor
+1412 win7-32:LsaAddPrivilegesToAccount win7-64:LsaAddPrivilegesToAccount win8-32:IsValidSecurityDescriptor win8-64:IsValidSecurityDescriptor
+1413 win7-32:LsaClearAuditLog win7-64:LsaClearAuditLog win8-32:IsValidSid win8-64:IsValidSid
+1414 win7-32:LsaClose win7-64:LsaClose win8-32:IsWellKnownSid win8-64:IsWellKnownSid
+1415 win7-32:LsaCreateAccount win7-64:LsaCreateAccount win8-32:LockServiceDatabase win8-64:LockServiceDatabase
+1416 win7-32:LsaCreateSecret win7-64:LsaCreateSecret win8-32:LogonUserA win8-64:LogonUserA
+1417 win7-32:LsaCreateTrustedDomain win7-64:LsaCreateTrustedDomain win8-32:LogonUserExA win8-64:LogonUserExA
+1418 win7-32:LsaCreateTrustedDomainEx win7-64:LsaCreateTrustedDomainEx win8-32:LogonUserExExW win8-64:LogonUserExExW
+1419 win7-32:LsaDelete win7-64:LsaDelete win8-32:LogonUserExW win8-64:LogonUserExW
+1420 win7-32:LsaDeleteTrustedDomain win7-64:LsaDeleteTrustedDomain win8-32:LogonUserW win8-64:LogonUserW
+1421 win7-32:LsaEnumerateAccountRights win7-64:LsaEnumerateAccountRights win8-32:LookupAccountNameA win8-64:LookupAccountNameA
+1422 win7-32:LsaEnumerateAccounts win7-64:LsaEnumerateAccounts win8-32:LookupAccountNameW win8-64:LookupAccountNameW
+1423 win7-32:LsaEnumerateAccountsWithUserRight win7-64:LsaEnumerateAccountsWithUserRight win8-32:LookupAccountSidA win8-64:LookupAccountSidA
+1424 win7-32:LsaEnumeratePrivileges win7-64:LsaEnumeratePrivileges win8-32:LookupAccountSidW win8-64:LookupAccountSidW
+1425 win7-32:LsaEnumeratePrivilegesOfAccount win7-64:LsaEnumeratePrivilegesOfAccount win8-32:LookupPrivilegeDisplayNameA win8-64:LookupPrivilegeDisplayNameA
+1426 win7-32:LsaEnumerateTrustedDomains win7-64:LsaEnumerateTrustedDomains win8-32:LookupPrivilegeDisplayNameW win8-64:LookupPrivilegeDisplayNameW
+1427 win7-32:LsaEnumerateTrustedDomainsEx win7-64:LsaEnumerateTrustedDomainsEx win8-32:LookupPrivilegeNameA win8-64:LookupPrivilegeNameA
+1428 win7-32:LsaFreeMemory win7-64:LsaFreeMemory win8-32:LookupPrivilegeNameW win8-64:LookupPrivilegeNameW
+1429 win7-32:LsaGetQuotasForAccount win7-64:LsaGetQuotasForAccount win8-32:LookupPrivilegeValueA win8-64:LookupPrivilegeValueA
+1430 win7-32:LsaGetRemoteUserName win7-64:LsaGetRemoteUserName win8-32:LookupPrivilegeValueW win8-64:LookupPrivilegeValueW
+1431 win7-32:LsaGetSystemAccessAccount win7-64:LsaGetSystemAccessAccount win8-32:LookupSecurityDescriptorPartsA win8-64:LookupSecurityDescriptorPartsA
+1432 win7-32:LsaGetUserName win7-64:LsaGetUserName win8-32:LookupSecurityDescriptorPartsW win8-64:LookupSecurityDescriptorPartsW
+1433 win7-32:LsaICLookupNames win7-64:LsaICLookupNames win8-32:LsaAddAccountRights win8-64:LsaAddAccountRights
+1434 win7-32:LsaICLookupNamesWithCreds win7-64:LsaICLookupNamesWithCreds win8-32:LsaAddPrivilegesToAccount win8-64:LsaAddPrivilegesToAccount
+1435 win7-32:LsaICLookupSids win7-64:LsaICLookupSids win8-32:LsaClearAuditLog win8-64:LsaClearAuditLog
+1436 win7-32:LsaICLookupSidsWithCreds win7-64:LsaICLookupSidsWithCreds win8-32:LsaClose win8-64:LsaClose
+1437 win7-32:LsaLookupNames2 win7-64:LsaLookupNames win8-32:LsaCreateAccount win8-64:LsaCreateAccount
+1438 win7-32:LsaLookupNames win7-64:LsaLookupNames2 win8-32:LsaCreateSecret win8-64:LsaCreateSecret
+1439 win7-32:LsaLookupPrivilegeDisplayName win7-64:LsaLookupPrivilegeDisplayName win8-32:LsaCreateTrustedDomain win8-64:LsaCreateTrustedDomain
+1440 win7-32:LsaLookupPrivilegeName win7-64:LsaLookupPrivilegeName win8-32:LsaCreateTrustedDomainEx win8-64:LsaCreateTrustedDomainEx
+1441 win7-32:LsaLookupPrivilegeValue win7-64:LsaLookupPrivilegeValue win8-32:LsaDelete win8-64:LsaDelete
+1442 win7-32:LsaLookupSids win7-64:LsaLookupSids win8-32:LsaDeleteTrustedDomain win8-64:LsaDeleteTrustedDomain
+1443 win7-32:LsaManageSidNameMapping win7-64:LsaManageSidNameMapping win8-32:LsaEnumerateAccountRights win8-64:LsaEnumerateAccountRights
+1444 win7-32:LsaNtStatusToWinError win7-64:LsaNtStatusToWinError win8-32:LsaEnumerateAccounts win8-64:LsaEnumerateAccounts
+1445 win7-32:LsaOpenAccount win7-64:LsaOpenAccount win8-32:LsaEnumerateAccountsWithUserRight win8-64:LsaEnumerateAccountsWithUserRight
+1446 win7-32:LsaOpenPolicy win7-64:LsaOpenPolicy win8-32:LsaEnumeratePrivileges win8-64:LsaEnumeratePrivileges
+1447 win7-32:LsaOpenPolicySce win7-64:LsaOpenPolicySce win8-32:LsaEnumeratePrivilegesOfAccount win8-64:LsaEnumeratePrivilegesOfAccount
+1448 win7-32:LsaOpenSecret win7-64:LsaOpenSecret win8-32:LsaEnumerateTrustedDomains win8-64:LsaEnumerateTrustedDomains
+1449 win7-32:LsaOpenTrustedDomain win7-64:LsaOpenTrustedDomain win8-32:LsaEnumerateTrustedDomainsEx win8-64:LsaEnumerateTrustedDomainsEx
+1450 win7-32:LsaOpenTrustedDomainByName win7-64:LsaOpenTrustedDomainByName win8-32:LsaFreeMemory win8-64:LsaFreeMemory
+1451 win7-32:LsaQueryDomainInformationPolicy win7-64:LsaQueryDomainInformationPolicy win8-32:LsaGetAppliedCAPIDs win8-64:LsaGetAppliedCAPIDs
+1452 win7-32:LsaQueryForestTrustInformation win7-64:LsaQueryForestTrustInformation win8-32:LsaGetQuotasForAccount win8-64:LsaGetQuotasForAccount
+1453 win7-32:LsaQueryInfoTrustedDomain win7-64:LsaQueryInfoTrustedDomain win8-32:LsaGetRemoteUserName win8-64:LsaGetRemoteUserName
+1454 win7-32:LsaQueryInformationPolicy win7-64:LsaQueryInformationPolicy win8-32:LsaGetSystemAccessAccount win8-64:LsaGetSystemAccessAccount
+1455 win7-32:LsaQuerySecret win7-64:LsaQuerySecret win8-32:LsaGetUserName win8-64:LsaGetUserName
+1456 win7-32:LsaQuerySecurityObject win7-64:LsaQuerySecurityObject win8-32:LsaICLookupNames win8-64:LsaICLookupNames
+1457 win7-32:LsaQueryTrustedDomainInfo win7-64:LsaQueryTrustedDomainInfo win8-32:LsaICLookupNamesWithCreds win8-64:LsaICLookupNamesWithCreds
+1458 win7-32:LsaQueryTrustedDomainInfoByName win7-64:LsaQueryTrustedDomainInfoByName win8-32:LsaICLookupSids win8-64:LsaICLookupSids
+1459 win7-32:LsaRemoveAccountRights win7-64:LsaRemoveAccountRights win8-32:LsaICLookupSidsWithCreds win8-64:LsaICLookupSidsWithCreds
+1460 win7-32:LsaRemovePrivilegesFromAccount win7-64:LsaRemovePrivilegesFromAccount win8-32:LsaLookupNames2 win8-64:LsaLookupNames
+1461 win7-32:LsaRetrievePrivateData win7-64:LsaRetrievePrivateData win8-32:LsaLookupNames win8-64:LsaLookupNames2
+1462 win7-32:LsaSetDomainInformationPolicy win7-64:LsaSetDomainInformationPolicy win8-32:LsaLookupPrivilegeDisplayName win8-64:LsaLookupPrivilegeDisplayName
+1463 win7-32:LsaSetForestTrustInformation win7-64:LsaSetForestTrustInformation win8-32:LsaLookupPrivilegeName win8-64:LsaLookupPrivilegeName
+1464 win7-32:LsaSetInformationPolicy win7-64:LsaSetInformationPolicy win8-32:LsaLookupPrivilegeValue win8-64:LsaLookupPrivilegeValue
+1465 win7-32:LsaSetInformationTrustedDomain win7-64:LsaSetInformationTrustedDomain win8-32:LsaLookupSids2 win8-64:LsaLookupSids
+1466 win7-32:LsaSetQuotasForAccount win7-64:LsaSetQuotasForAccount win8-32:LsaLookupSids win8-64:LsaLookupSids2
+1467 win7-32:LsaSetSecret win7-64:LsaSetSecret win8-32:LsaManageSidNameMapping win8-64:LsaManageSidNameMapping
+1468 win7-32:LsaSetSecurityObject win7-64:LsaSetSecurityObject win8-32:LsaNtStatusToWinError win8-64:LsaNtStatusToWinError
+1469 win7-32:LsaSetSystemAccessAccount win7-64:LsaSetSystemAccessAccount win8-32:LsaOpenAccount win8-64:LsaOpenAccount
+1470 win7-32:LsaSetTrustedDomainInfoByName win7-64:LsaSetTrustedDomainInfoByName win8-32:LsaOpenPolicy win8-64:LsaOpenPolicy
+1471 win7-32:LsaSetTrustedDomainInformation win7-64:LsaSetTrustedDomainInformation win8-32:LsaOpenPolicySce win8-64:LsaOpenPolicySce
+1472 win7-32:LsaStorePrivateData win7-64:LsaStorePrivateData win8-32:LsaOpenSecret win8-64:LsaOpenSecret
+1473 win7-32:MD4Final win7-64:MD4Final win8-32:LsaOpenTrustedDomain win8-64:LsaOpenTrustedDomain
+1474 win7-32:MD4Init win7-64:MD4Init win8-32:LsaOpenTrustedDomainByName win8-64:LsaOpenTrustedDomainByName
+1475 win7-32:MD4Update win7-64:MD4Update win8-32:LsaQueryCAPs win8-64:LsaQueryCAPs
+1476 win7-32:MD5Final win7-64:MD5Final win8-32:LsaQueryDomainInformationPolicy win8-64:LsaQueryDomainInformationPolicy
+1477 win7-32:MD5Init win7-64:MD5Init win8-32:LsaQueryForestTrustInformation win8-64:LsaQueryForestTrustInformation
+1478 win7-32:MD5Update win7-64:MD5Update win8-32:LsaQueryInfoTrustedDomain win8-64:LsaQueryInfoTrustedDomain
+1479 win7-32:MSChapSrvChangePassword2 win7-64:MSChapSrvChangePassword win8-32:LsaQueryInformationPolicy win8-64:LsaQueryInformationPolicy
+1480 win7-32:MSChapSrvChangePassword win7-64:MSChapSrvChangePassword2 win8-32:LsaQuerySecret win8-64:LsaQuerySecret
+1481 win7-32:MakeAbsoluteSD2 win7-64:MakeAbsoluteSD win8-32:LsaQuerySecurityObject win8-64:LsaQuerySecurityObject
+1482 win7-32:MakeAbsoluteSD win7-64:MakeAbsoluteSD2 win8-32:LsaQueryTrustedDomainInfo win8-64:LsaQueryTrustedDomainInfo
+1483 win7-32:MakeSelfRelativeSD win7-64:MakeSelfRelativeSD win8-32:LsaQueryTrustedDomainInfoByName win8-64:LsaQueryTrustedDomainInfoByName
+1484 win7-32:MapGenericMask win7-64:MapGenericMask win8-32:LsaRemoveAccountRights win8-64:LsaRemoveAccountRights
+1485 win7-32:NotifyBootConfigStatus win7-64:NotifyBootConfigStatus win8-32:LsaRemovePrivilegesFromAccount win8-64:LsaRemovePrivilegesFromAccount
+1486 win7-32:NotifyChangeEventLog win7-64:NotifyChangeEventLog win8-32:LsaRetrievePrivateData win8-64:LsaRetrievePrivateData
+1487 win7-32:NotifyServiceStatusChange win7-64:NotifyServiceStatusChange win8-32:LsaSetCAPs win8-64:LsaSetCAPs
+1488 win7-32:NotifyServiceStatusChangeA win7-64:NotifyServiceStatusChangeA win8-32:LsaSetDomainInformationPolicy win8-64:LsaSetDomainInformationPolicy
+1489 win7-32:NotifyServiceStatusChangeW win7-64:NotifyServiceStatusChangeW win8-32:LsaSetForestTrustInformation win8-64:LsaSetForestTrustInformation
+1490 win7-32:ObjectCloseAuditAlarmA win7-64:ObjectCloseAuditAlarmA win8-32:LsaSetInformationPolicy win8-64:LsaSetInformationPolicy
+1491 win7-32:ObjectCloseAuditAlarmW win7-64:ObjectCloseAuditAlarmW win8-32:LsaSetInformationTrustedDomain win8-64:LsaSetInformationTrustedDomain
+1492 win7-32:ObjectDeleteAuditAlarmA win7-64:ObjectDeleteAuditAlarmA win8-32:LsaSetQuotasForAccount win8-64:LsaSetQuotasForAccount
+1493 win7-32:ObjectDeleteAuditAlarmW win7-64:ObjectDeleteAuditAlarmW win8-32:LsaSetSecret win8-64:LsaSetSecret
+1494 win7-32:ObjectOpenAuditAlarmA win7-64:ObjectOpenAuditAlarmA win8-32:LsaSetSecurityObject win8-64:LsaSetSecurityObject
+1495 win7-32:ObjectOpenAuditAlarmW win7-64:ObjectOpenAuditAlarmW win8-32:LsaSetSystemAccessAccount win8-64:LsaSetSystemAccessAccount
+1496 win7-32:ObjectPrivilegeAuditAlarmA win7-64:ObjectPrivilegeAuditAlarmA win8-32:LsaSetTrustedDomainInfoByName win8-64:LsaSetTrustedDomainInfoByName
+1497 win7-32:ObjectPrivilegeAuditAlarmW win7-64:ObjectPrivilegeAuditAlarmW win8-32:LsaSetTrustedDomainInformation win8-64:LsaSetTrustedDomainInformation
+1498 win7-32:OpenBackupEventLogA win7-64:OpenBackupEventLogA win8-32:LsaStorePrivateData win8-64:LsaStorePrivateData
+1499 win7-32:OpenBackupEventLogW win7-64:OpenBackupEventLogW win8-32:MD4Final win8-64:MD4Final
+1500 win7-32:OpenEncryptedFileRawA win7-64:OpenEncryptedFileRawA win8-32:MD4Init win8-64:MD4Init
+1501 win7-32:OpenEncryptedFileRawW win7-64:OpenEncryptedFileRawW win8-32:MD4Update win8-64:MD4Update
+1502 win7-32:OpenEventLogA win7-64:OpenEventLogA win8-32:MD5Final win8-64:MD5Final
+1503 win7-32:OpenEventLogW win7-64:OpenEventLogW win8-32:MD5Init win8-64:MD5Init
+1504 win7-32:OpenProcessToken win7-64:OpenProcessToken win8-32:MD5Update win8-64:MD5Update
+1505 win7-32:OpenSCManagerA win7-64:OpenSCManagerA win8-32:MIDL_user_free_Ext win8-64:MIDL_user_free_Ext
+1506 win7-32:OpenSCManagerW win7-64:OpenSCManagerW win8-32:MSChapSrvChangePassword2 win8-64:MSChapSrvChangePassword
+1507 win7-32:OpenServiceA win7-64:OpenServiceA win8-32:MSChapSrvChangePassword win8-64:MSChapSrvChangePassword2
+1508 win7-32:OpenServiceW win7-64:OpenServiceW win8-32:MakeAbsoluteSD2 win8-64:MakeAbsoluteSD
+1509 win7-32:OpenThreadToken win7-64:OpenThreadToken win8-32:MakeAbsoluteSD win8-64:MakeAbsoluteSD2
+1510 win7-32:OpenThreadWaitChainSession win7-64:OpenThreadWaitChainSession win8-32:MakeSelfRelativeSD win8-64:MakeSelfRelativeSD
+1511 win7-32:OpenTraceA win7-64:OpenTraceA win8-32:MapGenericMask win8-64:MapGenericMask
+1512 win7-32:OpenTraceW win7-64:OpenTraceW win8-32:NotifyBootConfigStatus win8-64:NotifyBootConfigStatus
+1513 win7-32:PerfAddCounters win7-64:PerfAddCounters win8-32:NotifyChangeEventLog win8-64:NotifyChangeEventLog
+1514 win7-32:PerfCloseQueryHandle win7-64:PerfCloseQueryHandle win8-32:NotifyServiceStatusChange win8-64:NotifyServiceStatusChange
+1515 win7-32:PerfCreateInstance win7-64:PerfCreateInstance win8-32:NotifyServiceStatusChangeA win8-64:NotifyServiceStatusChangeA
+1516 win7-32:PerfDecrementULongCounterValue win7-64:PerfDecrementULongCounterValue win8-32:NotifyServiceStatusChangeW win8-64:NotifyServiceStatusChangeW
+1517 win7-32:PerfDecrementULongLongCounterValue win7-64:PerfDecrementULongLongCounterValue win8-32:ObjectCloseAuditAlarmA win8-64:ObjectCloseAuditAlarmA
+1518 win7-32:PerfDeleteCounters win7-64:PerfDeleteCounters win8-32:ObjectCloseAuditAlarmW win8-64:ObjectCloseAuditAlarmW
+1519 win7-32:PerfDeleteInstance win7-64:PerfDeleteInstance win8-32:ObjectDeleteAuditAlarmA win8-64:ObjectDeleteAuditAlarmA
+1520 win7-32:PerfEnumerateCounterSet win7-64:PerfEnumerateCounterSet win8-32:ObjectDeleteAuditAlarmW win8-64:ObjectDeleteAuditAlarmW
+1521 win7-32:PerfEnumerateCounterSetInstances win7-64:PerfEnumerateCounterSetInstances win8-32:ObjectOpenAuditAlarmA win8-64:ObjectOpenAuditAlarmA
+1522 win7-32:PerfIncrementULongCounterValue win7-64:PerfIncrementULongCounterValue win8-32:ObjectOpenAuditAlarmW win8-64:ObjectOpenAuditAlarmW
+1523 win7-32:PerfIncrementULongLongCounterValue win7-64:PerfIncrementULongLongCounterValue win8-32:ObjectPrivilegeAuditAlarmA win8-64:ObjectPrivilegeAuditAlarmA
+1524 win7-32:PerfOpenQueryHandle win7-64:PerfOpenQueryHandle win8-32:ObjectPrivilegeAuditAlarmW win8-64:ObjectPrivilegeAuditAlarmW
+1525 win7-32:PerfQueryCounterData win7-64:PerfQueryCounterData win8-32:OpenBackupEventLogA win8-64:OpenBackupEventLogA
+1526 win7-32:PerfQueryCounterInfo win7-64:PerfQueryCounterInfo win8-32:OpenBackupEventLogW win8-64:OpenBackupEventLogW
+1527 win7-32:PerfQueryCounterSetRegistrationInfo win7-64:PerfQueryCounterSetRegistrationInfo win8-32:OpenEncryptedFileRawA win8-64:OpenEncryptedFileRawA
+1528 win7-32:PerfQueryInstance win7-64:PerfQueryInstance win8-32:OpenEncryptedFileRawW win8-64:OpenEncryptedFileRawW
+1529 win7-32:PerfSetCounterRefValue win7-64:PerfSetCounterRefValue win8-32:OpenEventLogA win8-64:OpenEventLogA
+1530 win7-32:PerfSetCounterSetInfo win7-64:PerfSetCounterSetInfo win8-32:OpenEventLogW win8-64:OpenEventLogW
+1531 win7-32:PerfSetULongCounterValue win7-64:PerfSetULongCounterValue win8-32:OpenProcessToken win8-64:OpenProcessToken
+1532 win7-32:PerfSetULongLongCounterValue win7-64:PerfSetULongLongCounterValue win8-32:OpenSCManagerA win8-64:OpenSCManagerA
+1533 win7-32:PerfStartProvider win7-64:PerfStartProvider win8-32:OpenSCManagerW win8-64:OpenSCManagerW
+1534 win7-32:PerfStartProviderEx win7-64:PerfStartProviderEx win8-32:OpenServiceA win8-64:OpenServiceA
+1535 win7-32:PerfStopProvider win7-64:PerfStopProvider win8-32:OpenServiceW win8-64:OpenServiceW
+1536 win7-32:PrivilegeCheck win7-64:PrivilegeCheck win8-32:OpenThreadToken win8-64:OpenThreadToken
+1537 win7-32:PrivilegedServiceAuditAlarmA win7-64:PrivilegedServiceAuditAlarmA win8-32:OpenThreadWaitChainSession win8-64:OpenThreadWaitChainSession
+1538 win7-32:PrivilegedServiceAuditAlarmW win7-64:PrivilegedServiceAuditAlarmW win8-32:OpenTraceA win8-64:OpenTraceA
+1539 win7-32:ProcessIdleTasks win7-64:ProcessIdleTasks win8-32:OpenTraceW win8-64:OpenTraceW
+1540 win7-32:ProcessIdleTasksW win7-64:ProcessIdleTasksW win8-32:OperationEnd win8-64:OperationEnd
+1541 win7-32:ProcessTrace win7-64:ProcessTrace win8-32:OperationStart win8-64:OperationStart
+1542 win7-32:QueryAllTracesA win7-64:QueryAllTracesA win8-32:PerfAddCounters win8-64:PerfAddCounters
+1543 win7-32:QueryAllTracesW win7-64:QueryAllTracesW win8-32:PerfCloseQueryHandle win8-64:PerfCloseQueryHandle
+1544 win7-32:QueryRecoveryAgentsOnEncryptedFile win7-64:QueryRecoveryAgentsOnEncryptedFile win8-32:PerfCreateInstance win8-64:PerfCreateInstance
+1545 win7-32:QuerySecurityAccessMask win7-64:QuerySecurityAccessMask win8-32:PerfDecrementULongCounterValue win8-64:PerfDecrementULongCounterValue
+1546 win7-32:QueryServiceConfig2A win7-64:QueryServiceConfig2A win8-32:PerfDecrementULongLongCounterValue win8-64:PerfDecrementULongLongCounterValue
+1547 win7-32:QueryServiceConfig2W win7-64:QueryServiceConfig2W win8-32:PerfDeleteCounters win8-64:PerfDeleteCounters
+1548 win7-32:QueryServiceConfigA win7-64:QueryServiceConfigA win8-32:PerfDeleteInstance win8-64:PerfDeleteInstance
+1549 win7-32:QueryServiceConfigW win7-64:QueryServiceConfigW win8-32:PerfEnumerateCounterSet win8-64:PerfEnumerateCounterSet
+1550 win7-32:QueryServiceLockStatusA win7-64:QueryServiceLockStatusA win8-32:PerfEnumerateCounterSetInstances win8-64:PerfEnumerateCounterSetInstances
+1551 win7-32:QueryServiceLockStatusW win7-64:QueryServiceLockStatusW win8-32:PerfIncrementULongCounterValue win8-64:PerfIncrementULongCounterValue
+1552 win7-32:QueryServiceObjectSecurity win7-64:QueryServiceObjectSecurity win8-32:PerfIncrementULongLongCounterValue win8-64:PerfIncrementULongLongCounterValue
+1553 win7-32:QueryServiceStatus win7-64:QueryServiceStatus win8-32:PerfOpenQueryHandle win8-64:PerfOpenQueryHandle
+1554 win7-32:QueryServiceStatusEx win7-64:QueryServiceStatusEx win8-32:PerfQueryCounterData win8-64:PerfQueryCounterData
+1555 win7-32:QueryTraceA win7-64:QueryTraceA win8-32:PerfQueryCounterInfo win8-64:PerfQueryCounterInfo
+1556 win7-32:QueryTraceW win7-64:QueryTraceW win8-32:PerfQueryCounterSetRegistrationInfo win8-64:PerfQueryCounterSetRegistrationInfo
+1557 win7-32:QueryUsersOnEncryptedFile win7-64:QueryUsersOnEncryptedFile win8-32:PerfQueryInstance win8-64:PerfQueryInstance
+1558 win7-32:ReadEncryptedFileRaw win7-64:ReadEncryptedFileRaw win8-32:PerfRegCloseKey win8-64:PerfRegCloseKey
+1559 win7-32:ReadEventLogA win7-64:ReadEventLogA win8-32:PerfRegEnumKey win8-64:PerfRegEnumKey
+1560 win7-32:ReadEventLogW win7-64:ReadEventLogW win8-32:PerfRegEnumValue win8-64:PerfRegEnumValue
+1561 win7-32:RegCloseKey win7-64:RegCloseKey win8-32:PerfRegQueryInfoKey win8-64:PerfRegQueryInfoKey
+1562 win7-32:RegConnectRegistryA win7-64:RegConnectRegistryA win8-32:PerfRegQueryValue win8-64:PerfRegQueryValue
+1563 win7-32:RegConnectRegistryExA win7-64:RegConnectRegistryExA win8-32:PerfRegSetValue win8-64:PerfRegSetValue
+1564 win7-32:RegConnectRegistryExW win7-64:RegConnectRegistryExW win8-32:PerfSetCounterRefValue win8-64:PerfSetCounterRefValue
+1565 win7-32:RegConnectRegistryW win7-64:RegConnectRegistryW win8-32:PerfSetCounterSetInfo win8-64:PerfSetCounterSetInfo
+1566 win7-32:RegCopyTreeA win7-64:RegCopyTreeA win8-32:PerfSetULongCounterValue win8-64:PerfSetULongCounterValue
+1567 win7-32:RegCopyTreeW win7-64:RegCopyTreeW win8-32:PerfSetULongLongCounterValue win8-64:PerfSetULongLongCounterValue
+1568 win7-32:RegCreateKeyA win7-64:RegCreateKeyA win8-32:PerfStartProvider win8-64:PerfStartProvider
+1569 win7-32:RegCreateKeyExA win7-64:RegCreateKeyExA win8-32:PerfStartProviderEx win8-64:PerfStartProviderEx
+1570 win7-32:RegCreateKeyExW win7-64:RegCreateKeyExW win8-32:PerfStopProvider win8-64:PerfStopProvider
+1571 win7-32:RegCreateKeyTransactedA win7-64:RegCreateKeyTransactedA win8-32:PrivilegeCheck win8-64:PrivilegeCheck
+1572 win7-32:RegCreateKeyTransactedW win7-64:RegCreateKeyTransactedW win8-32:PrivilegedServiceAuditAlarmA win8-64:PrivilegedServiceAuditAlarmA
+1573 win7-32:RegCreateKeyW win7-64:RegCreateKeyW win8-32:PrivilegedServiceAuditAlarmW win8-64:PrivilegedServiceAuditAlarmW
+1574 win7-32:RegDeleteKeyA win7-64:RegDeleteKeyA win8-32:ProcessIdleTasks win8-64:ProcessIdleTasks
+1575 win7-32:RegDeleteKeyExA win7-64:RegDeleteKeyExA win8-32:ProcessIdleTasksW win8-64:ProcessIdleTasksW
+1576 win7-32:RegDeleteKeyExW win7-64:RegDeleteKeyExW win8-32:ProcessTrace win8-64:ProcessTrace
+1577 win7-32:RegDeleteKeyTransactedA win7-64:RegDeleteKeyTransactedA win8-32:PsmActivateApplication win8-64:PsmActivateApplication
+1578 win7-32:RegDeleteKeyTransactedW win7-64:RegDeleteKeyTransactedW win8-32:PsmAdjustActivationToken win8-64:PsmAdjustActivationToken
+1579 win7-32:RegDeleteKeyValueA win7-64:RegDeleteKeyValueA win8-32:PsmQueryBackgroundActivationType win8-64:PsmQueryBackgroundActivationType
+1580 win7-32:RegDeleteKeyValueW win7-64:RegDeleteKeyValueW win8-32:PsmRegisterApplicationProcess win8-64:PsmRegisterApplicationProcess
+1581 win7-32:RegDeleteKeyW win7-64:RegDeleteKeyW win8-32:QueryAllTracesA win8-64:QueryAllTracesA
+1582 win7-32:RegDeleteTreeA win7-64:RegDeleteTreeA win8-32:QueryAllTracesW win8-64:QueryAllTracesW
+1583 win7-32:RegDeleteTreeW win7-64:RegDeleteTreeW win8-32:QueryRecoveryAgentsOnEncryptedFile win8-64:QueryRecoveryAgentsOnEncryptedFile
+1584 win7-32:RegDeleteValueA win7-64:RegDeleteValueA win8-32:QuerySecurityAccessMask win8-64:QuerySecurityAccessMask
+1585 win7-32:RegDeleteValueW win7-64:RegDeleteValueW win8-32:QueryServiceConfig2A win8-64:QueryServiceConfig2A
+1586 win7-32:RegDisablePredefinedCache win7-64:RegDisablePredefinedCache win8-32:QueryServiceConfig2W win8-64:QueryServiceConfig2W
+1587 win7-32:RegDisablePredefinedCacheEx win7-64:RegDisablePredefinedCacheEx win8-32:QueryServiceConfigA win8-64:QueryServiceConfigA
+1588 win7-32:RegDisableReflectionKey win7-64:RegDisableReflectionKey win8-32:QueryServiceConfigW win8-64:QueryServiceConfigW
+1589 win7-32:RegEnableReflectionKey win7-64:RegEnableReflectionKey win8-32:QueryServiceDynamicInformation win8-64:QueryServiceDynamicInformation
+1590 win7-32:RegEnumKeyA win7-64:RegEnumKeyA win8-32:QueryServiceLockStatusA win8-64:QueryServiceLockStatusA
+1591 win7-32:RegEnumKeyExA win7-64:RegEnumKeyExA win8-32:QueryServiceLockStatusW win8-64:QueryServiceLockStatusW
+1592 win7-32:RegEnumKeyExW win7-64:RegEnumKeyExW win8-32:QueryServiceObjectSecurity win8-64:QueryServiceObjectSecurity
+1593 win7-32:RegEnumKeyW win7-64:RegEnumKeyW win8-32:QueryServiceStatus win8-64:QueryServiceStatus
+1594 win7-32:RegEnumValueA win7-64:RegEnumValueA win8-32:QueryServiceStatusEx win8-64:QueryServiceStatusEx
+1595 win7-32:RegEnumValueW win7-64:RegEnumValueW win8-32:QueryTraceA win8-64:QueryTraceA
+1596 win7-32:RegFlushKey win7-64:RegFlushKey win8-32:QueryTraceW win8-64:QueryTraceW
+1597 win7-32:RegGetKeySecurity win7-64:RegGetKeySecurity win8-32:QueryUsersOnEncryptedFile win8-64:QueryUsersOnEncryptedFile
+1598 win7-32:RegGetValueA win7-64:RegGetValueA win8-32:ReadEncryptedFileRaw win8-64:ReadEncryptedFileRaw
+1599 win7-32:RegGetValueW win7-64:RegGetValueW win8-32:ReadEventLogA win8-64:ReadEventLogA
+1600 win7-32:RegLoadAppKeyA win7-64:RegLoadAppKeyA win8-32:ReadEventLogW win8-64:ReadEventLogW
+1601 win7-32:RegLoadAppKeyW win7-64:RegLoadAppKeyW win8-32:RegCloseKey win8-64:RegCloseKey
+1602 win7-32:RegLoadKeyA win7-64:RegLoadKeyA win8-32:RegConnectRegistryA win8-64:RegConnectRegistryA
+1603 win7-32:RegLoadKeyW win7-64:RegLoadKeyW win8-32:RegConnectRegistryExA win8-64:RegConnectRegistryExA
+1604 win7-32:RegLoadMUIStringA win7-64:RegLoadMUIStringA win8-32:RegConnectRegistryExW win8-64:RegConnectRegistryExW
+1605 win7-32:RegLoadMUIStringW win7-64:RegLoadMUIStringW win8-32:RegConnectRegistryW win8-64:RegConnectRegistryW
+1606 win7-32:RegNotifyChangeKeyValue win7-64:RegNotifyChangeKeyValue win8-32:RegCopyTreeA win8-64:RegCopyTreeA
+1607 win7-32:RegOpenCurrentUser win7-64:RegOpenCurrentUser win8-32:RegCopyTreeW win8-64:RegCopyTreeW
+1608 win7-32:RegOpenKeyA win7-64:RegOpenKeyA win8-32:RegCreateKeyA win8-64:RegCreateKeyA
+1609 win7-32:RegOpenKeyExA win7-64:RegOpenKeyExA win8-32:RegCreateKeyExA win8-64:RegCreateKeyExA
+1610 win7-32:RegOpenKeyExW win7-64:RegOpenKeyExW win8-32:RegCreateKeyExW win8-64:RegCreateKeyExW
+1611 win7-32:RegOpenKeyTransactedA win7-64:RegOpenKeyTransactedA win8-32:RegCreateKeyTransactedA win8-64:RegCreateKeyTransactedA
+1612 win7-32:RegOpenKeyTransactedW win7-64:RegOpenKeyTransactedW win8-32:RegCreateKeyTransactedW win8-64:RegCreateKeyTransactedW
+1613 win7-32:RegOpenKeyW win7-64:RegOpenKeyW win8-32:RegCreateKeyW win8-64:RegCreateKeyW
+1614 win7-32:RegOpenUserClassesRoot win7-64:RegOpenUserClassesRoot win8-32:RegDeleteKeyA win8-64:RegDeleteKeyA
+1615 win7-32:RegOverridePredefKey win7-64:RegOverridePredefKey win8-32:RegDeleteKeyExA win8-64:RegDeleteKeyExA
+1616 win7-32:RegQueryInfoKeyA win7-64:RegQueryInfoKeyA win8-32:RegDeleteKeyExW win8-64:RegDeleteKeyExW
+1617 win7-32:RegQueryInfoKeyW win7-64:RegQueryInfoKeyW win8-32:RegDeleteKeyTransactedA win8-64:RegDeleteKeyTransactedA
+1618 win7-32:RegQueryMultipleValuesA win7-64:RegQueryMultipleValuesA win8-32:RegDeleteKeyTransactedW win8-64:RegDeleteKeyTransactedW
+1619 win7-32:RegQueryMultipleValuesW win7-64:RegQueryMultipleValuesW win8-32:RegDeleteKeyValueA win8-64:RegDeleteKeyValueA
+1620 win7-32:RegQueryReflectionKey win7-64:RegQueryReflectionKey win8-32:RegDeleteKeyValueW win8-64:RegDeleteKeyValueW
+1621 win7-32:RegQueryValueA win7-64:RegQueryValueA win8-32:RegDeleteKeyW win8-64:RegDeleteKeyW
+1622 win7-32:RegQueryValueExA win7-64:RegQueryValueExA win8-32:RegDeleteTreeA win8-64:RegDeleteTreeA
+1623 win7-32:RegQueryValueExW win7-64:RegQueryValueExW win8-32:RegDeleteTreeW win8-64:RegDeleteTreeW
+1624 win7-32:RegQueryValueW win7-64:RegQueryValueW win8-32:RegDeleteValueA win8-64:RegDeleteValueA
+1625 win7-32:RegRenameKey win7-64:RegRenameKey win8-32:RegDeleteValueW win8-64:RegDeleteValueW
+1626 win7-32:RegReplaceKeyA win7-64:RegReplaceKeyA win8-32:RegDisablePredefinedCache win8-64:RegDisablePredefinedCache
+1627 win7-32:RegReplaceKeyW win7-64:RegReplaceKeyW win8-32:RegDisablePredefinedCacheEx win8-64:RegDisablePredefinedCacheEx
+1628 win7-32:RegRestoreKeyA win7-64:RegRestoreKeyA win8-32:RegDisableReflectionKey win8-64:RegDisableReflectionKey
+1629 win7-32:RegRestoreKeyW win7-64:RegRestoreKeyW win8-32:RegEnableReflectionKey win8-64:RegEnableReflectionKey
+1630 win7-32:RegSaveKeyA win7-64:RegSaveKeyA win8-32:RegEnumKeyA win8-64:RegEnumKeyA
+1631 win7-32:RegSaveKeyExA win7-64:RegSaveKeyExA win8-32:RegEnumKeyExA win8-64:RegEnumKeyExA
+1632 win7-32:RegSaveKeyExW win7-64:RegSaveKeyExW win8-32:RegEnumKeyExW win8-64:RegEnumKeyExW
+1633 win7-32:RegSaveKeyW win7-64:RegSaveKeyW win8-32:RegEnumKeyW win8-64:RegEnumKeyW
+1634 win7-32:RegSetKeySecurity win7-64:RegSetKeySecurity win8-32:RegEnumValueA win8-64:RegEnumValueA
+1635 win7-32:RegSetKeyValueA win7-64:RegSetKeyValueA win8-32:RegEnumValueW win8-64:RegEnumValueW
+1636 win7-32:RegSetKeyValueW win7-64:RegSetKeyValueW win8-32:RegFlushKey win8-64:RegFlushKey
+1637 win7-32:RegSetValueA win7-64:RegSetValueA win8-32:RegGetKeySecurity win8-64:RegGetKeySecurity
+1638 win7-32:RegSetValueExA win7-64:RegSetValueExA win8-32:RegGetValueA win8-64:RegGetValueA
+1639 win7-32:RegSetValueExW win7-64:RegSetValueExW win8-32:RegGetValueW win8-64:RegGetValueW
+1640 win7-32:RegSetValueW win7-64:RegSetValueW win8-32:RegLoadAppKeyA win8-64:RegLoadAppKeyA
+1641 win7-32:RegUnLoadKeyA win7-64:RegUnLoadKeyA win8-32:RegLoadAppKeyW win8-64:RegLoadAppKeyW
+1642 win7-32:RegUnLoadKeyW win7-64:RegUnLoadKeyW win8-32:RegLoadKeyA win8-64:RegLoadKeyA
+1643 win7-32:RegisterEventSourceA win7-64:RegisterEventSourceA win8-32:RegLoadKeyW win8-64:RegLoadKeyW
+1644 win7-32:RegisterEventSourceW win7-64:RegisterEventSourceW win8-32:RegLoadMUIStringA win8-64:RegLoadMUIStringA
+1645 win7-32:RegisterIdleTask win7-64:RegisterIdleTask win8-32:RegLoadMUIStringW win8-64:RegLoadMUIStringW
+1646 win7-32:RegisterServiceCtrlHandlerA win7-64:RegisterServiceCtrlHandlerA win8-32:RegNotifyChangeKeyValue win8-64:RegNotifyChangeKeyValue
+1647 win7-32:RegisterServiceCtrlHandlerExA win7-64:RegisterServiceCtrlHandlerExA win8-32:RegOpenCurrentUser win8-64:RegOpenCurrentUser
+1648 win7-32:RegisterServiceCtrlHandlerExW win7-64:RegisterServiceCtrlHandlerExW win8-32:RegOpenKeyA win8-64:RegOpenKeyA
+1649 win7-32:RegisterServiceCtrlHandlerW win7-64:RegisterServiceCtrlHandlerW win8-32:RegOpenKeyExA win8-64:RegOpenKeyExA
+1650 win7-32:RegisterTraceGuidsA win7-64:RegisterTraceGuidsA win8-32:RegOpenKeyExW win8-64:RegOpenKeyExW
+1651 win7-32:RegisterTraceGuidsW win7-64:RegisterTraceGuidsW win8-32:RegOpenKeyTransactedA win8-64:RegOpenKeyTransactedA
+1652 win7-32:RegisterWaitChainCOMCallback win7-64:RegisterWaitChainCOMCallback win8-32:RegOpenKeyTransactedW win8-64:RegOpenKeyTransactedW
+1653 win7-32:RemoveTraceCallback win7-64:RemoveTraceCallback win8-32:RegOpenKeyW win8-64:RegOpenKeyW
+1654 win7-32:RemoveUsersFromEncryptedFile win7-64:RemoveUsersFromEncryptedFile win8-32:RegOpenUserClassesRoot win8-64:RegOpenUserClassesRoot
+1655 win7-32:ReportEventA win7-64:ReportEventA win8-32:RegOverridePredefKey win8-64:RegOverridePredefKey
+1656 win7-32:ReportEventW win7-64:ReportEventW win8-32:RegQueryInfoKeyA win8-64:RegQueryInfoKeyA
+1657 win7-32:RevertToSelf win7-64:RevertToSelf win8-32:RegQueryInfoKeyW win8-64:RegQueryInfoKeyW
+1658 win7-32:SaferCloseLevel win7-64:SaferCloseLevel win8-32:RegQueryMultipleValuesA win8-64:RegQueryMultipleValuesA
+1659 win7-32:SaferComputeTokenFromLevel win7-64:SaferComputeTokenFromLevel win8-32:RegQueryMultipleValuesW win8-64:RegQueryMultipleValuesW
+1660 win7-32:SaferCreateLevel win7-64:SaferCreateLevel win8-32:RegQueryReflectionKey win8-64:RegQueryReflectionKey
+1661 win7-32:SaferGetLevelInformation win7-64:SaferGetLevelInformation win8-32:RegQueryValueA win8-64:RegQueryValueA
+1662 win7-32:SaferGetPolicyInformation win7-64:SaferGetPolicyInformation win8-32:RegQueryValueExA win8-64:RegQueryValueExA
+1663 win7-32:SaferIdentifyLevel win7-64:SaferIdentifyLevel win8-32:RegQueryValueExW win8-64:RegQueryValueExW
+1664 win7-32:SaferRecordEventLogEntry win7-64:SaferRecordEventLogEntry win8-32:RegQueryValueW win8-64:RegQueryValueW
+1665 win7-32:SaferSetLevelInformation win7-64:SaferSetLevelInformation win8-32:RegRenameKey win8-64:RegRenameKey
+1666 win7-32:SaferSetPolicyInformation win7-64:SaferSetPolicyInformation win8-32:RegReplaceKeyA win8-64:RegReplaceKeyA
+1667 win7-32:SaferiChangeRegistryScope win7-64:SaferiChangeRegistryScope win8-32:RegReplaceKeyW win8-64:RegReplaceKeyW
+1668 win7-32:SaferiCompareTokenLevels win7-64:SaferiCompareTokenLevels win8-32:RegRestoreKeyA win8-64:RegRestoreKeyA
+1669 win7-32:SaferiIsDllAllowed win7-64:SaferiIsDllAllowed win8-32:RegRestoreKeyW win8-64:RegRestoreKeyW
+1670 win7-32:SaferiIsExecutableFileType win7-64:SaferiIsExecutableFileType win8-32:RegSaveKeyA win8-64:RegSaveKeyA
+1671 win7-32:SaferiPopulateDefaultsInRegistry win7-64:SaferiPopulateDefaultsInRegistry win8-32:RegSaveKeyExA win8-64:RegSaveKeyExA
+1672 win7-32:SaferiRecordEventLogEntry win7-64:SaferiRecordEventLogEntry win8-32:RegSaveKeyExW win8-64:RegSaveKeyExW
+1673 win7-32:SaferiSearchMatchingHashRules win7-64:SaferiSearchMatchingHashRules win8-32:RegSaveKeyW win8-64:RegSaveKeyW
+1674 win7-32:SetAclInformation win7-64:SetAclInformation win8-32:RegSetKeySecurity win8-64:RegSetKeySecurity
+1675 win7-32:SetEncryptedFileMetadata win7-64:SetEncryptedFileMetadata win8-32:RegSetKeyValueA win8-64:RegSetKeyValueA
+1676 win7-32:SetEntriesInAccessListA win7-64:SetEntriesInAccessListA win8-32:RegSetKeyValueW win8-64:RegSetKeyValueW
+1677 win7-32:SetEntriesInAccessListW win7-64:SetEntriesInAccessListW win8-32:RegSetValueA win8-64:RegSetValueA
+1678 win7-32:SetEntriesInAclA win7-64:SetEntriesInAclA win8-32:RegSetValueExA win8-64:RegSetValueExA
+1679 win7-32:SetEntriesInAclW win7-64:SetEntriesInAclW win8-32:RegSetValueExW win8-64:RegSetValueExW
+1680 win7-32:SetEntriesInAuditListA win7-64:SetEntriesInAuditListA win8-32:RegSetValueW win8-64:RegSetValueW
+1681 win7-32:SetEntriesInAuditListW win7-64:SetEntriesInAuditListW win8-32:RegUnLoadKeyA win8-64:RegUnLoadKeyA
+1682 win7-32:SetFileSecurityA win7-64:SetFileSecurityA win8-32:RegUnLoadKeyW win8-64:RegUnLoadKeyW
+1683 win7-32:SetFileSecurityW win7-64:SetFileSecurityW win8-32:RegisterEventSourceA win8-64:RegisterEventSourceA
+1684 win7-32:SetInformationCodeAuthzLevelW win7-64:SetInformationCodeAuthzLevelW win8-32:RegisterEventSourceW win8-64:RegisterEventSourceW
+1685 win7-32:SetInformationCodeAuthzPolicyW win7-64:SetInformationCodeAuthzPolicyW win8-32:RegisterIdleTask win8-64:RegisterIdleTask
+1686 win7-32:SetKernelObjectSecurity win7-64:SetKernelObjectSecurity win8-32:RegisterServiceCtrlHandlerA win8-64:RegisterServiceCtrlHandlerA
+1687 win7-32:SetNamedSecurityInfoA win7-64:SetNamedSecurityInfoA win8-32:RegisterServiceCtrlHandlerExA win8-64:RegisterServiceCtrlHandlerExA
+1688 win7-32:SetNamedSecurityInfoExA win7-64:SetNamedSecurityInfoExA win8-32:RegisterServiceCtrlHandlerExW win8-64:RegisterServiceCtrlHandlerExW
+1689 win7-32:SetNamedSecurityInfoExW win7-64:SetNamedSecurityInfoExW win8-32:RegisterServiceCtrlHandlerW win8-64:RegisterServiceCtrlHandlerW
+1690 win7-32:SetNamedSecurityInfoW win7-64:SetNamedSecurityInfoW win8-32:RegisterTraceGuidsA win8-64:RegisterTraceGuidsA
+1691 win7-32:SetPrivateObjectSecurity win7-64:SetPrivateObjectSecurity win8-32:RegisterTraceGuidsW win8-64:RegisterTraceGuidsW
+1692 win7-32:SetPrivateObjectSecurityEx win7-64:SetPrivateObjectSecurityEx win8-32:RegisterWaitChainCOMCallback win8-64:RegisterWaitChainCOMCallback
+1693 win7-32:SetSecurityAccessMask win7-64:SetSecurityAccessMask win8-32:RemoteRegEnumKeyWrapper win8-64:RemoteRegEnumKeyWrapper
+1694 win7-32:SetSecurityDescriptorControl win7-64:SetSecurityDescriptorControl win8-32:RemoteRegEnumValueWrapper win8-64:RemoteRegEnumValueWrapper
+1695 win7-32:SetSecurityDescriptorDacl win7-64:SetSecurityDescriptorDacl win8-32:RemoteRegQueryInfoKeyWrapper win8-64:RemoteRegQueryInfoKeyWrapper
+1696 win7-32:SetSecurityDescriptorGroup win7-64:SetSecurityDescriptorGroup win8-32:RemoteRegQueryValueWrapper win8-64:RemoteRegQueryValueWrapper
+1697 win7-32:SetSecurityDescriptorOwner win7-64:SetSecurityDescriptorOwner win8-32:RemoveTraceCallback win8-64:RemoveTraceCallback
+1698 win7-32:SetSecurityDescriptorRMControl win7-64:SetSecurityDescriptorRMControl win8-32:RemoveUsersFromEncryptedFile win8-64:RemoveUsersFromEncryptedFile
+1699 win7-32:SetSecurityDescriptorSacl win7-64:SetSecurityDescriptorSacl win8-32:ReportEventA win8-64:ReportEventA
+1700 win7-32:SetSecurityInfo win7-64:SetSecurityInfo win8-32:ReportEventW win8-64:ReportEventW
+1701 win7-32:SetSecurityInfoExA win7-64:SetSecurityInfoExA win8-32:RevertToSelf win8-64:RevertToSelf
+1702 win7-32:SetSecurityInfoExW win7-64:SetSecurityInfoExW win8-32:SafeBaseRegGetKeySecurity win8-64:SafeBaseRegGetKeySecurity
+1703 win7-32:SetServiceBits win7-64:SetServiceBits win8-32:SaferCloseLevel win8-64:SaferCloseLevel
+1704 win7-32:SetServiceObjectSecurity win7-64:SetServiceObjectSecurity win8-32:SaferComputeTokenFromLevel win8-64:SaferComputeTokenFromLevel
+1705 win7-32:SetServiceStatus win7-64:SetServiceStatus win8-32:SaferCreateLevel win8-64:SaferCreateLevel
+1706 win7-32:SetThreadToken win7-64:SetThreadToken win8-32:SaferGetLevelInformation win8-64:SaferGetLevelInformation
+1707 win7-32:SetTokenInformation win7-64:SetTokenInformation win8-32:SaferGetPolicyInformation win8-64:SaferGetPolicyInformation
+1708 win7-32:SetTraceCallback win7-64:SetTraceCallback win8-32:SaferIdentifyLevel win8-64:SaferIdentifyLevel
+1709 win7-32:SetUserFileEncryptionKey win7-64:SetUserFileEncryptionKey win8-32:SaferRecordEventLogEntry win8-64:SaferRecordEventLogEntry
+1710 win7-32:SetUserFileEncryptionKeyEx win7-64:SetUserFileEncryptionKeyEx win8-32:SaferSetLevelInformation win8-64:SaferSetLevelInformation
+1711 win7-32:StartServiceA win7-64:StartServiceA win8-32:SaferSetPolicyInformation win8-64:SaferSetPolicyInformation
+1712 win7-32:StartServiceCtrlDispatcherA win7-64:StartServiceCtrlDispatcherA win8-32:SaferiChangeRegistryScope win8-64:SaferiChangeRegistryScope
+1713 win7-32:StartServiceCtrlDispatcherW win7-64:StartServiceCtrlDispatcherW win8-32:SaferiCompareTokenLevels win8-64:SaferiCompareTokenLevels
+1714 win7-32:StartServiceW win7-64:StartServiceW win8-32:SaferiIsDllAllowed win8-64:SaferiIsDllAllowed
+1715 win7-32:StartTraceA win7-64:StartTraceA win8-32:SaferiIsExecutableFileType win8-64:SaferiIsExecutableFileType
+1716 win7-32:StartTraceW win7-64:StartTraceW win8-32:SaferiPopulateDefaultsInRegistry win8-64:SaferiPopulateDefaultsInRegistry
+1717 win7-32:StopTraceA win7-64:StopTraceA win8-32:SaferiRecordEventLogEntry win8-64:SaferiRecordEventLogEntry
+1718 win7-32:StopTraceW win7-64:StopTraceW win8-32:SaferiSearchMatchingHashRules win8-64:SaferiSearchMatchingHashRules
+1719 win7-32:SystemFunction001 win7-64:SystemFunction001 win8-32:SetAclInformation win8-64:SetAclInformation
+1720 win7-32:SystemFunction002 win7-64:SystemFunction002 win8-32:SetEncryptedFileMetadata win8-64:SetEncryptedFileMetadata
+1721 win7-32:SystemFunction003 win7-64:SystemFunction003 win8-32:SetEntriesInAccessListA win8-64:SetEntriesInAccessListA
+1722 win7-32:SystemFunction004 win7-64:SystemFunction004 win8-32:SetEntriesInAccessListW win8-64:SetEntriesInAccessListW
+1723 win7-32:SystemFunction005 win7-64:SystemFunction005 win8-32:SetEntriesInAclA win8-64:SetEntriesInAclA
+1724 win7-32:SystemFunction006 win7-64:SystemFunction006 win8-32:SetEntriesInAclW win8-64:SetEntriesInAclW
+1725 win7-32:SystemFunction007 win7-64:SystemFunction007 win8-32:SetEntriesInAuditListA win8-64:SetEntriesInAuditListA
+1726 win7-32:SystemFunction008 win7-64:SystemFunction008 win8-32:SetEntriesInAuditListW win8-64:SetEntriesInAuditListW
+1727 win7-32:SystemFunction009 win7-64:SystemFunction009 win8-32:SetFileSecurityA win8-64:SetFileSecurityA
+1728 win7-32:SystemFunction010 win7-64:SystemFunction010 win8-32:SetFileSecurityW win8-64:SetFileSecurityW
+1729 win7-32:SystemFunction011 win7-64:SystemFunction011 win8-32:SetInformationCodeAuthzLevelW win8-64:SetInformationCodeAuthzLevelW
+1730 win7-32:SystemFunction012 win7-64:SystemFunction012 win8-32:SetInformationCodeAuthzPolicyW win8-64:SetInformationCodeAuthzPolicyW
+1731 win7-32:SystemFunction013 win7-64:SystemFunction013 win8-32:SetKernelObjectSecurity win8-64:SetKernelObjectSecurity
+1732 win7-32:SystemFunction014 win7-64:SystemFunction014 win8-32:SetNamedSecurityInfoA win8-64:SetNamedSecurityInfoA
+1733 win7-32:SystemFunction015 win7-64:SystemFunction015 win8-32:SetNamedSecurityInfoExA win8-64:SetNamedSecurityInfoExA
+1734 win7-32:SystemFunction016 win7-64:SystemFunction016 win8-32:SetNamedSecurityInfoExW win8-64:SetNamedSecurityInfoExW
+1735 win7-32:SystemFunction017 win7-64:SystemFunction017 win8-32:SetNamedSecurityInfoW win8-64:SetNamedSecurityInfoW
+1736 win7-32:SystemFunction018 win7-64:SystemFunction018 win8-32:SetPrivateObjectSecurity win8-64:SetPrivateObjectSecurity
+1737 win7-32:SystemFunction019 win7-64:SystemFunction019 win8-32:SetPrivateObjectSecurityEx win8-64:SetPrivateObjectSecurityEx
+1738 win7-32:SystemFunction020 win7-64:SystemFunction020 win8-32:SetSecurityAccessMask win8-64:SetSecurityAccessMask
+1739 win7-32:SystemFunction021 win7-64:SystemFunction021 win8-32:SetSecurityDescriptorControl win8-64:SetSecurityDescriptorControl
+1740 win7-32:SystemFunction022 win7-64:SystemFunction022 win8-32:SetSecurityDescriptorDacl win8-64:SetSecurityDescriptorDacl
+1741 win7-32:SystemFunction023 win7-64:SystemFunction023 win8-32:SetSecurityDescriptorGroup win8-64:SetSecurityDescriptorGroup
+1742 win7-32:SystemFunction024 win7-64:SystemFunction024 win8-32:SetSecurityDescriptorOwner win8-64:SetSecurityDescriptorOwner
+1743 win7-32:SystemFunction025 win7-64:SystemFunction025 win8-32:SetSecurityDescriptorRMControl win8-64:SetSecurityDescriptorRMControl
+1744 win7-32:SystemFunction026 win7-64:SystemFunction026 win8-32:SetSecurityDescriptorSacl win8-64:SetSecurityDescriptorSacl
+1745 win7-32:SystemFunction027 win7-64:SystemFunction027 win8-32:SetSecurityInfo win8-64:SetSecurityInfo
+1746 win7-32:SystemFunction028 win7-64:SystemFunction028 win8-32:SetSecurityInfoExA win8-64:SetSecurityInfoExA
+1747 win7-32:SystemFunction029 win7-64:SystemFunction029 win8-32:SetSecurityInfoExW win8-64:SetSecurityInfoExW
+1748 win7-32:SystemFunction030 win7-64:SystemFunction030 win8-32:SetServiceBits win8-64:SetServiceBits
+1749 win7-32:SystemFunction031 win7-64:SystemFunction031 win8-32:SetServiceObjectSecurity win8-64:SetServiceObjectSecurity
+1750 win7-32:SystemFunction032 win7-64:SystemFunction032 win8-32:SetServiceStatus win8-64:SetServiceStatus
+1751 win7-32:SystemFunction033 win7-64:SystemFunction033 win8-32:SetThreadToken win8-64:SetThreadToken
+1752 win7-32:SystemFunction034 win7-64:SystemFunction034 win8-32:SetTokenInformation win8-64:SetTokenInformation
+1753 win7-32:SystemFunction035 win7-64:SystemFunction035 win8-32:SetTraceCallback win8-64:SetTraceCallback
+1754 win7-32:SystemFunction036 win7-64:SystemFunction036 win8-32:SetUserFileEncryptionKey win8-64:SetUserFileEncryptionKey
+1755 win7-32:SystemFunction040 win7-64:SystemFunction040 win8-32:SetUserFileEncryptionKeyEx win8-64:SetUserFileEncryptionKeyEx
+1756 win7-32:SystemFunction041 win7-64:SystemFunction041 win8-32:StartServiceA win8-64:StartServiceA
+1757 win7-32:TraceEvent win7-64:TraceEvent win8-32:StartServiceCtrlDispatcherA win8-64:StartServiceCtrlDispatcherA
+1758 win7-32:TraceEventInstance win7-64:TraceEventInstance win8-32:StartServiceCtrlDispatcherW win8-64:StartServiceCtrlDispatcherW
+1759 win7-32:TraceMessage win7-64:TraceMessage win8-32:StartServiceW win8-64:StartServiceW
+1760 win7-32:TraceMessageVa win7-64:TraceMessageVa win8-32:StartTraceA win8-64:StartTraceA
+1761 win7-32:TraceSetInformation win7-64:TraceSetInformation win8-32:StartTraceW win8-64:StartTraceW
+1762 win7-32:TreeResetNamedSecurityInfoA win7-64:TreeResetNamedSecurityInfoA win8-32:StopTraceA win8-64:StopTraceA
+1763 win7-32:TreeResetNamedSecurityInfoW win7-64:TreeResetNamedSecurityInfoW win8-32:StopTraceW win8-64:StopTraceW
+1764 win7-32:TreeSetNamedSecurityInfoA win7-64:TreeSetNamedSecurityInfoA win8-32:SystemFunction001 win8-64:SystemFunction001
+1765 win7-32:TreeSetNamedSecurityInfoW win7-64:TreeSetNamedSecurityInfoW win8-32:SystemFunction002 win8-64:SystemFunction002
+1766 win7-32:TrusteeAccessToObjectA win7-64:TrusteeAccessToObjectA win8-32:SystemFunction003 win8-64:SystemFunction003
+1767 win7-32:TrusteeAccessToObjectW win7-64:TrusteeAccessToObjectW win8-32:SystemFunction004 win8-64:SystemFunction004
+1768 win7-32:UninstallApplication win7-64:UninstallApplication win8-32:SystemFunction005 win8-64:SystemFunction005
+1769 win7-32:UnlockServiceDatabase win7-64:UnlockServiceDatabase win8-32:SystemFunction006 win8-64:SystemFunction006
+1770 win7-32:UnregisterIdleTask win7-64:UnregisterIdleTask win8-32:SystemFunction007 win8-64:SystemFunction007
+1771 win7-32:UnregisterTraceGuids win7-64:UnregisterTraceGuids win8-32:SystemFunction008 win8-64:SystemFunction008
+1772 win7-32:UpdateTraceA win7-64:UpdateTraceA win8-32:SystemFunction009 win8-64:SystemFunction009
+1773 win7-32:UpdateTraceW win7-64:UpdateTraceW win8-32:SystemFunction010 win8-64:SystemFunction010
+1774 win7-32:UsePinForEncryptedFilesA win7-64:UsePinForEncryptedFilesA win8-32:SystemFunction011 win8-64:SystemFunction011
+1775 win7-32:UsePinForEncryptedFilesW win7-64:UsePinForEncryptedFilesW win8-32:SystemFunction012 win8-64:SystemFunction012
+1776 win7-32:WmiCloseBlock win7-64:WmiCloseBlock win8-32:SystemFunction013 win8-64:SystemFunction013
+1777 win7-32:WmiDevInstToInstanceNameA win7-64:WmiDevInstToInstanceNameA win8-32:SystemFunction014 win8-64:SystemFunction014
+1778 win7-32:WmiDevInstToInstanceNameW win7-64:WmiDevInstToInstanceNameW win8-32:SystemFunction015 win8-64:SystemFunction015
+1779 win7-32:WmiEnumerateGuids win7-64:WmiEnumerateGuids win8-32:SystemFunction016 win8-64:SystemFunction016
+1780 win7-32:WmiExecuteMethodA win7-64:WmiExecuteMethodA win8-32:SystemFunction017 win8-64:SystemFunction017
+1781 win7-32:WmiExecuteMethodW win7-64:WmiExecuteMethodW win8-32:SystemFunction018 win8-64:SystemFunction018
+1782 win7-32:WmiFileHandleToInstanceNameA win7-64:WmiFileHandleToInstanceNameA win8-32:SystemFunction019 win8-64:SystemFunction019
+1783 win7-32:WmiFileHandleToInstanceNameW win7-64:WmiFileHandleToInstanceNameW win8-32:SystemFunction020 win8-64:SystemFunction020
+1784 win7-32:WmiFreeBuffer win7-64:WmiFreeBuffer win8-32:SystemFunction021 win8-64:SystemFunction021
+1785 win7-32:WmiMofEnumerateResourcesA win7-64:WmiMofEnumerateResourcesA win8-32:SystemFunction022 win8-64:SystemFunction022
+1786 win7-32:WmiMofEnumerateResourcesW win7-64:WmiMofEnumerateResourcesW win8-32:SystemFunction023 win8-64:SystemFunction023
+1787 win7-32:WmiNotificationRegistrationA win7-64:WmiNotificationRegistrationA win8-32:SystemFunction024 win8-64:SystemFunction024
+1788 win7-32:WmiNotificationRegistrationW win7-64:WmiNotificationRegistrationW win8-32:SystemFunction025 win8-64:SystemFunction025
+1789 win7-32:WmiOpenBlock win7-64:WmiOpenBlock win8-32:SystemFunction026 win8-64:SystemFunction026
+1790 win7-32:WmiQueryAllDataA win7-64:WmiQueryAllDataA win8-32:SystemFunction027 win8-64:SystemFunction027
+1791 win7-32:WmiQueryAllDataMultipleA win7-64:WmiQueryAllDataMultipleA win8-32:SystemFunction028 win8-64:SystemFunction028
+1792 win7-32:WmiQueryAllDataMultipleW win7-64:WmiQueryAllDataMultipleW win8-32:SystemFunction029 win8-64:SystemFunction029
+1793 win7-32:WmiQueryAllDataW win7-64:WmiQueryAllDataW win8-32:SystemFunction030 win8-64:SystemFunction030
+1794 win7-32:WmiQueryGuidInformation win7-64:WmiQueryGuidInformation win8-32:SystemFunction031 win8-64:SystemFunction031
+1795 win7-32:WmiQuerySingleInstanceA win7-64:WmiQuerySingleInstanceA win8-32:SystemFunction032 win8-64:SystemFunction032
+1796 win7-32:WmiQuerySingleInstanceMultipleA win7-64:WmiQuerySingleInstanceMultipleA win8-32:SystemFunction033 win8-64:SystemFunction033
+1797 win7-32:WmiQuerySingleInstanceMultipleW win7-64:WmiQuerySingleInstanceMultipleW win8-32:SystemFunction034 win8-64:SystemFunction034
+1798 win7-32:WmiQuerySingleInstanceW win7-64:WmiQuerySingleInstanceW win8-32:SystemFunction035 win8-64:SystemFunction035
+1799 win7-32:WmiReceiveNotificationsA win7-64:WmiReceiveNotificationsA win8-32:SystemFunction036 win8-64:SystemFunction036
+1800 win7-32:WmiReceiveNotificationsW win7-64:WmiReceiveNotificationsW win8-32:SystemFunction040 win8-64:SystemFunction040
+1801 win7-32:WmiSetSingleInstanceA win7-64:WmiSetSingleInstanceA win8-32:SystemFunction041 win8-64:SystemFunction041
+1802 win7-32:WmiSetSingleInstanceW win7-64:WmiSetSingleInstanceW win8-32:TraceEvent win8-64:TraceEvent
+1803 win7-32:WmiSetSingleItemA win7-64:WmiSetSingleItemA win8-32:TraceEventInstance win8-64:TraceEventInstance
+1804 win7-32:WmiSetSingleItemW win7-64:WmiSetSingleItemW win8-32:TraceMessage win8-64:TraceMessage
+1805 win7-32:WriteEncryptedFileRaw win7-64:WriteEncryptedFileRaw win8-32:TraceMessageVa win8-64:TraceMessageVa
+1806 win8-32:TraceQueryInformation win8-64:TraceQueryInformation
+1807 win8-32:TraceSetInformation win8-64:TraceSetInformation
+1808 win8-32:TreeResetNamedSecurityInfoA win8-64:TreeResetNamedSecurityInfoA
+1809 win8-32:TreeResetNamedSecurityInfoW win8-64:TreeResetNamedSecurityInfoW
+1810 win8-32:TreeSetNamedSecurityInfoA win8-64:TreeSetNamedSecurityInfoA
+1811 win8-32:TreeSetNamedSecurityInfoW win8-64:TreeSetNamedSecurityInfoW
+1812 win8-32:TrusteeAccessToObjectA win8-64:TrusteeAccessToObjectA
+1813 win8-32:TrusteeAccessToObjectW win8-64:TrusteeAccessToObjectW
+1814 win8-32:UninstallApplication win8-64:UninstallApplication
+1815 win8-32:UnlockServiceDatabase win8-64:UnlockServiceDatabase
+1816 win8-32:UnregisterIdleTask win8-64:UnregisterIdleTask
+1817 win8-32:UnregisterTraceGuids win8-64:UnregisterTraceGuids
+1818 win8-32:UpdateTraceA win8-64:UpdateTraceA
+1819 win8-32:UpdateTraceW win8-64:UpdateTraceW
+1820 win8-32:UsePinForEncryptedFilesA win8-64:UsePinForEncryptedFilesA
+1821 win8-32:UsePinForEncryptedFilesW win8-64:UsePinForEncryptedFilesW
+1822 win8-32:WaitServiceState win8-64:WaitServiceState
+1823 win8-32:WmiCloseBlock win8-64:WmiCloseBlock
+1824 win8-32:WmiDevInstToInstanceNameA win8-64:WmiDevInstToInstanceNameA
+1825 win8-32:WmiDevInstToInstanceNameW win8-64:WmiDevInstToInstanceNameW
+1826 win8-32:WmiEnumerateGuids win8-64:WmiEnumerateGuids
+1827 win8-32:WmiExecuteMethodA win8-64:WmiExecuteMethodA
+1828 win8-32:WmiExecuteMethodW win8-64:WmiExecuteMethodW
+1829 win8-32:WmiFileHandleToInstanceNameA win8-64:WmiFileHandleToInstanceNameA
+1830 win8-32:WmiFileHandleToInstanceNameW win8-64:WmiFileHandleToInstanceNameW
+1831 win8-32:WmiFreeBuffer win8-64:WmiFreeBuffer
+1832 win8-32:WmiMofEnumerateResourcesA win8-64:WmiMofEnumerateResourcesA
+1833 win8-32:WmiMofEnumerateResourcesW win8-64:WmiMofEnumerateResourcesW
+1834 win8-32:WmiNotificationRegistrationA win8-64:WmiNotificationRegistrationA
+1835 win8-32:WmiNotificationRegistrationW win8-64:WmiNotificationRegistrationW
+1836 win8-32:WmiOpenBlock win8-64:WmiOpenBlock
+1837 win8-32:WmiQueryAllDataA win8-64:WmiQueryAllDataA
+1838 win8-32:WmiQueryAllDataMultipleA win8-64:WmiQueryAllDataMultipleA
+1839 win8-32:WmiQueryAllDataMultipleW win8-64:WmiQueryAllDataMultipleW
+1840 win8-32:WmiQueryAllDataW win8-64:WmiQueryAllDataW
+1841 win8-32:WmiQueryGuidInformation win8-64:WmiQueryGuidInformation
+1842 win8-32:WmiQuerySingleInstanceA win8-64:WmiQuerySingleInstanceA
+1843 win8-32:WmiQuerySingleInstanceMultipleA win8-64:WmiQuerySingleInstanceMultipleA
+1844 win8-32:WmiQuerySingleInstanceMultipleW win8-64:WmiQuerySingleInstanceMultipleW
+1845 win8-32:WmiQuerySingleInstanceW win8-64:WmiQuerySingleInstanceW
+1846 win8-32:WmiReceiveNotificationsA win8-64:WmiReceiveNotificationsA
+1847 win8-32:WmiReceiveNotificationsW win8-64:WmiReceiveNotificationsW
+1848 win8-32:WmiSetSingleInstanceA win8-64:WmiSetSingleInstanceA
+1849 win8-32:WmiSetSingleInstanceW win8-64:WmiSetSingleInstanceW
+1850 win8-32:WmiSetSingleItemA win8-64:WmiSetSingleItemA
+1851 win8-32:WmiSetSingleItemW win8-64:WmiSetSingleItemW
+1852 win8-32:WriteEncryptedFileRaw win8-64:WriteEncryptedFileRaw

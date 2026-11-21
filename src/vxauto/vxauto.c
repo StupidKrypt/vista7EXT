@@ -52,6 +52,7 @@
 #include "../vxpatch/patchlib.h"
 #include "../common/console.h"
 #include <shlobj.h>
+#include <knownfolders.h>
 #include <wtsapi32.h>
 #include <userenv.h>
 #include <sddl.h>
@@ -59,14 +60,20 @@
 #include <wincrypt.h>
 #include <wintrust.h>
 #include <mscat.h>
+#ifndef WTS_SESSION_LOGON
+#define WTS_SESSION_LOGON 5           /* winuser.h; missing from the Wine headers we build with */
+#endif
 
+static void logf(const WCHAR *fmt, ...);
 #define SVC_NAME L"VistaExtAuto"
 #define PIPE_NAME L"\\\\.\\pipe\\VistaExt"
 #define QUIET_MS 20000
 #define LOOSE_MS 2000         /* a single file: written completely 2 s ago */
 #define GONE_MS 30000         /* removed, and not back after 30 s (an update replacing it) */
-#define MAXPEND 256
-#define MAXROOTS 32
+/* lists grow as needed; these limits only stop a runaway (each is logged) */
+#define MAXPEND 4096
+#define MAXFILES 4096
+#define WATCH_GROUP 63        /* folders per watcher thread (WaitForMultipleObjects: 64 handles) */
 #ifndef THREAD_MODE_BACKGROUND_BEGIN
 #define THREAD_MODE_BACKGROUND_BEGIN 0x00010000   /* Vista+ */
 #endif
@@ -79,20 +86,51 @@ static WCHAR g_logpath[MAX_PATH];
 static HANDLE g_switch;        /* one switch, patch or setting change at a time (service and command line) */
 
 typedef struct { WCHAR dir[MAX_PATH]; DWORD last; int tries; } pending;
-static pending g_pend[MAXPEND];
-static int g_npend;
+static pending *g_pend;
+static int g_npend, g_cpend;
 
-/* local: in a user's profile (work there as that user); loose: single
- * setup files, not program folders */
-typedef struct { WCHAR path[MAX_PATH]; WCHAR profile[MAX_PATH]; BOOL local, loose; } root;
-static root g_roots[MAXROOTS];
-static int g_nroots;
+/* a watched folder. local: in a user's profile (work there as that user);
+ * loose: single setup files, not program folders. Each is allocated once and
+ * never moves (watchers and queued files keep pointers to it). */
+typedef struct {
+    WCHAR path[MAX_PATH], profile[MAX_PATH];
+    BOOL local, loose;
+    HANDLE dir, ev;           /* the watcher's: folder handle, completion event */
+    OVERLAPPED ov;
+    DWORD *buf;
+} root;
+#define MAXROOTS 4096
+static root *g_roots[MAXROOTS];   /* never reallocated: other threads read it while sign-ins add to it */
+static volatile LONG g_nroots;
+static int g_nwatched;
 
 /* single files: new ones to look at, removed ones to forget */
-#define MAXFILES 256
 typedef struct { WCHAR path[MAX_PATH]; DWORD last; BOOL gone; const root *r; } pfile;
-static pfile g_files[MAXFILES];
-static int g_nfiles;
+static pfile *g_files;
+static int g_nfiles, g_cfiles;
+
+static HANDLE g_work;         /* something was queued (auto-reset) */
+static HANDLE g_logon;        /* a user signed in: watch their folders (auto-reset) */
+
+/* make room for one more item in a growable list (under g_cs); FALSE at the limit */
+static BOOL grow(void **list, int n, int *cap, SIZE_T item, int limit, const WCHAR *what)
+{
+    void *nl;
+    int nc;
+    if (n < *cap) return TRUE;
+    if (n >= limit) {
+        static LONG said;
+        if (!InterlockedExchange(&said, 1))
+            logf(L"more than %d %s waiting at once; the rest are looked at when the service starts next", limit, what);
+        return FALSE;
+    }
+    nc = *cap ? *cap * 2 : 32;
+    nl = *list ? HeapReAlloc(GetProcessHeap(), 0, *list, nc * item) : HeapAlloc(GetProcessHeap(), 0, nc * item);
+    if (!nl) return FALSE;
+    *list = nl;
+    *cap = nc;
+    return TRUE;
+}
 
 /* ---- log ------------------------------------------------------------------ */
 static void logw(const WCHAR *line)
@@ -132,22 +170,22 @@ static void logf(const WCHAR *fmt, ...)
     logw(b);
 }
 
-static BOOL auto_on(void)
-{
-    HKEY k;
-    DWORD v = 1, cb = sizeof(v), type;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Auto", NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = 1;
-        RegCloseKey(k);
-    }
-    return v != 0 && vxp_enabled();
-}
+static BOOL auto_on(void) { return vx_setting(L"Auto", 1) && vxp_enabled(); }
 
 static void new_file(const WCHAR *path, const root *r);
+static void reg_failed(LONG e, const WCHAR *key, const WCHAR *name);
 #define VX_REG_LATER VX_REG_ROOT L"\\RestoreLater"   /* patched, running when switched off */
 static int list_count(const WCHAR *key);
 static int restore_later(void);
 static void lock(void) { if (g_switch) WaitForSingleObject(g_switch, INFINITE); }
+/* the same, waiting "ms" at most (a program waits for the answer) */
+static BOOL lock_for(DWORD ms)
+{
+    DWORD w;
+    if (!g_switch) return TRUE;
+    w = WaitForSingleObject(g_switch, ms);
+    return w == WAIT_OBJECT_0 || w == WAIT_ABANDONED;
+}
 static void unlock(void) { if (g_switch) ReleaseMutex(g_switch); }
 
 /* ---- which folder is "the program" ---------------------------------------- */
@@ -194,20 +232,23 @@ static BOOL is_pe_name(const WCHAR *p, SIZE_T n)
     return n > 4 && (!vx_wcsnicmp(p + n - 4, L".exe", 4) || !vx_wcsnicmp(p + n - 4, L".dll", 4));
 }
 
-static void queue(const WCHAR *dir)
+static void queue_at(const WCHAR *dir, DWORD when, int tries)
 {
     int i;
     EnterCriticalSection(&g_cs);
     for (i = 0; i < g_npend; i++)
-        if (!vx_wcsicmp(g_pend[i].dir, dir)) { g_pend[i].last = GetTickCount(); break; }
-    if (i == g_npend && g_npend < MAXPEND) {
+        if (!vx_wcsicmp(g_pend[i].dir, dir)) { g_pend[i].last = when; break; }
+    if (i == g_npend && grow((void **)&g_pend, g_npend, &g_cpend, sizeof(pending), MAXPEND, L"program folders")) {
         vx_wcscpyn(g_pend[g_npend].dir, dir, MAX_PATH);
-        g_pend[g_npend].last = GetTickCount();
-        g_pend[g_npend].tries = 0;
+        g_pend[g_npend].last = when;
+        g_pend[g_npend].tries = tries;
         g_npend++;
     }
     LeaveCriticalSection(&g_cs);
+    if (g_work) SetEvent(g_work);
 }
+
+static void queue(const WCHAR *dir) { queue_at(dir, GetTickCount(), 0); }
 
 /* ---- loop protection: count patches per file ------------------------------ */
 #define MAXHIST 512
@@ -331,9 +372,24 @@ static const root *root_of(const WCHAR *dir)
 {
     int i;
     for (i = 0; i < g_nroots; i++) {
-        SIZE_T n = vx_wcslen(g_roots[i].path);
-        if (!vx_wcsnicmp(dir, g_roots[i].path, n) && dir[n] == '\\') return &g_roots[i];
+        SIZE_T n = vx_wcslen(g_roots[i]->path);
+        if (!vx_wcsnicmp(dir, g_roots[i]->path, n) && dir[n] == '\\') return g_roots[i];
     }
+    return NULL;
+}
+
+/* the command line (not the service) cannot ask for a signed-in user's token
+ * (that needs SYSTEM's privilege): a folder of the user running it is done
+ * with that user's own token; another user's is left to the service */
+static HANDLE own_token_for(const root *r)
+{
+    HANDLE t;
+    WCHAR prof[MAX_PATH];
+    DWORD cch = MAX_PATH;
+    SIZE_T plen = vx_wcslen(r->profile);
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY | TOKEN_IMPERSONATE | TOKEN_DUPLICATE, &t)) return NULL;
+    if (GetUserProfileDirectoryW(t, prof, &cch) && vx_wcslen(prof) == plen && !vx_wcsnicmp(prof, r->profile, plen)) return t;
+    CloseHandle(t);
     return NULL;
 }
 
@@ -344,6 +400,7 @@ static HANDLE user_token(const root *r)        /* NULL: that user is not logged 
     HANDLE tok = NULL;
     SIZE_T plen = vx_wcslen(r->profile);
     if (!plen) return NULL;
+    if (!g_ssh) return own_token_for(r);
     if (!WTSEnumerateSessionsW(WTS_CURRENT_SERVER_HANDLE, 0, 1, &s, &n)) return NULL;
     for (i = 0; i < n && !tok; i++) {
         HANDLE t;
@@ -382,7 +439,8 @@ static BOOL make_compatible(const WCHAR *dir)
     }
     if (r && r->local) {
         if (!(tok = user_token(r))) {
-            wsprintfW(m, L"%s: its user is not logged on; tried again later", dir);
+            wsprintfW(m, g_ssh ? L"%s: its user is not logged on; tried again later"
+                               : L"%s: another user's folder; VistaExt's service looks at it", dir);
             logw(m);
             return FALSE;
         }
@@ -444,9 +502,18 @@ done:
     return ok;
 }
 
-/* ---- watching ------------------------------------------------------------- */
-#define WATCH_BUF (512 * 1024)
+/* "<pre><name>\x.exe" (a probe path for app_folder), bounded: FALSE if a
+ * folder name is too long for it (NTFS allows 255 characters) */
+static BOOL probe_rel(WCHAR *rel, const WCHAR *pre, const WCHAR *name)
+{
+    if (vx_wcslen(pre) + vx_wcslen(name) + 7 >= MAX_PATH) return FALSE;
+    vx_wcscpyn(rel, pre, MAX_PATH);
+    vx_wcscatn(rel, name, MAX_PATH);
+    vx_wcscatn(rel, L"\\x.exe", MAX_PATH);
+    return TRUE;
+}
 
+/* ---- folders that changed a lot at once ------------------------------------- */
 static BOOL recent(const FILETIME *a, const FILETIME *b, ULONGLONG now)
 {
     ULONGLONG x = ((ULONGLONG)a->dwHighDateTime << 32) | a->dwLowDateTime;
@@ -484,20 +551,17 @@ static void queue_recent(const root *r)
                 do {
                     if (!(f2.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) || f2.cFileName[0] == '.' ||
                         !recent(&f2.ftCreationTime, &f2.ftLastWriteTime, now)) continue;
-                    wsprintfW(rel, L"Programs\\%s\\x.exe", f2.cFileName);
-                    if (app_folder(r, rel, app)) { queue(app); n++; }
+                    if (probe_rel(rel, L"Programs\\", f2.cFileName) && app_folder(r, rel, app)) { queue(app); n++; }
                 } while (FindNextFileW(h2, &f2));
                 FindClose(h2);
             }
             continue;
         }
         if (!recent(&fd.ftCreationTime, &fd.ftLastWriteTime, now)) continue;
-        wsprintfW(rel, L"%s\\x.exe", fd.cFileName);
-        if (app_folder(r, rel, app)) { queue(app); n++; }
+        if (probe_rel(rel, L"", fd.cFileName) && app_folder(r, rel, app)) { queue(app); n++; }
     } while (FindNextFileW(h, &fd));
     FindClose(h);
-    wsprintfW(rel, L"many changes at once in %s; %d recently changed folder(s) will be checked", r->path, n);
-    logw(rel);
+    logf(L"many changes at once in %s; %d recently changed folder(s) will be checked", r->path, n);
 }
 
 /* a single file to look at (new) or to forget (removed); the latest event
@@ -509,7 +573,10 @@ static void queue_file(const WCHAR *path, const root *r, BOOL gone)
     for (i = 0; i < g_nfiles; i++)
         if (!vx_wcsicmp(g_files[i].path, path)) break;
     if (i == g_nfiles) {
-        if (g_nfiles >= MAXFILES) { LeaveCriticalSection(&g_cs); return; }   /* the start-up clean-up catches the rest */
+        if (!grow((void **)&g_files, g_nfiles, &g_cfiles, sizeof(pfile), MAXFILES, L"new or removed files")) {
+            LeaveCriticalSection(&g_cs);
+            return;
+        }
         vx_wcscpyn(g_files[i].path, path, MAX_PATH);
         g_nfiles++;
     }
@@ -517,6 +584,7 @@ static void queue_file(const WCHAR *path, const root *r, BOOL gone)
     g_files[i].gone = gone;
     g_files[i].r = r;
     LeaveCriticalSection(&g_cs);
+    SetEvent(g_work);
 }
 
 /* places in a user's AppData\Local where setups run from: Temp (a setup's
@@ -531,100 +599,191 @@ static BOOL loose_place(const root *r, const WCHAR *rel)
     return FALSE;
 }
 
-static DWORD WINAPI watch_root(LPVOID p)
+/* ---- watching ----------------------------------------------------------------
+ * One thread watches up to 63 folders (overlapped reads, one event each).
+ * 64 KB per folder: a bigger burst only means "overflow", which is handled
+ * (queue_recent). Only names and last-write times are watched: a size change
+ * comes with a write anyway, and browsers' cache files would otherwise wake
+ * the service with every write. */
+#define WATCH_BUF (64 * 1024)
+#define WATCH_WHAT (FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE)
+
+static BOOL watch_start(root *r)
 {
-    root *r = p;
-    HANDLE dir = CreateFileW(r->path, FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-                             NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
-    OVERLAPPED ov;
-    DWORD *buf = HeapAlloc(GetProcessHeap(), 0, WATCH_BUF), got;
-    HANDLE ev = CreateEventW(NULL, TRUE, FALSE, NULL), hs[2];
-    if (dir == INVALID_HANDLE_VALUE || !ev || !buf) return 0;
-    hs[0] = g_stop; hs[1] = ev;
+    vx_memset(&r->ov, 0, sizeof(r->ov));
+    r->ov.hEvent = r->ev;
+    return ReadDirectoryChangesW(r->dir, r->buf, WATCH_BUF, TRUE, WATCH_WHAT, NULL, &r->ov, NULL);
+}
+
+static void watch_handle(root *r, DWORD got)
+{
+    FILE_NOTIFY_INFORMATION *fi = (FILE_NOTIFY_INFORMATION *)r->buf;
+    if (!got) { if (!r->loose) queue_recent(r); return; }                 /* overflow */
     for (;;) {
-        vx_memset(&ov, 0, sizeof(ov));
-        ov.hEvent = ev;
-        ResetEvent(ev);
-        if (!ReadDirectoryChangesW(dir, buf, WATCH_BUF, TRUE,
-                                   FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_SIZE,
-                                   NULL, &ov, NULL))
-            break;
-        if (WaitForMultipleObjects(2, hs, FALSE, INFINITE) == WAIT_OBJECT_0) { CancelIo(dir); break; }
-        if (!GetOverlappedResult(dir, &ov, &got, FALSE)) continue;
-        if (!got) { if (!r->loose) queue_recent(r); continue; }             /* overflow */
-        {
-            FILE_NOTIFY_INFORMATION *fi = (FILE_NOTIFY_INFORMATION *)buf;
-            for (;;) {
-                WCHAR rel[MAX_PATH], app[MAX_PATH];
-                SIZE_T n = fi->FileNameLength / sizeof(WCHAR);
-                if (n >= MAX_PATH) n = MAX_PATH - 1;
-                vx_memcpy(rel, fi->FileName, n * sizeof(WCHAR));
-                rel[n] = 0;
-                BOOL removed = fi->Action == FILE_ACTION_REMOVED || fi->Action == FILE_ACTION_RENAMED_OLD_NAME;
-                if (is_pe_name(rel, n)) {
-                    WCHAR full[MAX_PATH];
-                    vx_wcscpyn(full, r->path, MAX_PATH);
-                    vx_wcscatn(full, L"\\", MAX_PATH);
-                    vx_wcscatn(full, rel, MAX_PATH);
-                    if (removed) queue_file(full, r, TRUE);               /* uninstalled? */
-                    else if (r->loose || loose_place(r, rel)) {
-                        if (!vx_wcsnicmp(rel + n - 4, L".exe", 4)) queue_file(full, r, FALSE);
-                    } else if (app_folder(r, rel, app))
-                        queue(app);
-                }
-                if (!fi->NextEntryOffset) break;
-                fi = (FILE_NOTIFY_INFORMATION *)((BYTE *)fi + fi->NextEntryOffset);
-            }
+        WCHAR rel[MAX_PATH], app[MAX_PATH];
+        SIZE_T n = fi->FileNameLength / sizeof(WCHAR);
+        BOOL removed = fi->Action == FILE_ACTION_REMOVED || fi->Action == FILE_ACTION_RENAMED_OLD_NAME;
+        if (n >= MAX_PATH) n = MAX_PATH - 1;
+        vx_memcpy(rel, fi->FileName, n * sizeof(WCHAR));
+        rel[n] = 0;
+        if (is_pe_name(rel, n)) {
+            WCHAR full[MAX_PATH];
+            vx_wcscpyn(full, r->path, MAX_PATH);
+            vx_wcscatn(full, L"\\", MAX_PATH);
+            vx_wcscatn(full, rel, MAX_PATH);
+            if (removed) queue_file(full, r, TRUE);               /* uninstalled? */
+            else if (r->loose || loose_place(r, rel)) {
+                if (!vx_wcsnicmp(rel + n - 4, L".exe", 4)) queue_file(full, r, FALSE);
+            } else if (app_folder(r, rel, app))
+                queue(app);
+        }
+        if (!fi->NextEntryOffset) break;
+        fi = (FILE_NOTIFY_INFORMATION *)((BYTE *)fi + fi->NextEntryOffset);
+    }
+}
+
+typedef struct { int from, to; } watch_group;
+
+static DWORD WINAPI watcher(LPVOID p)
+{
+    watch_group *g = p;
+    HANDLE hs[WATCH_GROUP + 1];
+    root *rs[WATCH_GROUP];
+    int i, n = 0;
+    hs[0] = g_stop;
+    for (i = g->from; i < g->to; i++) {
+        root *r = g_roots[i];
+        r->dir = CreateFileW(r->path, FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
+                             OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
+        r->ev = CreateEventW(NULL, TRUE, FALSE, NULL);
+        r->buf = HeapAlloc(GetProcessHeap(), 0, WATCH_BUF);
+        if (r->dir == INVALID_HANDLE_VALUE || !r->ev || !r->buf || !watch_start(r)) {
+            logf(L"%s: cannot be watched (error %u)", r->path, GetLastError());
+            continue;
+        }
+        rs[n] = r;
+        hs[++n] = r->ev;
+    }
+    HeapFree(GetProcessHeap(), 0, g);
+    while (n) {
+        DWORD w = WaitForMultipleObjects(n + 1, hs, FALSE, INFINITE), got;
+        DWORD k;
+        root *r;
+        if (w == WAIT_OBJECT_0 || w > WAIT_OBJECT_0 + (DWORD)n) break;   /* stop, or a wait error */
+        k = w - WAIT_OBJECT_0 - 1;
+        r = rs[k];
+        if (GetOverlappedResult(r->dir, &r->ov, &got, FALSE)) watch_handle(r, got);
+        ResetEvent(r->ev);
+        if (!watch_start(r)) {                        /* the folder is gone: stop watching it */
+            logf(L"%s: no longer watched (error %u)", r->path, GetLastError());
+            for (i = (int)k; i < n - 1; i++) { rs[i] = rs[i + 1]; hs[i + 1] = hs[i + 2]; }
+            n--;
         }
     }
-    CloseHandle(dir);
-    CloseHandle(ev);
+    for (i = 0; i < n; i++) CancelIo(rs[i]->dir);
     return 0;
+}
+
+/* watch the folders added since the last call (a thread per 63) */
+static void watch_new(HANDLE *th, int *nth, int maxth)
+{
+    while (g_nwatched < g_nroots && *nth < maxth) {
+        watch_group *g = HeapAlloc(GetProcessHeap(), 0, sizeof(*g));
+        if (!g) return;
+        g->from = g_nwatched;
+        g->to = g_nroots - g_nwatched > WATCH_GROUP ? g_nwatched + WATCH_GROUP : g_nroots;
+        g_nwatched = g->to;
+        if ((th[*nth] = CreateThread(NULL, 0, watcher, g, 0, NULL))) (*nth)++;
+        else HeapFree(GetProcessHeap(), 0, g);
+    }
 }
 
 static void add_root(const WCHAR *p, const WCHAR *profile, BOOL loose)
 {
-    if (g_nroots >= MAXROOTS || GetFileAttributesW(p) == INVALID_FILE_ATTRIBUTES) return;
-    vx_wcscpyn(g_roots[g_nroots].path, p, MAX_PATH);
-    vx_wcscpyn(g_roots[g_nroots].profile, profile ? profile : L"", MAX_PATH);
-    g_roots[g_nroots].local = profile != NULL;
-    g_roots[g_nroots].loose = loose;
-    g_nroots++;
+    root *r;
+    int i;
+    if (!p[0] || GetFileAttributesW(p) == INVALID_FILE_ATTRIBUTES) return;
+    for (i = 0; i < g_nroots; i++) if (!vx_wcsicmp(g_roots[i]->path, p)) return;      /* already watched */
+    if (g_nroots >= MAXROOTS || !(r = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(*r)))) return;
+    vx_wcscpyn(r->path, p, MAX_PATH);
+    vx_wcscpyn(r->profile, profile ? profile : L"", MAX_PATH);
+    r->local = profile != NULL;
+    r->loose = loose;
+    r->dir = INVALID_HANDLE_VALUE;
+    g_roots[g_nroots] = r;
+    InterlockedIncrement(&g_nroots);          /* after the entry is complete (a full barrier) */
 }
 
+/* a profile's folders: programs installed per user (AppData\Local and
+ * \Roaming) and where setups land (Downloads, Desktop). "token": the user is
+ * signed in, so their real folders are known (they may be moved elsewhere);
+ * otherwise the standard places in the profile. */
+static void add_profile(const WCHAR *prof, HANDLE token)
+{
+    static const struct { const GUID *id; const WCHAR *sub; BOOL loose; } f[] = {
+        { &FOLDERID_LocalAppData, L"\\AppData\\Local", FALSE },
+        { &FOLDERID_RoamingAppData, L"\\AppData\\Roaming", FALSE },
+        { &FOLDERID_Downloads, L"\\Downloads", TRUE },
+        { &FOLDERID_Desktop, L"\\Desktop", TRUE },
+    };
+    unsigned i;
+    for (i = 0; i < sizeof(f) / sizeof(f[0]); i++) {
+        WCHAR p[MAX_PATH], *kp = NULL;
+        p[0] = 0;
+        if (token && SUCCEEDED(SHGetKnownFolderPath(f[i].id, 0, token, &kp)) && kp) vx_wcscpyn(p, kp, MAX_PATH);
+        if (kp) CoTaskMemFree(kp);
+        if (!p[0]) { vx_wcscpyn(p, prof, MAX_PATH); vx_wcscatn(p, f[i].sub, MAX_PATH); }
+        add_root(p, prof, f[i].loose);
+    }
+}
+
+/* Program Files, and every user profile Windows knows (its ProfileList, so a
+ * profile folder elsewhere than C:\Users is found too). System accounts
+ * (S-1-5-18/19/20) have no programs of their own. */
 static void find_roots(void)
 {
-    static const struct { const WCHAR *sub; BOOL loose; } prof[] = {
-        { L"\\AppData\\Local", FALSE }, { L"\\AppData\\Roaming", FALSE },   /* programs installed per user */
-        { L"\\Downloads", TRUE }, { L"\\Desktop", TRUE },                     /* setup programs */
-    };
-    WCHAR p[MAX_PATH], users[MAX_PATH], pat[MAX_PATH], pr[MAX_PATH];
-    WIN32_FIND_DATAW fd;
-    HANDLE h;
-    unsigned i;
+    WCHAR p[MAX_PATH], sid[200];
+    HKEY pl;
+    DWORD i;
     if (GetEnvironmentVariableW(L"ProgramFiles", p, MAX_PATH)) add_root(p, NULL, FALSE);
     if (GetEnvironmentVariableW(L"ProgramFiles(x86)", p, MAX_PATH)) add_root(p, NULL, FALSE);
-    if (GetEnvironmentVariableW(L"ProgramW6432", p, MAX_PATH) && vx_wcsicmp(p, g_roots[0].path)) add_root(p, NULL, FALSE);
-    /* every user profile (Vista and 7: %SystemDrive%\Users) */
-    if (!GetEnvironmentVariableW(L"SystemDrive", users, MAX_PATH)) vx_wcscpyn(users, L"C:", MAX_PATH);
-    vx_wcscatn(users, L"\\Users", MAX_PATH);
-    vx_wcscpyn(pat, users, MAX_PATH);
-    vx_wcscatn(pat, L"\\*", MAX_PATH);
-    if ((h = FindFirstFileW(pat, &fd)) != INVALID_HANDLE_VALUE) {
-        do {
-            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) || fd.cFileName[0] == '.' ||
-                (fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) || !vx_wcsicmp(fd.cFileName, L"Public")) continue;
-            vx_wcscpyn(pr, users, MAX_PATH);
-            vx_wcscatn(pr, L"\\", MAX_PATH);
-            vx_wcscatn(pr, fd.cFileName, MAX_PATH);
-            for (i = 0; i < sizeof(prof) / sizeof(prof[0]); i++) {
-                vx_wcscpyn(p, pr, MAX_PATH);
-                vx_wcscatn(p, prof[i].sub, MAX_PATH);
-                add_root(p, pr, prof[i].loose);
-            }
-        } while (FindNextFileW(h, &fd));
-        FindClose(h);
+    if (GetEnvironmentVariableW(L"ProgramW6432", p, MAX_PATH)) add_root(p, NULL, FALSE);
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProfileList", 0,
+                      KEY_READ | VX_REG_VIEW, &pl)) return;
+    for (i = 0; ; i++) {
+        DWORD n = 200, cb, type;
+        WCHAR raw[MAX_PATH], prof[MAX_PATH];
+        HKEY k;
+        if (RegEnumKeyExW(pl, i, sid, &n, NULL, NULL, NULL, NULL)) break;
+        if (vx_wcsnicmp(sid, L"S-1-5-21-", 9)) continue;                  /* only real users */
+        if (RegOpenKeyExW(pl, sid, 0, KEY_QUERY_VALUE, &k)) continue;
+        cb = sizeof(raw) - sizeof(WCHAR);
+        if (!RegQueryValueExW(k, L"ProfileImagePath", NULL, &type, (BYTE *)raw, &cb) &&
+            (type == REG_EXPAND_SZ || type == REG_SZ)) {
+            raw[cb / sizeof(WCHAR)] = 0;
+            if (ExpandEnvironmentStringsW(raw, prof, MAX_PATH) && GetFileAttributesW(prof) != INVALID_FILE_ATTRIBUTES)
+                add_profile(prof, NULL);
+        }
+        RegCloseKey(k);
     }
+    RegCloseKey(pl);
+}
+
+/* every signed-in user: their real folders (moved Downloads, a new profile) */
+static void find_session_roots(void)
+{
+    WTS_SESSION_INFOW *ss = NULL;
+    DWORD n = 0, i;
+    if (!WTSEnumerateSessionsW(WTS_CURRENT_SERVER_HANDLE, 0, 1, &ss, &n)) return;
+    for (i = 0; i < n; i++) {
+        HANDLE t;
+        WCHAR prof[MAX_PATH];
+        DWORD cch = MAX_PATH;
+        if (!WTSQueryUserToken(ss[i].SessionId, &t)) continue;
+        if (GetUserProfileDirectoryW(t, prof, &cch)) add_profile(prof, t);
+        CloseHandle(t);
+    }
+    WTSFreeMemory(ss);
 }
 
 /* every program folder in every root (first start, and /scan) */
@@ -636,48 +795,125 @@ static void scan_all(void)
         WCHAR pat[MAX_PATH], rel[MAX_PATH], app[MAX_PATH];
         WIN32_FIND_DATAW fd;
         HANDLE h;
-        if (g_roots[i].loose) {                 /* setups downloaded before VistaExt was installed */
-            vx_wcscpyn(pat, g_roots[i].path, MAX_PATH);
+        if (g_roots[i]->loose) {                 /* setups downloaded before VistaExt was installed */
+            vx_wcscpyn(pat, g_roots[i]->path, MAX_PATH);
             vx_wcscatn(pat, L"\\*.exe", MAX_PATH);
             if ((h = FindFirstFileW(pat, &fd)) == INVALID_HANDLE_VALUE) continue;
             do {
                 if (fd.dwFileAttributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT)) continue;
-                vx_wcscpyn(rel, g_roots[i].path, MAX_PATH);
+                vx_wcscpyn(rel, g_roots[i]->path, MAX_PATH);
                 vx_wcscatn(rel, L"\\", MAX_PATH);
                 vx_wcscatn(rel, fd.cFileName, MAX_PATH);
-                new_file(rel, &g_roots[i]);
+                new_file(rel, g_roots[i]);
             } while (FindNextFileW(h, &fd) && (!g_stop || WaitForSingleObject(g_stop, 0) != WAIT_OBJECT_0));
             FindClose(h);
             continue;
         }
-        vx_wcscpyn(pat, g_roots[i].path, MAX_PATH);
+        vx_wcscpyn(pat, g_roots[i]->path, MAX_PATH);
         vx_wcscatn(pat, L"\\*", MAX_PATH);
         if ((h = FindFirstFileW(pat, &fd)) == INVALID_HANDLE_VALUE) continue;
         do {
             if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) || fd.cFileName[0] == '.' ||
                 (fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)) continue;
-            if (g_roots[i].local && !vx_wcsicmp(fd.cFileName, L"Programs")) {
+            if (g_roots[i]->local && !vx_wcsicmp(fd.cFileName, L"Programs")) {
                 WIN32_FIND_DATAW f2;
                 HANDLE h2;
                 WCHAR pat2[MAX_PATH];
-                vx_wcscpyn(pat2, g_roots[i].path, MAX_PATH);
+                vx_wcscpyn(pat2, g_roots[i]->path, MAX_PATH);
                 vx_wcscatn(pat2, L"\\Programs\\*", MAX_PATH);
                 if ((h2 = FindFirstFileW(pat2, &f2)) != INVALID_HANDLE_VALUE) {
                     do {
                         if (!(f2.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) || f2.cFileName[0] == '.') continue;
-                        wsprintfW(rel, L"Programs\\%s\\x.exe", f2.cFileName);
-                        if (app_folder(&g_roots[i], rel, app)) make_compatible(app);
+                        if (probe_rel(rel, L"Programs\\", f2.cFileName) && app_folder(g_roots[i], rel, app)) make_compatible(app);
                     } while (FindNextFileW(h2, &f2) && WaitForSingleObject(g_stop, 0) != WAIT_OBJECT_0);
                     FindClose(h2);
                 }
                 continue;
             }
-            wsprintfW(rel, L"%s\\x.exe", fd.cFileName);
-            if (app_folder(&g_roots[i], rel, app)) make_compatible(app);
+            if (probe_rel(rel, L"", fd.cFileName) && app_folder(g_roots[i], rel, app)) make_compatible(app);
         } while (FindNextFileW(h, &fd) && (!g_stop || WaitForSingleObject(g_stop, 0) != WAIT_OBJECT_0));
         FindClose(h);
     }
     logw(L"scan finished");
+}
+
+/* milliseconds until the next queued item is due; INFINITE if none */
+static DWORD next_due(BOOL later)
+{
+    DWORD now = GetTickCount(), best = INFINITE;
+    int i;
+    EnterCriticalSection(&g_cs);
+    for (i = 0; i < g_nfiles; i++) {
+        LONG left = (LONG)(g_files[i].last + (g_files[i].gone ? GONE_MS : LOOSE_MS) - now);
+        DWORD d = left > 0 ? (DWORD)left : 0;
+        if (d < best) best = d;
+    }
+    for (i = 0; i < g_npend; i++) {
+        LONG left = (LONG)(g_pend[i].last + QUIET_MS - now);   /* signed: "last" may be in the future (a retry) */
+        DWORD d = left > 0 ? (DWORD)left : 0;
+        if (d < best) best = d;
+    }
+    LeaveCriticalSection(&g_cs);
+    if (later && best > 10000) best = 10000;
+    return best;
+}
+
+/* single files whose time has come: new setups (2 s after they were
+ * written), removed programs (30 s after, so that an update replacing a
+ * file does not count as removed) */
+static void do_due_files(void)
+{
+    BOOL forgot = FALSE;
+    for (;;) {
+        pfile f;
+        BOOL got = FALSE;
+        int i;
+        EnterCriticalSection(&g_cs);
+        for (i = 0; i < g_nfiles; i++)
+            if ((LONG)(GetTickCount() - g_files[i].last) >= (g_files[i].gone ? GONE_MS : LOOSE_MS)) {
+                f = g_files[i];
+                g_files[i] = g_files[--g_nfiles];
+                got = TRUE;
+                break;
+            }
+        LeaveCriticalSection(&g_cs);
+        if (!got) break;
+        if (f.gone) {
+            if (GetFileAttributesW(f.path) == INVALID_FILE_ATTRIBUTES) {
+                lock();
+                if (vxp_forget(f.path, log_cb, NULL)) forgot = TRUE;
+                unlock();
+            }
+        } else new_file(f.path, f.r);
+    }
+    if (forgot) { lock(); vxp_cleanup_missing(log_cb, NULL); unlock(); }
+}
+
+/* program folders quiet for 20 s: made compatible; one with a file in use
+ * (the program runs) is tried again a minute later, 10 times at most */
+static void do_due_folders(void)
+{
+    for (;;) {
+        WCHAR dir[MAX_PATH];
+        int i, tries = 0;
+        BOOL found = FALSE;
+        EnterCriticalSection(&g_cs);
+        for (i = 0; i < g_npend; i++)
+            if ((LONG)(GetTickCount() - g_pend[i].last) >= QUIET_MS) {
+                vx_wcscpyn(dir, g_pend[i].dir, MAX_PATH);
+                tries = g_pend[i].tries;
+                g_pend[i] = g_pend[--g_npend];
+                found = TRUE;
+                break;
+            }
+        LeaveCriticalSection(&g_cs);
+        if (!found) return;
+        if (!auto_on()) continue;
+        if (!make_compatible(dir)) {
+            if (tries < 10) queue_at(dir, GetTickCount() + 40000, tries + 1);
+            else logf(L"%s: still in use after 10 tries; left until it changes again", dir);
+        }
+    }
 }
 
 static DWORD WINAPI worker(LPVOID p)
@@ -701,64 +937,34 @@ static DWORD WINAPI worker(LPVOID p)
             RegCloseKey(k);
         }
     }
-    while (WaitForSingleObject(g_stop, 1000) == WAIT_TIMEOUT) {
-        WCHAR dir[MAX_PATH];
-        int i, tries;
-        BOOL found = FALSE, forgot = FALSE;
-        /* single files: new setups (2 s after they were written), removed
-         * programs (30 s after, so that an update replacing a file does not
-         * count as removed) */
+    /* Sleep until something is due: a queued item's time, something newly
+     * queued (g_work), or a change of VistaExt's settings (switched off from
+     * the command line). Nothing queued, nothing to wait for: no wake-ups. */
+    {
+        HKEY rk = NULL;
+        HANDLE regev = CreateEventW(NULL, FALSE, FALSE, NULL), hs[3];
+        DWORD last_later = GetTickCount() - 10000;
+        RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_NOTIFY | VX_REG_VIEW, &rk);
+        if (rk && regev) RegNotifyChangeKeyValue(rk, TRUE, REG_NOTIFY_CHANGE_LAST_SET | REG_NOTIFY_CHANGE_NAME, regev, TRUE);
+        hs[0] = g_stop; hs[1] = g_work; hs[2] = regev;
         for (;;) {
-            pfile f;
-            BOOL got = FALSE;
-            EnterCriticalSection(&g_cs);
-            for (i = 0; i < g_nfiles; i++)
-                if ((LONG)(GetTickCount() - g_files[i].last) >= (g_files[i].gone ? GONE_MS : LOOSE_MS)) {
-                    f = g_files[i];
-                    g_files[i] = g_files[--g_nfiles];
-                    got = TRUE;
-                    break;
-                }
-            LeaveCriticalSection(&g_cs);
-            if (!got) break;
-            if (f.gone) {
-                if (GetFileAttributesW(f.path) == INVALID_FILE_ATTRIBUTES) {
-                    lock();
-                    if (vxp_forget(f.path, log_cb, NULL)) forgot = TRUE;
-                    unlock();
-                }
-            } else new_file(f.path, f.r);
-        }
-        if (forgot) { lock(); vxp_cleanup_missing(log_cb, NULL); unlock(); }
-        {   /* switched off while changed programs ran: every 10 s, put back those now closed */
-            static DWORD last;
-            if (GetTickCount() - last >= 10000) {
-                last = GetTickCount();
-                if (!vxp_enabled() && list_count(VX_REG_LATER)) { lock(); restore_later(); unlock(); }
+            /* switched off while changed programs ran: they are put back once
+             * closed. Windows has no event for "this file is no longer in
+             * use", so while one waits it is tried every 10 s (only then). */
+            BOOL later = !vxp_enabled() && list_count(VX_REG_LATER) > 0;
+            DWORD w = WaitForMultipleObjects(regev ? 3 : 2, hs, FALSE, next_due(later));
+            if (w == WAIT_OBJECT_0 || w == WAIT_FAILED) break;
+            if (w == WAIT_OBJECT_0 + 2 && rk)
+                RegNotifyChangeKeyValue(rk, TRUE, REG_NOTIFY_CHANGE_LAST_SET | REG_NOTIFY_CHANGE_NAME, regev, TRUE);
+            do_due_files();
+            if (later && GetTickCount() - last_later >= 9000) {
+                last_later = GetTickCount();
+                lock(); restore_later(); unlock();
             }
+            do_due_folders();
         }
-        EnterCriticalSection(&g_cs);
-        for (i = 0; i < g_npend; i++)
-            if ((LONG)(GetTickCount() - g_pend[i].last) >= QUIET_MS) {   /* signed: "last" may be in the future */
-                vx_wcscpyn(dir, g_pend[i].dir, MAX_PATH);
-                tries = g_pend[i].tries;
-                g_pend[i] = g_pend[--g_npend];
-                found = TRUE;
-                break;
-            }
-        LeaveCriticalSection(&g_cs);
-        if (!found || !auto_on()) continue;
-        if (!make_compatible(dir) && tries < 10) {
-            /* a file was in use: again in a minute */
-            EnterCriticalSection(&g_cs);
-            if (g_npend < MAXPEND) {
-                vx_wcscpyn(g_pend[g_npend].dir, dir, MAX_PATH);
-                g_pend[g_npend].last = GetTickCount() + 40000;
-                g_pend[g_npend].tries = tries + 1;
-                g_npend++;
-            }
-            LeaveCriticalSection(&g_cs);
-        }
+        if (rk) RegCloseKey(rk);
+        if (regev) CloseHandle(regev);
     }
     return 0;
 }
@@ -808,15 +1014,9 @@ static BOOL system_place(const WCHAR *path)
  * HKLM\SOFTWARE\VistaExt "Setups" = 0 turns this off (tray icon menu). */
 static BOOL setups_on(void)
 {
-    HKEY k;
-    DWORD v = 1, cb = sizeof(v), type;
     WCHAR g[64];
     vx_layer l;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Setups", NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = 1;
-        RegCloseKey(k);
-    }
-    if (!v || !vx_global_version(g, 64)) return FALSE;
+    if (!vx_setting(L"Setups", 1) || !vx_global_version(g, 64)) return FALSE;
     vx_parse_layer(g, &l);
     return l.ver != NULL;                     /* "this Windows' own version": nothing to tell */
 }
@@ -890,30 +1090,55 @@ static BOOL looks_like_driver(const WCHAR *path)
     return contains_ci(base_name(path), L"driver") || version_strings_have(path, words, 1);
 }
 
-/* signed by Microsoft: in Windows' own catalogs, or its signer's organization */
-static BOOL by_microsoft(const WCHAR *path)
+/* a program's own signature: the PKCS#7 block the header's security
+ * directory points at (a file offset). Only the headers and that block are
+ * read - Windows' own CryptQueryObject on the file reads all of it, a minute
+ * for a 200 MB setup on a slow disk. NULL: not signed this way. */
+static BYTE *signature_block(const WCHAR *path, DWORD *len)
 {
-    HCATADMIN ca;
+    HANDLE f = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
+    BYTE hdr[1024], *blob = NULL;
+    DWORD got = 0, size, nt, off = 0, cb = 0;
+    if (f == INVALID_HANDLE_VALUE) return NULL;
+    size = GetFileSize(f, NULL);
+    if (ReadFile(f, hdr, sizeof(hdr), &got, NULL) && got >= 0x40 && hdr[0] == 'M' && hdr[1] == 'Z' &&
+        (nt = *(DWORD *)(hdr + 0x3C)) <= got - 0x100 && *(DWORD *)(hdr + nt) == IMAGE_NT_SIGNATURE) {
+        WORD magic = *(WORD *)(hdr + nt + 24);
+        /* DataDirectory[4] (security): after the optional header's fixed part */
+        DWORD dd = nt + 24 + (magic == IMAGE_NT_OPTIONAL_HDR64_MAGIC ? 112 : 96) + 4 * 8;
+        if (dd + 8 <= got) { off = *(DWORD *)(hdr + dd); cb = *(DWORD *)(hdr + dd + 4); }
+    }
+    /* a WIN_CERTIFICATE: length, revision, type 2 (PKCS#7 signed data), the block */
+    if (off && cb > 8 && cb <= (4u << 20) && off < size && cb <= size - off && (blob = HeapAlloc(GetProcessHeap(), 0, cb))) {
+        if (SetFilePointer(f, (LONG)off, NULL, FILE_BEGIN) != off || !ReadFile(f, blob, cb, &got, NULL) || got != cb ||
+            *(WORD *)(blob + 6) != WIN_CERT_TYPE_PKCS_SIGNED_DATA || *(DWORD *)blob < 8 || *(DWORD *)blob > cb) {
+            HeapFree(GetProcessHeap(), 0, blob);
+            blob = NULL;
+        } else *len = *(DWORD *)blob;
+    }
+    CloseHandle(f);
+    return blob;
+}
+
+/* the organization in a file's own (embedded) signature: 1 Microsoft,
+ * 0 someone else, -1 not signed this way. The file is not hashed. */
+static int embedded_by_microsoft(const WCHAR *path)
+{
     HCERTSTORE store = NULL;
     HCRYPTMSG msg = NULL;
-    DWORD enc = 0, ct, ft, n = 0;
-    BOOL r = FALSE;
-    if (CryptCATAdminAcquireContext(&ca, NULL, 0)) {
-        HANDLE f = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-        if (f != INVALID_HANDLE_VALUE) {
-            BYTE hash[64];
-            DWORD hl = sizeof(hash);
-            if (CryptCATAdminCalcHashFromFileHandle(f, &hl, hash, 0)) {
-                HCATINFO ci = CryptCATAdminEnumCatalogFromHash(ca, hash, hl, 0, NULL);
-                if (ci) { r = TRUE; CryptCATAdminReleaseCatalogContext(ca, ci, 0); }
-            }
-            CloseHandle(f);
-        }
-        CryptCATAdminReleaseContext(ca, 0);
+    DWORD enc = 0, ct, ft, n = 0, len = 0;
+    CERT_BLOB cb;
+    BYTE *blob = signature_block(path, &len);
+    int r = 0;
+    if (!blob) return -1;
+    cb.cbData = len - 8;
+    cb.pbData = blob + 8;
+    if (!CryptQueryObject(CERT_QUERY_OBJECT_BLOB, &cb, CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED, CERT_QUERY_FORMAT_FLAG_BINARY,
+                          0, &enc, &ct, &ft, &store, &msg, NULL)) {
+        HeapFree(GetProcessHeap(), 0, blob);
+        return -1;
     }
-    if (r) return TRUE;
-    if (!CryptQueryObject(CERT_QUERY_OBJECT_FILE, path, CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED, CERT_QUERY_FORMAT_FLAG_BINARY,
-                          0, &enc, &ct, &ft, &store, &msg, NULL)) return FALSE;
+    HeapFree(GetProcessHeap(), 0, blob);
     if (CryptMsgGetParam(msg, CMSG_SIGNER_INFO_PARAM, 0, NULL, &n) && n) {
         CMSG_SIGNER_INFO *si = HeapAlloc(GetProcessHeap(), 0, n);
         if (si && CryptMsgGetParam(msg, CMSG_SIGNER_INFO_PARAM, 0, si, &n)) {
@@ -936,6 +1161,41 @@ static BOOL by_microsoft(const WCHAR *path)
     return r;
 }
 
+/* signed by Microsoft: its own signature names Microsoft, or (no signature
+ * of its own) Windows' catalogs list it. The signature is looked at first:
+ * the catalog lookup hashes the whole file. */
+static BOOL by_microsoft(const WCHAR *path)
+{
+    HCATADMIN ca;
+    BOOL r = FALSE;
+    int e = embedded_by_microsoft(path);
+    if (e >= 0) return e == 1;
+    if (CryptCATAdminAcquireContext(&ca, NULL, 0)) {
+        HANDLE f = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        if (f != INVALID_HANDLE_VALUE) {
+            BYTE hash[64];
+            DWORD hl = sizeof(hash);
+            /* read once in 1 MB pieces first (one buffer, reused), so that
+             * Windows' hash takes the file from the cache: on a slow disk its
+             * own smaller reads take several times as long */
+            BYTE *buf = HeapAlloc(GetProcessHeap(), 0, 1 << 20);
+            DWORD got;
+            if (buf) {
+                while (ReadFile(f, buf, 1 << 20, &got, NULL) && got) ;
+                HeapFree(GetProcessHeap(), 0, buf);
+                SetFilePointer(f, 0, NULL, FILE_BEGIN);
+            }
+            if (CryptCATAdminCalcHashFromFileHandle(f, &hl, hash, 0)) {
+                HCATINFO ci = CryptCATAdminEnumCatalogFromHash(ca, hash, hl, 0, NULL);
+                if (ci) { r = TRUE; CryptCATAdminReleaseCatalogContext(ca, ci, 0); }
+            }
+            CloseHandle(f);
+        }
+        CryptCATAdminReleaseContext(ca, 0);
+    }
+    return r;
+}
+
 /* written in the last hour (part of what a setup is installing right now) */
 static BOOL recent_file(const WCHAR *path)
 {
@@ -952,8 +1212,17 @@ static BOOL recent_file(const WCHAR *path)
 }
 
 /* 1: VistaExt runs it (now, or already), 0: it runs as it is, -1: refused.
- * from_setup: a setup VistaExt runs is about to start it */
-static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup)
+ * from_setup: a setup VistaExt runs is about to start it; waited_for: a
+ * program waits for the answer (PREPARE) */
+/* a step of looking at a program that took long (a slow disk, a huge file):
+ * logged, so that the log says where the time went */
+static void slow_step(const WCHAR *path, const WCHAR *step, DWORD since)
+{
+    DWORD ms = GetTickCount() - since;
+    if (ms >= 2000) logf(L"%s: %s took %u ms", path, step, ms);
+}
+
+static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, BOOL waited_for)
 {
     WCHAR dir[MAX_PATH], layer[600];
     vxp_stats st = { 0 };
@@ -967,12 +1236,22 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup)
     if (vxp_memory_registered(path)) return 1;
     file_dir(path, dir);
     /* can it run on this Windows by itself? (only what the file needs) */
-    need = vxp_process_file(path, VXP_DRYRUN | VXP_QUIET, NULL, NULL, &st) == 1;
+    {
+        DWORD t = GetTickCount();
+        need = vxp_process_file(path, VXP_DRYRUN | VXP_QUIET, NULL, NULL, &st) == 1;
+        slow_step(path, L"checking its imports", t);
+    }
     if (!need) {
         /* a setup that refuses this Windows can still be told the chosen
          * version: one the user downloaded, or a new helper of a setup */
-        if (!setups_on() || !(from_setup ? recent_file(path) : is_setup(path))) return 0;
-        if (by_microsoft(path)) {
+        DWORD t = GetTickCount();
+        BOOL su = setups_on() && (from_setup ? recent_file(path) : is_setup(path)), ms;
+        slow_step(path, L"recognising a setup", t);
+        if (!su) return 0;
+        t = GetTickCount();
+        ms = by_microsoft(path);
+        slow_step(path, L"checking its signature", t);
+        if (ms) {
             logf(L"%s (%s): Microsoft's own setup: it sees this Windows' real version", path, why);
             return 0;
         }
@@ -998,13 +1277,23 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup)
     vx_memset(&st, 0, sizeof(st));
     logf(setup ? L"%s (%s): a setup program; it is told the chosen Windows version"
                : L"%s (%s): cannot run on this Windows by itself; made compatible", path, why);
-    lock();
-    r = vxp_process_file(path, flags, log_cb, NULL, &st);
+    /* a program is waiting to start this one: if a switch or a scan holds
+     * the lock, it starts as it is rather than waiting for them */
+    if (!lock_for(waited_for ? 5000 : INFINITE)) {
+        logf(L"%s: VistaExt was busy (switching or scanning); it starts as it is this time", path);
+        return 0;
+    }
+    {
+        DWORD t = GetTickCount();
+        r = vxp_process_file(path, flags, log_cb, NULL, &st);
+        slow_step(path, L"registering it", t);
+    }
     unlock();
     if (r >= 0 && !own && layer[0]) {
         HANDLE imp = vxp_unimpersonate();
-        vx_set_layer(path, layer);
+        LONG e = vx_set_layer(path, layer);
         vxp_reimpersonate(imp);
+        reg_failed(e, VX_REG_LAYERS, path);
     }
     return r < 0 ? -1 : 1;
 }
@@ -1018,7 +1307,7 @@ static void new_file(const WCHAR *path, const root *r)
         if (!(tok = user_token(r))) return;          /* not logged on: looked at when the scan runs */
         if (!ImpersonateLoggedOnUser(tok)) { CloseHandle(tok); return; }
     }
-    handle_single(path, L"new file", FALSE);
+    handle_single(path, L"new file", FALSE, FALSE);
     if (tok) { RevertToSelf(); CloseHandle(tok); }
 }
 
@@ -1064,7 +1353,11 @@ static void off_name(const WCHAR *path, WCHAR *out)
 
 typedef struct { int moved, kept, busy, reboot; } switch_stats;
 
-/* every line of installed.txt (paths of the files VistaExt added to Windows) */
+/* every line of installed.txt (paths of the files VistaExt added to Windows).
+ * install.cmd writes it with "echo", in the console's code page (OEM), and
+ * uninstall.cmd reads it with "for /f" and findstr, which cannot read UTF-16:
+ * so it stays in the OEM code page and is read as such. The paths are under
+ * the Windows folder. */
 static WCHAR *installed_list(void)
 {
     WCHAR p[MAX_PATH + 20], *w;
@@ -1135,13 +1428,22 @@ static void move_system_files(BOOL on, switch_stats *ss)
     HeapFree(GetProcessHeap(), 0, list);
 }
 
+/* VistaExt's own registry entries: a failure is logged (the change it was
+ * part of is then incomplete; the log says which) */
+static void reg_failed(LONG e, const WCHAR *key, const WCHAR *name)
+{
+    if (e) logf(L"could not write %s\\%s (error %d)", key, name && name[0] ? name : L"(default)", (int)e);
+}
+
 static void set_dword(const WCHAR *name, DWORD v)
 {
     HKEY k;
-    if (!RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL)) {
-        RegSetValueExW(k, name, 0, REG_DWORD, (const BYTE *)&v, sizeof(v));
+    LONG e = RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL);
+    if (!e) {
+        e = RegSetValueExW(k, name, 0, REG_DWORD, (const BYTE *)&v, sizeof(v));
         RegCloseKey(k);
     }
+    reg_failed(e, VX_REG_ROOT, name);
 }
 
 /* "a restart is needed": the time it was asked for, cleared once Windows has
@@ -1150,37 +1452,37 @@ static void need_restart(void)
 {
     HKEY k;
     FILETIME t;
+    LONG e;
     GetSystemTimeAsFileTime(&t);
-    if (!RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL)) {
-        RegSetValueExW(k, L"RestartNeeded", 0, REG_QWORD, (const BYTE *)&t, sizeof(t));
+    e = RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL);
+    if (!e) {
+        e = RegSetValueExW(k, L"RestartNeeded", 0, REG_QWORD, (const BYTE *)&t, sizeof(t));
         RegCloseKey(k);
     }
+    reg_failed(e, VX_REG_ROOT, L"RestartNeeded");
 }
 
 static BOOL restart_needed(void)
 {
+    int r = vx_restart_state();
     HKEY k;
-    ULONGLONG t = 0, now, boot;
-    DWORD cb = sizeof(t), type;
-    FILETIME ft;
-    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | KEY_SET_VALUE | VX_REG_VIEW, &k)) return FALSE;
-    if (RegQueryValueExW(k, L"RestartNeeded", NULL, &type, (BYTE *)&t, &cb) || type != REG_QWORD) t = 0;
-    GetSystemTimeAsFileTime(&ft);
-    now = ((ULONGLONG)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-    boot = now - (ULONGLONG)GetTickCount64() * 10000;
-    if (t && t < boot) { RegDeleteValueW(k, L"RestartNeeded"); t = 0; }    /* Windows has restarted since */
-    RegCloseKey(k);
-    return t != 0;
+    if (r < 0 && !RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_SET_VALUE | VX_REG_VIEW, &k)) {
+        RegDeleteValueW(k, L"RestartNeeded");                 /* Windows has restarted since */
+        RegCloseKey(k);
+    }
+    return r > 0;
 }
 
 static void list_set_data(const WCHAR *key, const WCHAR *path, BOOL add, const WCHAR *data)
 {
     HKEY k;
-    if (!RegCreateKeyExW(HKEY_LOCAL_MACHINE, key, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL)) {
-        if (add) RegSetValueExW(k, path, 0, REG_SZ, (const BYTE *)data, (DWORD)((vx_wcslen(data) + 1) * sizeof(WCHAR)));
-        else RegDeleteValueW(k, path);
+    LONG e = RegCreateKeyExW(HKEY_LOCAL_MACHINE, key, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL);
+    if (!e) {
+        if (add) e = RegSetValueExW(k, path, 0, REG_SZ, (const BYTE *)data, (DWORD)((vx_wcslen(data) + 1) * sizeof(WCHAR)));
+        else if ((e = RegDeleteValueW(k, path)) == ERROR_FILE_NOT_FOUND) e = 0;    /* not listed: nothing to remove */
         RegCloseKey(k);
     }
+    reg_failed(e, key, path);
 }
 
 #define list_set(key, p, add) list_set_data(key, p, add, L"")
@@ -1200,26 +1502,43 @@ static BOOL repatch_memory(const WCHAR *p)
     return !vx_wcsicmp(d, L"memory");
 }
 
-/* a list's entries as "a\0b\0\0": the files the switch put back (to patch
- * again when switched on), or those it could not put back yet */
+/* a list's entries as "a\0b\0\0": the files VistaExt patched, those the
+ * switch put back (to patch again when switched on), or those it could not
+ * put back yet. The buffer grows as needed: every entry is listed, however
+ * many there are (a cut-off list would leave programs patched while VistaExt
+ * says it is off). NULL: out of memory (logged). */
+#define VX_REG_PATCHED_LIST VX_REG_ROOT L"\\Patched"
 static WCHAR *list_entries(const WCHAR *key)
 {
     HKEY k;
     WCHAR name[MAX_PATH + 8], *buf;
-    DWORD n, idx, used = 0, cap = 32 * 1024;
-    if (!(buf = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, cap * sizeof(WCHAR)))) return NULL;
+    DWORD n, idx, used = 0, cap = 16 * 1024;
+    LONG e;
+    if (!(buf = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, cap * sizeof(WCHAR)))) goto oom;
     if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, key, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return buf;
     for (idx = 0; ; idx++) {
         DWORD l;
         n = MAX_PATH + 8;
-        if (RegEnumValueW(k, idx, name, &n, NULL, NULL, NULL, NULL)) break;
+        if ((e = RegEnumValueW(k, idx, name, &n, NULL, NULL, NULL, NULL))) {
+            if (e == ERROR_MORE_DATA) continue;            /* not a path VistaExt wrote: skip it */
+            break;
+        }
         l = (DWORD)vx_wcslen(name);
-        if (used + l + 2 >= cap) break;
+        if (used + l + 2 >= cap) {
+            WCHAR *nb = HeapReAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, buf, cap * 2 * sizeof(WCHAR));
+            if (!nb) { RegCloseKey(k); HeapFree(GetProcessHeap(), 0, buf); goto oom; }
+            buf = nb;
+            cap *= 2;
+        }
         vx_memcpy(buf + used, name, (l + 1) * sizeof(WCHAR));
         used += l + 1;
+        buf[used] = 0;
     }
     RegCloseKey(k);
     return buf;
+oom:
+    logf(L"%s: not enough memory to list its entries; nothing changed for them", key);
+    return NULL;
 }
 #define repatch_entries() list_entries(VX_REG_REPATCH)
 
@@ -1264,8 +1583,7 @@ static BOOL do_switch(BOOL on, BOOL quiet_if_done)
         set_dword(L"Enabled", 0);                   /* first: nothing new gets VistaExt from here on */
         progs = vxp_memory_switch(FALSE, quiet_if_done ? NULL : log_cb, NULL);
         /* patched files: put back now, or as soon as a running one is closed */
-        if ((list = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64 * 1024 * sizeof(WCHAR)))) {
-            vxp_patched_list(list, 64 * 1024);
+        if ((list = list_entries(VX_REG_PATCHED_LIST))) {
             for (p = list; *p; p += vx_wcslen(p) + 1) {
                 BOOL mem = vxp_memory_registered(p);
                 int r = vxp_restore_file(p, log_cb, NULL);
@@ -1363,8 +1681,7 @@ static int set_version(const WCHAR *tok)
     if (!r) {
         logf(L"programs VistaExt runs are now told: %s (%s); programs with their own setting keep it", label, norm);
         /* programs patched on disk (file mode) may need versvx now */
-        if (vxp_enabled() && (list = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64 * 1024 * sizeof(WCHAR)))) {
-            vxp_patched_list(list, 64 * 1024);
+        if (vxp_enabled() && (list = list_entries(VX_REG_PATCHED_LIST))) {
             for (p = list; *p; p += vx_wcslen(p) + 1) {
                 WCHAR layer[600] = L"";
                 vxp_stats st = { 0 };
@@ -1384,12 +1701,7 @@ static void status_text(WCHAR *out, SIZE_T cch)
     WCHAR v[64] = L"", norm[40] = L"";
     const WCHAR *label = L"This Windows' own version";
     if (vx_global_version(v, 64)) valid_version(v, &label, norm, 40);
-    HKEY k;
-    DWORD su = 1, cb = sizeof(su), type;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Setups", NULL, &type, (BYTE *)&su, &cb) || type != REG_DWORD) su = 1;
-        RegCloseKey(k);
-    }
+    DWORD su = vx_setting(L"Setups", 1);
     wsprintfW(out, L"enabled=%d\nversion=%s\nlabel=%s\nsetups=%d\nrestart=%d\nwaiting=%d\n", vxp_enabled() ? 1 : 0,
               norm[0] ? norm : L"REAL", label, su ? 1 : 0, restart_needed() ? 1 : 0, list_count(VX_REG_LATER));
 }
@@ -1398,26 +1710,29 @@ static void status_text(WCHAR *out, SIZE_T cch)
 static BOOL client_is_admin(HANDLE pipe)
 {
     HANDLE tok = NULL;
-    BYTE buf[4096];
-    TOKEN_GROUPS *g = (TOKEN_GROUPS *)buf;
-    DWORD got, i;
+    BYTE ubuf[256];
+    TOKEN_GROUPS *g = NULL;
+    DWORD got = 0, i;
     BOOL r = FALSE;
     SID_IDENTIFIER_AUTHORITY nt = { SECURITY_NT_AUTHORITY };
     PSID admins = NULL, system = NULL;
     if (!ImpersonateNamedPipeClient(pipe)) return FALSE;
-    OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, &tok);
+    if (!OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, &tok)) tok = NULL;
     RevertToSelf();
-    if (!tok) return FALSE;
+    if (!tok) { logf(L"a change was asked for, but who asked could not be checked (error %u)", GetLastError()); return FALSE; }
     AllocateAndInitializeSid(&nt, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &admins);
     AllocateAndInitializeSid(&nt, 1, SECURITY_LOCAL_SYSTEM_RID, 0, 0, 0, 0, 0, 0, 0, &system);
     /* an administrator, also while UAC runs their programs without the
      * rights (the group is then "deny only"): VistaExt's own switch, like a
-     * driver's tray tool */
-    if (admins && GetTokenInformation(tok, TokenGroups, g, sizeof(buf), &got))
+     * driver's tray tool. The group list is as long as it is (a domain user
+     * can be in hundreds): asked for its size first. */
+    GetTokenInformation(tok, TokenGroups, NULL, 0, &got);
+    if (admins && got && (g = HeapAlloc(GetProcessHeap(), 0, got)) && GetTokenInformation(tok, TokenGroups, g, got, &got))
         for (i = 0; i < g->GroupCount && !r; i++)
             if (EqualSid(g->Groups[i].Sid, admins) && (g->Groups[i].Attributes & (SE_GROUP_ENABLED | SE_GROUP_USE_FOR_DENY_ONLY)))
                 r = TRUE;
-    if (!r && system && GetTokenInformation(tok, TokenUser, buf, sizeof(buf), &got)) r = EqualSid(((TOKEN_USER *)buf)->User.Sid, system);
+    if (g) HeapFree(GetProcessHeap(), 0, g);
+    if (!r && system && GetTokenInformation(tok, TokenUser, ubuf, sizeof(ubuf), &got)) r = EqualSid(((TOKEN_USER *)ubuf)->User.Sid, system);
     if (admins) FreeSid(admins);
     if (system) FreeSid(system);
     CloseHandle(tok);
@@ -1437,7 +1752,7 @@ static void handle_request(HANDLE pipe, WCHAR *req, WCHAR *rep, SIZE_T cch)
         BOOL from_setup = !vx_wcsnicmp(arg, L"setup ", 6);
         if (from_setup) arg += 6;
         if (vxp_enabled() && auto_on() && ImpersonateNamedPipeClient(pipe)) {
-            r = handle_single(arg, from_setup ? L"started by a setup" : L"about to start", from_setup);
+            r = handle_single(arg, from_setup ? L"started by a setup" : L"about to start", from_setup, TRUE);
             RevertToSelf();
         }
         wsprintfW(rep, L"%d\n", r);
@@ -1540,7 +1855,8 @@ static void report(DWORD state)
 {
     g_ss.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
     g_ss.dwCurrentState = state;
-    g_ss.dwControlsAccepted = state == SERVICE_RUNNING ? SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN : 0;
+    g_ss.dwControlsAccepted = state == SERVICE_RUNNING ? SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN |
+                                                         SERVICE_ACCEPT_SESSIONCHANGE : 0;
     SetServiceStatus(g_ssh, &g_ss);
 }
 
@@ -1550,6 +1866,8 @@ static DWORD WINAPI handler(DWORD ctl, DWORD type, LPVOID data, LPVOID ctx)
         report(SERVICE_STOP_PENDING);
         SetEvent(g_stop);
     }
+    if (ctl == SERVICE_CONTROL_SESSIONCHANGE && type == WTS_SESSION_LOGON && g_logon) SetEvent(g_logon);
+    if (ctl == SERVICE_CONTROL_INTERROGATE) SetServiceStatus(g_ssh, &g_ss);
     return NO_ERROR;
 }
 
@@ -1582,12 +1900,14 @@ static void init_common(void)
 
 static void WINAPI svc_main(DWORD argc, LPWSTR *argv)
 {
-    HANDLE th[MAXROOTS + 2];
-    int i, n = 0;
+    HANDLE th[64], hs[2];
+    int nth = 0;
     g_ssh = RegisterServiceCtrlHandlerExW(SVC_NAME, handler, NULL);
     if (!g_ssh) return;
     report(SERVICE_START_PENDING);
     g_stop = CreateEventW(NULL, TRUE, FALSE, NULL);
+    g_work = CreateEventW(NULL, FALSE, FALSE, NULL);
+    g_logon = CreateEventW(NULL, FALSE, FALSE, NULL);
     init_common();
     report(SERVICE_RUNNING);
     logf(L"service started (VistaExt is %s)", vxp_enabled() ? L"on" : L"off");
@@ -1595,11 +1915,17 @@ static void WINAPI svc_main(DWORD argc, LPWSTR *argv)
     lock();
     vxp_cleanup_missing(log_cb, NULL);              /* programs removed while it was not running */
     unlock();
-    if ((th[n] = CreateThread(NULL, 0, pipe_server, NULL, 0, NULL))) n++;
-    for (i = 0; i < g_nroots; i++) if ((th[n] = CreateThread(NULL, 0, watch_root, &g_roots[i], 0, NULL))) n++;
-    if ((th[n] = CreateThread(NULL, 0, worker, NULL, 0, NULL))) n++;
-    WaitForSingleObject(g_stop, INFINITE);
-    WaitForMultipleObjects(n, th, TRUE, 30000);
+    if ((th[nth] = CreateThread(NULL, 0, pipe_server, NULL, 0, NULL))) nth++;
+    find_session_roots();                           /* signed-in users' real folders */
+    watch_new(th, &nth, 62);
+    if ((th[nth] = CreateThread(NULL, 0, worker, NULL, 0, NULL))) nth++;
+    hs[0] = g_stop; hs[1] = g_logon;
+    /* a user signed in: their real folders (a new profile, a moved Downloads) */
+    while (WaitForMultipleObjects(2, hs, FALSE, INFINITE) == WAIT_OBJECT_0 + 1) {
+        find_session_roots();
+        watch_new(th, &nth, 63);
+    }
+    WaitForMultipleObjects(nth, th, TRUE, 30000);
     logw(L"service stopped");
     report(SERVICE_STOPPED);
 }
@@ -1630,7 +1956,15 @@ static int install_service(BOOL on)
     if (!s) { con_print(L"Cannot create the service (error %u).\r\n", GetLastError()); CloseServiceHandle(m); return 2; }
     {
         SERVICE_DESCRIPTIONW d = { L"Makes newly installed and updated programs run on this Windows (VistaExt)." };
+        /* NOT a delayed start: programs started right after signing in need
+         * it (a setup's helpers are looked at before they start; the tray
+         * icon's switch; programs installed in the first minutes), and its
+         * own start is small (measured: running in 10-70 ms, 4 MB, no work
+         * until something changes). Turned off explicitly, for an update
+         * over a build that had it on. */
+        SERVICE_DELAYED_AUTO_START_INFO dl = { FALSE };
         ChangeServiceConfig2W(s, SERVICE_CONFIG_DESCRIPTION, &d);
+        ChangeServiceConfig2W(s, SERVICE_CONFIG_DELAYED_AUTO_START_INFO, &dl);
     }
     StartServiceW(s, 0, NULL);
     CloseServiceHandle(s);
@@ -1712,7 +2046,7 @@ int wmain(int argc, WCHAR **argv)
                                                : L"setup programs see the real Windows version unless they need VistaExt");
             r = print_status();
         } else if (!vx_wcsicmp(argv[1], L"/prepare")) {
-            r = argc > 2 ? handle_single(argv[2], L"asked from the command line", FALSE) : -1;
+            r = argc > 2 ? handle_single(argv[2], L"asked from the command line", FALSE, FALSE) : -1;
             con_print(L"%d\r\n", r);
             r = r < 0 ? 1 : 0;
         } else {

@@ -1,5 +1,6 @@
 /* VistaExt - CRT replacements and layer (compatibility setting) parsing. */
 #include "vx.h"
+#include "releases.h"
 
 /* The compiler may emit calls to these, so they keep their standard names. */
 void *memset(void *d, int c, size_t n) { unsigned char *p = d; while (n--) *p++ = (unsigned char)c; return d; }
@@ -57,12 +58,6 @@ void vx_wcscatn(WCHAR *d, const WCHAR *s, SIZE_T cch)
     if (n < cch) vx_wcscpyn(d + n, s, cch - n);
 }
 
-void vx_pin(void *addr)
-{
-    HMODULE h;
-    GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)addr, &h);
-}
-
 int vx_tracing = -1;
 
 void vx_trace(const char *what)
@@ -93,8 +88,8 @@ FARPROC vx_native(const WCHAR *module, const char *name)
  * which the per-program version setting does not change. */
 void vx_real_version(DWORD *major, DWORD *minor)
 {
-    *major = *(volatile ULONG *)(ULONG_PTR)0x7FFE026C;
-    *minor = *(volatile ULONG *)(ULONG_PTR)0x7FFE0270;
+    *major = VX_KUSER_NT_MAJOR;
+    *minor = VX_KUSER_NT_MINOR;
 }
 
 const vx_osver vx_osvers[] = {
@@ -119,12 +114,14 @@ static BOOL num(const WCHAR **s, DWORD *v, DWORD max)
     return TRUE;
 }
 
-static void put_num(WCHAR *out, SIZE_T cch, DWORD v)
+void vx_cat_num(WCHAR *out, SIZE_T cch, ULONG_PTR v)
 {
-    WCHAR t[12];
+    WCHAR t[24];
     int n = 0;
-    do { t[n++] = (WCHAR)('0' + v % 10); v /= 10; } while (v && n < 11);
-    while (n && cch > 1) { SIZE_T l = vx_wcslen(out); if (l + 1 >= cch) break; out[l] = t[--n]; out[l + 1] = 0; }
+    SIZE_T l = vx_wcslen(out);
+    do { t[n++] = (WCHAR)('0' + v % 10); v /= 10; } while (v);
+    while (n && l + 1 < cch) out[l++] = t[--n];
+    out[l] = 0;
 }
 
 BOOL vx_parse_custom(const WCHAR *s, vx_osver *v, WCHAR *tok, SIZE_T ctok, WCHAR *csd, SIZE_T ccsd)
@@ -137,13 +134,13 @@ BOOL vx_parse_custom(const WCHAR *s, vx_osver *v, WCHAR *tok, SIZE_T ctok, WCHAR
     if (*s && *s != ' ') return FALSE;
     tok[0] = 0;
     vx_wcscatn(tok, L"VER:", ctok);
-    put_num(tok, ctok, ma); vx_wcscatn(tok, L".", ctok);
-    put_num(tok, ctok, mi); vx_wcscatn(tok, L".", ctok);
-    put_num(tok, ctok, b);
+    vx_cat_num(tok, ctok, ma); vx_wcscatn(tok, L".", ctok);
+    vx_cat_num(tok, ctok, mi); vx_wcscatn(tok, L".", ctok);
+    vx_cat_num(tok, ctok, b);
     csd[0] = 0;
     if (sp) {
-        vx_wcscatn(tok, L".", ctok); put_num(tok, ctok, sp);
-        vx_wcscatn(csd, L"Service Pack ", ccsd); put_num(csd, ccsd, sp);
+        vx_wcscatn(tok, L".", ctok); vx_cat_num(tok, ctok, sp);
+        vx_wcscatn(csd, L"Service Pack ", ccsd); vx_cat_num(csd, ccsd, sp);
     }
     v->token = tok;
     v->label = L"Custom";
@@ -157,20 +154,9 @@ BOOL vx_parse_custom(const WCHAR *s, vx_osver *v, WCHAR *tok, SIZE_T ctok, WCHAR
  * registry (DisplayVersion, ReleaseId) next to the build number. */
 const WCHAR *vx_release_name(DWORD build, const WCHAR **releaseid)
 {
-    static const struct { DWORD build; const WCHAR *name, *id; } r[] = {
-        { 10240, L"1507", L"1507" }, { 10586, L"1511", L"1511" }, { 14393, L"1607", L"1607" },
-        { 15063, L"1703", L"1703" }, { 16299, L"1709", L"1709" }, { 17134, L"1803", L"1803" },
-        { 17763, L"1809", L"1809" }, { 18362, L"1903", L"1903" }, { 18363, L"1909", L"1909" },
-        { 19041, L"2004", L"2004" }, { 19042, L"20H2", L"2009" }, { 19043, L"21H1", L"2009" },
-        { 19044, L"21H2", L"2009" }, { 19045, L"22H2", L"2009" }, { 22000, L"21H2", L"2009" },
-        { 22621, L"22H2", L"2009" }, { 22631, L"23H2", L"2009" }, { 26100, L"24H2", L"2009" },
-        { 26200, L"25H2", L"2009" },
-    };
-    unsigned i;
-    for (i = 0; i < sizeof(r) / sizeof(r[0]); i++)
-        if (r[i].build == build) { if (releaseid) *releaseid = r[i].id; return r[i].name; }
-    if (releaseid) *releaseid = NULL;
-    return NULL;
+    const vx_release *r = vx_find_release(build);
+    if (releaseid) *releaseid = r ? r->rel : NULL;
+    return r ? r->disp : NULL;
 }
 
 void vx_parse_layer(const WCHAR *s, vx_layer *out)
@@ -217,6 +203,33 @@ void vx_copy_layer(vx_layer *to, const vx_layer *from)
     }
 }
 
+DWORD vx_setting(const WCHAR *name, DWORD def)
+{
+    HKEY k;
+    DWORD v = def, cb = sizeof(v), type;
+    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
+        if (RegQueryValueExW(k, name, NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = def;
+        RegCloseKey(k);
+    }
+    return v;
+}
+
+int vx_restart_state(void)
+{
+    HKEY k;
+    ULONGLONG t = 0, now, boot;
+    DWORD cb = sizeof(t), type;
+    FILETIME ft;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return 0;
+    if (RegQueryValueExW(k, L"RestartNeeded", NULL, &type, (BYTE *)&t, &cb) || type != REG_QWORD) t = 0;
+    RegCloseKey(k);
+    if (!t) return 0;
+    GetSystemTimeAsFileTime(&ft);
+    now = ((ULONGLONG)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
+    boot = now - (ULONGLONG)GetTickCount64() * 10000;
+    return t >= boot ? 1 : -1;
+}
+
 BOOL vx_global_version(WCHAR *buf, DWORD cch)
 {
     HKEY k;
@@ -254,38 +267,41 @@ BOOL vx_effective_layer(const WCHAR *exepath, vx_layer *out)
     return own;
 }
 
-static BOOL query(HKEY root, const WCHAR *name, WCHAR *buf, DWORD cch)
+static BOOL query(HKEY k, const WCHAR *name, WCHAR *buf, DWORD cch)
 {
-    HKEY k;
     DWORD type, cb = cch * sizeof(WCHAR);
-    LONG r;
-    if (RegOpenKeyExW(root, VX_REG_LAYERS, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return FALSE;
-    r = RegQueryValueExW(k, name, NULL, &type, (BYTE *)buf, &cb);
-    RegCloseKey(k);
-    if (r || type != REG_SZ) return FALSE;
+    if (!k || RegQueryValueExW(k, name, NULL, &type, (BYTE *)buf, &cb) || type != REG_SZ) return FALSE;
     /* REG_SZ data is not always NUL-terminated */
     buf[cb / sizeof(WCHAR) < cch ? cb / sizeof(WCHAR) : cch - 1] = 0;
     return TRUE;
 }
 
+/* the program's own setting, else its folder's, its parent folder's... (the
+ * user's before the machine's). Both keys are opened once per lookup: this
+ * runs as every program VistaExt runs starts. */
 BOOL vx_lookup_layer(const WCHAR *exepath, WCHAR *buf, DWORD cch)
 {
     WCHAR path[MAX_PATH + 2];
     SIZE_T n;
+    HKEY cu = NULL, lm = NULL;
+    BOOL r = FALSE;
+    RegOpenKeyExW(HKEY_CURRENT_USER, VX_REG_LAYERS, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &cu);
+    RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_LAYERS, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &lm);
+    if (!cu && !lm) return FALSE;
     vx_wcscpyn(path, exepath, MAX_PATH);
-    if (query(HKEY_CURRENT_USER, path, buf, cch) || query(HKEY_LOCAL_MACHINE, path, buf, cch))
-        return TRUE;
+    r = query(cu, path, buf, cch) || query(lm, path, buf, cch);
     /* walk up: "C:\a\b\" then "C:\a\" ... */
     n = vx_wcslen(path);
-    while (n > 3) {
+    while (!r && n > 3) {
         while (n && path[n - 1] != '\\') n--;
         if (n <= 3) break;
         path[n] = 0;                       /* keep trailing backslash */
-        if (query(HKEY_CURRENT_USER, path, buf, cch) || query(HKEY_LOCAL_MACHINE, path, buf, cch))
-            return TRUE;
+        r = query(cu, path, buf, cch) || query(lm, path, buf, cch);
         n--;                               /* step over that backslash */
     }
-    return FALSE;
+    if (cu) RegCloseKey(cu);
+    if (lm) RegCloseKey(lm);
+    return r;
 }
 
 /* ---- writing settings (used by the tools, needs administrator rights) --- */

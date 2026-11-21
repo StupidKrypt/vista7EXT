@@ -51,18 +51,16 @@ These were found by running real programs. They show the *kind* of failure to ex
 - **Watched folders only.** The automatic mode watches:
   - `Program Files`
   - `Program Files (x86)`
-  - each user's `AppData\Local`
+  - each user's `AppData\Local` and `AppData\Roaming` (programs installed per user)
+  - each user's Downloads and Desktop, for setup programs only (single files, not folders)
 
-  Programs elsewhere are not watched and need the right-click entry. Examples:
+  It finds the profiles in Windows' profile list (so a profile outside `C:\Users` is found), and a signed-in user's real folders (a Downloads folder moved to another drive, for example). A user who signs in for the first time after the service started is watched from that sign-in. Programs elsewhere are not watched and need the right-click entry. Examples:
   - other drives
   - `C:\Games`
   - portable apps on the Desktop or in Downloads
-  - `AppData\Roaming`
   - `ProgramData`
-
-  User profiles created after the service started are watched only after a restart.
 - **Missed changes.** If Windows' change notification overflows (thousands of files at once), the service checks every program folder in that place that was created or changed in the last hour. An update deep inside an older folder that doesn't change the folder's own time can still be missed until the next change or `vxauto /scan`.
-- **Patching takes time, and a program started before it finishes fails.** On Windows 7 Brave was done about 15 s after the copy. On Vista, with the disk busy, it took over 8 minutes (`chrome.dll` alone is 280 MB and is read more than once). The service now uses normal disk priority, but that change has not been re-measured on Vista.
+- **Patching takes time, and a program started before it finishes fails.** On Windows 7 Brave was done about 15 s after the copy. On Vista, with the disk busy, it took over 8 minutes (`chrome.dll` alone is 280 MB and was read whole, more than once). Files are now mapped instead of read, so only the parts VistaExt looks at come from the disk: checking a 200 MB program took 6–13 s instead of 18–46 s on the slow test PC (§8c), using 14–17 MB of memory instead of 220 MB. Brave itself has not been re-measured on Vista.
 - **The first start after an update can fail.** An updater that starts the new version straight away (Discord's Squirrel, Chromium's updater) can start it before the 20-second quiet period ends. That first start fails; the next one works.
 - **Programs in a logged-off user's AppData** are retried for about 10 minutes and then left until the next change.
 - **Extra start-up options** (the `ARGS:` setting, the Chromium option) do not reach programs that use the shared C runtime's `argv`.
@@ -78,7 +76,7 @@ These were found by running real programs. They show the *kind* of failure to ex
 | **Self-repairing programs / Windows Installer repair** | They put the original file back. The automatic mode patches it again. | After 3 times in an hour it stops and logs it. |
 | **Windows Installer patches and cached packages** | msifix installs a *modified* package with the same package code. Later `.msp` patches, repairs that fall back to the original source, or a "different package with the same code" check can fail. | The fixed copy is kept in `ProgramData\VistaExt\Packages`, so repairs use it. Updates via `.msp` are untested. |
 | **`.msi` file association** | VistaExt changes what double-clicking an `.msi` does, so every package goes through msifix (now a windowed program: no console window). A package msifix doesn't change installs as usual. | The previous command is saved and restored when VistaExt is switched off or uninstalled. If another program changes the association while VistaExt is installed, VistaExt puts *its* saved value back. |
-| **New system DLLs** (`kernelbase`, `combase`, `shcore`, `bcryptprimitives`, `api-ms-win-*` on Vista; `combase`, `shcore` and the API sets on 7) | They are visible to **every** program, including unpatched ones and Windows' own. A program that checks "is `shcore.dll` there?" to detect Windows 8.1 now detects it, and gets VistaExt's partial version. | Unavoidable with this design. |
+| **New system DLLs** (`kernelbase`, `combase`, `shcore`, `bcryptprimitives`, `api-ms-win-*` on Vista; `combase`, `shcore` and the API sets on 7) | They are visible to **every** program, including unpatched ones and Windows' own. A program that checks "is `shcore.dll` there?" to detect Windows 8.1 now detects it, and gets VistaExt's partial version. Windows' own background processes can load them too: on Windows 7 x86 with the updates from `deps.cmd`, Windows Search's `SearchFilterHost.exe` had `kernelvx.dll` loaded through `api-ms-win-core-localization-l1-2-1` and `-fibers-l1-1-1`; uninstalling then leaves those files for a restart (it says so). | Unavoidable with this design. |
 | **Microsoft's C runtime update (KB2999226/KB3118401)** | It installs some `api-ms-win-core-*` DLLs with the same names as VistaExt's. | VistaExt never overwrites a file without its marker. If the update replaces VistaExt's copy, Windows' copy wins, and uninstall keeps it. Tested in the VM program run on 7 and Vista. |
 | **The version setting (PEB)** | It changes what *Windows' own DLLs inside that program* see too (C runtime, .NET, comctl32, Direct3D...). They may take newer code paths. | Every program VistaExt runs is now told the global version (Windows 10 by default), not only Chromium programs; "this Windows' own version" in the tray menu, or per program in VistaExt Center, turns it off. Programs VistaExt does not run are never told anything. |
 | **`GetProcAddress`** | In a patched program, looking up a newer function by name now finds VistaExt's version. A program that used to fall back cleanly when the function was missing now uses a stub. | By design (otherwise many programs fail). It is the main backward-compatibility risk, see below. |
@@ -205,6 +203,40 @@ Firefox, Epic and Steam were last run on the build *before* the final two change
 
 **Not covered:** real GPUs (the VMs have none, so decoding is in software); dropped-frame counts inside the player; 32-bit browsers; other video sites.
 
+## 8c. Slow-PC pass (measured with `tests/vm/perf.cmd`)
+
+The test PC: one processor, 1 GB of memory, a disk limited to 20 MB/s and 100 operations per second (`tests/vm/vm.sh perf <vm>`). Each figure is from the same VM image before and after; two rounds each, on all four builds. Run-to-run noise was about ±20% for anything involving the disk or starting programs.
+
+| | before | after |
+|---|---|---|
+| Service, private memory | 10.3–12.3 MB | 3.5–4.6 MB |
+| Service, threads | 13–17 | 5–8 |
+| Service, wake-ups in 10 idle minutes | about 600 (once a second) | 0–14 |
+| Tray icon, wake-ups in 10 idle minutes | about 200 (every 3 s) | 0 |
+| Checking a 200 MB program (`vxpatch /check`) | 18–46 s, 220 MB in memory | 6–13 s, 14–17 MB |
+| Looking at a 200 MB unsigned setup (`vxauto /prepare`) | 16–36 s | 3–17 s (one read of the file for Windows' catalog check) |
+| `vxauto /scan` of Program Files | 130–260 ms | 6–71 ms |
+| A program VistaExt runs, start to end | 4.0–5.5 ms (plain Windows: 2.2–3.1 ms) | unchanged |
+| Install (`install.cmd`) | 38–76 s | unchanged (within noise) |
+
+**What changed:**
+- The service waits for something to happen (a file change, a sign-in, a setting) instead of looking every second; one thread watches up to 63 folders, with 64 KB buffers instead of 512 KB.
+- The tray icon waits for VistaExt's settings to change instead of reading them every 3 seconds, and makes changes in a second thread (its window keeps answering).
+- Program files are mapped, not read: only the parts looked at come from the disk.
+- A program's own signature is read from its signature block (a few KB); Windows' `CryptQueryObject` on the file read all of it.
+- The API-set DLLs carry only the imports they use (5 KB instead of 6 KB each); the setup is 14.3 MB instead of 16.0 MB.
+
+**Kept, with the reason:**
+- **The crash window is one small process per windowed program VistaExt runs** (0.7–1.4 MB private each). One shared watcher would save that, but it would be one more thing that must be running, and a program's watcher must outlive the program.
+- **`CreateFileMapping` with an access list costs about 15 µs** instead of under 1 µs: VistaExt names such sections so that Vista/7 apply the list (see the comment in `kernelvx/misc.c`). There is no cheaper way on Vista/7.
+- **The service starts with Windows, not delayed.** A delayed start was tried: it broke the switch and setup handling for the first two minutes after signing in, while the service's own start costs 10–70 ms.
+- **A 200 MB unsigned setup is still read once** for the check against Windows' catalogs (Microsoft's own files can be signed only there).
+
+**Conflicts found with the runtimes and updates of `deps.cmd` installed** (both older than this pass; found by its test runs):
+- **.NET's optimizer got crash windows.** After .NET 4.8 is installed, Windows runs `mscorsvw.exe` (it compiles .NET code in the background). It got `kernelvx.dll` loaded through VistaExt's API-set DLLs in the system folder, and `kernelvx` started a crash watcher for it, as for any windowed program. Fixed: the watcher is started only for programs VistaExt runs (their own imports name VistaExt's DLLs, or `vxload` is in the process).
+- **Windows Search's filter host keeps VistaExt's files in use** (see "New system DLLs" in §4): uninstalling then needs a restart, and says so.
+- **A delayed service start broke the first minutes after signing in** (see above): reverted before release.
+
 ## 10. Tray icon, on/off switch, setup programs
 
 **How safe it is for Windows itself.** Nothing of VistaExt's takes part in starting Windows:
@@ -254,6 +286,20 @@ WMI is answered for synchronous queries from the program, and for those Windows'
 - **`CoCreateInstance(Ex)` and `CoSetProxyBlanket` in ole32:** through its export table and the import tables of DLLs already loaded.
 
 Windows' verifier was meant to apply such hooks for VistaExt, but it applied none on Vista or 7. A program that checks its own ntdll code for changes (some anti-cheat and copy-protection systems) will see the jump; such folders are left alone by the automatic mode.
+
+## 11. Real setup programs (VMs, with network; this build)
+
+VistaExt installed with its own wizard, driven on the VM's keyboard. On all four systems, Accept, the restore point ("Before installing VistaExt" was created), Install and Finish worked, and Finish started the tray icon. Then SpotifySetup.exe, DiscordSetup.exe and SteamSetup.exe were saved to Downloads and started the way a double-click does.
+
+| Setup | What VistaExt did | Result | What is missing |
+|---|---|---|---|
+| **Steam** (NSIS) | registered it as a setup program (told Windows 10) | **Installs** on all four systems, into Program Files with its Start menu shortcut and Programs and Features entry; **uninstalls** from Programs and Features | Steam then says "Steam needs to be online to update": its update download uses Windows' own HTTPS, which these VMs can't do with Steam's servers (no TLS 1.2 update or current root certificates). Not VistaExt's part. |
+| **Spotify** (64-bit only) | registered it as a setup program; on Vista it also needs functions Vista lacks | Its own "requires Windows 10" check **passes**; then "Automatic download failed (error code 57)" while downloading the app | The same HTTPS problem as Steam: Spotify's setup only downloads the app. Not tested past this point. |
+| **Discord** (Squirrel) | registered it (it imports a function Vista/7 lack) | Stops at "Install .NET 4.5" | Discord's installer needs Microsoft .NET Framework 4.5 or later, which Vista and 7 don't include. Not tested past this point. |
+
+So none of the three was seen *running* on Vista/7 from its own setup in this test. What stopped Spotify and Discord, and Steam's first update, is missing system prerequisites (TLS 1.2 for Windows' HTTPS, current root certificates, .NET 4.5+), not functions VistaExt adds. Discord's program itself (copied from its package) starts with VistaExt (section 7).
+
+**Uninstalling while those setups were still open** left VistaExt's DLLs in System32: a running program had them loaded. Fixed after this run: the uninstaller now has Windows delete such files at the next restart and says so (Windows' own mechanism for files in use).
 
 ## 9. Further design ideas
 

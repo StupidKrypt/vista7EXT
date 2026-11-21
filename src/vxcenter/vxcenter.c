@@ -2,6 +2,7 @@
  * it should see, and make it run on Vista / 7. Also sets up the Explorer
  * right-click entries (/register, /unregister). */
 #include "../vxpatch/patchlib.h"
+#include "../common/userrun.h"
 #include <commctrl.h>
 #include <commdlg.h>
 #include <shlobj.h>
@@ -256,48 +257,6 @@ static void run_undo(void) { start_work(OP_UNDO); }
  * VistaExt Center runs as administrator, and a program it started directly
  * would too (no sandbox in browsers, no drag and drop from Explorer). Ask
  * Explorer, which runs as the user, to start it instead. */
-#undef ShellExecute          /* shellapi.h's A/W macro would rename the COM method */
-static BOOL run_as_user(const WCHAR *file, const WCHAR *dir)
-{
-    IShellWindows *sw = NULL;
-    IDispatch *disp = NULL, *bg = NULL, *app = NULL;
-    IServiceProvider *sp = NULL;
-    IShellBrowser *sb = NULL;
-    IShellView *sv = NULL;
-    IShellFolderViewDual *fv = NULL;
-    IShellDispatch2 *sd = NULL;
-    VARIANT loc, none, vdir, vshow;
-    long hwnd = 0;
-    BOOL ok = FALSE;
-    VariantInit(&loc); VariantInit(&none); VariantInit(&vdir); VariantInit(&vshow);
-    loc.vt = VT_I4; loc.lVal = CSIDL_DESKTOP;
-    if (SUCCEEDED(CoCreateInstance(&CLSID_ShellWindows, NULL, CLSCTX_LOCAL_SERVER, &IID_IShellWindows, (void **)&sw)) &&
-        sw->lpVtbl->FindWindowSW(sw, &loc, &none, SWC_DESKTOP, &hwnd, SWFO_NEEDDISPATCH, &disp) == S_OK && disp &&
-        SUCCEEDED(disp->lpVtbl->QueryInterface(disp, &IID_IServiceProvider, (void **)&sp)) &&
-        SUCCEEDED(sp->lpVtbl->QueryService(sp, &SID_STopLevelBrowser, &IID_IShellBrowser, (void **)&sb)) &&
-        SUCCEEDED(sb->lpVtbl->QueryActiveShellView(sb, &sv)) &&
-        SUCCEEDED(sv->lpVtbl->GetItemObject(sv, SVGIO_BACKGROUND, &IID_IDispatch, (void **)&bg)) &&
-        SUCCEEDED(bg->lpVtbl->QueryInterface(bg, &IID_IShellFolderViewDual, (void **)&fv)) &&
-        SUCCEEDED(fv->lpVtbl->get_Application(fv, &app)) &&
-        SUCCEEDED(app->lpVtbl->QueryInterface(app, &IID_IShellDispatch2, (void **)&sd))) {
-        BSTR bfile = SysAllocString(file);
-        vdir.vt = VT_BSTR; vdir.bstrVal = SysAllocString(dir);
-        vshow.vt = VT_I4; vshow.lVal = SW_SHOWNORMAL;
-        ok = bfile && vdir.bstrVal && SUCCEEDED(sd->lpVtbl->ShellExecute(sd, bfile, none, vdir, none, vshow));
-        SysFreeString(bfile);
-        VariantClear(&vdir);
-    }
-    if (sd) sd->lpVtbl->Release(sd);
-    if (app) app->lpVtbl->Release(app);
-    if (fv) fv->lpVtbl->Release(fv);
-    if (bg) bg->lpVtbl->Release(bg);
-    if (sv) sv->lpVtbl->Release(sv);
-    if (sb) sb->lpVtbl->Release(sb);
-    if (sp) sp->lpVtbl->Release(sp);
-    if (disp) disp->lpVtbl->Release(disp);
-    if (sw) sw->lpVtbl->Release(sw);
-    return ok;
-}
 
 static void run_program(void)
 {
@@ -309,7 +268,7 @@ static void run_program(void)
     while (n && dir[n - 1] != '\\') n--;
     if (n > 3) n--;                                   /* drop the backslash, but keep "C:\\" */
     dir[n] = 0;
-    if (!run_as_user(g_path, dir)) ShellExecuteW(g_wnd, NULL, g_path, NULL, dir, SW_SHOWNORMAL);
+    if (!vx_run_as_user(g_path, NULL, dir)) ShellExecuteW(g_wnd, NULL, g_path, NULL, dir, SW_SHOWNORMAL);
 }
 
 static void browse_file(void)

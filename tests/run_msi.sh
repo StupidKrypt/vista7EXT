@@ -24,7 +24,7 @@ CF=(--target=x86_64-w64-windows-gnu -O2 -ffreestanding -fno-builtin -mno-stack-a
     -I"$WINEINC/windows" -I"$WINEINC/msvcrt" -D_ACRTIMP= -D_ACRTIMP_ALT=)
 clang "${CF[@]}" -c tests/msitest.c -o "$T/msi/msitest.o"
 clang --target=x86_64-w64-windows-gnu -fuse-ld=lld -nostdlib -L/usr/lib/wine/x86_64-windows -o "$T/msi/msitest.exe" \
-    "$T/msi/msitest.o" "$W/obj/console.o" "$W/obj/common.o" -Wl,--entry=mainCRTStartup -Wl,--subsystem,console \
+    "$T/msi/msitest.o" "$W/obj/console.o" "$W/obj/common.o" "$W/obj/pin.o" -Wl,--entry=mainCRTStartup -Wl,--subsystem,console \
     -lmsi -lkernel32 -luser32 -lshell32 -ladvapi32
 
 wp() { winepath -w "$1" 2>/dev/null; }

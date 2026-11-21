@@ -43,6 +43,37 @@ static const IEnumWbemClassObjectVtbl g_enum_vt;
 static const IWbemClassObjectVtbl g_obj_vt;
 static const IClientSecurityVtbl g_sec_vt;
 
+/* oleaut32 (BSTR, VARIANT) is looked up on first use, not imported: olevx is
+ * loaded into every program VistaExt runs that uses ole32, and most never
+ * touch WMI. A program that does has oleaut32 loaded already (WMI's own
+ * client needs it). */
+typedef BSTR (WINAPI *sysalloc_fn)(const OLECHAR *);
+typedef HRESULT (WINAPI *varclear_fn)(VARIANTARG *);
+
+static HMODULE oleaut(void)
+{
+    static HMODULE h;
+    if (!h && !(h = GetModuleHandleW(L"oleaut32.dll"))) h = LoadLibraryW(L"oleaut32.dll");
+    return h;
+}
+
+static BSTR oa_SysAllocString(const OLECHAR *s)
+{
+    static sysalloc_fn f;
+    if (!f && oleaut()) f = (sysalloc_fn)(void *)GetProcAddress(oleaut(), "SysAllocString");
+    return f ? f(s) : NULL;
+}
+
+static void oa_VariantClear(VARIANT *v)
+{
+    static varclear_fn f;
+    if (V_VT(v) == VT_EMPTY || V_VT(v) == VT_NULL || V_VT(v) == VT_I4) { V_VT(v) = VT_EMPTY; return; }   /* nothing to free */
+    if (!f && oleaut()) f = (varclear_fn)(void *)GetProcAddress(oleaut(), "VariantClear");
+    if (f) f(v);
+}
+
+static void oa_VariantInit(VARIANT *v) { vx_memset(v, 0, sizeof(*v)); }   /* what VariantInit does: VT_EMPTY */
+
 static BOOL ours(const void *p)
 {
     const void *vt;
@@ -59,8 +90,8 @@ static BOOL version_told(told *t)
     typedef void (NTAPI *fn)(DWORD *, DWORD *, DWORD *);
     static fn real;
     static DWORD rmaj, rmin, rbld;
-    BYTE *peb = *(BYTE **)((BYTE *)NtCurrentTeb() + (sizeof(void *) == 8 ? 0x60 : 0x30));
-    const UNICODE_STRING *c = (const UNICODE_STRING *)(peb + (sizeof(void *) == 8 ? 0x2E8 : 0x1F0));
+    BYTE *peb = vx_peb();
+    const UNICODE_STRING *c = (const UNICODE_STRING *)(peb + VX_PEB_CSDSTR);
     SIZE_T i;
     if (!real) {
         real = (fn)(void *)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlGetNtVersionNumbers");
@@ -68,10 +99,8 @@ static BOOL version_told(told *t)
         real(&rmaj, &rmin, &rbld);
         rbld &= 0xFFFF;
     }
-    t->maj = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x118 : 0xA4));
-    t->min = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x11C : 0xA8));
-    t->build = *(USHORT *)(peb + (sizeof(void *) == 8 ? 0x120 : 0xAC));
-    t->sp = *(USHORT *)(peb + (sizeof(void *) == 8 ? 0x122 : 0xAE)) >> 8;
+    vx_peb_version(&t->maj, &t->min, &t->build);
+    t->sp = *(USHORT *)(peb + VX_PEB_CSDNUM) >> 8;
     for (i = 0; c->Buffer && i < c->Length / sizeof(WCHAR) && i < 63; i++) t->csd[i] = c->Buffer[i];
     t->csd[i] = 0;
     return t->maj != rmaj || t->min != rmin || t->build != rbld;
@@ -93,10 +122,10 @@ static BOOL is_os_object(IWbemClassObject *o)
 {
     VARIANT v;
     BOOL r = FALSE;
-    VariantInit(&v);
+    oa_VariantInit(&v);
     if (SUCCEEDED(o->lpVtbl->Get(o, L"__CLASS", 0, &v, NULL, NULL)) && V_VT(&v) == VT_BSTR && V_BSTR(&v))
         r = !vx_wcsicmp(V_BSTR(&v), L"Win32_OperatingSystem") || !vx_wcsicmp(V_BSTR(&v), L"CIM_OperatingSystem");
-    VariantClear(&v);
+    oa_VariantClear(&v);
     if (!r) r = o->lpVtbl->InheritsFrom(o, L"CIM_OperatingSystem") == WBEM_S_NO_ERROR;
     return r;
 }
@@ -243,26 +272,19 @@ static void caption(const told *t, const WCHAR *real, WCHAR *out, SIZE_T cch)
     vx_wcscatn(out, e, cch);
 }
 
-static void cat_num(WCHAR *d, SIZE_T cch, DWORD v)     /* no wsprintf: olevx does not load user32 */
-{
-    WCHAR t[12], one[2] = { 0, 0 };
-    int n = 0;
-    do { t[n++] = (WCHAR)('0' + v % 10); v /= 10; } while (v);
-    while (n) { one[0] = t[--n]; vx_wcscatn(d, one, cch); }
-}
 
 static void put_bstr(VARIANT *v, const WCHAR *s)
 {
-    BSTR b = SysAllocString(s);
+    BSTR b = oa_SysAllocString(s);
     if (!b) return;
-    VariantClear(v);
+    oa_VariantClear(v);
     V_VT(v) = VT_BSTR;
     V_BSTR(v) = b;
 }
 
 static void put_int(VARIANT *v, LONG n)
 {
-    VariantClear(v);
+    oa_VariantClear(v);
     V_VT(v) = VT_I4;
     V_I4(v) = n;
 }
@@ -275,13 +297,13 @@ static void fake(const WCHAR *name, VARIANT *v)
     if (!name || !v || !version_told(&t)) return;
     if (!vx_wcsicmp(name, L"Version")) {
         s[0] = 0;
-        cat_num(s, 300, t.maj); vx_wcscatn(s, L".", 300);
-        cat_num(s, 300, t.min); vx_wcscatn(s, L".", 300);
-        cat_num(s, 300, t.build);
+        vx_cat_num(s, 300, t.maj); vx_wcscatn(s, L".", 300);
+        vx_cat_num(s, 300, t.min); vx_wcscatn(s, L".", 300);
+        vx_cat_num(s, 300, t.build);
         put_bstr(v, s);
     } else if (!vx_wcsicmp(name, L"BuildNumber")) {
         s[0] = 0;
-        cat_num(s, 300, t.build);
+        vx_cat_num(s, 300, t.build);
         put_bstr(v, s);
     } else if (!vx_wcsicmp(name, L"Caption") || !vx_wcsicmp(name, L"Name")) {
         const WCHAR *real = V_VT(v) == VT_BSTR ? V_BSTR(v) : NULL, *rest = NULL;
@@ -295,7 +317,7 @@ static void fake(const WCHAR *name, VARIANT *v)
         put_int(v, 0);
     } else if (!vx_wcsicmp(name, L"CSDVersion")) {
         if (t.csd[0]) put_bstr(v, t.csd);
-        else { VariantClear(v); V_VT(v) = VT_NULL; }
+        else { oa_VariantClear(v); V_VT(v) = VT_NULL; }
     }
 }
 

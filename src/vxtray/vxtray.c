@@ -23,7 +23,8 @@
 #include <shlobj.h>
 
 #define WM_TRAY      (WM_APP + 1)
-#define ID_TIMER     1
+#define WM_CHANGED   (WM_APP + 2)   /* a change finished (worker thread): wp = it worked, lp = the request */
+#define ID_RETRY     1
 #define IDM_TOGGLE   100
 #define IDM_REAL     101
 #define IDM_CUSTOM   102
@@ -41,6 +42,8 @@ static UINT g_taskbar_created;
 static NOTIFYICONDATAW g_nid;
 static BOOL g_on = TRUE, g_restart, g_added;
 static DWORD g_waiting;       /* switched off while changed programs ran: put back once closed */
+static BOOL g_busy;           /* a change is being made (by the worker thread) */
+static int g_retries;
 static WCHAR g_ver[40], g_label[80];
 static const WCHAR *TITLE = L"VistaExt";
 
@@ -60,51 +63,16 @@ static void describe(const WCHAR *tok, WCHAR *out, SIZE_T cch)
     vx_wcscpyn(out, tok, cch);
 }
 
-static BOOL restart_pending(void)
-{
-    HKEY k;
-    ULONGLONG t = 0, now, boot;
-    DWORD cb = sizeof(t), type;
-    FILETIME ft;
-    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return FALSE;
-    if (RegQueryValueExW(k, L"RestartNeeded", NULL, &type, (BYTE *)&t, &cb) || type != REG_QWORD) t = 0;
-    RegCloseKey(k);
-    GetSystemTimeAsFileTime(&ft);
-    now = ((ULONGLONG)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-    boot = now - (ULONGLONG)GetTickCount64() * 10000;
-    return t && t >= boot;
-}
-
-static BOOL setups(void)
-{
-    HKEY k;
-    DWORD v = 1, cb = sizeof(v), type;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Setups", NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = 1;
-        RegCloseKey(k);
-    }
-    return v != 0;
-}
-
-static BOOL enabled(void)
-{
-    HKEY k;
-    DWORD v = 1, cb = sizeof(v), type;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Enabled", NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = 1;
-        RegCloseKey(k);
-    }
-    return v != 0;
-}
+static BOOL setups(void) { return vx_setting(L"Setups", 1) != 0; }
 
 static void read_state(void)
 {
     WCHAR v[64];
-    g_on = enabled();
+    g_on = vx_setting(L"Enabled", 1) != 0;
     if (!vx_global_version(v, 64)) v[0] = 0;
     vx_wcscpyn(g_ver, v[0] ? v : L"REAL", 40);
     describe(v, g_label, 80);
-    g_restart = restart_pending();
+    g_restart = vx_restart_state() > 0;
     {
         HKEY k;
         g_waiting = 0;
@@ -190,12 +158,9 @@ static BOOL run_elevated(const WCHAR *args)
     return code == 0 || code == 3;          /* 3: done, restart needed */
 }
 
-static void change(const WCHAR *req, const WCHAR *args)
+/* what the user saw after a change */
+static void changed(BOOL ok, const WCHAR *req)
 {
-    WCHAR rep[512];
-    HCURSOR old = SetCursor(LoadCursorW(NULL, (LPCWSTR)IDC_WAIT));
-    BOOL ok = ask_service(req, rep, 512) || run_elevated(args);
-    SetCursor(old);
     read_state();
     update_icon(FALSE);
     if (!ok) {
@@ -225,6 +190,35 @@ static void change(const WCHAR *req, const WCHAR *args)
     } else
         balloon(L"VistaExt is off", L"Windows works as it does without VistaExt. Programs that are running keep it "
                                     L"until you close them.", NIIF_INFO);
+}
+
+/* A switch can take a while (the service waits for files; a UAC prompt
+ * waits for the user), so it is made in its own thread: the icon's window
+ * keeps answering meanwhile (Windows and other programs send messages to
+ * every window, and wait for a hung one). */
+typedef struct { WCHAR req[64], args[64]; } change_req;
+
+static DWORD WINAPI change_thread(LPVOID p)
+{
+    change_req *c = p;
+    WCHAR rep[512];
+    BOOL ok = ask_service(c->req, rep, 512) || run_elevated(c->args);
+    if (!PostMessageW(g_wnd, WM_CHANGED, ok, (LPARAM)c)) HeapFree(GetProcessHeap(), 0, c);
+    return 0;
+}
+
+static void change(const WCHAR *req, const WCHAR *args)
+{
+    change_req *c = HeapAlloc(GetProcessHeap(), 0, sizeof(*c));
+    HANDLE t;
+    if (!c) return;
+    vx_wcscpyn(c->req, req, 64);
+    vx_wcscpyn(c->args, args, 64);
+    g_busy = TRUE;
+    if ((t = CreateThread(NULL, 0, change_thread, c, 0, NULL))) { CloseHandle(t); return; }
+    g_busy = FALSE;
+    HeapFree(GetProcessHeap(), 0, c);
+    changed(FALSE, req);
 }
 
 static void set_version(const WCHAR *tok)
@@ -354,6 +348,12 @@ static void show_menu(void)
     POINT pt;
     int i, cmd;
     BOOL custom = !vx_wcsnicmp(g_ver, L"VER:", 4);
+    if (g_busy) {
+        balloon(TITLE, L"Still making the last change...", NIIF_INFO);
+        DestroyMenu(m);
+        DestroyMenu(vm);
+        return;
+    }
     read_state();
     wsprintfW(line, g_on ? L"VistaExt is on - programs are told %s" : L"VistaExt is off", g_label);
     AppendMenuW(m, MF_STRING | MF_GRAYED, 0, line);
@@ -434,20 +434,29 @@ static void show_menu(void)
 
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM wp, LPARAM lp)
 {
-    if (m == g_taskbar_created && m) { g_added = FALSE; update_icon(TRUE); return 0; }   /* Explorer restarted */
+    if (m == g_taskbar_created && m) {             /* Explorer (re)started its notification area */
+        g_added = FALSE;
+        update_icon(TRUE);
+        return 0;
+    }
     switch (m) {
     case WM_TRAY:
         if (lp == WM_LBUTTONUP || lp == WM_RBUTTONUP || lp == WM_CONTEXTMENU) show_menu();
         return 0;
-    case WM_TIMER: {
-        BOOL on = g_on, rs = g_restart;
-        DWORD wt = g_waiting;
-        WCHAR v[40];
-        vx_wcscpyn(v, g_ver, 40);
-        read_state();
-        if (on != g_on || rs != g_restart || wt != g_waiting || vx_wcsicmp(v, g_ver)) update_icon(FALSE);
+    case WM_CHANGED:
+        g_busy = FALSE;
+        changed((BOOL)wp, ((change_req *)lp)->req);
+        HeapFree(GetProcessHeap(), 0, (void *)lp);
         return 0;
-    }
+    case WM_TIMER:
+        /* The taskbar was there but did not answer in time (Explorer is
+         * busy right after logon on a slow PC; Shell_NotifyIcon then fails
+         * although the notification area exists, and no TaskbarCreated
+         * follows). Tried again every 2 s, 30 times at most. If there is no
+         * taskbar yet, TaskbarCreated says when there is. */
+        update_icon(TRUE);
+        if (g_added || ++g_retries >= 30 || !FindWindowW(L"Shell_TrayWnd", NULL)) KillTimer(h, ID_RETRY);
+        return 0;
     case WM_DESTROY:
         Shell_NotifyIconW(NIM_DELETE, &g_nid);
         PostQuitMessage(0);
@@ -462,7 +471,9 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
     MSG msg;
     int argc = 0, i;
     WCHAR **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    HANDLE one;
+    HANDLE one, ev = NULL;
+    HKEY key = NULL;
+    BOOL armed = FALSE;
     g_inst = inst;
     for (i = 1; argv && i < argc; i++)
         if (!vx_wcsicmp(argv[i], L"/autostart") && !autostart_on()) return 0;
@@ -478,17 +489,36 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
     g_wnd = CreateWindowExW(0, wc.lpszClassName, TITLE, 0, 0, 0, 0, 0, NULL, NULL, inst, NULL);
     if (!g_wnd) return 1;
     read_state();
-    /* Explorer may not have its notification area yet right after logon */
-    for (i = 0; i < 30; i++) {
-        update_icon(TRUE);
-        if (g_added) break;
-        Sleep(2000);
-    }
-    SetTimer(g_wnd, ID_TIMER, 3000, NULL);
+    update_icon(TRUE);
+    if (!g_added && FindWindowW(L"Shell_TrayWnd", NULL)) SetTimer(g_wnd, ID_RETRY, 2000, NULL);
     for (i = 1; argv && i < argc; i++)          /* tests: open the menu at once, for a picture */
         if (!vx_wcsicmp(argv[i], L"/showmenu")) PostMessageW(g_wnd, WM_TRAY, 1, WM_RBUTTONUP);
-    while (GetMessageW(&msg, NULL, 0, 0)) { TranslateMessage(&msg); DispatchMessageW(&msg); }
-    return 0;
+    /* Sleeps until a message comes or VistaExt's settings change (switched
+     * on or off, another version, a restart needed: by this icon, VistaExt
+     * Center, the command line or the service). No polling. */
+    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_NOTIFY | VX_REG_VIEW, &key))
+        ev = CreateEventW(NULL, FALSE, FALSE, NULL);
+    for (;;) {
+        DWORD w;
+        if (ev && !armed)
+            armed = !RegNotifyChangeKeyValue(key, TRUE, REG_NOTIFY_CHANGE_LAST_SET | REG_NOTIFY_CHANGE_NAME, ev, TRUE);
+        w = MsgWaitForMultipleObjects(armed ? 1 : 0, &ev, FALSE, INFINITE, QS_ALLINPUT);
+        if (armed && w == WAIT_OBJECT_0) {
+            BOOL on = g_on, rs = g_restart;
+            DWORD wt = g_waiting;
+            WCHAR v[40];
+            armed = FALSE;
+            vx_wcscpyn(v, g_ver, 40);
+            read_state();
+            if (on != g_on || rs != g_restart || wt != g_waiting || vx_wcsicmp(v, g_ver)) update_icon(FALSE);
+            continue;
+        }
+        while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_QUIT) return 0;
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+    }
 }
 
 void WinMainCRTStartup(void)

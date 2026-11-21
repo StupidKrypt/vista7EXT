@@ -61,7 +61,7 @@ VX_EXPORT HINSTANCE WINAPI vx_ShellExecuteA(HWND h, LPCSTR op, LPCSTR file, LPCS
     return ShellExecuteA(h, op, file, params, dir, show);
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_SetCurrentProcessExplicitAppUserModelID(PCWSTR id)
 { VX_NATIVE(L"shell32.dll", SetCurrentProcessExplicitAppUserModelID, HRESULT, (PCWSTR id), (id));
     if (!id || vx_wcslen(id) >= 128) return E_INVALIDARG;
@@ -70,7 +70,7 @@ VX_EXPORT HRESULT WINAPI vx_SetCurrentProcessExplicitAppUserModelID(PCWSTR id)
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_GetCurrentProcessExplicitAppUserModelID(PWSTR *id)
 { VX_NATIVE(L"shell32.dll", GetCurrentProcessExplicitAppUserModelID, HRESULT, (PWSTR *id), (id));
     SIZE_T n;
@@ -84,7 +84,7 @@ VX_EXPORT HRESULT WINAPI vx_GetCurrentProcessExplicitAppUserModelID(PWSTR *id)
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_SHGetPropertyStoreForWindow(HWND h, REFIID riid, void **ppv)
 { VX_NATIVE(L"shell32.dll", SHGetPropertyStoreForWindow, HRESULT, (HWND h, REFIID riid, void **ppv), (h, riid, ppv));
     *ppv = NULL;
@@ -92,11 +92,11 @@ VX_EXPORT HRESULT WINAPI vx_SHGetPropertyStoreForWindow(HWND h, REFIID riid, voi
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_Shell_NotifyIconGetRect(const void *id, RECT *rc) { VX_NATIVE(L"shell32.dll", Shell_NotifyIconGetRect, HRESULT, (const void *id, RECT *rc), (id, rc)); return E_NOTIMPL; }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_SHGetKnownFolderItem(REFKNOWNFOLDERID id, DWORD flags, HANDLE tok, REFIID riid, void **ppv)
 { VX_NATIVE(L"shell32.dll", SHGetKnownFolderItem, HRESULT, (REFKNOWNFOLDERID id, DWORD flags, HANDLE tok, REFIID riid, void **ppv), (id, flags, tok, riid, ppv));
     PWSTR path = NULL;

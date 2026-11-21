@@ -66,6 +66,7 @@ if exist "%SAFESTATE%" (
     set "NF=!B!\nofault.exe"
     if "%~2"=="safemode" goto :safe_in
     if exist "%SAFEAFTER%" goto :safe_after
+    if exist "%SystemDrive%\vxt-uninst.after" goto :uninst_after
 )
 call :say "Windows: !PN! !CSD!, version !CV!, build !BLD!, %OSA%"
 call :say "Started: %DATE% %TIME%"
@@ -135,6 +136,8 @@ reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x1" >nul
 call :expect "VistaExt is on after installing" 0 !errorlevel!
 sc query VistaExtAuto | find "RUNNING" >nul
 call :expect "VistaExt's service runs (hidden, no window)" 0 !errorlevel!
+sc qc VistaExtAuto | find "DELAYED" >nul
+call :expect "the service starts with Windows, not delayed (programs started at sign-in need it)" 1 !errorlevel!
 start "" "%VX%\vxtray.exe" /showmenu
 ping -n 5 127.0.0.1 >nul
 tasklist /fi "imagename eq vxtray.exe" 2>nul | find /i "vxtray.exe" >nul
@@ -184,6 +187,8 @@ call :run 120 "%VX%\vxpatch.exe" /undo /q "%FE%"
 reg delete "%LAYERS%" /v "%FE%\\" /f >nul 2>&1
 
 if exist "%T%\only-diag.txt" goto :diag
+if exist "%T%\only-watch.txt" goto :watchdiag
+if exist "%T%\only-uninst.txt" goto :uninst
 rem --------------------------------------------------------- performance
 call :bench
 if exist "%T%\only-bench.txt" goto :finish
@@ -240,8 +245,20 @@ ping -n 3 127.0.0.1 >nul
 call :say "### uninstall.cmd (with programs still patched, switched off and on once)"
 set "APP=%T%\%OSA%\app\vxtest.exe"
 call :run 120 "%VX%\vxpatch.exe" /file /q "%APP%"
+rem Windows Search's filter host can have VistaExt's API-set DLLs loaded (with
+rem the deps baseline's updates, a component it loads imports two of them; see
+rem KNOWN_RISKS "New system DLLs"). uninstall.cmd then rightly leaves them for
+rem a restart. Stopped here (a test VM) so that removal in this session is checked.
+net stop WSearch >nul 2>&1
+taskkill /f /im SearchFilterHost.exe >nul 2>&1
+taskkill /f /im SearchProtocolHost.exe >nul 2>&1
 cmd /c ""%VX%\uninstall.cmd"" < nul > "%R%\uninstall.txt" 2>&1
 call :expect "uninstall.cmd succeeds" 0 !errorlevel!
+if exist "%SYS%\kernelvx.dll" (
+    rem who still has it loaded (diagnosis for the check below)
+    >>"%LOG%" echo   processes with kernelvx.dll loaded:
+    tasklist /m kernelvx.dll >> "%LOG%" 2>&1
+)
 call :absent "kernelvx.dll removed from System32" "%SYS%\kernelvx.dll"
 if defined OWNSYS (call :exists "Windows' own API-set DLL kept" "%SYS%\api-ms-win-core-synch-l1-2-0.dll") else (call :absent "API-set DLLs removed" "%SYS%\api-ms-win-core-synch-l1-2-0.dll")
 if "%OSA%"=="x64" call :absent "32-bit kernelvx.dll removed from SysWOW64" "%WOW%\kernelvx.dll"
@@ -500,10 +517,33 @@ ping -n 6 127.0.0.1 >nul
 taskkill /f /im vxwatch.exe >nul 2>&1
 rem a helper process (started by the program itself) that crashes gets no
 rem window of its own: the main process is the one users see
+rem watchers of other windowed programs still running are counted first:
+rem only a new one would be the helper's
+set "N0=0"
+for /f %%n in ('tasklist /fi "imagename eq vxwatch.exe" 2^>nul ^| find /c /i "vxwatch.exe"') do set "N0=%%n"
 start "" "%W%\crashtest.exe" /helper
-ping -n 14 127.0.0.1 >nul
-tasklist /fi "imagename eq vxwatch.exe" 2>nul | find /i "vxwatch.exe" >nul
-call :expect "%A% no crash window for a crashed helper process of a program" 1 !errorlevel!
+ping -n 6 127.0.0.1 >nul
+rem the program waits for its crashed helper (Windows Error Reporting may hold
+rem it for a while); its own watcher runs, silently, until it ends: so wait for
+rem the program to end before looking for a crash window
+for /l %%w in (1,1,30) do (tasklist /fi "imagename eq crashtest.exe" 2>nul | find /i "crashtest.exe" >nul && ping -n 2 127.0.0.1 >nul)
+ping -n 4 127.0.0.1 >nul
+set "N1=0"
+for /f %%n in ('tasklist /fi "imagename eq vxwatch.exe" 2^>nul ^| find /c /i "vxwatch.exe"') do set "N1=%%n"
+set "HW=1"
+if !N1! GTR !N0! (
+    set "HW=0"
+    rem a new watcher is still there: whose, and what is on screen
+    2>nul >COM1 echo SHOT helper-%A%
+    ping -n 6 127.0.0.1 >nul
+    >>"%LOG%" echo   watchers before !N0!, after !N1!; still running:
+    wmic process where "name='vxwatch.exe' or name='crashtest.exe' or name='WerFault.exe'" get ProcessId,ParentProcessId,CommandLine /format:list 2>nul | find "=" >> "%LOG%"
+    wmic process get Name,ProcessId /format:csv 2>nul | find "," >> "%LOG%"
+) else if !N0! GTR 0 (
+    >>"%LOG%" echo   ^(!N0! watcher^(s^) of other windowed programs still running were there before^)
+    wmic process get Name,ProcessId,ParentProcessId /format:csv 2>nul | find "," >> "%LOG%"
+)
+call :expect "%A% no crash window for a crashed helper process of a program" 1 !HW!
 taskkill /f /im vxwatch.exe >nul 2>&1
 taskkill /f /im crashtest.exe >nul 2>&1
 rem "Restart with this setting": answered by the test hook, Windows 10
@@ -776,7 +816,84 @@ set "OWNSYS="
 if exist "%SYS%\api-ms-win-core-synch-l1-2-0.dll" findstr /m /l /c:"VistaExt-owned-file" "%SYS%\api-ms-win-core-synch-l1-2-0.dll" >nul 2>&1 || set "OWNSYS=1"
 goto :safe_done
 
+rem ---- uninstalling with VistaExtSetup.exe while a program VistaExt runs is open
+:uninst
+call :say "### uninstall (VistaExtSetup.exe) while a program VistaExt runs is open"
+set "UN=%T%\uninst"
+mkdir "%UN%" 2>nul
+copy /y "%B%\apitest.exe" "%UN%\vxbusy3.exe" >nul
+ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
+call :run 120 "%VX%\vxpatch.exe" /memory /q "%UN%"
+ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
+start "" "%UN%\vxbusy3.exe" /wait:600
+ping -n 5 127.0.0.1 >nul
+tasklist /fi "imagename eq vxbusy3.exe" 2>nul | find /i "vxbusy3.exe" >nul
+call :expect "a program VistaExt runs is open" 0 !errorlevel!
+copy /y "%T%\VistaExtSetup.exe" "%VX%\VistaExtSetup.exe" >nul
+start "" /wait "%VX%\VistaExtSetup.exe" /uninstall /quiet
+for /l %%w in (1,1,30) do (if exist "%VX%\vxpatch.exe" ping -n 3 127.0.0.1 >nul)
+ping -n 6 127.0.0.1 >nul
+copy /y "%ProgramData%\VistaExt\setup.log" "%R%\uninst-setup.log" >nul 2>&1
+reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations > "%R%\uninst-pending.txt" 2>&1
+find /i "System32\kernelvx.dll" "%R%\uninst-pending.txt" >nul
+call :expect "a VistaExt file the open program uses is deleted when Windows restarts" 0 !errorlevel!
+call :absent "the service is gone" "%VX%\vxauto.exe"
+reg query "HKLM\SOFTWARE\VistaExt" >nul 2>&1
+call :expect "settings are gone" 1 !errorlevel!
+> "%SAFESTATE%" echo !PASS! !FAIL!
+> "%SystemDrive%\vxt-uninst.after" echo after
+call :say "    restarting"
+shutdown /r /t 3 /f
+exit
+
+:uninst_after
+call :say "--- after the restart ---"
+del /f /q "%SAFESTATE%" "%SystemDrive%\vxt-uninst.after" >nul 2>&1
+call :absent "kernelvx.dll is gone from System32" "%SYS%\kernelvx.dll"
+call :absent "vxload.dll is gone" "%SYS%\vxload.dll"
+if "%OSA%"=="x64" call :absent "32-bit kernelvx.dll is gone from SysWOW64" "%WOW%\kernelvx.dll"
+dir /b "%SYS%\api-ms-win-core-winrt-l1-1-0.dll" "%SYS%\vxs-*" > "%T%\left.txt" 2>nul
+for /f %%c in ('find /c /v "" ^< "%T%\left.txt"') do call :say "    VistaExt API-set files left: %%c"
+call :absent "VistaExt's folder in Program Files is gone" "%VX%"
+call :absent "the log folder is gone" "%ProgramData%\VistaExt"
+goto :finish
+
 rem ---- diagnostics (VX_VM_ONLY=diag): the in-memory loader's own report
+:watchdiag
+rem the crash watcher with 32-bit programs: which processes exist when
+call :say "### diagnostics: crash watchers of 32-bit programs"
+set "WD=%T%\watchdiag"
+mkdir "%WD%" 2>nul
+copy /y "%T%\bin\x86\crashtest.exe" "%WD%\" >nul
+call :run 120 "%VX%\vxpatch.exe" /memory /q "%WD%"
+call :say "--- a program that keeps running, then is ended (taskkill /f)"
+start "" "%WD%\crashtest.exe" /stay
+ping -n 6 127.0.0.1 >nul
+call :procs "running"
+taskkill /f /im crashtest.exe >nul 2>&1
+ping -n 6 127.0.0.1 >nul
+call :procs "5 s after it was ended"
+taskkill /f /im vxwatch.exe >nul 2>&1
+call :say "--- a program whose helper crashes"
+start "" "%WD%\crashtest.exe" /helper
+ping -n 3 127.0.0.1 >nul
+call :procs "2 s"
+ping -n 7 127.0.0.1 >nul
+call :procs "8 s"
+ping -n 23 127.0.0.1 >nul
+call :procs "30 s"
+ping -n 16 127.0.0.1 >nul
+call :procs "45 s"
+2>nul >COM1 echo SHOT watchdiag
+ping -n 6 127.0.0.1 >nul
+copy /y "%LOCALAPPDATA%\VistaExt\crashes.log" "%R%\crashes.log" >nul 2>&1
+goto :finish
+
+:procs
+call :say "  processes (%~1):"
+wmic process where "name='vxwatch.exe' or name='crashtest.exe' or name='WerFault.exe'" get ProcessId,ParentProcessId,CommandLine /format:list 2>nul | find "=" >> "%LOG%"
+goto :eof
+
 :diag
 call :say "### diagnostics: vxload under vxdbg, VX_TRACE=1"
 set "DG=%T%\diag"

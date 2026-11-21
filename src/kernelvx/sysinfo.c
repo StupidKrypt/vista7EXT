@@ -93,14 +93,14 @@ VX_EXPORT void WINAPI vx_GetSystemTimePreciseAsFileTime(LPFILETIME ft)
 /* KUSER_SHARED_DATA.InterruptTime, readable from user mode on every NT. */
 static ULONGLONG interrupt_time(void)
 {
-    volatile LONG *p = (volatile LONG *)(ULONG_PTR)0x7FFE0008;
+    volatile LONG *p = VX_KUSER_INTERRUPT_TIME;
     LONG hi1, hi2;
     ULONG lo;
     do { hi1 = p[1]; lo = (ULONG)p[0]; hi2 = p[2]; } while (hi1 != hi2);
     return ((ULONGLONG)(ULONG)hi1 << 32) | lo;
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_QueryUnbiasedInterruptTime(PULONGLONG t)
 { VX_NATIVE(K32, QueryUnbiasedInterruptTime, BOOL, (PULONGLONG t), (t));
     if (!t) { SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
@@ -115,7 +115,7 @@ VX_EXPORT void WINAPI vx_QueryUnbiasedInterruptTimePrecise(PULONGLONG t) { VX_NA
 /* ---- processor groups (Windows 7). Vista always has exactly one group. -- */
 static DWORD ncpu(void) { SYSTEM_INFO si; GetSystemInfo(&si); return si.dwNumberOfProcessors; }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT DWORD WINAPI vx_GetActiveProcessorCount(WORD group)
 { VX_NATIVE(K32, GetActiveProcessorCount, DWORD, (WORD group), (group));
     if (group && group != ALL_PROCESSOR_GROUPS) { SetLastError(ERROR_INVALID_PARAMETER); return 0; }
@@ -126,7 +126,7 @@ VX_EXPORT WORD WINAPI vx_GetActiveProcessorGroupCount(void) { VX_NATIVE(K32, Get
 VX_EXPORT WORD WINAPI vx_GetMaximumProcessorGroupCount(void) { VX_NATIVE(K32, GetMaximumProcessorGroupCount, WORD, (void), ()); return 1; }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT void WINAPI vx_GetCurrentProcessorNumberEx(PPROCESSOR_NUMBER p)
 { VX_NATIVE_VOID(K32, GetCurrentProcessorNumberEx, (PPROCESSOR_NUMBER p), (p));
     p->Group = 0;
@@ -141,7 +141,7 @@ typedef struct {
 } VX_THREAD_BASIC_INFORMATION;
 LONG WINAPI NtQueryInformationThread(HANDLE, int, PVOID, ULONG, PULONG);
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetThreadGroupAffinity(HANDLE h, PGROUP_AFFINITY ga)
 { VX_NATIVE(K32, GetThreadGroupAffinity, BOOL, (HANDLE h, PGROUP_AFFINITY ga), (h, ga));
     VX_THREAD_BASIC_INFORMATION tbi;
@@ -155,7 +155,7 @@ VX_EXPORT BOOL WINAPI vx_GetThreadGroupAffinity(HANDLE h, PGROUP_AFFINITY ga)
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_SetThreadGroupAffinity(HANDLE h, const GROUP_AFFINITY *ga, PGROUP_AFFINITY prev)
 { VX_NATIVE(K32, SetThreadGroupAffinity, BOOL, (HANDLE h, const GROUP_AFFINITY *ga, PGROUP_AFFINITY prev), (h, ga, prev));
     DWORD_PTR old;
@@ -167,7 +167,7 @@ VX_EXPORT BOOL WINAPI vx_SetThreadGroupAffinity(HANDLE h, const GROUP_AFFINITY *
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetProcessGroupAffinity(HANDLE h, PUSHORT count, PUSHORT groups)
 { VX_NATIVE(K32, GetProcessGroupAffinity, BOOL, (HANDLE h, PUSHORT count, PUSHORT groups), (h, count, groups));
     if (!count) { SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
@@ -178,7 +178,7 @@ VX_EXPORT BOOL WINAPI vx_GetProcessGroupAffinity(HANDLE h, PUSHORT count, PUSHOR
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetNumaNodeProcessorMaskEx(USHORT node, PGROUP_AFFINITY ga)
 { VX_NATIVE(K32, GetNumaNodeProcessorMaskEx, BOOL, (USHORT node, PGROUP_AFFINITY ga), (node, ga));
     ULONGLONG m;
@@ -189,7 +189,7 @@ VX_EXPORT BOOL WINAPI vx_GetNumaNodeProcessorMaskEx(USHORT node, PGROUP_AFFINITY
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetNumaProximityNodeEx(ULONG prox, PUSHORT node)
 { VX_NATIVE(K32, GetNumaProximityNodeEx, BOOL, (ULONG prox, PUSHORT node), (prox, node));
     if (prox) { SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
@@ -198,7 +198,7 @@ VX_EXPORT BOOL WINAPI vx_GetNumaProximityNodeEx(ULONG prox, PUSHORT node)
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetNumaProcessorNodeEx(PPROCESSOR_NUMBER p, PUSHORT node)
 { VX_NATIVE(K32, GetNumaProcessorNodeEx, BOOL, (PPROCESSOR_NUMBER p, PUSHORT node), (p, node));
     UCHAR n = 0;
@@ -210,7 +210,7 @@ VX_EXPORT BOOL WINAPI vx_GetNumaProcessorNodeEx(PPROCESSOR_NUMBER p, PUSHORT nod
 #endif
 
 /* SetThreadIdealProcessor(h, MAXIMUM_PROCESSORS) reads the current one */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetThreadIdealProcessorEx(HANDLE h, PPROCESSOR_NUMBER p)
 { VX_NATIVE(K32, GetThreadIdealProcessorEx, BOOL, (HANDLE h, PPROCESSOR_NUMBER p), (h, p));
     DWORD cur = SetThreadIdealProcessor(h, MAXIMUM_PROCESSORS);
@@ -220,7 +220,7 @@ VX_EXPORT BOOL WINAPI vx_GetThreadIdealProcessorEx(HANDLE h, PPROCESSOR_NUMBER p
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_SetThreadIdealProcessorEx(HANDLE h, PPROCESSOR_NUMBER ideal, PPROCESSOR_NUMBER prev)
 { VX_NATIVE(K32, SetThreadIdealProcessorEx, BOOL, (HANDLE h, PPROCESSOR_NUMBER ideal, PPROCESSOR_NUMBER prev), (h, ideal, prev));
     DWORD old;
@@ -231,7 +231,7 @@ VX_EXPORT BOOL WINAPI vx_SetThreadIdealProcessorEx(HANDLE h, PPROCESSOR_NUMBER i
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetNumaNodeNumberFromHandle(HANDLE h, PUSHORT node) { VX_NATIVE(K32, GetNumaNodeNumberFromHandle, BOOL, (HANDLE h, PUSHORT node), (h, node)); *node = 0; return TRUE; }
 #endif
 
@@ -240,7 +240,7 @@ static BYTE popcount(ULONG_PTR m) { BYTE n = 0; while (m) { n += (BYTE)(m & 1); 
 /* GetLogicalProcessorInformationEx (Windows 7), built from the Vista-era
  * GetLogicalProcessorInformation. Callers walk the result by each entry's
  * Size, so a fixed entry size is fine. */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP rel,
         PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX out, PDWORD len)
 { VX_NATIVE(K32, GetLogicalProcessorInformationEx, BOOL, (LOGICAL_PROCESSOR_RELATIONSHIP rel,         PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX out, PDWORD len), (rel, out, len));
@@ -319,7 +319,7 @@ VX_EXPORT BOOL WINAPI vx_GetSystemCpuSetInformation(PVOID info, ULONG len, PULON
     return FALSE;
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT DWORD64 WINAPI vx_GetEnabledXStateFeatures(void) { VX_NATIVE(K32, GetEnabledXStateFeatures, DWORD64, (void), ()); return 3; /* x87 + SSE */ }
 #endif
 

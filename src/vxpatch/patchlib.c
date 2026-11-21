@@ -43,17 +43,56 @@ static int scmp(const char *a, const char *b)
 static void *xalloc(SIZE_T n) { return HeapAlloc(GetProcessHeap(), 0, n); }
 static void xfree(void *p) { if (p) HeapFree(GetProcessHeap(), 0, p); }
 
+/* A file's contents to look at. On a fixed local disk the file is mapped,
+ * not read: only the pages that are looked at come from the disk - for the
+ * imports of a 200 MB program, a few KB instead of 200 MB of memory and disk
+ * time. The view is copy-on-write, so the patch code may change the bytes in
+ * memory (the file is not changed). Elsewhere (USB stick, network share) the
+ * file is read whole: a mapped file that disappears would crash the reader.
+ * Release with release_file(). */
+static BOOL fixed_disk(const WCHAR *path)
+{
+    WCHAR root[4];
+    if (!path[0] || path[1] != ':' || path[2] != '\\') return FALSE;
+    root[0] = path[0]; root[1] = ':'; root[2] = '\\'; root[3] = 0;
+    return GetDriveTypeW(root) == DRIVE_FIXED;
+}
+
 static BYTE *read_file(const WCHAR *path, DWORD *size)
 {
-    HANDLE h = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE h = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL), m;
     DWORD hi, got;
     BYTE *buf;
     if (h == INVALID_HANDLE_VALUE) return NULL;
     *size = GetFileSize(h, &hi);
-    if (hi || *size < 0x200 || *size > 0x40000000 || !(buf = xalloc(*size))) { CloseHandle(h); return NULL; }
+    if (hi || *size < 0x200 || *size > 0x40000000) { CloseHandle(h); return NULL; }
+    if (fixed_disk(path) && (m = CreateFileMappingW(h, NULL, PAGE_WRITECOPY, 0, 0, NULL))) {
+        buf = MapViewOfFile(m, FILE_MAP_COPY, 0, 0, 0);
+        CloseHandle(m);
+        if (buf) { CloseHandle(h); return buf; }
+    }
+    if (!(buf = xalloc(*size))) { CloseHandle(h); return NULL; }
     if (!ReadFile(h, buf, *size, &got, NULL) || got != *size) { xfree(buf); CloseHandle(h); return NULL; }
     CloseHandle(h);
     return buf;
+}
+
+static void release_file(BYTE *d)
+{
+    MEMORY_BASIC_INFORMATION mbi;
+    if (!d) return;
+    if (VirtualQuery(d, &mbi, sizeof(mbi)) && mbi.Type == MEM_MAPPED) UnmapViewOfFile(d);
+    else xfree(d);
+}
+
+/* the patched bytes, to be written over the file: they must not stay a view
+ * of the file itself while it is written (it could not be opened for writing) */
+static BYTE *own_copy(BYTE *d, DWORD size)
+{
+    BYTE *c = xalloc(size);
+    if (c) vx_memcpy(c, d, size);
+    release_file(d);                    /* also without a copy: the caller then has nothing to free */
+    return c;
 }
 
 static BOOL file_exists(const WCHAR *p)
@@ -239,7 +278,7 @@ static expset *get_exports(const WCHAR *path)
             }
         }
     }
-    xfree(d);
+    release_file(d);
     return e;
 }
 
@@ -621,15 +660,54 @@ static DWORD unprotect(const WCHAR *path)
     return 0;
 }
 
+/* The patched bytes replace the file all at once, never in place: they are
+ * written to a new file next to it, flushed to the disk, and swapped in with
+ * ReplaceFile, which keeps the original's attributes and security - the way
+ * Microsoft recommends for updating a file without a half-written state
+ * ("Alternatives to using Transactional NTFS"). A power cut or a full disk
+ * leaves the original as it was. The original is opened for writing first, as
+ * before: a program that runs keeps its file and is patched later. */
+#ifndef ERROR_UNABLE_TO_MOVE_REPLACEMENT_2
+#define ERROR_UNABLE_TO_MOVE_REPLACEMENT_2 1177L
+#endif
 static BOOL write_file(const WCHAR *path, BYTE *d, DWORD size)
 {
-    DWORD attr = unprotect(path), put, err;
-    HANDLE h = CreateFileW(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+    WCHAR tmp[MAX_PATH + 16], old[MAX_PATH + 16];
+    DWORD attr, put, err;
+    HANDLE h;
     BOOL ok = FALSE;
-    if (h != INVALID_HANDLE_VALUE) {
-        ok = WriteFile(h, d, size, &put, NULL) && put == size && SetEndOfFile(h);
-        CloseHandle(h);
+    SIZE_T n = vx_wcslen(path);
+    if (n + 7 >= MAX_PATH) { SetLastError(ERROR_FILENAME_EXCED_RANGE); return FALSE; }
+    vx_wcscpyn(tmp, path, MAX_PATH + 16);
+    vx_wcscatn(tmp, L".vxnew", MAX_PATH + 16);
+    vx_wcscpyn(old, path, MAX_PATH + 16);
+    vx_wcscatn(old, L".vxold", MAX_PATH + 16);
+    attr = unprotect(path);
+    /* in use (a running program): left for later, as it always was */
+    h = CreateFileW(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+    if (h == INVALID_HANDLE_VALUE) goto out;
+    CloseHandle(h);
+    DeleteFileW(tmp);                          /* left over from an interrupted earlier try */
+    DeleteFileW(old);
+    h = CreateFileW(tmp, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (h == INVALID_HANDLE_VALUE) goto out;
+    ok = WriteFile(h, d, size, &put, NULL) && put == size && FlushFileBuffers(h);
+    err = GetLastError();
+    CloseHandle(h);
+    if (!ok) { DeleteFileW(tmp); SetLastError(err); goto out; }
+    if (ReplaceFileW(path, tmp, old, REPLACEFILE_IGNORE_MERGE_ERRORS, NULL, NULL)) {
+        DeleteFileW(old);
+    } else {
+        err = GetLastError();
+        ok = FALSE;
+        /* 1177: the original is under the backup name now: put it back. 1175,
+         * 1176: the original is where it was. Either way the new file goes. */
+        if (err == ERROR_UNABLE_TO_MOVE_REPLACEMENT_2 && GetFileAttributesW(path) == INVALID_FILE_ATTRIBUTES)
+            MoveFileExW(old, path, 0);
+        DeleteFileW(tmp);
+        SetLastError(err);
     }
+out:
     err = GetLastError();
     if (attr) SetFileAttributesW(path, attr);
     SetLastError(err);
@@ -647,7 +725,7 @@ static BOOL same_but_patched(const BYTE *d, DWORD size, const WCHAR *b)
     if (!o) return FALSE;
     ok = bsize == size;
     for (i = 0; ok && i < size; i++) if (d[i] != o[i] && ++diff > 4096) ok = FALSE;
-    xfree(o);
+    release_file(o);
     return ok;
 }
 
@@ -856,16 +934,7 @@ static BOOL name_still_used(const WCHAR *exe)
 }
 
 /* Is VistaExt switched on (HKLM\SOFTWARE\VistaExt "Enabled", default on)? */
-BOOL vxp_enabled(void)
-{
-    HKEY k;
-    DWORD v = 1, cb = sizeof(v), type;
-    if (!RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-        if (RegQueryValueExW(k, L"Enabled", NULL, &type, (BYTE *)&v, &cb) || type != REG_DWORD) v = 1;
-        RegCloseKey(k);
-    }
-    return v != 0;
-}
+BOOL vxp_enabled(void) { return vx_setting(L"Enabled", 1) != 0; }
 
 /* Does Windows have a program of this name? Image File Execution Options go
  * by file name, so VistaExt never registers such a name: Windows' program
@@ -880,23 +949,34 @@ BOOL vxp_windows_name(const WCHAR *name)
                                  L"Windows Mail", L"Windows Photo Viewer", L"Windows Journal", L"Windows Calendar",
                                  L"Windows Collaboration", L"Windows NT\\Accessories", L"Movie Maker", L"DVD Maker" };
     static const WCHAR *env[] = { L"ProgramW6432", L"ProgramFiles", L"ProgramFiles(x86)" };
-    WCHAR p[MAX_PATH + 40], w[MAX_PATH];
+    WCHAR p[MAX_PATH * 2 + 40], w[MAX_PATH];
     unsigned i, e;
     BOOL wow = FALSE;
+    /* (a longer name counts as Windows': never registered. Paths below are
+     * built with bounded copies, so no folder length can overflow p) */
     if (!name || !name[0] || vx_wcslen(name) > 100) return TRUE;
     if (!GetWindowsDirectoryW(w, MAX_PATH)) return TRUE;
     IsWow64Process(GetCurrentProcess(), &wow);
     for (i = 0; i < sizeof(sub) / sizeof(sub[0]); i++) {
         /* a 32-bit caller on 64-bit Windows: the real System32 is "Sysnative" */
-        wsprintfW(p, L"%s%s\\%s", w, (wow && !vx_wcsnicmp(sub[i], L"\\System32", 9)) ? L"\\Sysnative" : sub[i], name);
-        if (wow && !vx_wcsnicmp(sub[i], L"\\System32\\", 10)) wsprintfW(p, L"%s\\Sysnative%s\\%s", w, sub[i] + 9, name);
+        vx_wcscpyn(p, w, MAX_PATH * 2 + 40);
+        if (wow && !vx_wcsnicmp(sub[i], L"\\System32", 9)) {
+            vx_wcscatn(p, L"\\Sysnative", MAX_PATH * 2 + 40);
+            vx_wcscatn(p, sub[i] + 9, MAX_PATH * 2 + 40);
+        } else vx_wcscatn(p, sub[i], MAX_PATH * 2 + 40);
+        vx_wcscatn(p, L"\\", MAX_PATH * 2 + 40);
+        vx_wcscatn(p, name, MAX_PATH * 2 + 40);
         if (GetFileAttributesW(p) != INVALID_FILE_ATTRIBUTES) return TRUE;
     }
     for (e = 0; e < 3; e++) {
         WCHAR root[MAX_PATH];
         if (!GetEnvironmentVariableW(env[e], root, MAX_PATH)) continue;
         for (i = 0; i < sizeof(pf) / sizeof(pf[0]); i++) {
-            wsprintfW(p, L"%s\\%s\\%s", root, pf[i], name);
+            vx_wcscpyn(p, root, MAX_PATH * 2 + 40);
+            vx_wcscatn(p, L"\\", MAX_PATH * 2 + 40);
+            vx_wcscatn(p, pf[i], MAX_PATH * 2 + 40);
+            vx_wcscatn(p, L"\\", MAX_PATH * 2 + 40);
+            vx_wcscatn(p, name, MAX_PATH * 2 + 40);
             if (GetFileAttributesW(p) != INVALID_FILE_ATTRIBUTES) return TRUE;
         }
     }
@@ -1140,7 +1220,7 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
         if (st) st->failed++;
         return -1;
     }
-    if (!pe_open(&p, d, size)) { xfree(d); if (st) st->files--; return 0; }    /* not a program */
+    if (!pe_open(&p, d, size)) { release_file(d); if (st) st->files--; return 0; }    /* not a program */
 
     vx_memset(&j, 0, sizeof(j));
     sys_dir(p.is64, sysdir);
@@ -1164,9 +1244,9 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
         if (j.changed) {
             header(&j);
             vxlog(&lg, L"  (in memory while it runs: the file itself keeps these imports)");
-            xfree(d);                              /* the unchanged file, for the header check below */
+            release_file(d);                       /* the unchanged file, for the header check below */
             if (!(d = read_file(path, &size)) || !pe_open(&p, d, size)) {
-                if (d) xfree(d);
+                release_file(d);
                 if (st) st->failed++;
                 return -1;
             }
@@ -1191,7 +1271,7 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
      * Windows 10 say subsystem 10.0. Lower it to this Windows' version. */
     {
         WORD *ss = (WORD *)(d + p.opt + 48);      /* Major/MinorSubsystemVersion, PE32 and PE32+ */
-        const DWORD maj = VX_OS / 100, min = VX_OS % 100;     /* this build's Windows: 6.0 or 6.1 */
+        const DWORD maj = VX_OS / 100, min = VX_OS % 100;     /* this build's Windows: 6.0, 6.1 or 6.2 */
         if (ss[0] > maj || (ss[0] == maj && ss[1] > min)) {
             header(&j);
             vxlog(&lg, L"  header says it needs Windows %u.%u; set to %u.%u so this Windows starts it",
@@ -1240,7 +1320,7 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
                        (unprotect(b), DeleteFileW(b), !CopyFileW(path, b, TRUE))) {   /* a new file, never through a link */
                 vxlog(&lg, L"  could not save a backup copy (error %d); nothing changed", (int)GetLastError());
                 ret = -1;
-            } else if (!write_file(path, d, size)) {
+            } else if (!(d = own_copy(d, size)) || !write_file(path, d, size)) {
                 vxlog(&lg, L"  could not write the file (error %d). Is the program running, or do you need administrator rights?",
                      (int)GetLastError());
                 ret = -1;
@@ -1253,7 +1333,7 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
     } else if (!(flags & VXP_QUIET) && !j.unsupported) {
         vxlog(&lg, L"  nothing to change");
     }
-    xfree(d);
+    release_file(d);
     return ret;
 }
 
@@ -1331,7 +1411,7 @@ int vxp_restore_file(const WCHAR *path, vxp_log_fn fn, void *ctx)
     }
     if ((d = read_file(path, &size))) {
         BOOL ours = same_but_patched(d, size, b);
-        xfree(d);
+        release_file(d);
         if (!ours) {
             /* updated or reinstalled since it was patched: the backup is an
              * older version, so putting it back would downgrade the program */
@@ -1430,7 +1510,7 @@ static BOOL needs_win10(const WCHAR *file)
     BOOL r = FALSE;
     if (!d) return FALSE;
     if (pe_open(&p, d, size)) r = *(WORD *)(d + p.opt + 48) >= 10;
-    xfree(d);
+    release_file(d);
     return r;
 }
 

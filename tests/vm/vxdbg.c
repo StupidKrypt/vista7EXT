@@ -119,6 +119,21 @@ static void stack_scan(proc *p, DWORD tid)
     vx_memset(&c, 0, sizeof(c));
     c.ContextFlags = CONTEXT_CONTROL | CONTEXT_INTEGER;
     if (!GetThreadContext(th, &c)) return;
+    {   /* the thread's last error and last NTSTATUS (TEB LastErrorValue at
+         * 0x68, LastStatusValue at 0x1250 on x64): a program that stops on
+         * a failed call (V8's CHECK_EQ(ERROR_..., GetLastError())) has the
+         * value there */
+        typedef LONG (WINAPI *qit_fn)(HANDLE, int, PVOID, ULONG, PULONG);
+        static qit_fn qit;
+        struct { LONG exit; PVOID teb; ULONG_PTR cid[2]; ULONG_PTR aff; LONG pri, base; } tbi;
+        DWORD le = 0, ls = 0;
+        if (!qit) qit = (qit_fn)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtQueryInformationThread");
+        if (qit && !qit(th, 0 /* ThreadBasicInformation */, &tbi, sizeof(tbi), NULL) && tbi.teb &&
+            ReadProcessMemory(p->h, (BYTE *)tbi.teb + 0x68, &le, sizeof(le), &got) &&
+            ReadProcessMemory(p->h, (BYTE *)tbi.teb + 0x1250, &ls, sizeof(ls), &got))
+            con_print(L"    thread's last error: %u, last status: 0x%08X\r\n", le, ls);
+        got = 0;
+    }
     ReadProcessMemory(p->h, (void *)c.Rsp, st, sizeof(st), &got);
     con_print(L"    stack (rip, then values that point into modules):\r\n");
     {

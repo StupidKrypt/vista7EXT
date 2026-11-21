@@ -1,9 +1,10 @@
 @echo off
-rem VistaExt installer for Windows Vista (SP2) and Windows 7 (SP1).
+rem VistaExt installer for Windows Vista (SP2), Windows 7 (SP1), Windows 8 and 8.1.
 rem Right-click this file and choose "Run as administrator".
 rem
 rem The release folder has one build per Windows and architecture:
-rem vista\x86, vista\x64, win7\x86, win7\x64. This picks the one for this
+rem vista\x86, vista\x64, win7\x86, win7\x64, win8\x86, win8\x64 (8.1 uses the
+rem Windows 8 build: it has everything 8 has). This picks the one for this
 rem Windows (and on 64-bit Windows also that Windows' x86 build, for the
 rem 32-bit programs in SysWOW64). It is the only place that chooses.
 rem
@@ -13,7 +14,7 @@ rem marker). Everything it adds is listed in
 rem "%ProgramFiles%\VistaExt\installed.txt" so uninstall.cmd can remove it.
 setlocal enableextensions enabledelayedexpansion
 rem Options: /quiet (no questions or pauses: VistaExtSetup.exe uses it),
-rem /force (also on Windows other than Vista/7), /noauto (no automatic mode).
+rem /force (also on Windows other than Vista to 8.1), /noauto (no automatic mode).
 set "QUIET="
 set "FORCE="
 set "NOAUTO="
@@ -42,16 +43,22 @@ if not defined ADMIN (
 
 set "WINVER=unknown"
 for /f "tokens=3" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentVersion 2^>nul ^| find "CurrentVersion"') do set "WINVER=%%a"
-if not "!WINVER!"=="6.0" if not "!WINVER!"=="6.1" if not defined FORCE (
-    echo VistaExt is for Windows Vista and Windows 7. This is Windows !WINVER!.
+rem Windows 10 and 11 still say 6.3 there; they have CurrentMajorVersionNumber
+reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentMajorVersionNumber >nul 2>&1 && set "WINVER=10"
+set "KNOWN="
+for %%v in (6.0 6.1 6.2 6.3) do if "!WINVER!"=="%%v" set "KNOWN=1"
+if not defined KNOWN if not defined FORCE (
+    echo VistaExt is for Windows Vista, 7, 8 and 8.1. This is Windows !WINVER!.
     echo Use "install.cmd /force" to install anyway.
     if not defined QUIET pause
     exit /b 1
 )
 
-rem the build for this Windows (another Windows, only with /force: Windows 7's)
-set "OSB=win7"
+rem the build for this Windows (another Windows, only with /force: the newest)
+set "OSB=win8"
 if "!WINVER!"=="6.0" set "OSB=vista"
+if "!WINVER!"=="6.1" set "OSB=win7"
+if "!OSB!"=="win8" if not exist "%~dp0win8" if not defined KNOWN set "OSB=win7"
 set "HERE=%~dp0"
 set "SRC=%~dp0!OSB!"
 set "VX=%ProgramFiles%\VistaExt"
@@ -151,9 +158,21 @@ if "!OURS!"=="0" (
     set /a KEPT+=1
     goto :eof
 )
-rem (test copy's own result: it does not reset ERRORLEVEL on success)
-copy /y "%~1" "%~2" >nul 2>&1 || (
-    echo   could not copy !NAME! ^(in use?^)
+rem Copied next to the target first, then renamed into place: a rename on the
+rem same disk is all or nothing, so a full disk or a power cut never leaves a
+rem half-written DLL in the system folder (Windows' own programs can load the
+rem API-set ones). (copy's and move's own results: they do not reset
+rem ERRORLEVEL on success.)
+if exist "%~2.vxnew" del /f /q "%~2.vxnew" >nul 2>&1
+copy /y "%~1" "%~2.vxnew" >nul 2>&1 || (
+    if exist "%~2.vxnew" del /f /q "%~2.vxnew" >nul 2>&1
+    echo   could not copy !NAME! ^(disk full?^)
+    set /a FAILED+=1
+    goto :eof
+)
+move /y "%~2.vxnew" "%~2" >nul 2>&1 || (
+    del /f /q "%~2.vxnew" >nul 2>&1
+    echo   could not replace !NAME! ^(in use?^)
     set /a FAILED+=1
     goto :eof
 )

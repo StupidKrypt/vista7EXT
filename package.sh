@@ -5,7 +5,8 @@ cd "$(dirname "$0")"
 D=out/dist/VistaExt
 rm -rf out/dist; mkdir -p "$D/webview2"
 # one build per Windows and architecture; install.cmd picks the right one
-for os in vista win7; do
+for os in vista win7 win8; do
+    [ -d out/$os-x86 ] || { [ $os = win8 ] && echo "note: no Windows 8 build (build.sh skipped it): not packaged" && continue; }
     for a in x86 x64; do
         mkdir -p "$D/$os/$a/apisets"
         cp out/$os-$a/*.dll out/$os-$a/*.exe "$D/$os/$a/"

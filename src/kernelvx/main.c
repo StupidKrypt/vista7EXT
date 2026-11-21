@@ -17,37 +17,16 @@ DWORD vx_tls_errmode = TLS_OUT_OF_INDEXES;
  * GetVersion, GetVersionEx, VerifyVersionInfo and RtlGetVersion all read the
  * OS version from the PEB, so changing it there covers every caller in the
  * process (this is what Microsoft's own "version lie" shims do). */
-#ifdef _WIN64
-#define PEB_OFF_TEB   0x60
-#define PEB_MAJOR     0x118
-#define PEB_MINOR     0x11C
-#define PEB_BUILD     0x120
-#define PEB_CSDNUM    0x122
-#define PEB_CSDSTR    0x2E8
-#else
-#define PEB_OFF_TEB   0x30
-#define PEB_MAJOR     0xA4
-#define PEB_MINOR     0xA8
-#define PEB_BUILD     0xAC
-#define PEB_CSDNUM    0xAE
-#define PEB_CSDSTR    0x1F0
-#endif
-
 typedef struct { USHORT Length, MaximumLength; PWSTR Buffer; } VX_USTR;
-
-static BYTE *get_peb(void)
-{
-    return *(BYTE **)((BYTE *)NtCurrentTeb() + PEB_OFF_TEB);
-}
 
 static void apply_version(const vx_osver *v)
 {
-    BYTE *peb = get_peb();
-    VX_USTR *csd = (VX_USTR *)(peb + PEB_CSDSTR);
-    *(ULONG *)(peb + PEB_MAJOR) = v->major;
-    *(ULONG *)(peb + PEB_MINOR) = v->minor;
-    *(USHORT *)(peb + PEB_BUILD) = (USHORT)v->build;
-    *(USHORT *)(peb + PEB_CSDNUM) = (USHORT)(v->spmajor << 8);
+    BYTE *peb = vx_peb();
+    VX_USTR *csd = (VX_USTR *)(peb + VX_PEB_CSDSTR);
+    *(ULONG *)(peb + VX_PEB_MAJOR) = v->major;
+    *(ULONG *)(peb + VX_PEB_MINOR) = v->minor;
+    *(USHORT *)(peb + VX_PEB_BUILD) = (USHORT)v->build;
+    *(USHORT *)(peb + VX_PEB_CSDNUM) = (USHORT)(v->spmajor << 8);
     csd->Buffer = (PWSTR)v->csd;
     csd->Length = (USHORT)(vx_wcslen(v->csd) * sizeof(WCHAR));
     csd->MaximumLength = csd->Length + sizeof(WCHAR);
@@ -444,17 +423,29 @@ VX_EXPORT BOOL WINAPI vx_SetDefaultDllDirectories(DWORD flags)
 }
 
 /* AddDllDirectory: emulated by prepending the folder to PATH, which the
- * standard search order includes. The cookie is a heap copy of the path. */
+ * standard search order includes. The cookie is a record holding a copy of
+ * the path; the records VistaExt handed out are kept in a list, so that
+ * RemoveDllDirectory with a cookie it did not hand out (or one already
+ * removed) fails as Windows' own does instead of freeing foreign memory. One
+ * lock keeps two threads from changing PATH at the same time. */
+typedef struct dll_dir { struct dll_dir *next; WCHAR path[1]; } dll_dir;
+static dll_dir *g_dll_dirs;
+static SRWLOCK g_dll_dirs_lock = SRWLOCK_INIT;
+
 VX_EXPORT PVOID WINAPI vx_AddDllDirectory(PCWSTR dir)
 {
-    WCHAR *copy, *path;
+    WCHAR *path;
     DWORD n, dl;
+    dll_dir *rec;
     VX_NATIVE_UPDATE(K32, AddDllDirectory, PVOID, (PCWSTR), (dir));
     if (!dir || !has_path(dir)) { SetLastError(ERROR_INVALID_PARAMETER); return NULL; }
     dl = (DWORD)vx_wcslen(dir);
-    copy = HeapAlloc(GetProcessHeap(), 0, (dl + 1) * sizeof(WCHAR));
-    if (!copy) return NULL;
-    vx_wcscpyn(copy, dir, dl + 1);
+    if (!(rec = HeapAlloc(GetProcessHeap(), 0, sizeof(*rec) + dl * sizeof(WCHAR)))) {
+        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+        return NULL;
+    }
+    vx_wcscpyn(rec->path, dir, dl + 1);
+    AcquireSRWLockExclusive(&g_dll_dirs_lock);
     n = GetEnvironmentVariableW(L"PATH", NULL, 0);
     path = HeapAlloc(GetProcessHeap(), 0, (n + dl + 2) * sizeof(WCHAR));
     if (path) {
@@ -465,23 +456,34 @@ VX_EXPORT PVOID WINAPI vx_AddDllDirectory(PCWSTR dir)
         SetEnvironmentVariableW(L"PATH", path);
         HeapFree(GetProcessHeap(), 0, path);
     }
-    return copy;
+    rec->next = g_dll_dirs;
+    g_dll_dirs = rec;
+    ReleaseSRWLockExclusive(&g_dll_dirs_lock);
+    return rec;
 }
 
 VX_EXPORT BOOL WINAPI vx_RemoveDllDirectory(PVOID cookie)
 {
-    WCHAR *dir = cookie, *path, *p;
+    WCHAR *path, *p;
     DWORD n, dl;
+    dll_dir **pp, *rec = NULL;
     VX_NATIVE_UPDATE(K32, RemoveDllDirectory, BOOL, (PVOID), (cookie));
-    if (!dir) { SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
-    dl = (DWORD)vx_wcslen(dir);
+    AcquireSRWLockExclusive(&g_dll_dirs_lock);
+    for (pp = &g_dll_dirs; *pp; pp = &(*pp)->next)
+        if (*pp == cookie) { rec = *pp; *pp = rec->next; break; }
+    if (!rec) {
+        ReleaseSRWLockExclusive(&g_dll_dirs_lock);
+        SetLastError(ERROR_INVALID_PARAMETER);
+        return FALSE;
+    }
+    dl = (DWORD)vx_wcslen(rec->path);
     n = GetEnvironmentVariableW(L"PATH", NULL, 0);
     path = n ? HeapAlloc(GetProcessHeap(), 0, n * sizeof(WCHAR)) : NULL;
     if (path && GetEnvironmentVariableW(L"PATH", path, n)) {
         for (p = path; *p; ) {
             WCHAR *e = p;
             while (*e && *e != ';') e++;
-            if ((DWORD)(e - p) == dl && !vx_wcsnicmp(p, dir, dl)) {
+            if ((DWORD)(e - p) == dl && !vx_wcsnicmp(p, rec->path, dl)) {
                 if (*e == ';') e++;
                 memmove(p, e, (vx_wcslen(e) + 1) * sizeof(WCHAR));
                 SetEnvironmentVariableW(L"PATH", path);
@@ -490,8 +492,9 @@ VX_EXPORT BOOL WINAPI vx_RemoveDllDirectory(PVOID cookie)
             p = *e ? e + 1 : e;
         }
     }
+    ReleaseSRWLockExclusive(&g_dll_dirs_lock);
     if (path) HeapFree(GetProcessHeap(), 0, path);
-    HeapFree(GetProcessHeap(), 0, dir);
+    HeapFree(GetProcessHeap(), 0, rec);
     return TRUE;
 }
 
@@ -655,15 +658,6 @@ static LONG CALLBACK watch_veh(EXCEPTION_POINTERS *ep)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-static void put_dec(WCHAR *o, ULONG_PTR v)
-{
-    WCHAR t[24];
-    int n = 0, k = 0;
-    do { t[n++] = (WCHAR)('0' + v % 10); v /= 10; } while (v);
-    while (n) o[k++] = t[--n];
-    o[k] = 0;
-}
-
 static DWORD WINAPI watch_launch(LPVOID unused)
 {
     WCHAR path[MAX_PATH + 20], cmd[MAX_PATH + 80];
@@ -689,9 +683,9 @@ static DWORD WINAPI watch_launch(LPVOID unused)
     cmd[0] = '"';
     vx_wcscpyn(cmd + 1, path, MAX_PATH + 20);
     vx_wcscatn(cmd, L"\" ", MAX_PATH + 80);
-    put_dec(cmd + vx_wcslen(cmd), (ULONG_PTR)hp);
+    vx_cat_num(cmd, MAX_PATH + 80, (ULONG_PTR)hp);
     vx_wcscatn(cmd, L" ", MAX_PATH + 80);
-    put_dec(cmd + vx_wcslen(cmd), (ULONG_PTR)hs);
+    vx_cat_num(cmd, MAX_PATH + 80, (ULONG_PTR)hs);
     /* outside the program's job if allowed, so that it survives the program */
     ok = CreateProcessW(path, cmd, NULL, NULL, TRUE, EXTENDED_STARTUPINFO_PRESENT | CREATE_BREAKAWAY_FROM_JOB,
                         NULL, NULL, &si.StartupInfo, &pi) ||
@@ -715,6 +709,54 @@ static BOOL crash_window_off(const WCHAR *exe)
     return off;
 }
 
+/* an import's (ASCII) DLL name against a wide one, ignoring case */
+static BOOL dll_is(const char *a, const WCHAR *w)
+{
+    for (; *a && *w; a++, w++) {
+        WCHAR x = (WCHAR)(unsigned char)*a, y = *w;
+        if (x >= 'A' && x <= 'Z') x += 32;
+        if (y >= 'A' && y <= 'Z') y += 32;
+        if (x != y) return FALSE;
+    }
+    return !*a && !*w;
+}
+
+static BOOL vistaext_dll(const char *n)
+{
+    unsigned i;
+    if ((n[0] | 32) == 'v' && (n[1] | 32) == 'x' && ((n[2] | 32) == 's' || (n[2] | 32) == 'e') && n[3] == '-')
+        return TRUE;                                   /* VistaExt's own copies of API sets */
+    for (i = 0; i < sizeof(g_map) / sizeof(g_map[0]); i++) if (dll_is(n, g_map[i].comp)) return TRUE;
+    return FALSE;
+}
+
+/* Is this a program VistaExt runs? Patched on disk, or registered for the
+ * in-memory mode (vxload switched its imports in memory): either way its own
+ * import table names one of VistaExt's DLLs. Other programs can have kernelvx
+ * loaded too, through VistaExt's API-set DLLs in the system folder (seen:
+ * .NET's optimizer mscorsvw.exe, Windows Search's filter host); they are not
+ * VistaExt's to watch. */
+static BOOL vistaext_runs(BYTE *base, IMAGE_NT_HEADERS *nh)
+{
+    IMAGE_DATA_DIRECTORY *dd = nh->OptionalHeader.DataDirectory;
+    if (GetModuleHandleW(L"vxload.dll")) return TRUE;
+    if (nh->OptionalHeader.NumberOfRvaAndSizes > IMAGE_DIRECTORY_ENTRY_IMPORT && dd[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress) {
+        IMAGE_IMPORT_DESCRIPTOR *id = (void *)(base + dd[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+        for (; id->Name; id++) if (vistaext_dll((const char *)base + id->Name)) return TRUE;
+    }
+    if (nh->OptionalHeader.NumberOfRvaAndSizes > IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT &&
+        dd[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT].VirtualAddress) {
+        /* 8 DWORDs each: attributes, then the DLL's name - an RVA (attribute
+         * 1, every current linker) or, in old 32-bit programs, an address */
+        DWORD *d = (DWORD *)(base + dd[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT].VirtualAddress);
+        for (; d[1]; d += 8) {
+            const char *n = (d[0] & 1) ? (const char *)base + d[1] : sizeof(void *) == 4 ? (const char *)(ULONG_PTR)d[1] : NULL;
+            if (n && vistaext_dll(n)) return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 static void start_watch(const WCHAR *exe)
 {
     IMAGE_NT_HEADERS *nh;
@@ -724,6 +766,7 @@ static void start_watch(const WCHAR *exe)
     if (GetEnvironmentVariableW(L"VX_NO_WATCH", NULL, 0) || !base) return;
     nh = (IMAGE_NT_HEADERS *)(base + ((IMAGE_DOS_HEADER *)base)->e_lfanew);
     if (nh->OptionalHeader.Subsystem != IMAGE_SUBSYSTEM_WINDOWS_GUI) return;   /* windowed programs only */
+    if (!vistaext_runs(base, nh)) return;                                      /* VistaExt's programs only */
     /* helper processes of multi-process programs: the main process has the window */
     if (started_by_itself(exe)) return;
     if (crash_window_off(exe)) return;

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Build VistaExt: one build per Windows (Vista, 7), each for 32-bit (x86)
-# and 64-bit (x64) Windows. The code is shared; what differs per Windows is
-# chosen here, at build time (-DVX_OS=600 / 601, gen.py --os), never by a
-# version check at run time. See docs/LAYOUT.md.
+# Build VistaExt: one build per Windows (Vista, 7, 8 - which 8.1 uses too),
+# each for 32-bit (x86) and 64-bit (x64) Windows. The code is shared; what
+# differs per Windows is chosen here, at build time (-DVX_OS=600 / 601 / 602,
+# gen.py --os), never by a version check at run time. See docs/LAYOUT.md.
+# The Windows 8 build needs Windows 8's export lists in third_party/winexports
+# (read from an installation with tools/peexp.py); without them it is skipped.
 # Needs: clang, lld, llvm-nm, llvm-windres, python3, and Wine's Windows
 # headers + import libraries (/usr/include/wine, /usr/lib/wine/*-windows).
-# Output: out/vista-x86, out/vista-x64, out/win7-x86, out/win7-x64.
+# Output: out/<vista|win7|win8>-<x86|x64>.
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT=$PWD
@@ -15,7 +17,7 @@ ONLY=${1:-all}     # "dlls" builds just the DLLs
 build_arch() {
     local os=$1 arch=$2 winarch=$3 archname=$4
     local OUT=$ROOT/out/$os-$archname OBJ=$ROOT/out/obj/$os-$archname
-    local vxos=600; [ "$os" = win7 ] && vxos=601
+    local vxos; case $os in vista) vxos=600 ;; win7) vxos=601 ;; win8) vxos=602 ;; esac
     local LIB=/usr/lib/wine/$winarch-windows
     local entry=DllMainCRTStartup cmain=mainCRTStartup wmain=wWinMainCRTStartup
     [ "$arch" = i686 ] && entry=DllMainCRTStartup@12
@@ -34,6 +36,10 @@ build_arch() {
     [ "$arch" = x86_64 ] && LDFLAGS+=(-Wl,--high-entropy-va)
 
     clang "${CFLAGS[@]}" -c src/common/common.c -o "$OBJ/common.o"
+    clang "${CFLAGS[@]}" -c src/common/pin.c -o "$OBJ/pin.o"
+    # the shared code as a library: each program or DLL takes only the parts it uses
+    rm -f "$OBJ/libvxcommon.a"
+    llvm-ar rcs "$OBJ/libvxcommon.a" "$OBJ/common.o" "$OBJ/pin.o"
     # version info + ownership marker for every DLL (see src/common/dll.rc)
     llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/common/dll.rc -o "$OBJ/dll.res.o"
 
@@ -48,7 +54,7 @@ build_arch() {
         "ntvx:src/ntvx/ntvx.c::-lntdll -lkernel32 -ladvapi32"
         "ws2vx:src/ws2vx/ws2vx.c::-lws2_32 -lkernel32 -ladvapi32"
         "cfgmgrvx:src/cfgmgrvx/cfgmgrvx.c::-lkernel32 -ladvapi32"
-        "olevx:src/olevx/olevx.c src/olevx/wmi.c::-lole32 -loleaut32 -lkernel32 -ladvapi32 -luuid -lwbemuuid"
+        "olevx:src/olevx/olevx.c src/olevx/wmi.c::-lole32 -lkernel32 -ladvapi32 -luuid -lwbemuuid"
         "versvx:src/versvx/versvx.c::-lversion -lkernel32 -ladvapi32"
     )
     if [ "$os" = vista ]; then
@@ -69,7 +75,7 @@ build_arch() {
             objs+=("$o")
         done
         python3 -I tools/gen.py component --os $os --arch $arch --comp $name --out "$OBJ/$name.def" --outdir "$OUT" "${objs[@]}"
-        clang "${LDFLAGS[@]}" -shared -o "$OUT/$name.dll" "${objs[@]}" "$OBJ/common.o" "$OBJ/dll.res.o" "$OBJ/$name.def" \
+        clang "${LDFLAGS[@]}" -shared -o "$OUT/$name.dll" "${objs[@]}" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$OBJ/$name.def" \
             -Wl,--entry=$entry $libs
     done
 
@@ -79,7 +85,7 @@ build_arch() {
     clang "${CFLAGS[@]}" -c src/kernelbase/kernelbase.c -o "$OBJ/apistub.o"
     for def in "$OBJ"/apisets/*.def; do
         local n=$(basename "${def%.def}")
-        clang "${LDFLAGS[@]}" -shared -o "$OUT/apisets/$n.dll" "$OBJ/apistub.o" "$OBJ/common.o" "$OBJ/dll.res.o" "$def" \
+        clang "${LDFLAGS[@]}" -shared -o "$OUT/apisets/$n.dll" "$OBJ/apistub.o" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$def" \
             -Wl,--entry=$entry -lkernel32 -ladvapi32
     done
 
@@ -102,42 +108,49 @@ build_arch() {
         llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/$t/$t.rc -o "$OBJ/$t.res.o"
         clang "${CFLAGS[@]}" -c src/$t/$t.c -o "$OBJ/$t.o"
     done
+    clang "${CFLAGS[@]}" -c src/common/userrun.c -o "$OBJ/userrun.o"
     llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/vxcenter/vxcenter.rc -o "$OBJ/vxcenter.res.o"
     clang "${CFLAGS[@]}" -c src/vxcenter/vxcenter.c -o "$OBJ/vxcenter.o"
 
     clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxpatch.exe" "$OBJ/vxpatch.o" "$OBJ/vxpatch.res.o" "$OBJ/patchlib.o" "$OBJ/console.o" \
-        "$OBJ/common.o" -Wl,--entry=$main -Wl,--subsystem,console:6.0 -ladvapi32 -lkernel32 -lshell32 -luser32 -lwtsapi32 -luserenv
+        "$OBJ/libvxcommon.a" -Wl,--entry=$main -Wl,--subsystem,console:6.0 -ladvapi32 -lkernel32 -lshell32 -luser32 -lwtsapi32 -luserenv
     clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/msifix.exe" "$OBJ/msifix.o" "$OBJ/msifix.res.o" "$OBJ/patchlib.o" "$OBJ/console.o" \
-        "$OBJ/common.o" -Wl,--entry=$main -Wl,--subsystem,windows:6.0 -lmsi -ladvapi32 -lkernel32 -lshell32 -luser32
+        "$OBJ/libvxcommon.a" -Wl,--entry=$main -Wl,--subsystem,windows:6.0 -lmsi -ladvapi32 -lkernel32 -lshell32 -luser32
     clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxauto.exe" "$OBJ/vxauto.o" "$OBJ/vxauto.res.o" "$OBJ/patchlib.o" "$OBJ/console.o" \
-        "$OBJ/common.o" -Wl,--entry=$main -Wl,--subsystem,console:6.0 -ladvapi32 -lkernel32 -lshell32 -luser32 -lwtsapi32 -luserenv \
-        -lcrypt32 -lwintrust -lversion
+        "$OBJ/libvxcommon.a" -Wl,--entry=$main -Wl,--subsystem,console:6.0 -ladvapi32 -lkernel32 -lshell32 -luser32 -lwtsapi32 -luserenv \
+        -lcrypt32 -lwintrust -lversion -lole32 -luuid
     # the setup program: one for all four builds (32-bit, so it runs on every
     # Vista/7); it picks the build to install (src/setup/vxsetup.c)
     if [ "$arch" = i686 ] && [ "$os" = vista ]; then
         llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/setup/vxsetup.rc -o "$OBJ/vxsetup.res.o"
         clang "${CFLAGS[@]}" -c src/setup/vxsetup.c -o "$OBJ/vxsetup.o"
-        clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$ROOT/out/obj/VistaExtSetup-stub.exe" "$OBJ/vxsetup.o" "$OBJ/vxsetup.res.o" "$OBJ/common.o" \
+        clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$ROOT/out/obj/VistaExtSetup-stub.exe" "$OBJ/vxsetup.o" "$OBJ/vxsetup.res.o" "$OBJ/libvxcommon.a" "$OBJ/userrun.o" \
             -Wl,--entry=$wmainw -Wl,--subsystem,windows:6.0 -lcomctl32 -lshell32 -lole32 -loleaut32 -luuid -luser32 -lgdi32 \
             -ladvapi32 -lkernel32
     fi
     # the crash window (installed next to the DLLs; kernelvx starts it)
     clang "${CFLAGS[@]}" -c src/vxwatch/vxwatch.c -o "$OBJ/vxwatch.o"
-    clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxwatch.exe" "$OBJ/vxwatch.o" "$OBJ/common.o" "$OBJ/dll.res.o" \
+    clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxwatch.exe" "$OBJ/vxwatch.o" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" \
         -Wl,--entry=$wmainw -Wl,--subsystem,windows:6.0 -ladvapi32 -luser32 -lgdi32 -lshell32 -lkernel32
     # the tray icon (the only visible part while VistaExt works)
     llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/vxtray/vxtray.rc -o "$OBJ/vxtray.res.o"
     clang "${CFLAGS[@]}" -c src/vxtray/vxtray.c -o "$OBJ/vxtray.o"
-    clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxtray.exe" "$OBJ/vxtray.o" "$OBJ/vxtray.res.o" "$OBJ/common.o" \
+    clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxtray.exe" "$OBJ/vxtray.o" "$OBJ/vxtray.res.o" "$OBJ/libvxcommon.a" \
         -Wl,--entry=$wmainw -Wl,--subsystem,windows:6.0 -lshell32 -luser32 -lgdi32 -ladvapi32 -lkernel32
     clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$OUT/vxcenter.exe" "$OBJ/vxcenter.o" "$OBJ/vxcenter.res.o" "$OBJ/patchlib.o" \
-        "$OBJ/common.o" -Wl,--entry=$wmainw -Wl,--subsystem,windows:6.0 -lcomctl32 -lcomdlg32 -lshell32 -lole32 \
+        "$OBJ/libvxcommon.a" "$OBJ/userrun.o" -Wl,--entry=$wmainw -Wl,--subsystem,windows:6.0 -lcomctl32 -lcomdlg32 -lshell32 -lole32 \
         -luser32 -lgdi32 -ladvapi32 -lkernel32 -loleaut32 -luuid
 }
 
-# four builds; within each, the API sets come last (gen.py reads that
-# build's kernelvx.dll)
-for os in vista win7; do
+# one build per Windows and architecture; within each, the API sets come
+# last (gen.py reads that build's kernelvx.dll)
+OSES="vista win7"
+if python3 -I -c 'import sys; sys.path.insert(0, "tools"); import gen; sys.exit(0 if gen.has_os_data("win8") else 1)'; then
+    OSES="$OSES win8"
+else
+    echo "note: no Windows 8 export lists in third_party/winexports yet: the Windows 8 build is skipped"
+fi
+for os in $OSES; do
     build_arch $os i686 i386 x86
     build_arch $os x86_64 x86_64 x64
 done
@@ -146,7 +159,7 @@ done
 # control. Without stack probes a frame of 4 KB or more can skip the guard
 # page and crash the program: refuse to build such a DLL.
 big=0
-for f in out/{vista,win7}-{x86,x64}/*.dll; do
+for f in $(for os in $OSES; do echo out/$os-{x86,x64}/*.dll; done); do
     for h in $(llvm-objdump -d --no-show-raw-insn "$f" | grep -oE 'sub[lq][[:space:]]+\$0x[0-9a-f]+, %(r|e)sp' | grep -oE '0x[0-9a-f]+'); do
         if [ $((h)) -ge 4096 ]; then echo "error: $f has a $h-byte stack frame (limit 4 KB; use the heap)"; big=1; fi
     done
@@ -156,6 +169,7 @@ done
 # Wine's import libraries put some functions in the DLL newer Windows has
 # them in (OpenThreadToken: kernel32 on 8+, advapi32 on Vista/7). Check every
 # program against the real Vista and 7 export lists.
-python3 -I tools/vistacheck.py out/{vista,win7}-{x86,x64}/*.exe out/{vista,win7}-{x86,x64}/vxload.dll out/obj/VistaExtSetup-stub.exe || {
+python3 -I tools/vistacheck.py $(for os in $OSES; do echo out/$os-{x86,x64}/*.exe out/$os-{x86,x64}/vxload.dll; done) \
+    out/obj/VistaExtSetup-stub.exe || {
     echo "error: a program imports something Windows Vista or 7 lacks (link order?)"; exit 1; }
-echo "done: out/vista-x86 out/vista-x64 out/win7-x86 out/win7-x64"
+echo "done: $(for os in $OSES; do echo -n "out/$os-x86 out/$os-x64 "; done)"

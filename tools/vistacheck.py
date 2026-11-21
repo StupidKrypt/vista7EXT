@@ -23,6 +23,12 @@ def table(dll):
     return t
 
 
+# every program must run on every Windows VistaExt supports (the tools are
+# shared code); Windows 8 counts once its export lists are there
+OSES = ['vista', 'win7']
+if any('win8' in v for vs in (table('kernel32') or {}).values() for v in vs):
+    OSES.append('win8')
+
 bad = 0
 for f in sys.argv[1:]:
     pe = PE(f)
@@ -34,7 +40,7 @@ for f in sys.argv[1:]:
         for n in names:
             if n.startswith('#'):
                 continue
-            for osn in ('vista', 'win7'):
+            for osn in OSES:
                 # "vista" without "-32"/"-64": both (lists made from one architecture's names)
                 if n not in t or ('%s-%s' % (osn, bits) not in t[n] and osn not in t[n]):
                     print('%s: %s!%s is missing on %s %s-bit' % (f, dll, n, osn, bits))

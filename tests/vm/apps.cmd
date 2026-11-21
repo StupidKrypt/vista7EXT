@@ -72,7 +72,11 @@ if exist "%SystemRoot%\System32\ucrtbase.dll" (call :say "C runtime ucrtbase.dll
 
 set "WANT= "
 for /f "usebackq delims=" %%a in ("%CDR%\vxvm\apps.txt") do set "WANT=!WANT!%%a "
-if not "!WANT: setups =!"=="!WANT!" (
+set "NOVX="
+if not "!WANT: novx =!"=="!WANT!" set "NOVX=1"
+if defined NOVX (
+    call :say "### WITHOUT VistaExt: nothing installed, for comparison"
+) else if not "!WANT: setups =!"=="!WANT!" (
     call :wizard
 ) else (
     call :say "### install VistaExt: VistaExtSetup.exe /quiet"
@@ -95,11 +99,13 @@ if not "!WANT: firefox =!"=="!WANT!" if exist "%CDR%\apps\firefox\firefox.exe" c
 if not "!WANT: epic =!"=="!WANT!" if exist "%CDR%\apps\epic\EpicInstaller.msi" call :epic
 if not "!WANT: steam =!"=="!WANT!" if exist "%CDR%\apps\steam\Steam.exe" call :app steam "Steam.exe" ""
 if not "!WANT: edge =!"=="!WANT!" if exist "%CDR%\apps\edge-%OSA%\msedge.exe" call :edge
+if exist "%CDR%\vxvm\trace.txt" call :trace
 
 rem ---------------------------------------------------------------- the end
 wevtutil qe Application /c:80 /rd:true /f:text > "%R%\events.txt" 2>&1
 copy /y "%ALOG%" "%R%\auto.log" >nul 2>&1
 
+if defined NOVX goto :novx_end
 call :say "### uninstall: VistaExtSetup.exe /uninstall /quiet"
 copy /y "%VX%\VistaExtSetup.exe" "%T%\uninst-check.exe" >nul 2>&1 || call :say "VistaExtSetup.exe was not copied into %VX%"
 start "" /wait "%VX%\VistaExtSetup.exe" /uninstall /quiet
@@ -114,8 +120,13 @@ ping -n 4 127.0.0.1 >nul
 if exist "%VX%\vxpatch.exe" (call :say "after uninstall: files LEFT") else (call :say "after uninstall: files removed")
 reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VistaExt" >nul 2>&1 && (call :say "after uninstall: Programs and Features entry LEFT") || (call :say "after uninstall: Programs and Features entry removed")
 sc query VistaExtAuto >nul 2>&1 && (call :say "after uninstall: service LEFT") || (call :say "after uninstall: service removed")
-if exist "%SystemRoot%\System32\kernelvx.dll" (call :say "after uninstall: kernelvx.dll LEFT") else (call :say "after uninstall: system DLLs removed")
+if exist "%SystemRoot%\System32\kernelvx.dll" (
+    reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations 2>nul | find /i "kernelvx.dll" >nul && (
+        call :say "after uninstall: kernelvx.dll in use by a running program, deleted when Windows restarts") || (
+        call :say "after uninstall: kernelvx.dll LEFT")
+) else (call :say "after uninstall: system DLLs removed")
 copy /y "%ProgramData%\VistaExt\setup.log" "%R%\uninstall.txt" >nul 2>&1
+:novx_end
 call :say "Finished: %DATE% %TIME%"
 call :say "RESULT: programs tried, see above"
 (echo VXTEST done)>COM1
@@ -393,6 +404,23 @@ for /f "usebackq delims=" %%l in ("%T%\summary.txt") do 2>nul >COM1 echo   %%l
 taskkill /f /t /im "!IMG!" >nul 2>&1
 reg query "!IFEO!" /v VistaExt >nul 2>&1 && (reg add "!IFEO!" /v GlobalFlag /t REG_DWORD /d 0x100 /f >nul 2>&1) || (reg delete "!IFEO!" /f >nul 2>&1)
 ping -n 4 127.0.0.1 >nul
+goto :eof
+
+rem ------------------------------------------------------- traced programs
+rem \vxvm\trace.txt: name|program|arguments, folder \apps\trace-<name> on the
+rem CD (tests/vm/trace-apps.txt). Each is registered for the in-memory mode and
+rem run under vxdbg (VX_TRACE=1, loader messages): <name>-run.txt has it all.
+:trace
+call :say "### traced programs"
+for /f "usebackq tokens=1,2,* delims=|" %%a in ("%CDR%\vxvm\trace.txt") do call :trace_one "%%a" "%%b" "%%c"
+goto :eof
+
+:trace_one
+set "N=%~1"
+set "AD=%APPS%\trace-!N!"
+xcopy "%CDR%\apps\trace-!N!" "!AD!\" /e /i /q /y >nul
+"%VX%\vxpatch.exe" /memory /auto /q "!AD!" > "%R%\!N!-memory.txt" 2>&1
+call :launch "!N!" "!AD!\%~2" "%~3"
 goto :eof
 
 :say

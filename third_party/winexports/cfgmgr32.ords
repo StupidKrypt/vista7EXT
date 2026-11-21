@@ -1,252 +1,271 @@
-# cfgmgr32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# cfgmgr32.dll export ordinals: vista-32, vista-64, win7-32, win7-64, win8-32, win8-64.
 # Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
-1 vista-32:CMP_Init_Detection vista-64:CMP_Init_Detection win7-32:CMP_GetBlockedDriverInfo win7-64:CMP_GetBlockedDriverInfo
-2 vista-32:CMP_RegisterNotification vista-64:CMP_RegisterNotification win7-32:CMP_GetServerSideDeviceInstallFlags win7-64:CMP_GetServerSideDeviceInstallFlags
-3 vista-32:CMP_Report_LogOn vista-64:CMP_Report_LogOn win7-32:CMP_Init_Detection win7-64:CMP_Init_Detection
-4 vista-32:CMP_UnregisterNotification vista-64:CMP_UnregisterNotification win7-32:CMP_RegisterNotification win7-64:CMP_RegisterNotification
-5 vista-32:CMP_WaitNoPendingInstallEvents vista-64:CMP_WaitNoPendingInstallEvents win7-32:CMP_Report_LogOn win7-64:CMP_Report_LogOn
-6 vista-32:CMP_WaitServicesAvailable vista-64:CMP_WaitServicesAvailable win7-32:CMP_UnregisterNotification win7-64:CMP_UnregisterNotification
-7 vista-32:CM_Add_Empty_Log_Conf vista-64:CM_Add_Empty_Log_Conf win7-32:CMP_WaitNoPendingInstallEvents win7-64:CMP_WaitNoPendingInstallEvents
-8 vista-32:CM_Add_Empty_Log_Conf_Ex vista-64:CM_Add_Empty_Log_Conf_Ex win7-32:CMP_WaitServicesAvailable win7-64:CMP_WaitServicesAvailable
-9 vista-32:CM_Add_IDA vista-64:CM_Add_IDA win7-32:CM_Add_Driver_PackageW win7-64:CM_Add_Driver_PackageW
-10 vista-32:CM_Add_IDW vista-64:CM_Add_IDW win7-32:CM_Add_Driver_Package_ExW win7-64:CM_Add_Driver_Package_ExW
-11 vista-32:CM_Add_ID_ExA vista-64:CM_Add_ID_ExA win7-32:CM_Add_Empty_Log_Conf win7-64:CM_Add_Empty_Log_Conf
-12 vista-32:CM_Add_ID_ExW vista-64:CM_Add_ID_ExW win7-32:CM_Add_Empty_Log_Conf_Ex win7-64:CM_Add_Empty_Log_Conf_Ex
-13 vista-32:CM_Add_Range vista-64:CM_Add_Range win7-32:CM_Add_IDA win7-64:CM_Add_IDA
-14 vista-32:CM_Add_Res_Des vista-64:CM_Add_Res_Des win7-32:CM_Add_IDW win7-64:CM_Add_IDW
-15 vista-32:CM_Add_Res_Des_Ex vista-64:CM_Add_Res_Des_Ex win7-32:CM_Add_ID_ExA win7-64:CM_Add_ID_ExA
-16 vista-32:CM_Connect_MachineA vista-64:CM_Connect_MachineA win7-32:CM_Add_ID_ExW win7-64:CM_Add_ID_ExW
-17 vista-32:CM_Connect_MachineW vista-64:CM_Connect_MachineW win7-32:CM_Add_Range win7-64:CM_Add_Range
-18 vista-32:CM_Create_DevNodeA vista-64:CM_Create_DevNodeA win7-32:CM_Add_Res_Des win7-64:CM_Add_Res_Des
-19 vista-32:CM_Create_DevNodeW vista-64:CM_Create_DevNodeW win7-32:CM_Add_Res_Des_Ex win7-64:CM_Add_Res_Des_Ex
-20 vista-32:CM_Create_DevNode_ExA vista-64:CM_Create_DevNode_ExA win7-32:CM_Apply_PowerScheme win7-64:CM_Apply_PowerScheme
-21 vista-32:CM_Create_DevNode_ExW vista-64:CM_Create_DevNode_ExW win7-32:CM_Connect_MachineA win7-64:CM_Connect_MachineA
-22 vista-32:CM_Create_Range_List vista-64:CM_Create_Range_List win7-32:CM_Connect_MachineW win7-64:CM_Connect_MachineW
-23 vista-32:CM_Delete_Class_Key vista-64:CM_Delete_Class_Key win7-32:CM_Create_DevNodeA win7-64:CM_Create_DevNodeA
-24 vista-32:CM_Delete_Class_Key_Ex vista-64:CM_Delete_Class_Key_Ex win7-32:CM_Create_DevNodeW win7-64:CM_Create_DevNodeW
-25 vista-32:CM_Delete_DevNode_Key vista-64:CM_Delete_DevNode_Key win7-32:CM_Create_DevNode_ExA win7-64:CM_Create_DevNode_ExA
-26 vista-32:CM_Delete_DevNode_Key_Ex vista-64:CM_Delete_DevNode_Key_Ex win7-32:CM_Create_DevNode_ExW win7-64:CM_Create_DevNode_ExW
-27 vista-32:CM_Delete_Range vista-64:CM_Delete_Range win7-32:CM_Create_Range_List win7-64:CM_Create_Range_List
-28 vista-32:CM_Detect_Resource_Conflict vista-64:CM_Detect_Resource_Conflict win7-32:CM_Delete_Class_Key win7-64:CM_Delete_Class_Key
-29 vista-32:CM_Detect_Resource_Conflict_Ex vista-64:CM_Detect_Resource_Conflict_Ex win7-32:CM_Delete_Class_Key_Ex win7-64:CM_Delete_Class_Key_Ex
-30 vista-32:CM_Disable_DevNode vista-64:CM_Disable_DevNode win7-32:CM_Delete_DevNode_Key win7-64:CM_Delete_DevNode_Key
-31 vista-32:CM_Disable_DevNode_Ex vista-64:CM_Disable_DevNode_Ex win7-32:CM_Delete_DevNode_Key_Ex win7-64:CM_Delete_DevNode_Key_Ex
-32 vista-32:CM_Disconnect_Machine vista-64:CM_Disconnect_Machine win7-32:CM_Delete_Device_Interface_KeyA win7-64:CM_Delete_Device_Interface_KeyA
-33 vista-32:CM_Dup_Range_List vista-64:CM_Dup_Range_List win7-32:CM_Delete_Device_Interface_KeyW win7-64:CM_Delete_Device_Interface_KeyW
-34 vista-32:CM_Enable_DevNode vista-64:CM_Enable_DevNode win7-32:CM_Delete_Device_Interface_Key_ExA win7-64:CM_Delete_Device_Interface_Key_ExA
-35 vista-32:CM_Enable_DevNode_Ex vista-64:CM_Enable_DevNode_Ex win7-32:CM_Delete_Device_Interface_Key_ExW win7-64:CM_Delete_Device_Interface_Key_ExW
-36 vista-32:CM_Enumerate_Classes vista-64:CM_Enumerate_Classes win7-32:CM_Delete_Driver_PackageW win7-64:CM_Delete_Driver_PackageW
-37 vista-32:CM_Enumerate_Classes_Ex vista-64:CM_Enumerate_Classes_Ex win7-32:CM_Delete_Driver_Package_ExW win7-64:CM_Delete_Driver_Package_ExW
-38 vista-32:CM_Enumerate_EnumeratorsA vista-64:CM_Enumerate_EnumeratorsA win7-32:CM_Delete_PowerScheme win7-64:CM_Delete_PowerScheme
-39 vista-32:CM_Enumerate_EnumeratorsW vista-64:CM_Enumerate_EnumeratorsW win7-32:CM_Delete_Range win7-64:CM_Delete_Range
-40 vista-32:CM_Enumerate_Enumerators_ExA vista-64:CM_Enumerate_Enumerators_ExA win7-32:CM_Detect_Resource_Conflict win7-64:CM_Detect_Resource_Conflict
-41 vista-32:CM_Enumerate_Enumerators_ExW vista-64:CM_Enumerate_Enumerators_ExW win7-32:CM_Detect_Resource_Conflict_Ex win7-64:CM_Detect_Resource_Conflict_Ex
-42 vista-32:CM_Find_Range vista-64:CM_Find_Range win7-32:CM_Disable_DevNode win7-64:CM_Disable_DevNode
-43 vista-32:CM_First_Range vista-64:CM_First_Range win7-32:CM_Disable_DevNode_Ex win7-64:CM_Disable_DevNode_Ex
-44 vista-32:CM_Free_Log_Conf vista-64:CM_Free_Log_Conf win7-32:CM_Disconnect_Machine win7-64:CM_Disconnect_Machine
-45 vista-32:CM_Free_Log_Conf_Ex vista-64:CM_Free_Log_Conf_Ex win7-32:CM_Dup_Range_List win7-64:CM_Dup_Range_List
-46 vista-32:CM_Free_Log_Conf_Handle vista-64:CM_Free_Log_Conf_Handle win7-32:CM_Duplicate_PowerScheme win7-64:CM_Duplicate_PowerScheme
-47 vista-32:CM_Free_Range_List vista-64:CM_Free_Range_List win7-32:CM_Enable_DevNode win7-64:CM_Enable_DevNode
-48 vista-32:CM_Free_Res_Des vista-64:CM_Free_Res_Des win7-32:CM_Enable_DevNode_Ex win7-64:CM_Enable_DevNode_Ex
-49 vista-32:CM_Free_Res_Des_Ex vista-64:CM_Free_Res_Des_Ex win7-32:CM_Enumerate_Classes win7-64:CM_Enumerate_Classes
-50 vista-32:CM_Free_Res_Des_Handle vista-64:CM_Free_Res_Des_Handle win7-32:CM_Enumerate_Classes_Ex win7-64:CM_Enumerate_Classes_Ex
-51 vista-32:CM_Free_Resource_Conflict_Handle vista-64:CM_Free_Resource_Conflict_Handle win7-32:CM_Enumerate_EnumeratorsA win7-64:CM_Enumerate_EnumeratorsA
-52 vista-32:CM_Get_Child vista-64:CM_Get_Child win7-32:CM_Enumerate_EnumeratorsW win7-64:CM_Enumerate_EnumeratorsW
-53 vista-32:CM_Get_Child_Ex vista-64:CM_Get_Child_Ex win7-32:CM_Enumerate_Enumerators_ExA win7-64:CM_Enumerate_Enumerators_ExA
-54 vista-32:CM_Get_Class_Key_NameA vista-64:CM_Get_Class_Key_NameA win7-32:CM_Enumerate_Enumerators_ExW win7-64:CM_Enumerate_Enumerators_ExW
-55 vista-32:CM_Get_Class_Key_NameW vista-64:CM_Get_Class_Key_NameW win7-32:CM_Find_Range win7-64:CM_Find_Range
-56 vista-32:CM_Get_Class_Key_Name_ExA vista-64:CM_Get_Class_Key_Name_ExA win7-32:CM_First_Range win7-64:CM_First_Range
-57 vista-32:CM_Get_Class_Key_Name_ExW vista-64:CM_Get_Class_Key_Name_ExW win7-32:CM_Free_Log_Conf win7-64:CM_Free_Log_Conf
-58 vista-32:CM_Get_Class_NameA vista-64:CM_Get_Class_NameA win7-32:CM_Free_Log_Conf_Ex win7-64:CM_Free_Log_Conf_Ex
-59 vista-32:CM_Get_Class_NameW vista-64:CM_Get_Class_NameW win7-32:CM_Free_Log_Conf_Handle win7-64:CM_Free_Log_Conf_Handle
-60 vista-32:CM_Get_Class_Name_ExA vista-64:CM_Get_Class_Name_ExA win7-32:CM_Free_Range_List win7-64:CM_Free_Range_List
-61 vista-32:CM_Get_Class_Name_ExW vista-64:CM_Get_Class_Name_ExW win7-32:CM_Free_Res_Des win7-64:CM_Free_Res_Des
-62 vista-32:CM_Get_Class_Registry_PropertyA vista-64:CM_Get_Class_Registry_PropertyA win7-32:CM_Free_Res_Des_Ex win7-64:CM_Free_Res_Des_Ex
-63 vista-32:CM_Get_Class_Registry_PropertyW vista-64:CM_Get_Class_Registry_PropertyW win7-32:CM_Free_Res_Des_Handle win7-64:CM_Free_Res_Des_Handle
-64 vista-32:CM_Get_Depth vista-64:CM_Get_Depth win7-32:CM_Free_Resource_Conflict_Handle win7-64:CM_Free_Resource_Conflict_Handle
-65 vista-32:CM_Get_Depth_Ex vista-64:CM_Get_Depth_Ex win7-32:CM_Get_Child win7-64:CM_Get_Child
-66 vista-32:CM_Get_DevNode_Registry_PropertyA vista-64:CM_Get_DevNode_Registry_PropertyA win7-32:CM_Get_Child_Ex win7-64:CM_Get_Child_Ex
-67 vista-32:CM_Get_DevNode_Registry_PropertyW vista-64:CM_Get_DevNode_Registry_PropertyW win7-32:CM_Get_Class_Key_NameA win7-64:CM_Get_Class_Key_NameA
-68 vista-32:CM_Get_DevNode_Registry_Property_ExA vista-64:CM_Get_DevNode_Registry_Property_ExA win7-32:CM_Get_Class_Key_NameW win7-64:CM_Get_Class_Key_NameW
-69 vista-32:CM_Get_DevNode_Registry_Property_ExW vista-64:CM_Get_DevNode_Registry_Property_ExW win7-32:CM_Get_Class_Key_Name_ExA win7-64:CM_Get_Class_Key_Name_ExA
-70 vista-32:CM_Get_DevNode_Status vista-64:CM_Get_DevNode_Status win7-32:CM_Get_Class_Key_Name_ExW win7-64:CM_Get_Class_Key_Name_ExW
-71 vista-32:CM_Get_DevNode_Status_Ex vista-64:CM_Get_DevNode_Status_Ex win7-32:CM_Get_Class_NameA win7-64:CM_Get_Class_NameA
-72 vista-32:CM_Get_Device_IDA vista-64:CM_Get_Device_IDA win7-32:CM_Get_Class_NameW win7-64:CM_Get_Class_NameW
-73 vista-32:CM_Get_Device_IDW vista-64:CM_Get_Device_IDW win7-32:CM_Get_Class_Name_ExA win7-64:CM_Get_Class_Name_ExA
-74 vista-32:CM_Get_Device_ID_ExA vista-64:CM_Get_Device_ID_ExA win7-32:CM_Get_Class_Name_ExW win7-64:CM_Get_Class_Name_ExW
-75 vista-32:CM_Get_Device_ID_ExW vista-64:CM_Get_Device_ID_ExW win7-32:CM_Get_Class_PropertyW win7-64:CM_Get_Class_PropertyW
-76 vista-32:CM_Get_Device_ID_ListA vista-64:CM_Get_Device_ID_ListA win7-32:CM_Get_Class_Property_ExW win7-64:CM_Get_Class_Property_ExW
-77 vista-32:CM_Get_Device_ID_ListW vista-64:CM_Get_Device_ID_ListW win7-32:CM_Get_Class_Property_Keys win7-64:CM_Get_Class_Property_Keys
-78 vista-32:CM_Get_Device_ID_List_ExA vista-64:CM_Get_Device_ID_List_ExA win7-32:CM_Get_Class_Property_Keys_Ex win7-64:CM_Get_Class_Property_Keys_Ex
-79 vista-32:CM_Get_Device_ID_List_ExW vista-64:CM_Get_Device_ID_List_ExW win7-32:CM_Get_Class_Registry_PropertyA win7-64:CM_Get_Class_Registry_PropertyA
-80 vista-32:CM_Get_Device_ID_List_SizeA vista-64:CM_Get_Device_ID_List_SizeA win7-32:CM_Get_Class_Registry_PropertyW win7-64:CM_Get_Class_Registry_PropertyW
-81 vista-32:CM_Get_Device_ID_List_SizeW vista-64:CM_Get_Device_ID_List_SizeW win7-32:CM_Get_Depth win7-64:CM_Get_Depth
-82 vista-32:CM_Get_Device_ID_List_Size_ExA vista-64:CM_Get_Device_ID_List_Size_ExA win7-32:CM_Get_Depth_Ex win7-64:CM_Get_Depth_Ex
-83 vista-32:CM_Get_Device_ID_List_Size_ExW vista-64:CM_Get_Device_ID_List_Size_ExW win7-32:CM_Get_DevNode_Custom_PropertyA win7-64:CM_Get_DevNode_Custom_PropertyA
-84 vista-32:CM_Get_Device_ID_Size vista-64:CM_Get_Device_ID_Size win7-32:CM_Get_DevNode_Custom_PropertyW win7-64:CM_Get_DevNode_Custom_PropertyW
-85 vista-32:CM_Get_Device_ID_Size_Ex vista-64:CM_Get_Device_ID_Size_Ex win7-32:CM_Get_DevNode_Custom_Property_ExA win7-64:CM_Get_DevNode_Custom_Property_ExA
-86 vista-32:CM_Get_Device_Interface_AliasA vista-64:CM_Get_Device_Interface_AliasA win7-32:CM_Get_DevNode_Custom_Property_ExW win7-64:CM_Get_DevNode_Custom_Property_ExW
-87 vista-32:CM_Get_Device_Interface_AliasW vista-64:CM_Get_Device_Interface_AliasW win7-32:CM_Get_DevNode_PropertyW win7-64:CM_Get_DevNode_PropertyW
-88 vista-32:CM_Get_Device_Interface_Alias_ExA vista-64:CM_Get_Device_Interface_Alias_ExA win7-32:CM_Get_DevNode_Property_ExW win7-64:CM_Get_DevNode_Property_ExW
-89 vista-32:CM_Get_Device_Interface_Alias_ExW vista-64:CM_Get_Device_Interface_Alias_ExW win7-32:CM_Get_DevNode_Property_Keys win7-64:CM_Get_DevNode_Property_Keys
-90 vista-32:CM_Get_Device_Interface_ListA vista-64:CM_Get_Device_Interface_ListA win7-32:CM_Get_DevNode_Property_Keys_Ex win7-64:CM_Get_DevNode_Property_Keys_Ex
-91 vista-32:CM_Get_Device_Interface_ListW vista-64:CM_Get_Device_Interface_ListW win7-32:CM_Get_DevNode_Registry_PropertyA win7-64:CM_Get_DevNode_Registry_PropertyA
-92 vista-32:CM_Get_Device_Interface_List_ExA vista-64:CM_Get_Device_Interface_List_ExA win7-32:CM_Get_DevNode_Registry_PropertyW win7-64:CM_Get_DevNode_Registry_PropertyW
-93 vista-32:CM_Get_Device_Interface_List_ExW vista-64:CM_Get_Device_Interface_List_ExW win7-32:CM_Get_DevNode_Registry_Property_ExA win7-64:CM_Get_DevNode_Registry_Property_ExA
-94 vista-32:CM_Get_Device_Interface_List_SizeA vista-64:CM_Get_Device_Interface_List_SizeA win7-32:CM_Get_DevNode_Registry_Property_ExW win7-64:CM_Get_DevNode_Registry_Property_ExW
-95 vista-32:CM_Get_Device_Interface_List_SizeW vista-64:CM_Get_Device_Interface_List_SizeW win7-32:CM_Get_DevNode_Status win7-64:CM_Get_DevNode_Status
-96 vista-32:CM_Get_Device_Interface_List_Size_ExA vista-64:CM_Get_Device_Interface_List_Size_ExA win7-32:CM_Get_DevNode_Status_Ex win7-64:CM_Get_DevNode_Status_Ex
-97 vista-32:CM_Get_Device_Interface_List_Size_ExW vista-64:CM_Get_Device_Interface_List_Size_ExW win7-32:CM_Get_Device_IDA win7-64:CM_Get_Device_IDA
-98 vista-32:CM_Get_First_Log_Conf vista-64:CM_Get_First_Log_Conf win7-32:CM_Get_Device_IDW win7-64:CM_Get_Device_IDW
-99 vista-32:CM_Get_First_Log_Conf_Ex vista-64:CM_Get_First_Log_Conf_Ex win7-32:CM_Get_Device_ID_ExA win7-64:CM_Get_Device_ID_ExA
-100 vista-32:CM_Get_Global_State vista-64:CM_Get_Global_State win7-32:CM_Get_Device_ID_ExW win7-64:CM_Get_Device_ID_ExW
-101 vista-32:CM_Get_Global_State_Ex vista-64:CM_Get_Global_State_Ex win7-32:CM_Get_Device_ID_ListA win7-64:CM_Get_Device_ID_ListA
-102 vista-32:CM_Get_HW_Prof_FlagsA vista-64:CM_Get_HW_Prof_FlagsA win7-32:CM_Get_Device_ID_ListW win7-64:CM_Get_Device_ID_ListW
-103 vista-32:CM_Get_HW_Prof_FlagsW vista-64:CM_Get_HW_Prof_FlagsW win7-32:CM_Get_Device_ID_List_ExA win7-64:CM_Get_Device_ID_List_ExA
-104 vista-32:CM_Get_HW_Prof_Flags_ExA vista-64:CM_Get_HW_Prof_Flags_ExA win7-32:CM_Get_Device_ID_List_ExW win7-64:CM_Get_Device_ID_List_ExW
-105 vista-32:CM_Get_HW_Prof_Flags_ExW vista-64:CM_Get_HW_Prof_Flags_ExW win7-32:CM_Get_Device_ID_List_SizeA win7-64:CM_Get_Device_ID_List_SizeA
-106 vista-32:CM_Get_Hardware_Profile_InfoA vista-64:CM_Get_Hardware_Profile_InfoA win7-32:CM_Get_Device_ID_List_SizeW win7-64:CM_Get_Device_ID_List_SizeW
-107 vista-32:CM_Get_Hardware_Profile_InfoW vista-64:CM_Get_Hardware_Profile_InfoW win7-32:CM_Get_Device_ID_List_Size_ExA win7-64:CM_Get_Device_ID_List_Size_ExA
-108 vista-32:CM_Get_Hardware_Profile_Info_ExA vista-64:CM_Get_Hardware_Profile_Info_ExA win7-32:CM_Get_Device_ID_List_Size_ExW win7-64:CM_Get_Device_ID_List_Size_ExW
-109 vista-32:CM_Get_Hardware_Profile_Info_ExW vista-64:CM_Get_Hardware_Profile_Info_ExW win7-32:CM_Get_Device_ID_Size win7-64:CM_Get_Device_ID_Size
-110 vista-32:CM_Get_Log_Conf_Priority vista-64:CM_Get_Log_Conf_Priority win7-32:CM_Get_Device_ID_Size_Ex win7-64:CM_Get_Device_ID_Size_Ex
-111 vista-32:CM_Get_Log_Conf_Priority_Ex vista-64:CM_Get_Log_Conf_Priority_Ex win7-32:CM_Get_Device_Interface_AliasA win7-64:CM_Get_Device_Interface_AliasA
-112 vista-32:CM_Get_Next_Log_Conf vista-64:CM_Get_Next_Log_Conf win7-32:CM_Get_Device_Interface_AliasW win7-64:CM_Get_Device_Interface_AliasW
-113 vista-32:CM_Get_Next_Log_Conf_Ex vista-64:CM_Get_Next_Log_Conf_Ex win7-32:CM_Get_Device_Interface_Alias_ExA win7-64:CM_Get_Device_Interface_Alias_ExA
-114 vista-32:CM_Get_Next_Res_Des vista-64:CM_Get_Next_Res_Des win7-32:CM_Get_Device_Interface_Alias_ExW win7-64:CM_Get_Device_Interface_Alias_ExW
-115 vista-32:CM_Get_Next_Res_Des_Ex vista-64:CM_Get_Next_Res_Des_Ex win7-32:CM_Get_Device_Interface_ListA win7-64:CM_Get_Device_Interface_ListA
-116 vista-32:CM_Get_Parent vista-64:CM_Get_Parent win7-32:CM_Get_Device_Interface_ListW win7-64:CM_Get_Device_Interface_ListW
-117 vista-32:CM_Get_Parent_Ex vista-64:CM_Get_Parent_Ex win7-32:CM_Get_Device_Interface_List_ExA win7-64:CM_Get_Device_Interface_List_ExA
-118 vista-32:CM_Get_Res_Des_Data vista-64:CM_Get_Res_Des_Data win7-32:CM_Get_Device_Interface_List_ExW win7-64:CM_Get_Device_Interface_List_ExW
-119 vista-32:CM_Get_Res_Des_Data_Ex vista-64:CM_Get_Res_Des_Data_Ex win7-32:CM_Get_Device_Interface_List_SizeA win7-64:CM_Get_Device_Interface_List_SizeA
-120 vista-32:CM_Get_Res_Des_Data_Size vista-64:CM_Get_Res_Des_Data_Size win7-32:CM_Get_Device_Interface_List_SizeW win7-64:CM_Get_Device_Interface_List_SizeW
-121 vista-32:CM_Get_Res_Des_Data_Size_Ex vista-64:CM_Get_Res_Des_Data_Size_Ex win7-32:CM_Get_Device_Interface_List_Size_ExA win7-64:CM_Get_Device_Interface_List_Size_ExA
-122 vista-32:CM_Get_Resource_Conflict_Count vista-64:CM_Get_Resource_Conflict_Count win7-32:CM_Get_Device_Interface_List_Size_ExW win7-64:CM_Get_Device_Interface_List_Size_ExW
-123 vista-32:CM_Get_Resource_Conflict_DetailsA vista-64:CM_Get_Resource_Conflict_DetailsA win7-32:CM_Get_Device_Interface_PropertyW win7-64:CM_Get_Device_Interface_PropertyW
-124 vista-32:CM_Get_Resource_Conflict_DetailsW vista-64:CM_Get_Resource_Conflict_DetailsW win7-32:CM_Get_Device_Interface_Property_ExW win7-64:CM_Get_Device_Interface_Property_ExW
-125 vista-32:CM_Get_Sibling vista-64:CM_Get_Sibling win7-32:CM_Get_Device_Interface_Property_KeysW win7-64:CM_Get_Device_Interface_Property_KeysW
-126 vista-32:CM_Get_Sibling_Ex vista-64:CM_Get_Sibling_Ex win7-32:CM_Get_Device_Interface_Property_Keys_ExW win7-64:CM_Get_Device_Interface_Property_Keys_ExW
-127 vista-32:CM_Get_Version vista-64:CM_Get_Version win7-32:CM_Get_First_Log_Conf win7-64:CM_Get_First_Log_Conf
-128 vista-32:CM_Get_Version_Ex vista-64:CM_Get_Version_Ex win7-32:CM_Get_First_Log_Conf_Ex win7-64:CM_Get_First_Log_Conf_Ex
-129 vista-32:CM_Intersect_Range_List vista-64:CM_Intersect_Range_List win7-32:CM_Get_Global_State win7-64:CM_Get_Global_State
-130 vista-32:CM_Invert_Range_List vista-64:CM_Invert_Range_List win7-32:CM_Get_Global_State_Ex win7-64:CM_Get_Global_State_Ex
-131 vista-32:CM_Is_Dock_Station_Present vista-64:CM_Is_Dock_Station_Present win7-32:CM_Get_HW_Prof_FlagsA win7-64:CM_Get_HW_Prof_FlagsA
-132 vista-32:CM_Is_Dock_Station_Present_Ex vista-64:CM_Is_Dock_Station_Present_Ex win7-32:CM_Get_HW_Prof_FlagsW win7-64:CM_Get_HW_Prof_FlagsW
-133 vista-32:CM_Locate_DevNodeA vista-64:CM_Locate_DevNodeA win7-32:CM_Get_HW_Prof_Flags_ExA win7-64:CM_Get_HW_Prof_Flags_ExA
-134 vista-32:CM_Locate_DevNodeW vista-64:CM_Locate_DevNodeW win7-32:CM_Get_HW_Prof_Flags_ExW win7-64:CM_Get_HW_Prof_Flags_ExW
-135 vista-32:CM_Locate_DevNode_ExA vista-64:CM_Locate_DevNode_ExA win7-32:CM_Get_Hardware_Profile_InfoA win7-64:CM_Get_Hardware_Profile_InfoA
-136 vista-32:CM_Locate_DevNode_ExW vista-64:CM_Locate_DevNode_ExW win7-32:CM_Get_Hardware_Profile_InfoW win7-64:CM_Get_Hardware_Profile_InfoW
-137 vista-32:CM_Merge_Range_List vista-64:CM_Merge_Range_List win7-32:CM_Get_Hardware_Profile_Info_ExA win7-64:CM_Get_Hardware_Profile_Info_ExA
-138 vista-32:CM_Modify_Res_Des vista-64:CM_Modify_Res_Des win7-32:CM_Get_Hardware_Profile_Info_ExW win7-64:CM_Get_Hardware_Profile_Info_ExW
-139 vista-32:CM_Modify_Res_Des_Ex vista-64:CM_Modify_Res_Des_Ex win7-32:CM_Get_Log_Conf_Priority win7-64:CM_Get_Log_Conf_Priority
-140 vista-32:CM_Move_DevNode vista-64:CM_Move_DevNode win7-32:CM_Get_Log_Conf_Priority_Ex win7-64:CM_Get_Log_Conf_Priority_Ex
-141 vista-32:CM_Move_DevNode_Ex vista-64:CM_Move_DevNode_Ex win7-32:CM_Get_Next_Log_Conf win7-64:CM_Get_Next_Log_Conf
-142 vista-32:CM_Next_Range vista-64:CM_Next_Range win7-32:CM_Get_Next_Log_Conf_Ex win7-64:CM_Get_Next_Log_Conf_Ex
-143 vista-32:CM_Open_Class_KeyA vista-64:CM_Open_Class_KeyA win7-32:CM_Get_Next_Res_Des win7-64:CM_Get_Next_Res_Des
-144 vista-32:CM_Open_Class_KeyW vista-64:CM_Open_Class_KeyW win7-32:CM_Get_Next_Res_Des_Ex win7-64:CM_Get_Next_Res_Des_Ex
-145 vista-32:CM_Open_Class_Key_ExA vista-64:CM_Open_Class_Key_ExA win7-32:CM_Get_Parent win7-64:CM_Get_Parent
-146 vista-32:CM_Open_Class_Key_ExW vista-64:CM_Open_Class_Key_ExW win7-32:CM_Get_Parent_Ex win7-64:CM_Get_Parent_Ex
-147 vista-32:CM_Open_DevNode_Key vista-64:CM_Open_DevNode_Key win7-32:CM_Get_Res_Des_Data win7-64:CM_Get_Res_Des_Data
-148 vista-32:CM_Open_DevNode_Key_Ex vista-64:CM_Open_DevNode_Key_Ex win7-32:CM_Get_Res_Des_Data_Ex win7-64:CM_Get_Res_Des_Data_Ex
-149 vista-32:CM_Query_And_Remove_SubTreeA vista-64:CM_Query_And_Remove_SubTreeA win7-32:CM_Get_Res_Des_Data_Size win7-64:CM_Get_Res_Des_Data_Size
-150 vista-32:CM_Query_And_Remove_SubTreeW vista-64:CM_Query_And_Remove_SubTreeW win7-32:CM_Get_Res_Des_Data_Size_Ex win7-64:CM_Get_Res_Des_Data_Size_Ex
-151 vista-32:CM_Query_And_Remove_SubTree_ExA vista-64:CM_Query_And_Remove_SubTree_ExA win7-32:CM_Get_Resource_Conflict_Count win7-64:CM_Get_Resource_Conflict_Count
-152 vista-32:CM_Query_And_Remove_SubTree_ExW vista-64:CM_Query_And_Remove_SubTree_ExW win7-32:CM_Get_Resource_Conflict_DetailsA win7-64:CM_Get_Resource_Conflict_DetailsA
-153 vista-32:CM_Query_Arbitrator_Free_Data vista-64:CM_Query_Arbitrator_Free_Data win7-32:CM_Get_Resource_Conflict_DetailsW win7-64:CM_Get_Resource_Conflict_DetailsW
-154 vista-32:CM_Query_Arbitrator_Free_Data_Ex vista-64:CM_Query_Arbitrator_Free_Data_Ex win7-32:CM_Get_Sibling win7-64:CM_Get_Sibling
-155 vista-32:CM_Query_Arbitrator_Free_Size vista-64:CM_Query_Arbitrator_Free_Size win7-32:CM_Get_Sibling_Ex win7-64:CM_Get_Sibling_Ex
-156 vista-32:CM_Query_Arbitrator_Free_Size_Ex vista-64:CM_Query_Arbitrator_Free_Size_Ex win7-32:CM_Get_Version win7-64:CM_Get_Version
-157 vista-32:CM_Query_Remove_SubTree vista-64:CM_Query_Remove_SubTree win7-32:CM_Get_Version_Ex win7-64:CM_Get_Version_Ex
-158 vista-32:CM_Query_Remove_SubTree_Ex vista-64:CM_Query_Remove_SubTree_Ex win7-32:CM_Import_PowerScheme win7-64:CM_Import_PowerScheme
-159 vista-32:CM_Query_Resource_Conflict_List vista-64:CM_Query_Resource_Conflict_List win7-32:CM_Install_DevNodeW win7-64:CM_Install_DevNodeW
-160 vista-32:CM_Reenumerate_DevNode vista-64:CM_Reenumerate_DevNode win7-32:CM_Install_DevNode_ExW win7-64:CM_Install_DevNode_ExW
-161 vista-32:CM_Reenumerate_DevNode_Ex vista-64:CM_Reenumerate_DevNode_Ex win7-32:CM_Intersect_Range_List win7-64:CM_Intersect_Range_List
-162 vista-32:CM_Register_Device_Driver vista-64:CM_Register_Device_Driver win7-32:CM_Invert_Range_List win7-64:CM_Invert_Range_List
-163 vista-32:CM_Register_Device_Driver_Ex vista-64:CM_Register_Device_Driver_Ex win7-32:CM_Is_Dock_Station_Present win7-64:CM_Is_Dock_Station_Present
-164 vista-32:CM_Register_Device_InterfaceA vista-64:CM_Register_Device_InterfaceA win7-32:CM_Is_Dock_Station_Present_Ex win7-64:CM_Is_Dock_Station_Present_Ex
-165 vista-32:CM_Register_Device_InterfaceW vista-64:CM_Register_Device_InterfaceW win7-32:CM_Is_Version_Available win7-64:CM_Is_Version_Available
-166 vista-32:CM_Register_Device_Interface_ExA vista-64:CM_Register_Device_Interface_ExA win7-32:CM_Is_Version_Available_Ex win7-64:CM_Is_Version_Available_Ex
-167 vista-32:CM_Register_Device_Interface_ExW vista-64:CM_Register_Device_Interface_ExW win7-32:CM_Locate_DevNodeA win7-64:CM_Locate_DevNodeA
-168 vista-32:CM_Remove_SubTree vista-64:CM_Remove_SubTree win7-32:CM_Locate_DevNodeW win7-64:CM_Locate_DevNodeW
-169 vista-32:CM_Remove_SubTree_Ex vista-64:CM_Remove_SubTree_Ex win7-32:CM_Locate_DevNode_ExA win7-64:CM_Locate_DevNode_ExA
-170 vista-32:CM_Request_Eject_PC vista-64:CM_Request_Eject_PC win7-32:CM_Locate_DevNode_ExW win7-64:CM_Locate_DevNode_ExW
-171 vista-32:CM_Request_Eject_PC_Ex vista-64:CM_Request_Eject_PC_Ex win7-32:CM_MapCrToSpErr win7-64:CM_MapCrToSpErr
-172 vista-32:CM_Run_Detection vista-64:CM_Run_Detection win7-32:CM_MapCrToWin32Err win7-64:CM_MapCrToWin32Err
-173 vista-32:CM_Run_Detection_Ex vista-64:CM_Run_Detection_Ex win7-32:CM_Merge_Range_List win7-64:CM_Merge_Range_List
-174 vista-32:CM_Set_Class_Registry_PropertyA vista-64:CM_Set_Class_Registry_PropertyA win7-32:CM_Modify_Res_Des win7-64:CM_Modify_Res_Des
-175 vista-32:CM_Set_Class_Registry_PropertyW vista-64:CM_Set_Class_Registry_PropertyW win7-32:CM_Modify_Res_Des_Ex win7-64:CM_Modify_Res_Des_Ex
-176 vista-32:CM_Set_DevNode_Problem vista-64:CM_Set_DevNode_Problem win7-32:CM_Move_DevNode win7-64:CM_Move_DevNode
-177 vista-32:CM_Set_DevNode_Problem_Ex vista-64:CM_Set_DevNode_Problem_Ex win7-32:CM_Move_DevNode_Ex win7-64:CM_Move_DevNode_Ex
-178 vista-32:CM_Set_DevNode_Registry_PropertyA vista-64:CM_Set_DevNode_Registry_PropertyA win7-32:CM_Next_Range win7-64:CM_Next_Range
-179 vista-32:CM_Set_DevNode_Registry_PropertyW vista-64:CM_Set_DevNode_Registry_PropertyW win7-32:CM_Open_Class_KeyA win7-64:CM_Open_Class_KeyA
-180 vista-32:CM_Set_DevNode_Registry_Property_ExA vista-64:CM_Set_DevNode_Registry_Property_ExA win7-32:CM_Open_Class_KeyW win7-64:CM_Open_Class_KeyW
-181 vista-32:CM_Set_DevNode_Registry_Property_ExW vista-64:CM_Set_DevNode_Registry_Property_ExW win7-32:CM_Open_Class_Key_ExA win7-64:CM_Open_Class_Key_ExA
-182 vista-32:CM_Set_HW_Prof vista-64:CM_Set_HW_Prof win7-32:CM_Open_Class_Key_ExW win7-64:CM_Open_Class_Key_ExW
-183 vista-32:CM_Set_HW_Prof_Ex vista-64:CM_Set_HW_Prof_Ex win7-32:CM_Open_DevNode_Key win7-64:CM_Open_DevNode_Key
-184 vista-32:CM_Set_HW_Prof_FlagsA vista-64:CM_Set_HW_Prof_FlagsA win7-32:CM_Open_DevNode_Key_Ex win7-64:CM_Open_DevNode_Key_Ex
-185 vista-32:CM_Set_HW_Prof_FlagsW vista-64:CM_Set_HW_Prof_FlagsW win7-32:CM_Open_Device_Interface_KeyA win7-64:CM_Open_Device_Interface_KeyA
-186 vista-32:CM_Set_HW_Prof_Flags_ExA vista-64:CM_Set_HW_Prof_Flags_ExA win7-32:CM_Open_Device_Interface_KeyW win7-64:CM_Open_Device_Interface_KeyW
-187 vista-32:CM_Set_HW_Prof_Flags_ExW vista-64:CM_Set_HW_Prof_Flags_ExW win7-32:CM_Open_Device_Interface_Key_ExA win7-64:CM_Open_Device_Interface_Key_ExA
-188 vista-32:CM_Setup_DevNode vista-64:CM_Setup_DevNode win7-32:CM_Open_Device_Interface_Key_ExW win7-64:CM_Open_Device_Interface_Key_ExW
-189 vista-32:CM_Setup_DevNode_Ex vista-64:CM_Setup_DevNode_Ex win7-32:CM_Query_And_Remove_SubTreeA win7-64:CM_Query_And_Remove_SubTreeA
-190 vista-32:CM_Test_Range_Available vista-64:CM_Test_Range_Available win7-32:CM_Query_And_Remove_SubTreeW win7-64:CM_Query_And_Remove_SubTreeW
-191 vista-32:CM_Uninstall_DevNode vista-64:CM_Uninstall_DevNode win7-32:CM_Query_And_Remove_SubTree_ExA win7-64:CM_Query_And_Remove_SubTree_ExA
-192 vista-32:CM_Uninstall_DevNode_Ex vista-64:CM_Uninstall_DevNode_Ex win7-32:CM_Query_And_Remove_SubTree_ExW win7-64:CM_Query_And_Remove_SubTree_ExW
-193 vista-32:CM_Unregister_Device_InterfaceA vista-64:CM_Unregister_Device_InterfaceA win7-32:CM_Query_Arbitrator_Free_Data win7-64:CM_Query_Arbitrator_Free_Data
-194 vista-32:CM_Unregister_Device_InterfaceW vista-64:CM_Unregister_Device_InterfaceW win7-32:CM_Query_Arbitrator_Free_Data_Ex win7-64:CM_Query_Arbitrator_Free_Data_Ex
-195 vista-32:CM_Unregister_Device_Interface_ExA vista-64:CM_Unregister_Device_Interface_ExA win7-32:CM_Query_Arbitrator_Free_Size win7-64:CM_Query_Arbitrator_Free_Size
-196 vista-32:CM_Unregister_Device_Interface_ExW vista-64:CM_Unregister_Device_Interface_ExW win7-32:CM_Query_Arbitrator_Free_Size_Ex win7-64:CM_Query_Arbitrator_Free_Size_Ex
-197 win7-32:CM_Query_Remove_SubTree win7-64:CM_Query_Remove_SubTree
-198 win7-32:CM_Query_Remove_SubTree_Ex win7-64:CM_Query_Remove_SubTree_Ex
-199 win7-32:CM_Query_Resource_Conflict_List win7-64:CM_Query_Resource_Conflict_List
-200 win7-32:CM_Reenumerate_DevNode win7-64:CM_Reenumerate_DevNode
-201 win7-32:CM_Reenumerate_DevNode_Ex win7-64:CM_Reenumerate_DevNode_Ex
-202 win7-32:CM_Register_Device_Driver win7-64:CM_Register_Device_Driver
-203 win7-32:CM_Register_Device_Driver_Ex win7-64:CM_Register_Device_Driver_Ex
-204 win7-32:CM_Register_Device_InterfaceA win7-64:CM_Register_Device_InterfaceA
-205 win7-32:CM_Register_Device_InterfaceW win7-64:CM_Register_Device_InterfaceW
-206 win7-32:CM_Register_Device_Interface_ExA win7-64:CM_Register_Device_Interface_ExA
-207 win7-32:CM_Register_Device_Interface_ExW win7-64:CM_Register_Device_Interface_ExW
-208 win7-32:CM_Remove_SubTree win7-64:CM_Remove_SubTree
-209 win7-32:CM_Remove_SubTree_Ex win7-64:CM_Remove_SubTree_Ex
-210 win7-32:CM_Request_Device_EjectA win7-64:CM_Request_Device_EjectA
-211 win7-32:CM_Request_Device_EjectW win7-64:CM_Request_Device_EjectW
-212 win7-32:CM_Request_Device_Eject_ExA win7-64:CM_Request_Device_Eject_ExA
-213 win7-32:CM_Request_Device_Eject_ExW win7-64:CM_Request_Device_Eject_ExW
-214 win7-32:CM_Request_Eject_PC win7-64:CM_Request_Eject_PC
-215 win7-32:CM_Request_Eject_PC_Ex win7-64:CM_Request_Eject_PC_Ex
-216 win7-32:CM_RestoreAll_DefaultPowerSchemes win7-64:CM_RestoreAll_DefaultPowerSchemes
-217 win7-32:CM_Restore_DefaultPowerScheme win7-64:CM_Restore_DefaultPowerScheme
-218 win7-32:CM_Run_Detection win7-64:CM_Run_Detection
-219 win7-32:CM_Run_Detection_Ex win7-64:CM_Run_Detection_Ex
-220 win7-32:CM_Set_ActiveScheme win7-64:CM_Set_ActiveScheme
-221 win7-32:CM_Set_Class_PropertyW win7-64:CM_Set_Class_PropertyW
-222 win7-32:CM_Set_Class_Property_ExW win7-64:CM_Set_Class_Property_ExW
-223 win7-32:CM_Set_Class_Registry_PropertyA win7-64:CM_Set_Class_Registry_PropertyA
-224 win7-32:CM_Set_Class_Registry_PropertyW win7-64:CM_Set_Class_Registry_PropertyW
-225 win7-32:CM_Set_DevNode_Problem win7-64:CM_Set_DevNode_Problem
-226 win7-32:CM_Set_DevNode_Problem_Ex win7-64:CM_Set_DevNode_Problem_Ex
-227 win7-32:CM_Set_DevNode_PropertyW win7-64:CM_Set_DevNode_PropertyW
-228 win7-32:CM_Set_DevNode_Property_ExW win7-64:CM_Set_DevNode_Property_ExW
-229 win7-32:CM_Set_DevNode_Registry_PropertyA win7-64:CM_Set_DevNode_Registry_PropertyA
-230 win7-32:CM_Set_DevNode_Registry_PropertyW win7-64:CM_Set_DevNode_Registry_PropertyW
-231 win7-32:CM_Set_DevNode_Registry_Property_ExA win7-64:CM_Set_DevNode_Registry_Property_ExA
-232 win7-32:CM_Set_DevNode_Registry_Property_ExW win7-64:CM_Set_DevNode_Registry_Property_ExW
-233 win7-32:CM_Set_Device_Interface_PropertyW win7-64:CM_Set_Device_Interface_PropertyW
-234 win7-32:CM_Set_Device_Interface_Property_ExW win7-64:CM_Set_Device_Interface_Property_ExW
-235 win7-32:CM_Set_HW_Prof win7-64:CM_Set_HW_Prof
-236 win7-32:CM_Set_HW_Prof_Ex win7-64:CM_Set_HW_Prof_Ex
-237 win7-32:CM_Set_HW_Prof_FlagsA win7-64:CM_Set_HW_Prof_FlagsA
-238 win7-32:CM_Set_HW_Prof_FlagsW win7-64:CM_Set_HW_Prof_FlagsW
-239 win7-32:CM_Set_HW_Prof_Flags_ExA win7-64:CM_Set_HW_Prof_Flags_ExA
-240 win7-32:CM_Set_HW_Prof_Flags_ExW win7-64:CM_Set_HW_Prof_Flags_ExW
-241 win7-32:CM_Setup_DevNode win7-64:CM_Setup_DevNode
-242 win7-32:CM_Setup_DevNode_Ex win7-64:CM_Setup_DevNode_Ex
-243 win7-32:CM_Test_Range_Available win7-64:CM_Test_Range_Available
-244 win7-32:CM_Uninstall_DevNode win7-64:CM_Uninstall_DevNode
-245 win7-32:CM_Uninstall_DevNode_Ex win7-64:CM_Uninstall_DevNode_Ex
-246 win7-32:CM_Unregister_Device_InterfaceA win7-64:CM_Unregister_Device_InterfaceA
-247 win7-32:CM_Unregister_Device_InterfaceW win7-64:CM_Unregister_Device_InterfaceW
-248 win7-32:CM_Unregister_Device_Interface_ExA win7-64:CM_Unregister_Device_Interface_ExA
-249 win7-32:CM_Unregister_Device_Interface_ExW win7-64:CM_Unregister_Device_Interface_ExW
-250 win7-32:CM_Write_UserPowerKey win7-64:CM_Write_UserPowerKey
+1 vista-32:CMP_Init_Detection vista-64:CMP_Init_Detection win7-32:CMP_GetBlockedDriverInfo win7-64:CMP_GetBlockedDriverInfo win8-32:CMP_GetBlockedDriverInfo win8-64:CMP_GetBlockedDriverInfo
+2 vista-32:CMP_RegisterNotification vista-64:CMP_RegisterNotification win7-32:CMP_GetServerSideDeviceInstallFlags win7-64:CMP_GetServerSideDeviceInstallFlags win8-32:CMP_GetServerSideDeviceInstallFlags win8-64:CMP_GetServerSideDeviceInstallFlags
+3 vista-32:CMP_Report_LogOn vista-64:CMP_Report_LogOn win7-32:CMP_Init_Detection win7-64:CMP_Init_Detection win8-32:CMP_Init_Detection win8-64:CMP_Init_Detection
+4 vista-32:CMP_UnregisterNotification vista-64:CMP_UnregisterNotification win7-32:CMP_RegisterNotification win7-64:CMP_RegisterNotification win8-32:CMP_RegisterServiceNotification win8-64:CMP_RegisterServiceNotification
+5 vista-32:CMP_WaitNoPendingInstallEvents vista-64:CMP_WaitNoPendingInstallEvents win7-32:CMP_Report_LogOn win7-64:CMP_Report_LogOn win8-32:CMP_Register_Notification win8-64:CMP_Register_Notification
+6 vista-32:CMP_WaitServicesAvailable vista-64:CMP_WaitServicesAvailable win7-32:CMP_UnregisterNotification win7-64:CMP_UnregisterNotification win8-32:CMP_Report_LogOn win8-64:CMP_Report_LogOn
+7 vista-32:CM_Add_Empty_Log_Conf vista-64:CM_Add_Empty_Log_Conf win7-32:CMP_WaitNoPendingInstallEvents win7-64:CMP_WaitNoPendingInstallEvents win8-32:CMP_WaitNoPendingInstallEvents win8-64:CMP_WaitNoPendingInstallEvents
+8 vista-32:CM_Add_Empty_Log_Conf_Ex vista-64:CM_Add_Empty_Log_Conf_Ex win7-32:CMP_WaitServicesAvailable win7-64:CMP_WaitServicesAvailable win8-32:CMP_WaitServicesAvailable win8-64:CMP_WaitServicesAvailable
+9 vista-32:CM_Add_IDA vista-64:CM_Add_IDA win7-32:CM_Add_Driver_PackageW win7-64:CM_Add_Driver_PackageW win8-32:CM_Add_Driver_PackageW win8-64:CM_Add_Driver_PackageW
+10 vista-32:CM_Add_IDW vista-64:CM_Add_IDW win7-32:CM_Add_Driver_Package_ExW win7-64:CM_Add_Driver_Package_ExW win8-32:CM_Add_Driver_Package_ExW win8-64:CM_Add_Driver_Package_ExW
+11 vista-32:CM_Add_ID_ExA vista-64:CM_Add_ID_ExA win7-32:CM_Add_Empty_Log_Conf win7-64:CM_Add_Empty_Log_Conf win8-32:CM_Add_Empty_Log_Conf win8-64:CM_Add_Empty_Log_Conf
+12 vista-32:CM_Add_ID_ExW vista-64:CM_Add_ID_ExW win7-32:CM_Add_Empty_Log_Conf_Ex win7-64:CM_Add_Empty_Log_Conf_Ex win8-32:CM_Add_Empty_Log_Conf_Ex win8-64:CM_Add_Empty_Log_Conf_Ex
+13 vista-32:CM_Add_Range vista-64:CM_Add_Range win7-32:CM_Add_IDA win7-64:CM_Add_IDA win8-32:CM_Add_IDA win8-64:CM_Add_IDA
+14 vista-32:CM_Add_Res_Des vista-64:CM_Add_Res_Des win7-32:CM_Add_IDW win7-64:CM_Add_IDW win8-32:CM_Add_IDW win8-64:CM_Add_IDW
+15 vista-32:CM_Add_Res_Des_Ex vista-64:CM_Add_Res_Des_Ex win7-32:CM_Add_ID_ExA win7-64:CM_Add_ID_ExA win8-32:CM_Add_ID_ExA win8-64:CM_Add_ID_ExA
+16 vista-32:CM_Connect_MachineA vista-64:CM_Connect_MachineA win7-32:CM_Add_ID_ExW win7-64:CM_Add_ID_ExW win8-32:CM_Add_ID_ExW win8-64:CM_Add_ID_ExW
+17 vista-32:CM_Connect_MachineW vista-64:CM_Connect_MachineW win7-32:CM_Add_Range win7-64:CM_Add_Range win8-32:CM_Add_Range win8-64:CM_Add_Range
+18 vista-32:CM_Create_DevNodeA vista-64:CM_Create_DevNodeA win7-32:CM_Add_Res_Des win7-64:CM_Add_Res_Des win8-32:CM_Add_Res_Des win8-64:CM_Add_Res_Des
+19 vista-32:CM_Create_DevNodeW vista-64:CM_Create_DevNodeW win7-32:CM_Add_Res_Des_Ex win7-64:CM_Add_Res_Des_Ex win8-32:CM_Add_Res_Des_Ex win8-64:CM_Add_Res_Des_Ex
+20 vista-32:CM_Create_DevNode_ExA vista-64:CM_Create_DevNode_ExA win7-32:CM_Apply_PowerScheme win7-64:CM_Apply_PowerScheme win8-32:CM_Apply_PowerScheme win8-64:CM_Apply_PowerScheme
+21 vista-32:CM_Create_DevNode_ExW vista-64:CM_Create_DevNode_ExW win7-32:CM_Connect_MachineA win7-64:CM_Connect_MachineA win8-32:CM_Connect_MachineA win8-64:CM_Connect_MachineA
+22 vista-32:CM_Create_Range_List vista-64:CM_Create_Range_List win7-32:CM_Connect_MachineW win7-64:CM_Connect_MachineW win8-32:CM_Connect_MachineW win8-64:CM_Connect_MachineW
+23 vista-32:CM_Delete_Class_Key vista-64:CM_Delete_Class_Key win7-32:CM_Create_DevNodeA win7-64:CM_Create_DevNodeA win8-32:CM_Create_DevNodeA win8-64:CM_Create_DevNodeA
+24 vista-32:CM_Delete_Class_Key_Ex vista-64:CM_Delete_Class_Key_Ex win7-32:CM_Create_DevNodeW win7-64:CM_Create_DevNodeW win8-32:CM_Create_DevNodeW win8-64:CM_Create_DevNodeW
+25 vista-32:CM_Delete_DevNode_Key vista-64:CM_Delete_DevNode_Key win7-32:CM_Create_DevNode_ExA win7-64:CM_Create_DevNode_ExA win8-32:CM_Create_DevNode_ExA win8-64:CM_Create_DevNode_ExA
+26 vista-32:CM_Delete_DevNode_Key_Ex vista-64:CM_Delete_DevNode_Key_Ex win7-32:CM_Create_DevNode_ExW win7-64:CM_Create_DevNode_ExW win8-32:CM_Create_DevNode_ExW win8-64:CM_Create_DevNode_ExW
+27 vista-32:CM_Delete_Range vista-64:CM_Delete_Range win7-32:CM_Create_Range_List win7-64:CM_Create_Range_List win8-32:CM_Create_Range_List win8-64:CM_Create_Range_List
+28 vista-32:CM_Detect_Resource_Conflict vista-64:CM_Detect_Resource_Conflict win7-32:CM_Delete_Class_Key win7-64:CM_Delete_Class_Key win8-32:CM_Delete_Class_Key win8-64:CM_Delete_Class_Key
+29 vista-32:CM_Detect_Resource_Conflict_Ex vista-64:CM_Detect_Resource_Conflict_Ex win7-32:CM_Delete_Class_Key_Ex win7-64:CM_Delete_Class_Key_Ex win8-32:CM_Delete_Class_Key_Ex win8-64:CM_Delete_Class_Key_Ex
+30 vista-32:CM_Disable_DevNode vista-64:CM_Disable_DevNode win7-32:CM_Delete_DevNode_Key win7-64:CM_Delete_DevNode_Key win8-32:CM_Delete_DevNode_Key win8-64:CM_Delete_DevNode_Key
+31 vista-32:CM_Disable_DevNode_Ex vista-64:CM_Disable_DevNode_Ex win7-32:CM_Delete_DevNode_Key_Ex win7-64:CM_Delete_DevNode_Key_Ex win8-32:CM_Delete_DevNode_Key_Ex win8-64:CM_Delete_DevNode_Key_Ex
+32 vista-32:CM_Disconnect_Machine vista-64:CM_Disconnect_Machine win7-32:CM_Delete_Device_Interface_KeyA win7-64:CM_Delete_Device_Interface_KeyA win8-32:CM_Delete_Device_Interface_KeyA win8-64:CM_Delete_Device_Interface_KeyA
+33 vista-32:CM_Dup_Range_List vista-64:CM_Dup_Range_List win7-32:CM_Delete_Device_Interface_KeyW win7-64:CM_Delete_Device_Interface_KeyW win8-32:CM_Delete_Device_Interface_KeyW win8-64:CM_Delete_Device_Interface_KeyW
+34 vista-32:CM_Enable_DevNode vista-64:CM_Enable_DevNode win7-32:CM_Delete_Device_Interface_Key_ExA win7-64:CM_Delete_Device_Interface_Key_ExA win8-32:CM_Delete_Device_Interface_Key_ExA win8-64:CM_Delete_Device_Interface_Key_ExA
+35 vista-32:CM_Enable_DevNode_Ex vista-64:CM_Enable_DevNode_Ex win7-32:CM_Delete_Device_Interface_Key_ExW win7-64:CM_Delete_Device_Interface_Key_ExW win8-32:CM_Delete_Device_Interface_Key_ExW win8-64:CM_Delete_Device_Interface_Key_ExW
+36 vista-32:CM_Enumerate_Classes vista-64:CM_Enumerate_Classes win7-32:CM_Delete_Driver_PackageW win7-64:CM_Delete_Driver_PackageW win8-32:CM_Delete_Driver_PackageW win8-64:CM_Delete_Driver_PackageW
+37 vista-32:CM_Enumerate_Classes_Ex vista-64:CM_Enumerate_Classes_Ex win7-32:CM_Delete_Driver_Package_ExW win7-64:CM_Delete_Driver_Package_ExW win8-32:CM_Delete_Driver_Package_ExW win8-64:CM_Delete_Driver_Package_ExW
+38 vista-32:CM_Enumerate_EnumeratorsA vista-64:CM_Enumerate_EnumeratorsA win7-32:CM_Delete_PowerScheme win7-64:CM_Delete_PowerScheme win8-32:CM_Delete_PowerScheme win8-64:CM_Delete_PowerScheme
+39 vista-32:CM_Enumerate_EnumeratorsW vista-64:CM_Enumerate_EnumeratorsW win7-32:CM_Delete_Range win7-64:CM_Delete_Range win8-32:CM_Delete_Range win8-64:CM_Delete_Range
+40 vista-32:CM_Enumerate_Enumerators_ExA vista-64:CM_Enumerate_Enumerators_ExA win7-32:CM_Detect_Resource_Conflict win7-64:CM_Detect_Resource_Conflict win8-32:CM_Detect_Resource_Conflict win8-64:CM_Detect_Resource_Conflict
+41 vista-32:CM_Enumerate_Enumerators_ExW vista-64:CM_Enumerate_Enumerators_ExW win7-32:CM_Detect_Resource_Conflict_Ex win7-64:CM_Detect_Resource_Conflict_Ex win8-32:CM_Detect_Resource_Conflict_Ex win8-64:CM_Detect_Resource_Conflict_Ex
+42 vista-32:CM_Find_Range vista-64:CM_Find_Range win7-32:CM_Disable_DevNode win7-64:CM_Disable_DevNode win8-32:CM_Disable_DevNode win8-64:CM_Disable_DevNode
+43 vista-32:CM_First_Range vista-64:CM_First_Range win7-32:CM_Disable_DevNode_Ex win7-64:CM_Disable_DevNode_Ex win8-32:CM_Disable_DevNode_Ex win8-64:CM_Disable_DevNode_Ex
+44 vista-32:CM_Free_Log_Conf vista-64:CM_Free_Log_Conf win7-32:CM_Disconnect_Machine win7-64:CM_Disconnect_Machine win8-32:CM_Disconnect_Machine win8-64:CM_Disconnect_Machine
+45 vista-32:CM_Free_Log_Conf_Ex vista-64:CM_Free_Log_Conf_Ex win7-32:CM_Dup_Range_List win7-64:CM_Dup_Range_List win8-32:CM_Dup_Range_List win8-64:CM_Dup_Range_List
+46 vista-32:CM_Free_Log_Conf_Handle vista-64:CM_Free_Log_Conf_Handle win7-32:CM_Duplicate_PowerScheme win7-64:CM_Duplicate_PowerScheme win8-32:CM_Duplicate_PowerScheme win8-64:CM_Duplicate_PowerScheme
+47 vista-32:CM_Free_Range_List vista-64:CM_Free_Range_List win7-32:CM_Enable_DevNode win7-64:CM_Enable_DevNode win8-32:CM_Enable_DevNode win8-64:CM_Enable_DevNode
+48 vista-32:CM_Free_Res_Des vista-64:CM_Free_Res_Des win7-32:CM_Enable_DevNode_Ex win7-64:CM_Enable_DevNode_Ex win8-32:CM_Enable_DevNode_Ex win8-64:CM_Enable_DevNode_Ex
+49 vista-32:CM_Free_Res_Des_Ex vista-64:CM_Free_Res_Des_Ex win7-32:CM_Enumerate_Classes win7-64:CM_Enumerate_Classes win8-32:CM_Enumerate_Classes win8-64:CM_Enumerate_Classes
+50 vista-32:CM_Free_Res_Des_Handle vista-64:CM_Free_Res_Des_Handle win7-32:CM_Enumerate_Classes_Ex win7-64:CM_Enumerate_Classes_Ex win8-32:CM_Enumerate_Classes_Ex win8-64:CM_Enumerate_Classes_Ex
+51 vista-32:CM_Free_Resource_Conflict_Handle vista-64:CM_Free_Resource_Conflict_Handle win7-32:CM_Enumerate_EnumeratorsA win7-64:CM_Enumerate_EnumeratorsA win8-32:CM_Enumerate_EnumeratorsA win8-64:CM_Enumerate_EnumeratorsA
+52 vista-32:CM_Get_Child vista-64:CM_Get_Child win7-32:CM_Enumerate_EnumeratorsW win7-64:CM_Enumerate_EnumeratorsW win8-32:CM_Enumerate_EnumeratorsW win8-64:CM_Enumerate_EnumeratorsW
+53 vista-32:CM_Get_Child_Ex vista-64:CM_Get_Child_Ex win7-32:CM_Enumerate_Enumerators_ExA win7-64:CM_Enumerate_Enumerators_ExA win8-32:CM_Enumerate_Enumerators_ExA win8-64:CM_Enumerate_Enumerators_ExA
+54 vista-32:CM_Get_Class_Key_NameA vista-64:CM_Get_Class_Key_NameA win7-32:CM_Enumerate_Enumerators_ExW win7-64:CM_Enumerate_Enumerators_ExW win8-32:CM_Enumerate_Enumerators_ExW win8-64:CM_Enumerate_Enumerators_ExW
+55 vista-32:CM_Get_Class_Key_NameW vista-64:CM_Get_Class_Key_NameW win7-32:CM_Find_Range win7-64:CM_Find_Range win8-32:CM_Find_Range win8-64:CM_Find_Range
+56 vista-32:CM_Get_Class_Key_Name_ExA vista-64:CM_Get_Class_Key_Name_ExA win7-32:CM_First_Range win7-64:CM_First_Range win8-32:CM_First_Range win8-64:CM_First_Range
+57 vista-32:CM_Get_Class_Key_Name_ExW vista-64:CM_Get_Class_Key_Name_ExW win7-32:CM_Free_Log_Conf win7-64:CM_Free_Log_Conf win8-32:CM_Free_Log_Conf win8-64:CM_Free_Log_Conf
+58 vista-32:CM_Get_Class_NameA vista-64:CM_Get_Class_NameA win7-32:CM_Free_Log_Conf_Ex win7-64:CM_Free_Log_Conf_Ex win8-32:CM_Free_Log_Conf_Ex win8-64:CM_Free_Log_Conf_Ex
+59 vista-32:CM_Get_Class_NameW vista-64:CM_Get_Class_NameW win7-32:CM_Free_Log_Conf_Handle win7-64:CM_Free_Log_Conf_Handle win8-32:CM_Free_Log_Conf_Handle win8-64:CM_Free_Log_Conf_Handle
+60 vista-32:CM_Get_Class_Name_ExA vista-64:CM_Get_Class_Name_ExA win7-32:CM_Free_Range_List win7-64:CM_Free_Range_List win8-32:CM_Free_Range_List win8-64:CM_Free_Range_List
+61 vista-32:CM_Get_Class_Name_ExW vista-64:CM_Get_Class_Name_ExW win7-32:CM_Free_Res_Des win7-64:CM_Free_Res_Des win8-32:CM_Free_Res_Des win8-64:CM_Free_Res_Des
+62 vista-32:CM_Get_Class_Registry_PropertyA vista-64:CM_Get_Class_Registry_PropertyA win7-32:CM_Free_Res_Des_Ex win7-64:CM_Free_Res_Des_Ex win8-32:CM_Free_Res_Des_Ex win8-64:CM_Free_Res_Des_Ex
+63 vista-32:CM_Get_Class_Registry_PropertyW vista-64:CM_Get_Class_Registry_PropertyW win7-32:CM_Free_Res_Des_Handle win7-64:CM_Free_Res_Des_Handle win8-32:CM_Free_Res_Des_Handle win8-64:CM_Free_Res_Des_Handle
+64 vista-32:CM_Get_Depth vista-64:CM_Get_Depth win7-32:CM_Free_Resource_Conflict_Handle win7-64:CM_Free_Resource_Conflict_Handle win8-32:CM_Free_Resource_Conflict_Handle win8-64:CM_Free_Resource_Conflict_Handle
+65 vista-32:CM_Get_Depth_Ex vista-64:CM_Get_Depth_Ex win7-32:CM_Get_Child win7-64:CM_Get_Child win8-32:CM_Get_Child win8-64:CM_Get_Child
+66 vista-32:CM_Get_DevNode_Registry_PropertyA vista-64:CM_Get_DevNode_Registry_PropertyA win7-32:CM_Get_Child_Ex win7-64:CM_Get_Child_Ex win8-32:CM_Get_Child_Ex win8-64:CM_Get_Child_Ex
+67 vista-32:CM_Get_DevNode_Registry_PropertyW vista-64:CM_Get_DevNode_Registry_PropertyW win7-32:CM_Get_Class_Key_NameA win7-64:CM_Get_Class_Key_NameA win8-32:CM_Get_Class_Key_NameA win8-64:CM_Get_Class_Key_NameA
+68 vista-32:CM_Get_DevNode_Registry_Property_ExA vista-64:CM_Get_DevNode_Registry_Property_ExA win7-32:CM_Get_Class_Key_NameW win7-64:CM_Get_Class_Key_NameW win8-32:CM_Get_Class_Key_NameW win8-64:CM_Get_Class_Key_NameW
+69 vista-32:CM_Get_DevNode_Registry_Property_ExW vista-64:CM_Get_DevNode_Registry_Property_ExW win7-32:CM_Get_Class_Key_Name_ExA win7-64:CM_Get_Class_Key_Name_ExA win8-32:CM_Get_Class_Key_Name_ExA win8-64:CM_Get_Class_Key_Name_ExA
+70 vista-32:CM_Get_DevNode_Status vista-64:CM_Get_DevNode_Status win7-32:CM_Get_Class_Key_Name_ExW win7-64:CM_Get_Class_Key_Name_ExW win8-32:CM_Get_Class_Key_Name_ExW win8-64:CM_Get_Class_Key_Name_ExW
+71 vista-32:CM_Get_DevNode_Status_Ex vista-64:CM_Get_DevNode_Status_Ex win7-32:CM_Get_Class_NameA win7-64:CM_Get_Class_NameA win8-32:CM_Get_Class_NameA win8-64:CM_Get_Class_NameA
+72 vista-32:CM_Get_Device_IDA vista-64:CM_Get_Device_IDA win7-32:CM_Get_Class_NameW win7-64:CM_Get_Class_NameW win8-32:CM_Get_Class_NameW win8-64:CM_Get_Class_NameW
+73 vista-32:CM_Get_Device_IDW vista-64:CM_Get_Device_IDW win7-32:CM_Get_Class_Name_ExA win7-64:CM_Get_Class_Name_ExA win8-32:CM_Get_Class_Name_ExA win8-64:CM_Get_Class_Name_ExA
+74 vista-32:CM_Get_Device_ID_ExA vista-64:CM_Get_Device_ID_ExA win7-32:CM_Get_Class_Name_ExW win7-64:CM_Get_Class_Name_ExW win8-32:CM_Get_Class_Name_ExW win8-64:CM_Get_Class_Name_ExW
+75 vista-32:CM_Get_Device_ID_ExW vista-64:CM_Get_Device_ID_ExW win7-32:CM_Get_Class_PropertyW win7-64:CM_Get_Class_PropertyW win8-32:CM_Get_Class_PropertyW win8-64:CM_Get_Class_PropertyW
+76 vista-32:CM_Get_Device_ID_ListA vista-64:CM_Get_Device_ID_ListA win7-32:CM_Get_Class_Property_ExW win7-64:CM_Get_Class_Property_ExW win8-32:CM_Get_Class_Property_ExW win8-64:CM_Get_Class_Property_ExW
+77 vista-32:CM_Get_Device_ID_ListW vista-64:CM_Get_Device_ID_ListW win7-32:CM_Get_Class_Property_Keys win7-64:CM_Get_Class_Property_Keys win8-32:CM_Get_Class_Property_Keys win8-64:CM_Get_Class_Property_Keys
+78 vista-32:CM_Get_Device_ID_List_ExA vista-64:CM_Get_Device_ID_List_ExA win7-32:CM_Get_Class_Property_Keys_Ex win7-64:CM_Get_Class_Property_Keys_Ex win8-32:CM_Get_Class_Property_Keys_Ex win8-64:CM_Get_Class_Property_Keys_Ex
+79 vista-32:CM_Get_Device_ID_List_ExW vista-64:CM_Get_Device_ID_List_ExW win7-32:CM_Get_Class_Registry_PropertyA win7-64:CM_Get_Class_Registry_PropertyA win8-32:CM_Get_Class_Registry_PropertyA win8-64:CM_Get_Class_Registry_PropertyA
+80 vista-32:CM_Get_Device_ID_List_SizeA vista-64:CM_Get_Device_ID_List_SizeA win7-32:CM_Get_Class_Registry_PropertyW win7-64:CM_Get_Class_Registry_PropertyW win8-32:CM_Get_Class_Registry_PropertyW win8-64:CM_Get_Class_Registry_PropertyW
+81 vista-32:CM_Get_Device_ID_List_SizeW vista-64:CM_Get_Device_ID_List_SizeW win7-32:CM_Get_Depth win7-64:CM_Get_Depth win8-32:CM_Get_Depth win8-64:CM_Get_Depth
+82 vista-32:CM_Get_Device_ID_List_Size_ExA vista-64:CM_Get_Device_ID_List_Size_ExA win7-32:CM_Get_Depth_Ex win7-64:CM_Get_Depth_Ex win8-32:CM_Get_Depth_Ex win8-64:CM_Get_Depth_Ex
+83 vista-32:CM_Get_Device_ID_List_Size_ExW vista-64:CM_Get_Device_ID_List_Size_ExW win7-32:CM_Get_DevNode_Custom_PropertyA win7-64:CM_Get_DevNode_Custom_PropertyA win8-32:CM_Get_DevNode_Custom_PropertyA win8-64:CM_Get_DevNode_Custom_PropertyA
+84 vista-32:CM_Get_Device_ID_Size vista-64:CM_Get_Device_ID_Size win7-32:CM_Get_DevNode_Custom_PropertyW win7-64:CM_Get_DevNode_Custom_PropertyW win8-32:CM_Get_DevNode_Custom_PropertyW win8-64:CM_Get_DevNode_Custom_PropertyW
+85 vista-32:CM_Get_Device_ID_Size_Ex vista-64:CM_Get_Device_ID_Size_Ex win7-32:CM_Get_DevNode_Custom_Property_ExA win7-64:CM_Get_DevNode_Custom_Property_ExA win8-32:CM_Get_DevNode_Custom_Property_ExA win8-64:CM_Get_DevNode_Custom_Property_ExA
+86 vista-32:CM_Get_Device_Interface_AliasA vista-64:CM_Get_Device_Interface_AliasA win7-32:CM_Get_DevNode_Custom_Property_ExW win7-64:CM_Get_DevNode_Custom_Property_ExW win8-32:CM_Get_DevNode_Custom_Property_ExW win8-64:CM_Get_DevNode_Custom_Property_ExW
+87 vista-32:CM_Get_Device_Interface_AliasW vista-64:CM_Get_Device_Interface_AliasW win7-32:CM_Get_DevNode_PropertyW win7-64:CM_Get_DevNode_PropertyW win8-32:CM_Get_DevNode_PropertyW win8-64:CM_Get_DevNode_PropertyW
+88 vista-32:CM_Get_Device_Interface_Alias_ExA vista-64:CM_Get_Device_Interface_Alias_ExA win7-32:CM_Get_DevNode_Property_ExW win7-64:CM_Get_DevNode_Property_ExW win8-32:CM_Get_DevNode_Property_ExW win8-64:CM_Get_DevNode_Property_ExW
+89 vista-32:CM_Get_Device_Interface_Alias_ExW vista-64:CM_Get_Device_Interface_Alias_ExW win7-32:CM_Get_DevNode_Property_Keys win7-64:CM_Get_DevNode_Property_Keys win8-32:CM_Get_DevNode_Property_Keys win8-64:CM_Get_DevNode_Property_Keys
+90 vista-32:CM_Get_Device_Interface_ListA vista-64:CM_Get_Device_Interface_ListA win7-32:CM_Get_DevNode_Property_Keys_Ex win7-64:CM_Get_DevNode_Property_Keys_Ex win8-32:CM_Get_DevNode_Property_Keys_Ex win8-64:CM_Get_DevNode_Property_Keys_Ex
+91 vista-32:CM_Get_Device_Interface_ListW vista-64:CM_Get_Device_Interface_ListW win7-32:CM_Get_DevNode_Registry_PropertyA win7-64:CM_Get_DevNode_Registry_PropertyA win8-32:CM_Get_DevNode_Registry_PropertyA win8-64:CM_Get_DevNode_Registry_PropertyA
+92 vista-32:CM_Get_Device_Interface_List_ExA vista-64:CM_Get_Device_Interface_List_ExA win7-32:CM_Get_DevNode_Registry_PropertyW win7-64:CM_Get_DevNode_Registry_PropertyW win8-32:CM_Get_DevNode_Registry_PropertyW win8-64:CM_Get_DevNode_Registry_PropertyW
+93 vista-32:CM_Get_Device_Interface_List_ExW vista-64:CM_Get_Device_Interface_List_ExW win7-32:CM_Get_DevNode_Registry_Property_ExA win7-64:CM_Get_DevNode_Registry_Property_ExA win8-32:CM_Get_DevNode_Registry_Property_ExA win8-64:CM_Get_DevNode_Registry_Property_ExA
+94 vista-32:CM_Get_Device_Interface_List_SizeA vista-64:CM_Get_Device_Interface_List_SizeA win7-32:CM_Get_DevNode_Registry_Property_ExW win7-64:CM_Get_DevNode_Registry_Property_ExW win8-32:CM_Get_DevNode_Registry_Property_ExW win8-64:CM_Get_DevNode_Registry_Property_ExW
+95 vista-32:CM_Get_Device_Interface_List_SizeW vista-64:CM_Get_Device_Interface_List_SizeW win7-32:CM_Get_DevNode_Status win7-64:CM_Get_DevNode_Status win8-32:CM_Get_DevNode_Status win8-64:CM_Get_DevNode_Status
+96 vista-32:CM_Get_Device_Interface_List_Size_ExA vista-64:CM_Get_Device_Interface_List_Size_ExA win7-32:CM_Get_DevNode_Status_Ex win7-64:CM_Get_DevNode_Status_Ex win8-32:CM_Get_DevNode_Status_Ex win8-64:CM_Get_DevNode_Status_Ex
+97 vista-32:CM_Get_Device_Interface_List_Size_ExW vista-64:CM_Get_Device_Interface_List_Size_ExW win7-32:CM_Get_Device_IDA win7-64:CM_Get_Device_IDA win8-32:CM_Get_Device_IDA win8-64:CM_Get_Device_IDA
+98 vista-32:CM_Get_First_Log_Conf vista-64:CM_Get_First_Log_Conf win7-32:CM_Get_Device_IDW win7-64:CM_Get_Device_IDW win8-32:CM_Get_Device_IDW win8-64:CM_Get_Device_IDW
+99 vista-32:CM_Get_First_Log_Conf_Ex vista-64:CM_Get_First_Log_Conf_Ex win7-32:CM_Get_Device_ID_ExA win7-64:CM_Get_Device_ID_ExA win8-32:CM_Get_Device_ID_ExA win8-64:CM_Get_Device_ID_ExA
+100 vista-32:CM_Get_Global_State vista-64:CM_Get_Global_State win7-32:CM_Get_Device_ID_ExW win7-64:CM_Get_Device_ID_ExW win8-32:CM_Get_Device_ID_ExW win8-64:CM_Get_Device_ID_ExW
+101 vista-32:CM_Get_Global_State_Ex vista-64:CM_Get_Global_State_Ex win7-32:CM_Get_Device_ID_ListA win7-64:CM_Get_Device_ID_ListA win8-32:CM_Get_Device_ID_ListA win8-64:CM_Get_Device_ID_ListA
+102 vista-32:CM_Get_HW_Prof_FlagsA vista-64:CM_Get_HW_Prof_FlagsA win7-32:CM_Get_Device_ID_ListW win7-64:CM_Get_Device_ID_ListW win8-32:CM_Get_Device_ID_ListW win8-64:CM_Get_Device_ID_ListW
+103 vista-32:CM_Get_HW_Prof_FlagsW vista-64:CM_Get_HW_Prof_FlagsW win7-32:CM_Get_Device_ID_List_ExA win7-64:CM_Get_Device_ID_List_ExA win8-32:CM_Get_Device_ID_List_ExA win8-64:CM_Get_Device_ID_List_ExA
+104 vista-32:CM_Get_HW_Prof_Flags_ExA vista-64:CM_Get_HW_Prof_Flags_ExA win7-32:CM_Get_Device_ID_List_ExW win7-64:CM_Get_Device_ID_List_ExW win8-32:CM_Get_Device_ID_List_ExW win8-64:CM_Get_Device_ID_List_ExW
+105 vista-32:CM_Get_HW_Prof_Flags_ExW vista-64:CM_Get_HW_Prof_Flags_ExW win7-32:CM_Get_Device_ID_List_SizeA win7-64:CM_Get_Device_ID_List_SizeA win8-32:CM_Get_Device_ID_List_SizeA win8-64:CM_Get_Device_ID_List_SizeA
+106 vista-32:CM_Get_Hardware_Profile_InfoA vista-64:CM_Get_Hardware_Profile_InfoA win7-32:CM_Get_Device_ID_List_SizeW win7-64:CM_Get_Device_ID_List_SizeW win8-32:CM_Get_Device_ID_List_SizeW win8-64:CM_Get_Device_ID_List_SizeW
+107 vista-32:CM_Get_Hardware_Profile_InfoW vista-64:CM_Get_Hardware_Profile_InfoW win7-32:CM_Get_Device_ID_List_Size_ExA win7-64:CM_Get_Device_ID_List_Size_ExA win8-32:CM_Get_Device_ID_List_Size_ExA win8-64:CM_Get_Device_ID_List_Size_ExA
+108 vista-32:CM_Get_Hardware_Profile_Info_ExA vista-64:CM_Get_Hardware_Profile_Info_ExA win7-32:CM_Get_Device_ID_List_Size_ExW win7-64:CM_Get_Device_ID_List_Size_ExW win8-32:CM_Get_Device_ID_List_Size_ExW win8-64:CM_Get_Device_ID_List_Size_ExW
+109 vista-32:CM_Get_Hardware_Profile_Info_ExW vista-64:CM_Get_Hardware_Profile_Info_ExW win7-32:CM_Get_Device_ID_Size win7-64:CM_Get_Device_ID_Size win8-32:CM_Get_Device_ID_Size win8-64:CM_Get_Device_ID_Size
+110 vista-32:CM_Get_Log_Conf_Priority vista-64:CM_Get_Log_Conf_Priority win7-32:CM_Get_Device_ID_Size_Ex win7-64:CM_Get_Device_ID_Size_Ex win8-32:CM_Get_Device_ID_Size_Ex win8-64:CM_Get_Device_ID_Size_Ex
+111 vista-32:CM_Get_Log_Conf_Priority_Ex vista-64:CM_Get_Log_Conf_Priority_Ex win7-32:CM_Get_Device_Interface_AliasA win7-64:CM_Get_Device_Interface_AliasA win8-32:CM_Get_Device_Interface_AliasA win8-64:CM_Get_Device_Interface_AliasA
+112 vista-32:CM_Get_Next_Log_Conf vista-64:CM_Get_Next_Log_Conf win7-32:CM_Get_Device_Interface_AliasW win7-64:CM_Get_Device_Interface_AliasW win8-32:CM_Get_Device_Interface_AliasW win8-64:CM_Get_Device_Interface_AliasW
+113 vista-32:CM_Get_Next_Log_Conf_Ex vista-64:CM_Get_Next_Log_Conf_Ex win7-32:CM_Get_Device_Interface_Alias_ExA win7-64:CM_Get_Device_Interface_Alias_ExA win8-32:CM_Get_Device_Interface_Alias_ExA win8-64:CM_Get_Device_Interface_Alias_ExA
+114 vista-32:CM_Get_Next_Res_Des vista-64:CM_Get_Next_Res_Des win7-32:CM_Get_Device_Interface_Alias_ExW win7-64:CM_Get_Device_Interface_Alias_ExW win8-32:CM_Get_Device_Interface_Alias_ExW win8-64:CM_Get_Device_Interface_Alias_ExW
+115 vista-32:CM_Get_Next_Res_Des_Ex vista-64:CM_Get_Next_Res_Des_Ex win7-32:CM_Get_Device_Interface_ListA win7-64:CM_Get_Device_Interface_ListA win8-32:CM_Get_Device_Interface_ListA win8-64:CM_Get_Device_Interface_ListA
+116 vista-32:CM_Get_Parent vista-64:CM_Get_Parent win7-32:CM_Get_Device_Interface_ListW win7-64:CM_Get_Device_Interface_ListW win8-32:CM_Get_Device_Interface_ListW win8-64:CM_Get_Device_Interface_ListW
+117 vista-32:CM_Get_Parent_Ex vista-64:CM_Get_Parent_Ex win7-32:CM_Get_Device_Interface_List_ExA win7-64:CM_Get_Device_Interface_List_ExA win8-32:CM_Get_Device_Interface_List_ExA win8-64:CM_Get_Device_Interface_List_ExA
+118 vista-32:CM_Get_Res_Des_Data vista-64:CM_Get_Res_Des_Data win7-32:CM_Get_Device_Interface_List_ExW win7-64:CM_Get_Device_Interface_List_ExW win8-32:CM_Get_Device_Interface_List_ExW win8-64:CM_Get_Device_Interface_List_ExW
+119 vista-32:CM_Get_Res_Des_Data_Ex vista-64:CM_Get_Res_Des_Data_Ex win7-32:CM_Get_Device_Interface_List_SizeA win7-64:CM_Get_Device_Interface_List_SizeA win8-32:CM_Get_Device_Interface_List_SizeA win8-64:CM_Get_Device_Interface_List_SizeA
+120 vista-32:CM_Get_Res_Des_Data_Size vista-64:CM_Get_Res_Des_Data_Size win7-32:CM_Get_Device_Interface_List_SizeW win7-64:CM_Get_Device_Interface_List_SizeW win8-32:CM_Get_Device_Interface_List_SizeW win8-64:CM_Get_Device_Interface_List_SizeW
+121 vista-32:CM_Get_Res_Des_Data_Size_Ex vista-64:CM_Get_Res_Des_Data_Size_Ex win7-32:CM_Get_Device_Interface_List_Size_ExA win7-64:CM_Get_Device_Interface_List_Size_ExA win8-32:CM_Get_Device_Interface_List_Size_ExA win8-64:CM_Get_Device_Interface_List_Size_ExA
+122 vista-32:CM_Get_Resource_Conflict_Count vista-64:CM_Get_Resource_Conflict_Count win7-32:CM_Get_Device_Interface_List_Size_ExW win7-64:CM_Get_Device_Interface_List_Size_ExW win8-32:CM_Get_Device_Interface_List_Size_ExW win8-64:CM_Get_Device_Interface_List_Size_ExW
+123 vista-32:CM_Get_Resource_Conflict_DetailsA vista-64:CM_Get_Resource_Conflict_DetailsA win7-32:CM_Get_Device_Interface_PropertyW win7-64:CM_Get_Device_Interface_PropertyW win8-32:CM_Get_Device_Interface_PropertyW win8-64:CM_Get_Device_Interface_PropertyW
+124 vista-32:CM_Get_Resource_Conflict_DetailsW vista-64:CM_Get_Resource_Conflict_DetailsW win7-32:CM_Get_Device_Interface_Property_ExW win7-64:CM_Get_Device_Interface_Property_ExW win8-32:CM_Get_Device_Interface_Property_ExW win8-64:CM_Get_Device_Interface_Property_ExW
+125 vista-32:CM_Get_Sibling vista-64:CM_Get_Sibling win7-32:CM_Get_Device_Interface_Property_KeysW win7-64:CM_Get_Device_Interface_Property_KeysW win8-32:CM_Get_Device_Interface_Property_KeysW win8-64:CM_Get_Device_Interface_Property_KeysW
+126 vista-32:CM_Get_Sibling_Ex vista-64:CM_Get_Sibling_Ex win7-32:CM_Get_Device_Interface_Property_Keys_ExW win7-64:CM_Get_Device_Interface_Property_Keys_ExW win8-32:CM_Get_Device_Interface_Property_Keys_ExW win8-64:CM_Get_Device_Interface_Property_Keys_ExW
+127 vista-32:CM_Get_Version vista-64:CM_Get_Version win7-32:CM_Get_First_Log_Conf win7-64:CM_Get_First_Log_Conf win8-32:CM_Get_First_Log_Conf win8-64:CM_Get_First_Log_Conf
+128 vista-32:CM_Get_Version_Ex vista-64:CM_Get_Version_Ex win7-32:CM_Get_First_Log_Conf_Ex win7-64:CM_Get_First_Log_Conf_Ex win8-32:CM_Get_First_Log_Conf_Ex win8-64:CM_Get_First_Log_Conf_Ex
+129 vista-32:CM_Intersect_Range_List vista-64:CM_Intersect_Range_List win7-32:CM_Get_Global_State win7-64:CM_Get_Global_State win8-32:CM_Get_Global_State win8-64:CM_Get_Global_State
+130 vista-32:CM_Invert_Range_List vista-64:CM_Invert_Range_List win7-32:CM_Get_Global_State_Ex win7-64:CM_Get_Global_State_Ex win8-32:CM_Get_Global_State_Ex win8-64:CM_Get_Global_State_Ex
+131 vista-32:CM_Is_Dock_Station_Present vista-64:CM_Is_Dock_Station_Present win7-32:CM_Get_HW_Prof_FlagsA win7-64:CM_Get_HW_Prof_FlagsA win8-32:CM_Get_HW_Prof_FlagsA win8-64:CM_Get_HW_Prof_FlagsA
+132 vista-32:CM_Is_Dock_Station_Present_Ex vista-64:CM_Is_Dock_Station_Present_Ex win7-32:CM_Get_HW_Prof_FlagsW win7-64:CM_Get_HW_Prof_FlagsW win8-32:CM_Get_HW_Prof_FlagsW win8-64:CM_Get_HW_Prof_FlagsW
+133 vista-32:CM_Locate_DevNodeA vista-64:CM_Locate_DevNodeA win7-32:CM_Get_HW_Prof_Flags_ExA win7-64:CM_Get_HW_Prof_Flags_ExA win8-32:CM_Get_HW_Prof_Flags_ExA win8-64:CM_Get_HW_Prof_Flags_ExA
+134 vista-32:CM_Locate_DevNodeW vista-64:CM_Locate_DevNodeW win7-32:CM_Get_HW_Prof_Flags_ExW win7-64:CM_Get_HW_Prof_Flags_ExW win8-32:CM_Get_HW_Prof_Flags_ExW win8-64:CM_Get_HW_Prof_Flags_ExW
+135 vista-32:CM_Locate_DevNode_ExA vista-64:CM_Locate_DevNode_ExA win7-32:CM_Get_Hardware_Profile_InfoA win7-64:CM_Get_Hardware_Profile_InfoA win8-32:CM_Get_Hardware_Profile_InfoA win8-64:CM_Get_Hardware_Profile_InfoA
+136 vista-32:CM_Locate_DevNode_ExW vista-64:CM_Locate_DevNode_ExW win7-32:CM_Get_Hardware_Profile_InfoW win7-64:CM_Get_Hardware_Profile_InfoW win8-32:CM_Get_Hardware_Profile_InfoW win8-64:CM_Get_Hardware_Profile_InfoW
+137 vista-32:CM_Merge_Range_List vista-64:CM_Merge_Range_List win7-32:CM_Get_Hardware_Profile_Info_ExA win7-64:CM_Get_Hardware_Profile_Info_ExA win8-32:CM_Get_Hardware_Profile_Info_ExA win8-64:CM_Get_Hardware_Profile_Info_ExA
+138 vista-32:CM_Modify_Res_Des vista-64:CM_Modify_Res_Des win7-32:CM_Get_Hardware_Profile_Info_ExW win7-64:CM_Get_Hardware_Profile_Info_ExW win8-32:CM_Get_Hardware_Profile_Info_ExW win8-64:CM_Get_Hardware_Profile_Info_ExW
+139 vista-32:CM_Modify_Res_Des_Ex vista-64:CM_Modify_Res_Des_Ex win7-32:CM_Get_Log_Conf_Priority win7-64:CM_Get_Log_Conf_Priority win8-32:CM_Get_Log_Conf_Priority win8-64:CM_Get_Log_Conf_Priority
+140 vista-32:CM_Move_DevNode vista-64:CM_Move_DevNode win7-32:CM_Get_Log_Conf_Priority_Ex win7-64:CM_Get_Log_Conf_Priority_Ex win8-32:CM_Get_Log_Conf_Priority_Ex win8-64:CM_Get_Log_Conf_Priority_Ex
+141 vista-32:CM_Move_DevNode_Ex vista-64:CM_Move_DevNode_Ex win7-32:CM_Get_Next_Log_Conf win7-64:CM_Get_Next_Log_Conf win8-32:CM_Get_Next_Log_Conf win8-64:CM_Get_Next_Log_Conf
+142 vista-32:CM_Next_Range vista-64:CM_Next_Range win7-32:CM_Get_Next_Log_Conf_Ex win7-64:CM_Get_Next_Log_Conf_Ex win8-32:CM_Get_Next_Log_Conf_Ex win8-64:CM_Get_Next_Log_Conf_Ex
+143 vista-32:CM_Open_Class_KeyA vista-64:CM_Open_Class_KeyA win7-32:CM_Get_Next_Res_Des win7-64:CM_Get_Next_Res_Des win8-32:CM_Get_Next_Res_Des win8-64:CM_Get_Next_Res_Des
+144 vista-32:CM_Open_Class_KeyW vista-64:CM_Open_Class_KeyW win7-32:CM_Get_Next_Res_Des_Ex win7-64:CM_Get_Next_Res_Des_Ex win8-32:CM_Get_Next_Res_Des_Ex win8-64:CM_Get_Next_Res_Des_Ex
+145 vista-32:CM_Open_Class_Key_ExA vista-64:CM_Open_Class_Key_ExA win7-32:CM_Get_Parent win7-64:CM_Get_Parent win8-32:CM_Get_Parent win8-64:CM_Get_Parent
+146 vista-32:CM_Open_Class_Key_ExW vista-64:CM_Open_Class_Key_ExW win7-32:CM_Get_Parent_Ex win7-64:CM_Get_Parent_Ex win8-32:CM_Get_Parent_Ex win8-64:CM_Get_Parent_Ex
+147 vista-32:CM_Open_DevNode_Key vista-64:CM_Open_DevNode_Key win7-32:CM_Get_Res_Des_Data win7-64:CM_Get_Res_Des_Data win8-32:CM_Get_Res_Des_Data win8-64:CM_Get_Res_Des_Data
+148 vista-32:CM_Open_DevNode_Key_Ex vista-64:CM_Open_DevNode_Key_Ex win7-32:CM_Get_Res_Des_Data_Ex win7-64:CM_Get_Res_Des_Data_Ex win8-32:CM_Get_Res_Des_Data_Ex win8-64:CM_Get_Res_Des_Data_Ex
+149 vista-32:CM_Query_And_Remove_SubTreeA vista-64:CM_Query_And_Remove_SubTreeA win7-32:CM_Get_Res_Des_Data_Size win7-64:CM_Get_Res_Des_Data_Size win8-32:CM_Get_Res_Des_Data_Size win8-64:CM_Get_Res_Des_Data_Size
+150 vista-32:CM_Query_And_Remove_SubTreeW vista-64:CM_Query_And_Remove_SubTreeW win7-32:CM_Get_Res_Des_Data_Size_Ex win7-64:CM_Get_Res_Des_Data_Size_Ex win8-32:CM_Get_Res_Des_Data_Size_Ex win8-64:CM_Get_Res_Des_Data_Size_Ex
+151 vista-32:CM_Query_And_Remove_SubTree_ExA vista-64:CM_Query_And_Remove_SubTree_ExA win7-32:CM_Get_Resource_Conflict_Count win7-64:CM_Get_Resource_Conflict_Count win8-32:CM_Get_Resource_Conflict_Count win8-64:CM_Get_Resource_Conflict_Count
+152 vista-32:CM_Query_And_Remove_SubTree_ExW vista-64:CM_Query_And_Remove_SubTree_ExW win7-32:CM_Get_Resource_Conflict_DetailsA win7-64:CM_Get_Resource_Conflict_DetailsA win8-32:CM_Get_Resource_Conflict_DetailsA win8-64:CM_Get_Resource_Conflict_DetailsA
+153 vista-32:CM_Query_Arbitrator_Free_Data vista-64:CM_Query_Arbitrator_Free_Data win7-32:CM_Get_Resource_Conflict_DetailsW win7-64:CM_Get_Resource_Conflict_DetailsW win8-32:CM_Get_Resource_Conflict_DetailsW win8-64:CM_Get_Resource_Conflict_DetailsW
+154 vista-32:CM_Query_Arbitrator_Free_Data_Ex vista-64:CM_Query_Arbitrator_Free_Data_Ex win7-32:CM_Get_Sibling win7-64:CM_Get_Sibling win8-32:CM_Get_Sibling win8-64:CM_Get_Sibling
+155 vista-32:CM_Query_Arbitrator_Free_Size vista-64:CM_Query_Arbitrator_Free_Size win7-32:CM_Get_Sibling_Ex win7-64:CM_Get_Sibling_Ex win8-32:CM_Get_Sibling_Ex win8-64:CM_Get_Sibling_Ex
+156 vista-32:CM_Query_Arbitrator_Free_Size_Ex vista-64:CM_Query_Arbitrator_Free_Size_Ex win7-32:CM_Get_Version win7-64:CM_Get_Version win8-32:CM_Get_Version win8-64:CM_Get_Version
+157 vista-32:CM_Query_Remove_SubTree vista-64:CM_Query_Remove_SubTree win7-32:CM_Get_Version_Ex win7-64:CM_Get_Version_Ex win8-32:CM_Get_Version_Ex win8-64:CM_Get_Version_Ex
+158 vista-32:CM_Query_Remove_SubTree_Ex vista-64:CM_Query_Remove_SubTree_Ex win7-32:CM_Import_PowerScheme win7-64:CM_Import_PowerScheme win8-32:CM_Import_PowerScheme win8-64:CM_Import_PowerScheme
+159 vista-32:CM_Query_Resource_Conflict_List vista-64:CM_Query_Resource_Conflict_List win7-32:CM_Install_DevNodeW win7-64:CM_Install_DevNodeW win8-32:CM_Install_DevNodeW win8-64:CM_Install_DevNodeW
+160 vista-32:CM_Reenumerate_DevNode vista-64:CM_Reenumerate_DevNode win7-32:CM_Install_DevNode_ExW win7-64:CM_Install_DevNode_ExW win8-32:CM_Install_DevNode_ExW win8-64:CM_Install_DevNode_ExW
+161 vista-32:CM_Reenumerate_DevNode_Ex vista-64:CM_Reenumerate_DevNode_Ex win7-32:CM_Intersect_Range_List win7-64:CM_Intersect_Range_List win8-32:CM_Intersect_Range_List win8-64:CM_Intersect_Range_List
+162 vista-32:CM_Register_Device_Driver vista-64:CM_Register_Device_Driver win7-32:CM_Invert_Range_List win7-64:CM_Invert_Range_List win8-32:CM_Invert_Range_List win8-64:CM_Invert_Range_List
+163 vista-32:CM_Register_Device_Driver_Ex vista-64:CM_Register_Device_Driver_Ex win7-32:CM_Is_Dock_Station_Present win7-64:CM_Is_Dock_Station_Present win8-32:CM_Is_Dock_Station_Present win8-64:CM_Is_Dock_Station_Present
+164 vista-32:CM_Register_Device_InterfaceA vista-64:CM_Register_Device_InterfaceA win7-32:CM_Is_Dock_Station_Present_Ex win7-64:CM_Is_Dock_Station_Present_Ex win8-32:CM_Is_Dock_Station_Present_Ex win8-64:CM_Is_Dock_Station_Present_Ex
+165 vista-32:CM_Register_Device_InterfaceW vista-64:CM_Register_Device_InterfaceW win7-32:CM_Is_Version_Available win7-64:CM_Is_Version_Available win8-32:CM_Is_Version_Available win8-64:CM_Is_Version_Available
+166 vista-32:CM_Register_Device_Interface_ExA vista-64:CM_Register_Device_Interface_ExA win7-32:CM_Is_Version_Available_Ex win7-64:CM_Is_Version_Available_Ex win8-32:CM_Is_Version_Available_Ex win8-64:CM_Is_Version_Available_Ex
+167 vista-32:CM_Register_Device_Interface_ExW vista-64:CM_Register_Device_Interface_ExW win7-32:CM_Locate_DevNodeA win7-64:CM_Locate_DevNodeA win8-32:CM_Locate_DevNodeA win8-64:CM_Locate_DevNodeA
+168 vista-32:CM_Remove_SubTree vista-64:CM_Remove_SubTree win7-32:CM_Locate_DevNodeW win7-64:CM_Locate_DevNodeW win8-32:CM_Locate_DevNodeW win8-64:CM_Locate_DevNodeW
+169 vista-32:CM_Remove_SubTree_Ex vista-64:CM_Remove_SubTree_Ex win7-32:CM_Locate_DevNode_ExA win7-64:CM_Locate_DevNode_ExA win8-32:CM_Locate_DevNode_ExA win8-64:CM_Locate_DevNode_ExA
+170 vista-32:CM_Request_Eject_PC vista-64:CM_Request_Eject_PC win7-32:CM_Locate_DevNode_ExW win7-64:CM_Locate_DevNode_ExW win8-32:CM_Locate_DevNode_ExW win8-64:CM_Locate_DevNode_ExW
+171 vista-32:CM_Request_Eject_PC_Ex vista-64:CM_Request_Eject_PC_Ex win7-32:CM_MapCrToSpErr win7-64:CM_MapCrToSpErr win8-32:CM_MapCrToSpErr win8-64:CM_MapCrToSpErr
+172 vista-32:CM_Run_Detection vista-64:CM_Run_Detection win7-32:CM_MapCrToWin32Err win7-64:CM_MapCrToWin32Err win8-32:CM_MapCrToWin32Err win8-64:CM_MapCrToWin32Err
+173 vista-32:CM_Run_Detection_Ex vista-64:CM_Run_Detection_Ex win7-32:CM_Merge_Range_List win7-64:CM_Merge_Range_List win8-32:CM_Merge_Range_List win8-64:CM_Merge_Range_List
+174 vista-32:CM_Set_Class_Registry_PropertyA vista-64:CM_Set_Class_Registry_PropertyA win7-32:CM_Modify_Res_Des win7-64:CM_Modify_Res_Des win8-32:CM_Modify_Res_Des win8-64:CM_Modify_Res_Des
+175 vista-32:CM_Set_Class_Registry_PropertyW vista-64:CM_Set_Class_Registry_PropertyW win7-32:CM_Modify_Res_Des_Ex win7-64:CM_Modify_Res_Des_Ex win8-32:CM_Modify_Res_Des_Ex win8-64:CM_Modify_Res_Des_Ex
+176 vista-32:CM_Set_DevNode_Problem vista-64:CM_Set_DevNode_Problem win7-32:CM_Move_DevNode win7-64:CM_Move_DevNode win8-32:CM_Move_DevNode win8-64:CM_Move_DevNode
+177 vista-32:CM_Set_DevNode_Problem_Ex vista-64:CM_Set_DevNode_Problem_Ex win7-32:CM_Move_DevNode_Ex win7-64:CM_Move_DevNode_Ex win8-32:CM_Move_DevNode_Ex win8-64:CM_Move_DevNode_Ex
+178 vista-32:CM_Set_DevNode_Registry_PropertyA vista-64:CM_Set_DevNode_Registry_PropertyA win7-32:CM_Next_Range win7-64:CM_Next_Range win8-32:CM_Next_Range win8-64:CM_Next_Range
+179 vista-32:CM_Set_DevNode_Registry_PropertyW vista-64:CM_Set_DevNode_Registry_PropertyW win7-32:CM_Open_Class_KeyA win7-64:CM_Open_Class_KeyA win8-32:CM_Open_Class_KeyA win8-64:CM_Open_Class_KeyA
+180 vista-32:CM_Set_DevNode_Registry_Property_ExA vista-64:CM_Set_DevNode_Registry_Property_ExA win7-32:CM_Open_Class_KeyW win7-64:CM_Open_Class_KeyW win8-32:CM_Open_Class_KeyW win8-64:CM_Open_Class_KeyW
+181 vista-32:CM_Set_DevNode_Registry_Property_ExW vista-64:CM_Set_DevNode_Registry_Property_ExW win7-32:CM_Open_Class_Key_ExA win7-64:CM_Open_Class_Key_ExA win8-32:CM_Open_Class_Key_ExA win8-64:CM_Open_Class_Key_ExA
+182 vista-32:CM_Set_HW_Prof vista-64:CM_Set_HW_Prof win7-32:CM_Open_Class_Key_ExW win7-64:CM_Open_Class_Key_ExW win8-32:CM_Open_Class_Key_ExW win8-64:CM_Open_Class_Key_ExW
+183 vista-32:CM_Set_HW_Prof_Ex vista-64:CM_Set_HW_Prof_Ex win7-32:CM_Open_DevNode_Key win7-64:CM_Open_DevNode_Key win8-32:CM_Open_DevNode_Key win8-64:CM_Open_DevNode_Key
+184 vista-32:CM_Set_HW_Prof_FlagsA vista-64:CM_Set_HW_Prof_FlagsA win7-32:CM_Open_DevNode_Key_Ex win7-64:CM_Open_DevNode_Key_Ex win8-32:CM_Open_DevNode_Key_Ex win8-64:CM_Open_DevNode_Key_Ex
+185 vista-32:CM_Set_HW_Prof_FlagsW vista-64:CM_Set_HW_Prof_FlagsW win7-32:CM_Open_Device_Interface_KeyA win7-64:CM_Open_Device_Interface_KeyA win8-32:CM_Open_Device_Interface_KeyA win8-64:CM_Open_Device_Interface_KeyA
+186 vista-32:CM_Set_HW_Prof_Flags_ExA vista-64:CM_Set_HW_Prof_Flags_ExA win7-32:CM_Open_Device_Interface_KeyW win7-64:CM_Open_Device_Interface_KeyW win8-32:CM_Open_Device_Interface_KeyW win8-64:CM_Open_Device_Interface_KeyW
+187 vista-32:CM_Set_HW_Prof_Flags_ExW vista-64:CM_Set_HW_Prof_Flags_ExW win7-32:CM_Open_Device_Interface_Key_ExA win7-64:CM_Open_Device_Interface_Key_ExA win8-32:CM_Open_Device_Interface_Key_ExA win8-64:CM_Open_Device_Interface_Key_ExA
+188 vista-32:CM_Setup_DevNode vista-64:CM_Setup_DevNode win7-32:CM_Open_Device_Interface_Key_ExW win7-64:CM_Open_Device_Interface_Key_ExW win8-32:CM_Open_Device_Interface_Key_ExW win8-64:CM_Open_Device_Interface_Key_ExW
+189 vista-32:CM_Setup_DevNode_Ex vista-64:CM_Setup_DevNode_Ex win7-32:CM_Query_And_Remove_SubTreeA win7-64:CM_Query_And_Remove_SubTreeA win8-32:CM_Query_And_Remove_SubTreeA win8-64:CM_Query_And_Remove_SubTreeA
+190 vista-32:CM_Test_Range_Available vista-64:CM_Test_Range_Available win7-32:CM_Query_And_Remove_SubTreeW win7-64:CM_Query_And_Remove_SubTreeW win8-32:CM_Query_And_Remove_SubTreeW win8-64:CM_Query_And_Remove_SubTreeW
+191 vista-32:CM_Uninstall_DevNode vista-64:CM_Uninstall_DevNode win7-32:CM_Query_And_Remove_SubTree_ExA win7-64:CM_Query_And_Remove_SubTree_ExA win8-32:CM_Query_And_Remove_SubTree_ExA win8-64:CM_Query_And_Remove_SubTree_ExA
+192 vista-32:CM_Uninstall_DevNode_Ex vista-64:CM_Uninstall_DevNode_Ex win7-32:CM_Query_And_Remove_SubTree_ExW win7-64:CM_Query_And_Remove_SubTree_ExW win8-32:CM_Query_And_Remove_SubTree_ExW win8-64:CM_Query_And_Remove_SubTree_ExW
+193 vista-32:CM_Unregister_Device_InterfaceA vista-64:CM_Unregister_Device_InterfaceA win7-32:CM_Query_Arbitrator_Free_Data win7-64:CM_Query_Arbitrator_Free_Data win8-32:CM_Query_Arbitrator_Free_Data win8-64:CM_Query_Arbitrator_Free_Data
+194 vista-32:CM_Unregister_Device_InterfaceW vista-64:CM_Unregister_Device_InterfaceW win7-32:CM_Query_Arbitrator_Free_Data_Ex win7-64:CM_Query_Arbitrator_Free_Data_Ex win8-32:CM_Query_Arbitrator_Free_Data_Ex win8-64:CM_Query_Arbitrator_Free_Data_Ex
+195 vista-32:CM_Unregister_Device_Interface_ExA vista-64:CM_Unregister_Device_Interface_ExA win7-32:CM_Query_Arbitrator_Free_Size win7-64:CM_Query_Arbitrator_Free_Size win8-32:CM_Query_Arbitrator_Free_Size win8-64:CM_Query_Arbitrator_Free_Size
+196 vista-32:CM_Unregister_Device_Interface_ExW vista-64:CM_Unregister_Device_Interface_ExW win7-32:CM_Query_Arbitrator_Free_Size_Ex win7-64:CM_Query_Arbitrator_Free_Size_Ex win8-32:CM_Query_Arbitrator_Free_Size_Ex win8-64:CM_Query_Arbitrator_Free_Size_Ex
+197 win7-32:CM_Query_Remove_SubTree win7-64:CM_Query_Remove_SubTree win8-32:CM_Query_Remove_SubTree win8-64:CM_Query_Remove_SubTree
+198 win7-32:CM_Query_Remove_SubTree_Ex win7-64:CM_Query_Remove_SubTree_Ex win8-32:CM_Query_Remove_SubTree_Ex win8-64:CM_Query_Remove_SubTree_Ex
+199 win7-32:CM_Query_Resource_Conflict_List win7-64:CM_Query_Resource_Conflict_List win8-32:CM_Query_Resource_Conflict_List win8-64:CM_Query_Resource_Conflict_List
+200 win7-32:CM_Reenumerate_DevNode win7-64:CM_Reenumerate_DevNode win8-32:CM_Reenumerate_DevNode win8-64:CM_Reenumerate_DevNode
+201 win7-32:CM_Reenumerate_DevNode_Ex win7-64:CM_Reenumerate_DevNode_Ex win8-32:CM_Reenumerate_DevNode_Ex win8-64:CM_Reenumerate_DevNode_Ex
+202 win7-32:CM_Register_Device_Driver win7-64:CM_Register_Device_Driver win8-32:CM_Register_Device_Driver win8-64:CM_Register_Device_Driver
+203 win7-32:CM_Register_Device_Driver_Ex win7-64:CM_Register_Device_Driver_Ex win8-32:CM_Register_Device_Driver_Ex win8-64:CM_Register_Device_Driver_Ex
+204 win7-32:CM_Register_Device_InterfaceA win7-64:CM_Register_Device_InterfaceA win8-32:CM_Register_Device_InterfaceA win8-64:CM_Register_Device_InterfaceA
+205 win7-32:CM_Register_Device_InterfaceW win7-64:CM_Register_Device_InterfaceW win8-32:CM_Register_Device_InterfaceW win8-64:CM_Register_Device_InterfaceW
+206 win7-32:CM_Register_Device_Interface_ExA win7-64:CM_Register_Device_Interface_ExA win8-32:CM_Register_Device_Interface_ExA win8-64:CM_Register_Device_Interface_ExA
+207 win7-32:CM_Register_Device_Interface_ExW win7-64:CM_Register_Device_Interface_ExW win8-32:CM_Register_Device_Interface_ExW win8-64:CM_Register_Device_Interface_ExW
+208 win7-32:CM_Remove_SubTree win7-64:CM_Remove_SubTree win8-32:CM_Register_Notification win8-64:CM_Register_Notification
+209 win7-32:CM_Remove_SubTree_Ex win7-64:CM_Remove_SubTree_Ex win8-32:CM_Remove_SubTree win8-64:CM_Remove_SubTree
+210 win7-32:CM_Request_Device_EjectA win7-64:CM_Request_Device_EjectA win8-32:CM_Remove_SubTree_Ex win8-64:CM_Remove_SubTree_Ex
+211 win7-32:CM_Request_Device_EjectW win7-64:CM_Request_Device_EjectW win8-32:CM_Request_Device_EjectA win8-64:CM_Request_Device_EjectA
+212 win7-32:CM_Request_Device_Eject_ExA win7-64:CM_Request_Device_Eject_ExA win8-32:CM_Request_Device_EjectW win8-64:CM_Request_Device_EjectW
+213 win7-32:CM_Request_Device_Eject_ExW win7-64:CM_Request_Device_Eject_ExW win8-32:CM_Request_Device_Eject_ExA win8-64:CM_Request_Device_Eject_ExA
+214 win7-32:CM_Request_Eject_PC win7-64:CM_Request_Eject_PC win8-32:CM_Request_Device_Eject_ExW win8-64:CM_Request_Device_Eject_ExW
+215 win7-32:CM_Request_Eject_PC_Ex win7-64:CM_Request_Eject_PC_Ex win8-32:CM_Request_Eject_PC win8-64:CM_Request_Eject_PC
+216 win7-32:CM_RestoreAll_DefaultPowerSchemes win7-64:CM_RestoreAll_DefaultPowerSchemes win8-32:CM_Request_Eject_PC_Ex win8-64:CM_Request_Eject_PC_Ex
+217 win7-32:CM_Restore_DefaultPowerScheme win7-64:CM_Restore_DefaultPowerScheme win8-32:CM_RestoreAll_DefaultPowerSchemes win8-64:CM_RestoreAll_DefaultPowerSchemes
+218 win7-32:CM_Run_Detection win7-64:CM_Run_Detection win8-32:CM_Restore_DefaultPowerScheme win8-64:CM_Restore_DefaultPowerScheme
+219 win7-32:CM_Run_Detection_Ex win7-64:CM_Run_Detection_Ex win8-32:CM_Run_Detection win8-64:CM_Run_Detection
+220 win7-32:CM_Set_ActiveScheme win7-64:CM_Set_ActiveScheme win8-32:CM_Run_Detection_Ex win8-64:CM_Run_Detection_Ex
+221 win7-32:CM_Set_Class_PropertyW win7-64:CM_Set_Class_PropertyW win8-32:CM_Set_ActiveScheme win8-64:CM_Set_ActiveScheme
+222 win7-32:CM_Set_Class_Property_ExW win7-64:CM_Set_Class_Property_ExW win8-32:CM_Set_Class_PropertyW win8-64:CM_Set_Class_PropertyW
+223 win7-32:CM_Set_Class_Registry_PropertyA win7-64:CM_Set_Class_Registry_PropertyA win8-32:CM_Set_Class_Property_ExW win8-64:CM_Set_Class_Property_ExW
+224 win7-32:CM_Set_Class_Registry_PropertyW win7-64:CM_Set_Class_Registry_PropertyW win8-32:CM_Set_Class_Registry_PropertyA win8-64:CM_Set_Class_Registry_PropertyA
+225 win7-32:CM_Set_DevNode_Problem win7-64:CM_Set_DevNode_Problem win8-32:CM_Set_Class_Registry_PropertyW win8-64:CM_Set_Class_Registry_PropertyW
+226 win7-32:CM_Set_DevNode_Problem_Ex win7-64:CM_Set_DevNode_Problem_Ex win8-32:CM_Set_DevNode_Problem win8-64:CM_Set_DevNode_Problem
+227 win7-32:CM_Set_DevNode_PropertyW win7-64:CM_Set_DevNode_PropertyW win8-32:CM_Set_DevNode_Problem_Ex win8-64:CM_Set_DevNode_Problem_Ex
+228 win7-32:CM_Set_DevNode_Property_ExW win7-64:CM_Set_DevNode_Property_ExW win8-32:CM_Set_DevNode_PropertyW win8-64:CM_Set_DevNode_PropertyW
+229 win7-32:CM_Set_DevNode_Registry_PropertyA win7-64:CM_Set_DevNode_Registry_PropertyA win8-32:CM_Set_DevNode_Property_ExW win8-64:CM_Set_DevNode_Property_ExW
+230 win7-32:CM_Set_DevNode_Registry_PropertyW win7-64:CM_Set_DevNode_Registry_PropertyW win8-32:CM_Set_DevNode_Registry_PropertyA win8-64:CM_Set_DevNode_Registry_PropertyA
+231 win7-32:CM_Set_DevNode_Registry_Property_ExA win7-64:CM_Set_DevNode_Registry_Property_ExA win8-32:CM_Set_DevNode_Registry_PropertyW win8-64:CM_Set_DevNode_Registry_PropertyW
+232 win7-32:CM_Set_DevNode_Registry_Property_ExW win7-64:CM_Set_DevNode_Registry_Property_ExW win8-32:CM_Set_DevNode_Registry_Property_ExA win8-64:CM_Set_DevNode_Registry_Property_ExA
+233 win7-32:CM_Set_Device_Interface_PropertyW win7-64:CM_Set_Device_Interface_PropertyW win8-32:CM_Set_DevNode_Registry_Property_ExW win8-64:CM_Set_DevNode_Registry_Property_ExW
+234 win7-32:CM_Set_Device_Interface_Property_ExW win7-64:CM_Set_Device_Interface_Property_ExW win8-32:CM_Set_Device_Interface_PropertyW win8-64:CM_Set_Device_Interface_PropertyW
+235 win7-32:CM_Set_HW_Prof win7-64:CM_Set_HW_Prof win8-32:CM_Set_Device_Interface_Property_ExW win8-64:CM_Set_Device_Interface_Property_ExW
+236 win7-32:CM_Set_HW_Prof_Ex win7-64:CM_Set_HW_Prof_Ex win8-32:CM_Set_HW_Prof win8-64:CM_Set_HW_Prof
+237 win7-32:CM_Set_HW_Prof_FlagsA win7-64:CM_Set_HW_Prof_FlagsA win8-32:CM_Set_HW_Prof_Ex win8-64:CM_Set_HW_Prof_Ex
+238 win7-32:CM_Set_HW_Prof_FlagsW win7-64:CM_Set_HW_Prof_FlagsW win8-32:CM_Set_HW_Prof_FlagsA win8-64:CM_Set_HW_Prof_FlagsA
+239 win7-32:CM_Set_HW_Prof_Flags_ExA win7-64:CM_Set_HW_Prof_Flags_ExA win8-32:CM_Set_HW_Prof_FlagsW win8-64:CM_Set_HW_Prof_FlagsW
+240 win7-32:CM_Set_HW_Prof_Flags_ExW win7-64:CM_Set_HW_Prof_Flags_ExW win8-32:CM_Set_HW_Prof_Flags_ExA win8-64:CM_Set_HW_Prof_Flags_ExA
+241 win7-32:CM_Setup_DevNode win7-64:CM_Setup_DevNode win8-32:CM_Set_HW_Prof_Flags_ExW win8-64:CM_Set_HW_Prof_Flags_ExW
+242 win7-32:CM_Setup_DevNode_Ex win7-64:CM_Setup_DevNode_Ex win8-32:CM_Setup_DevNode win8-64:CM_Setup_DevNode
+243 win7-32:CM_Test_Range_Available win7-64:CM_Test_Range_Available win8-32:CM_Setup_DevNode_Ex win8-64:CM_Setup_DevNode_Ex
+244 win7-32:CM_Uninstall_DevNode win7-64:CM_Uninstall_DevNode win8-32:CM_Test_Range_Available win8-64:CM_Test_Range_Available
+245 win7-32:CM_Uninstall_DevNode_Ex win7-64:CM_Uninstall_DevNode_Ex win8-32:CM_Uninstall_DevNode win8-64:CM_Uninstall_DevNode
+246 win7-32:CM_Unregister_Device_InterfaceA win7-64:CM_Unregister_Device_InterfaceA win8-32:CM_Uninstall_DevNode_Ex win8-64:CM_Uninstall_DevNode_Ex
+247 win7-32:CM_Unregister_Device_InterfaceW win7-64:CM_Unregister_Device_InterfaceW win8-32:CM_Unregister_Device_InterfaceA win8-64:CM_Unregister_Device_InterfaceA
+248 win7-32:CM_Unregister_Device_Interface_ExA win7-64:CM_Unregister_Device_Interface_ExA win8-32:CM_Unregister_Device_InterfaceW win8-64:CM_Unregister_Device_InterfaceW
+249 win7-32:CM_Unregister_Device_Interface_ExW win7-64:CM_Unregister_Device_Interface_ExW win8-32:CM_Unregister_Device_Interface_ExA win8-64:CM_Unregister_Device_Interface_ExA
+250 win7-32:CM_Write_UserPowerKey win7-64:CM_Write_UserPowerKey win8-32:CM_Unregister_Device_Interface_ExW win8-64:CM_Unregister_Device_Interface_ExW
+251 win8-32:CM_Unregister_Notification win8-64:CM_Unregister_Notification
+252 win8-32:CM_Write_UserPowerKey win8-64:CM_Write_UserPowerKey
+253 win8-32:DevCloseObjectQuery win8-64:DevCloseObjectQuery
+254 win8-32:DevCreateObjectQuery win8-64:DevCreateObjectQuery
+255 win8-32:DevCreateObjectQueryFromId win8-64:DevCreateObjectQueryFromId
+256 win8-32:DevCreateObjectQueryFromIds win8-64:DevCreateObjectQueryFromIds
+257 win8-32:DevFindProperty win8-64:DevFindProperty
+258 win8-32:DevFreeObjectProperties win8-64:DevFreeObjectProperties
+259 win8-32:DevFreeObjects win8-64:DevFreeObjects
+260 win8-32:DevGetObjectProperties win8-64:DevGetObjectProperties
+261 win8-32:DevGetObjects win8-64:DevGetObjects
+262 win8-32:DevSetObjectProperties win8-64:DevSetObjectProperties
+263 win8-32:SwDeviceClose win8-64:SwDeviceClose
+264 win8-32:SwDeviceCreate win8-64:SwDeviceCreate
+265 win8-32:SwDeviceInterfacePropertySet win8-64:SwDeviceInterfacePropertySet
+266 win8-32:SwDeviceInterfaceRegister win8-64:SwDeviceInterfaceRegister
+267 win8-32:SwDeviceInterfaceSetState win8-64:SwDeviceInterfaceSetState
+268 win8-32:SwDevicePropertySet win8-64:SwDevicePropertySet
+269 win8-32:SwMemFree win8-64:SwMemFree

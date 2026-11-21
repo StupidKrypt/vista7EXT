@@ -57,6 +57,13 @@ BOOL vx_lookup_layer(const WCHAR *exepath, WCHAR *buf, DWORD cch);
  * L"WIN10", L"VER:10.0.26100", or L"REAL"). FALSE if none is set. */
 #define VX_REG_GLOBALVER L"Version"
 BOOL vx_global_version(WCHAR *buf, DWORD cch);
+/* a DWORD setting under HKLM\SOFTWARE\VistaExt ("Enabled", "Auto", "Setups"); def when unset */
+DWORD vx_setting(const WCHAR *name, DWORD def);
+/* append a number in decimal (the DLLs do not load user32 for wsprintf) */
+void vx_cat_num(WCHAR *out, SIZE_T cch, ULONG_PTR v);
+/* "RestartNeeded": 1 asked for since Windows started, -1 asked for before
+ * (Windows has restarted since: done), 0 never */
+int vx_restart_state(void);
 /* The program's own setting, with the global version filled in when it has
  * none (and is not "REAL"). FALSE if neither applies. */
 BOOL vx_effective_layer(const WCHAR *exepath, vx_layer *out);
@@ -91,17 +98,21 @@ typedef struct {
 #define VX_REG_NOCRASHWND L"SOFTWARE\\VistaExt\\NoCrashWindow"
 
 /* Which Windows this build is for. build.sh builds every component once per
- * Windows: -DVX_OS=600 (Vista SP2) or -DVX_OS=601 (Windows 7 SP1), each for
- * x86 and x64. Test tools that belong to neither leave it at 0. */
+ * Windows: -DVX_OS=600 (Vista SP2), 601 (Windows 7 SP1) or 602 (Windows 8,
+ * also installed on 8.1), each for x86 and x64. Test tools that belong to
+ * none leave it at 0. Code for functions a newer Windows has is guarded with
+ * "#if VX_OS < 601" (Windows 7 and later have it) and so on; the generator
+ * forwards such names to Windows on those builds (tools/gen.py). */
 #ifndef VX_OS
 #define VX_OS 0
 #endif
 #define VX_VISTA (VX_OS == 600)
 #define VX_WIN7  (VX_OS == 601)
+#define VX_WIN8  (VX_OS == 602)
 
 /* Every function a companion implements is one its Windows lacks: the
- * Windows 7 build leaves out what Windows 7 already has (its .def forwards
- * those names to Windows instead, tools/gen.py), so nothing has to ask at
+ * Windows 7 and 8 builds leave out what their Windows already has (their .def
+ * forwards those names to Windows instead, tools/gen.py), so nothing has to ask at
  * run time whether Windows has the function. VX_NATIVE only reports the call
  * (VX_TRACE). VX_NATIVE_UPDATE is for functions a Windows *update* can add
  * (KB2533623: AddDllDirectory & co. on Vista and 7): those still use
@@ -156,5 +167,7 @@ SIZE_T vx_strlen(const char *s);
 void   vx_wcscpyn(WCHAR *d, const WCHAR *s, SIZE_T cch);
 void   vx_wcscatn(WCHAR *d, const WCHAR *s, SIZE_T cch);
 int    vx_stricmp(const char *a, const char *b);
+
+#include "ntinternals.h"
 
 #endif

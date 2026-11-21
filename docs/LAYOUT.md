@@ -60,6 +60,12 @@ Two installers would only add a way to download the wrong one.
   - **`msifix`:** built per Windows (see below).
 - **`LoadLibraryEx` search flags:** the emulation stays in both builds and steps aside when Windows has them. That depends on update KB2533623 (available for Vista and 7), not on the Windows version. `AddDllDirectory`, `RemoveDllDirectory` and `SetDefaultDllDirectories` are the only functions that still look for Windows' own version at run time (`VX_NATIVE_UPDATE` in `src/common/vx.h`).
 - **The table of companions** (`src/common/companions.h`) is one list used by `vxload`, `vxpatch` and `kernelvx`. It differs only in its `bcryptprimitives` entry (below).
+- **Shared code, one copy each** (`src/common/`). It is linked as a library (`libvxcommon.a`), so each DLL or program takes only the files it uses, and only their imports:
+  - `common.c`: settings (`vx_setting`, `vx_restart_state`, the global version), the per-program layer lookup, the version table, number formatting without user32;
+  - `pin.c`: `vx_pin`, the only shared code the API-set stubs need;
+  - `ntinternals.h`: the undocumented layouts VistaExt reads or writes (the PEB's version fields, KUSER_SHARED_DATA, the TEB's stack base), with where they come from. Header only, so `vxload` (ntdll only) uses it too;
+  - `releases.h`: Windows 10/11 release names, build labs and update numbers. One table for `common.c` and `vxload`;
+  - `userrun.c`: starting a program as the signed-in user through Explorer (setup and VistaExt Center, which run as administrator).
 
 ### Diverging: Windows 7 has it, Vista doesn't (64 functions)
 

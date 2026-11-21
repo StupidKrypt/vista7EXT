@@ -98,7 +98,7 @@ VX_EXPORT BOOL WINAPI vx_PhysicalToLogicalPointForPerMonitorDPI(HWND h, LPPOINT 
 
 /* ---- message filter (Windows 7) ------------------------------------------ */
 typedef struct { DWORD cbSize, ExtStatus; } VX_CHANGEFILTERSTRUCT;
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_ChangeWindowMessageFilterEx(HWND h, UINT msg, DWORD action, VX_CHANGEFILTERSTRUCT *s)
 { VX_NATIVE(U32, ChangeWindowMessageFilterEx, BOOL, (HWND h, UINT msg, DWORD action, VX_CHANGEFILTERSTRUCT *s), (h, msg, action, s));
     if (s) s->ExtStatus = 0;
@@ -109,7 +109,7 @@ VX_EXPORT BOOL WINAPI vx_ChangeWindowMessageFilterEx(HWND h, UINT msg, DWORD act
 
 /* ---- touch / gesture / pointer input: Vista has none, so report "no
  * touch hardware" in the ways programs already handle. ---------------------- */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_RegisterTouchWindow(HWND h, ULONG f) { VX_NATIVE(U32, RegisterTouchWindow, BOOL, (HWND h, ULONG f), (h, f)); return TRUE; }
 VX_EXPORT BOOL WINAPI vx_UnregisterTouchWindow(HWND h) { VX_NATIVE(U32, UnregisterTouchWindow, BOOL, (HWND h), (h)); return TRUE; }
 VX_EXPORT BOOL WINAPI vx_IsTouchWindow(HWND h, PULONG f) { VX_NATIVE(U32, IsTouchWindow, BOOL, (HWND h, PULONG f), (h, f)); if (f) *f = 0; return FALSE; }
@@ -154,7 +154,7 @@ VX_EXPORT BOOL WINAPI vx_GetDisplayAutoRotationPreferences(int *o) { VX_NATIVE(U
 VX_EXPORT BOOL WINAPI vx_GetAutoRotationState(int *s) { VX_NATIVE(U32, GetAutoRotationState, BOOL, (int *s), (s)); *s = 0x10; /* AR_NOSENSOR */ return TRUE; }
 VX_EXPORT HANDLE WINAPI vx_RegisterSuspendResumeNotification(HANDLE r, DWORD f) { VX_NATIVE(U32, RegisterSuspendResumeNotification, HANDLE, (HANDLE r, DWORD f), (r, f)); return (HANDLE)(ULONG_PTR)0x5658; }
 VX_EXPORT BOOL WINAPI vx_UnregisterSuspendResumeNotification(HANDLE h) { VX_NATIVE(U32, UnregisterSuspendResumeNotification, BOOL, (HANDLE h), (h)); return TRUE; }
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_SetWindowDisplayAffinity(HWND h, DWORD a) { VX_NATIVE(U32, SetWindowDisplayAffinity, BOOL, (HWND h, DWORD a), (h, a)); return TRUE; }
 VX_EXPORT BOOL WINAPI vx_GetWindowDisplayAffinity(HWND h, DWORD *a) { VX_NATIVE(U32, GetWindowDisplayAffinity, BOOL, (HWND h, DWORD *a), (h, a)); *a = 0; return TRUE; }
 VX_EXPORT LONG WINAPI vx_GetDisplayConfigBufferSizes(UINT32 f, UINT32 *np, UINT32 *nm) { VX_NATIVE(U32, GetDisplayConfigBufferSizes, LONG, (UINT32 f, UINT32 *np, UINT32 *nm), (f, np, nm)); return ERROR_NOT_SUPPORTED; }
@@ -169,7 +169,7 @@ VX_EXPORT UINT_PTR WINAPI vx_SetCoalescableTimer(HWND h, UINT_PTR id, UINT ms, T
 
 /* CalculatePopupWindowPosition (Windows 7): place the popup at the anchor,
  * flipped and clamped to stay on the anchor's monitor. */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOL WINAPI vx_CalculatePopupWindowPosition(const POINT *anchor, const SIZE *size, UINT flags, RECT *exclude, RECT *out)
 { VX_NATIVE(U32, CalculatePopupWindowPosition, BOOL, (const POINT *anchor, const SIZE *size, UINT flags, RECT *exclude, RECT *out), (anchor, size, flags, exclude, out));
     MONITORINFO mi;

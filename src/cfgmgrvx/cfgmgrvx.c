@@ -33,7 +33,7 @@ VX_EXPORT CONFIGRET WINAPI vx_CM_Unregister_Notification(HANDLE h)
     return CR_SUCCESS;
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT DWORD WINAPI vx_CM_MapCrToWin32Err(CONFIGRET cr, DWORD dflt)
 { VX_NATIVE(CFG, CM_MapCrToWin32Err, DWORD, (CONFIGRET cr, DWORD dflt), (cr, dflt));
     switch (cr) {
@@ -52,7 +52,7 @@ VX_EXPORT DWORD WINAPI vx_CM_MapCrToWin32Err(CONFIGRET cr, DWORD dflt)
 #endif
 
 /* device properties by key (Windows 7): not available on Vista */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT CONFIGRET WINAPI vx_CM_Get_DevNode_PropertyW(DWORD dev, const void *key, ULONG *type, BYTE *buf, ULONG *size, ULONG flags)
 { VX_NATIVE(CFG, CM_Get_DevNode_PropertyW, CONFIGRET, (DWORD dev, const void *key, ULONG *type, BYTE *buf, ULONG *size, ULONG flags), (dev, key, type, buf, size, flags));
     return CR_CALL_NOT_IMPLEMENTED;

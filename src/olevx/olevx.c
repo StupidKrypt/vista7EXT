@@ -7,7 +7,7 @@
 
 #define OLE L"ole32.dll"
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_CoGetApartmentType(APTTYPE *type, APTTYPEQUALIFIER *qual)
 { VX_NATIVE(OLE, CoGetApartmentType, HRESULT, (APTTYPE *type, APTTYPEQUALIFIER *qual), (type, qual));
     IComThreadingInfo *ti;

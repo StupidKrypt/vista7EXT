@@ -9,11 +9,12 @@
  *
  * Per Windows (build.sh: -DVX_OS): Vista has no bcryptprimitives.dll at all;
  * VistaExt installs its own, which programs then use directly. Windows 7 has
- * one without ProcessPrng, which bcryptprimvx adds. */
+ * one without ProcessPrng, which bcryptprimvx adds (on 8, the generator
+ * forwards it to Windows where Windows 8 has it). */
 #ifndef VX_COMPANIONS_H
 #define VX_COMPANIONS_H
 
-#if VX_OS == 601
+#if VX_OS >= 601
 #define VX_COMPANION_BCRYPT VX_COMPANION(bcryptprimitives, bcryptprimvx, 1)
 #else
 #define VX_COMPANION_BCRYPT

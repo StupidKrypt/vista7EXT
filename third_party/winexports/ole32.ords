@@ -1,4 +1,4 @@
-# ole32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# ole32.dll export ordinals: vista-32, vista-64, win7-32, win7-64, win8-32, win8-64.
 # Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
 1 vista-32:CoVrfCheckThreadState vista-64:CoVrfCheckThreadState win7-32:CoVrfCheckThreadState win7-64:CoVrfCheckThreadState
 2 vista-32:CoVrfGetThreadState vista-64:CoVrfGetThreadState win7-32:CoVrfGetThreadState win7-64:CoVrfGetThreadState
@@ -458,3 +458,535 @@
 456 win7-64:WriteFmtUserTypeStg
 457 win7-64:WriteOleStg
 458 win7-64:WriteStringStream
+800 win8-32:- win8-64:-
+801 win8-32:- win8-64:-
+802 win8-32:- win8-64:-
+803 win8-32:- win8-64:-
+804 win8-32:- win8-64:-
+805 win8-32:CLIPFORMAT_UserFreeExt win8-64:CLIPFORMAT_UserFreeExt
+806 win8-32:CLIPFORMAT_UserMarshalExt win8-64:CLIPFORMAT_UserMarshalExt
+807 win8-32:CLIPFORMAT_UserSizeExt win8-64:CLIPFORMAT_UserSizeExt
+808 win8-32:CLIPFORMAT_UserUnmarshalExt win8-64:CLIPFORMAT_UserUnmarshalExt
+809 win8-32:CheckInitDde win8-64:CheckInitDde
+810 win8-32:CleanROTForApartment win8-64:CleanROTForApartment
+811 win8-32:ClipboardProcessUninitialize win8-64:ClipboardProcessUninitialize
+812 win8-32:DdeBindToObject win8-64:DdeBindToObject
+813 win8-32:DestroyRunningObjectTable win8-64:DestroyRunningObjectTable
+814 win8-32:FindExt win8-64:FindExt
+815 win8-32:GetObjectFromRotByPath win8-64:GetObjectFromRotByPath
+816 win8-32:HPALETTE_UserFreeExt win8-64:HPALETTE_UserFreeExt
+817 win8-32:HPALETTE_UserMarshalExt win8-64:HPALETTE_UserMarshalExt
+818 win8-32:HPALETTE_UserSizeExt win8-64:HPALETTE_UserSizeExt
+819 win8-32:HPALETTE_UserUnmarshalExt win8-64:HPALETTE_UserUnmarshalExt
+820 win8-32:HRGN_UserFree win8-64:HRGN_UserFree
+821 win8-32:HRGN_UserMarshal win8-64:HRGN_UserMarshal
+822 win8-32:HRGN_UserSize win8-64:HRGN_UserSize
+823 win8-32:HRGN_UserUnmarshal win8-64:HRGN_UserUnmarshal
+824 win8-32:HWND_UserFreeExt win8-64:HWND_UserFree64Ext
+825 win8-32:HWND_UserMarshalExt win8-64:HWND_UserFreeExt
+826 win8-32:HWND_UserSizeExt win8-64:HWND_UserMarshal64Ext
+827 win8-32:HWND_UserUnmarshalExt win8-64:HWND_UserMarshalExt
+828 win8-32:MonikerLoadTypeLib win8-64:HWND_UserSize64Ext
+829 win8-32:PropVariantChangeType win8-64:HWND_UserSizeExt
+830 win8-32:ReadStorageProperties win8-64:HWND_UserUnmarshal64Ext
+831 win8-32:STGMEDIUM_UserFreeExt win8-64:HWND_UserUnmarshalExt
+832 win8-32:STGMEDIUM_UserMarshalExt win8-64:MonikerLoadTypeLib
+833 win8-32:STGMEDIUM_UserSizeExt win8-64:PropVariantChangeType
+834 win8-32:STGMEDIUM_UserUnmarshalExt win8-64:ReadStorageProperties
+835 win8-32:SetOleautModule win8-64:STGMEDIUM_UserFreeExt
+836 win8-32:StdTypesGetClassObject win8-64:STGMEDIUM_UserMarshalExt
+837 win8-32:StdTypesRegisterServer win8-64:STGMEDIUM_UserSizeExt
+838 win8-32:WriteStorageProperties win8-64:STGMEDIUM_UserUnmarshalExt
+839 win8-32:BindMoniker win8-64:SetOleautModule
+840 win8-32:CLIPFORMAT_UserFree win8-64:StdTypesGetClassObject
+841 win8-32:CLIPFORMAT_UserMarshal win8-64:StdTypesRegisterServer
+842 win8-32:CLIPFORMAT_UserSize win8-64:WriteStorageProperties
+843 win8-32:CLIPFORMAT_UserUnmarshal win8-64:BindMoniker
+844 win8-32:CLSIDFromOle1Class win8-64:CLIPFORMAT_UserFree
+845 win8-32:CLSIDFromProgID win8-64:CLIPFORMAT_UserFree64
+846 win8-32:CLSIDFromProgIDEx win8-64:CLIPFORMAT_UserMarshal
+847 win8-32:CLSIDFromString win8-64:CLIPFORMAT_UserMarshal64
+848 win8-32:CoAddRefServerProcess win8-64:CLIPFORMAT_UserSize
+849 win8-32:CoAicGetTokenForCOM win8-64:CLIPFORMAT_UserSize64
+850 win8-32:CoAllowSetForegroundWindow win8-64:CLIPFORMAT_UserUnmarshal
+851 win8-32:CoBuildVersion win8-64:CLIPFORMAT_UserUnmarshal64
+852 win8-32:CoCancelCall win8-64:CLSIDFromOle1Class
+853 win8-32:CoCheckElevationEnabled win8-64:CLSIDFromProgID
+854 win8-32:CoCopyProxy win8-64:CLSIDFromProgIDEx
+855 win8-32:CoCreateFreeThreadedMarshaler win8-64:CLSIDFromString
+856 win8-32:CoCreateGuid win8-64:CoAddRefServerProcess
+857 win8-32:CoCreateInstance win8-64:CoAicGetTokenForCOM
+858 win8-32:CoCreateInstanceEx win8-64:CoAllowSetForegroundWindow
+859 win8-32:CoCreateInstanceFromApp win8-64:CoBuildVersion
+860 win8-32:CoCreateObjectInContext win8-64:CoCancelCall
+861 win8-32:CoDeactivateObject win8-64:CoCheckElevationEnabled
+862 win8-32:CoDecodeProxy win8-64:CoCopyProxy
+863 win8-32:CoDecrementMTAUsage win8-64:CoCreateFreeThreadedMarshaler
+864 win8-32:CoDisableCallCancellation win8-64:CoCreateGuid
+865 win8-32:CoDisconnectContext win8-64:CoCreateInstance
+866 win8-32:CoDisconnectObject win8-64:CoCreateInstanceEx
+867 win8-32:CoDosDateTimeToFileTime win8-64:CoCreateInstanceFromApp
+868 win8-32:CoEnableCallCancellation win8-64:CoCreateObjectInContext
+869 win8-32:CoFileTimeNow win8-64:CoDeactivateObject
+870 win8-32:CoFileTimeToDosDateTime win8-64:CoDecodeProxy
+871 win8-32:CoFreeAllLibraries win8-64:CoDecrementMTAUsage
+872 win8-32:CoFreeLibrary win8-64:CoDisableCallCancellation
+873 win8-32:CoFreeUnusedLibraries win8-64:CoDisconnectContext
+874 win8-32:CoFreeUnusedLibrariesEx win8-64:CoDisconnectObject
+875 win8-32:CoGetActivationState win8-64:CoDosDateTimeToFileTime
+876 win8-32:CoGetApartmentID win8-64:CoEnableCallCancellation
+877 win8-32:CoGetApartmentType win8-64:CoFileTimeNow
+878 win8-32:CoGetCallContext win8-64:CoFileTimeToDosDateTime
+879 win8-32:CoGetCallState win8-64:CoFreeAllLibraries
+880 win8-32:CoGetCallerTID win8-64:CoFreeLibrary
+881 win8-32:CoGetCancelObject win8-64:CoFreeUnusedLibraries
+882 win8-32:CoGetClassObject win8-64:CoFreeUnusedLibrariesEx
+883 win8-32:CoGetClassVersion win8-64:CoGetActivationState
+884 win8-32:CoGetComCatalog win8-64:CoGetApartmentID
+885 win8-32:CoGetContextToken win8-64:CoGetApartmentType
+886 win8-32:CoGetCurrentLogicalThreadId win8-64:CoGetCallContext
+887 win8-32:CoGetCurrentProcess win8-64:CoGetCallState
+888 win8-32:CoGetDefaultContext win8-64:CoGetCallerTID
+889 win8-32:CoGetInstanceFromFile win8-64:CoGetCancelObject
+890 win8-32:CoGetInstanceFromIStorage win8-64:CoGetClassObject
+891 win8-32:CoGetInterceptor win8-64:CoGetClassVersion
+892 win8-32:CoGetInterceptorForOle32 win8-64:CoGetComCatalog
+893 win8-32:CoGetInterceptorFromTypeInfo win8-64:CoGetContextToken
+894 win8-32:CoGetInterfaceAndReleaseStream win8-64:CoGetCurrentLogicalThreadId
+895 win8-32:CoGetMalloc win8-64:CoGetCurrentProcess
+896 win8-32:CoGetMarshalSizeMax win8-64:CoGetDefaultContext
+897 win8-32:CoGetModuleType win8-64:CoGetInstanceFromFile
+898 win8-32:CoGetObject win8-64:CoGetInstanceFromIStorage
+899 win8-32:CoGetObjectContext win8-64:CoGetInterceptor
+900 win8-32:CoGetPSClsid win8-64:CoGetInterceptorForOle32
+901 win8-32:CoGetProcessIdentifier win8-64:CoGetInterceptorFromTypeInfo
+902 win8-32:CoGetStandardMarshal win8-64:CoGetInterfaceAndReleaseStream
+903 win8-32:CoGetStdMarshalEx win8-64:CoGetMalloc
+904 win8-32:CoGetSystemSecurityPermissions win8-64:CoGetMarshalSizeMax
+905 win8-32:CoGetSystemWow64DirectoryW win8-64:CoGetModuleType
+906 win8-32:CoGetTreatAsClass win8-64:CoGetObject
+907 win8-32:CoHandlePriorityEventsFromMessagePump win8-64:CoGetObjectContext
+908 win8-32:CoImpersonateClient win8-64:CoGetPSClsid
+909 win8-32:CoIncrementMTAUsage win8-64:CoGetProcessIdentifier
+910 win8-32:CoInitialize win8-64:CoGetStandardMarshal
+911 win8-32:CoInitializeEx win8-64:CoGetStdMarshalEx
+912 win8-32:CoInitializeSecurity win8-64:CoGetSystemSecurityPermissions
+913 win8-32:CoInitializeWOW win8-64:CoGetSystemWow64DirectoryW
+914 win8-32:CoInstall win8-64:CoGetTreatAsClass
+915 win8-32:CoInvalidateRemoteMachineBindings win8-64:CoHandlePriorityEventsFromMessagePump
+916 win8-32:CoIsHandlerConnected win8-64:CoImpersonateClient
+917 win8-32:CoIsOle1Class win8-64:CoIncrementMTAUsage
+918 win8-32:CoLoadLibrary win8-64:CoInitialize
+919 win8-32:CoLockObjectExternal win8-64:CoInitializeEx
+920 win8-32:CoMarshalHresult win8-64:CoInitializeSecurity
+921 win8-32:CoMarshalInterThreadInterfaceInStream win8-64:CoInitializeWOW
+922 win8-32:CoMarshalInterface win8-64:CoInstall
+923 win8-32:CoPopServiceDomain win8-64:CoInvalidateRemoteMachineBindings
+924 win8-32:CoPushServiceDomain win8-64:CoIsHandlerConnected
+925 win8-32:CoQueryAuthenticationServices win8-64:CoIsOle1Class
+926 win8-32:CoQueryClientBlanket win8-64:CoLoadLibrary
+927 win8-32:CoQueryProxyBlanket win8-64:CoLockObjectExternal
+928 win8-32:CoQueryReleaseObject win8-64:CoMarshalHresult
+929 win8-32:CoReactivateObject win8-64:CoMarshalInterThreadInterfaceInStream
+930 win8-32:CoRegisterChannelHook win8-64:CoMarshalInterface
+931 win8-32:CoRegisterClassObject win8-64:CoPopServiceDomain
+932 win8-32:CoRegisterInitializeSpy win8-64:CoPushServiceDomain
+933 win8-32:CoRegisterMallocSpy win8-64:CoQueryAuthenticationServices
+934 win8-32:CoRegisterMessageFilter win8-64:CoQueryClientBlanket
+935 win8-32:CoRegisterPSClsid win8-64:CoQueryProxyBlanket
+936 win8-32:CoRegisterSurrogate win8-64:CoQueryReleaseObject
+937 win8-32:CoRegisterSurrogateEx win8-64:CoReactivateObject
+938 win8-32:CoReleaseMarshalData win8-64:CoRegisterChannelHook
+939 win8-32:CoReleaseServerProcess win8-64:CoRegisterClassObject
+940 win8-32:CoResumeClassObjects win8-64:CoRegisterInitializeSpy
+941 win8-32:CoRetireServer win8-64:CoRegisterMallocSpy
+942 win8-32:CoRevertToSelf win8-64:CoRegisterMessageFilter
+943 win8-32:CoRevokeClassObject win8-64:CoRegisterPSClsid
+944 win8-32:CoRevokeInitializeSpy win8-64:CoRegisterSurrogate
+945 win8-32:CoRevokeMallocSpy win8-64:CoRegisterSurrogateEx
+946 win8-32:CoSetCancelObject win8-64:CoReleaseMarshalData
+947 win8-32:CoSetMessageDispatcher win8-64:CoReleaseServerProcess
+948 win8-32:CoSetProxyBlanket win8-64:CoResumeClassObjects
+949 win8-32:CoSetState win8-64:CoRetireServer
+950 win8-32:CoSuspendClassObjects win8-64:CoRevertToSelf
+951 win8-32:CoSwitchCallContext win8-64:CoRevokeClassObject
+952 win8-32:CoTaskMemAlloc win8-64:CoRevokeInitializeSpy
+953 win8-32:CoTaskMemFree win8-64:CoRevokeMallocSpy
+954 win8-32:CoTaskMemRealloc win8-64:CoSetCancelObject
+955 win8-32:CoTestCancel win8-64:CoSetMessageDispatcher
+956 win8-32:CoTreatAsClass win8-64:CoSetProxyBlanket
+957 win8-32:CoUninitialize win8-64:CoSetState
+958 win8-32:CoUnloadingWOW win8-64:CoSuspendClassObjects
+959 win8-32:CoUnmarshalHresult win8-64:CoSwitchCallContext
+960 win8-32:CoUnmarshalInterface win8-64:CoTaskMemAlloc
+961 win8-32:CoVrfCheckThreadState win8-64:CoTaskMemFree
+962 win8-32:CoVrfGetThreadState win8-64:CoTaskMemRealloc
+963 win8-32:CoVrfReleaseThreadState win8-64:CoTestCancel
+964 win8-32:CoWaitForMultipleHandles win8-64:CoTreatAsClass
+965 win8-32:CoWaitForMultipleObjects win8-64:CoUninitialize
+966 win8-32:ComPs_NdrDllCanUnloadNow win8-64:CoUnloadingWOW
+967 win8-32:ComPs_NdrDllGetClassObject win8-64:CoUnmarshalHresult
+968 win8-32:ComPs_NdrDllRegisterProxy win8-64:CoUnmarshalInterface
+969 win8-32:ComPs_NdrDllUnregisterProxy win8-64:CoVrfCheckThreadState
+970 win8-32:CreateAntiMoniker win8-64:CoVrfGetThreadState
+971 win8-32:CreateBindCtx win8-64:CoVrfReleaseThreadState
+972 win8-32:CreateClassMoniker win8-64:CoWaitForMultipleHandles
+973 win8-32:CreateDataAdviseHolder win8-64:CoWaitForMultipleObjects
+974 win8-32:CreateDataCache win8-64:ComPs_NdrDllCanUnloadNow
+975 win8-32:CreateErrorInfo win8-64:ComPs_NdrDllGetClassObject
+976 win8-32:CreateFileMoniker win8-64:ComPs_NdrDllRegisterProxy
+977 win8-32:CreateGenericComposite win8-64:ComPs_NdrDllUnregisterProxy
+978 win8-32:CreateILockBytesOnHGlobal win8-64:CreateAntiMoniker
+979 win8-32:CreateItemMoniker win8-64:CreateBindCtx
+980 win8-32:CreateObjrefMoniker win8-64:CreateClassMoniker
+981 win8-32:CreateOleAdviseHolder win8-64:CreateDataAdviseHolder
+982 win8-32:CreatePointerMoniker win8-64:CreateDataCache
+983 win8-32:CreateStdProgressIndicator win8-64:CreateErrorInfo
+984 win8-32:CreateStreamOnHGlobal win8-64:CreateFileMoniker
+985 win8-32:DcomChannelSetHResult win8-64:CreateGenericComposite
+986 win8-32:DeletePatternAndExtensionTables win8-64:CreateILockBytesOnHGlobal
+987 win8-32:DllDebugObjectRPCHook win8-64:CreateItemMoniker
+988 win8-32:DllGetClassObject win8-64:CreateObjrefMoniker
+989 win8-32:DllGetClassObjectWOW win8-64:CreateOleAdviseHolder
+990 win8-32:DllRegisterServer win8-64:CreatePointerMoniker
+991 win8-32:DoDragDrop win8-64:CreateStdProgressIndicator
+992 win8-32:DragDropSetFDT win8-64:CreateStreamOnHGlobal
+993 win8-32:EnableHookObject win8-64:DcomChannelSetHResult
+994 win8-32:FmtIdToPropStgName win8-64:DeletePatternAndExtensionTables
+995 win8-32:FreePropVariantArray win8-64:DllDebugObjectRPCHook
+996 win8-32:GetActiveObjectExt win8-64:DllGetClassObject
+997 win8-32:GetClassFile win8-64:DllGetClassObjectWOW
+998 win8-32:GetConvertStg win8-64:DllRegisterServer
+999 win8-32:GetDocumentBitStg win8-64:DoDragDrop
+1000 win8-32:GetErrorInfo win8-64:DragDropSetFDT
+1001 win8-32:GetHGlobalFromILockBytes win8-64:EnableHookObject
+1002 win8-32:GetHGlobalFromStream win8-64:FmtIdToPropStgName
+1003 win8-32:GetHookInterface win8-64:FreePropVariantArray
+1004 win8-32:GetRunningObjectTable win8-64:GetActiveObjectExt
+1005 win8-32:HACCEL_UserFree win8-64:GetClassFile
+1006 win8-32:HACCEL_UserMarshal win8-64:GetConvertStg
+1007 win8-32:HACCEL_UserSize win8-64:GetDocumentBitStg
+1008 win8-32:HACCEL_UserUnmarshal win8-64:GetErrorInfo
+1009 win8-32:HBITMAP_UserFree win8-64:GetHGlobalFromILockBytes
+1010 win8-32:HBITMAP_UserMarshal win8-64:GetHGlobalFromStream
+1011 win8-32:HBITMAP_UserSize win8-64:GetHookInterface
+1012 win8-32:HBITMAP_UserUnmarshal win8-64:GetRunningObjectTable
+1013 win8-32:HBRUSH_UserFree win8-64:HACCEL_UserFree
+1014 win8-32:HBRUSH_UserMarshal win8-64:HACCEL_UserFree64
+1015 win8-32:HBRUSH_UserSize win8-64:HACCEL_UserMarshal
+1016 win8-32:HBRUSH_UserUnmarshal win8-64:HACCEL_UserMarshal64
+1017 win8-32:HDC_UserFree win8-64:HACCEL_UserSize
+1018 win8-32:HDC_UserMarshal win8-64:HACCEL_UserSize64
+1019 win8-32:HDC_UserSize win8-64:HACCEL_UserUnmarshal
+1020 win8-32:HDC_UserUnmarshal win8-64:HACCEL_UserUnmarshal64
+1021 win8-32:HENHMETAFILE_UserFree win8-64:HBITMAP_UserFree
+1022 win8-32:HENHMETAFILE_UserMarshal win8-64:HBITMAP_UserFree64
+1023 win8-32:HENHMETAFILE_UserSize win8-64:HBITMAP_UserMarshal
+1024 win8-32:HENHMETAFILE_UserUnmarshal win8-64:HBITMAP_UserMarshal64
+1025 win8-32:HGLOBAL_UserFree win8-64:HBITMAP_UserSize
+1026 win8-32:HGLOBAL_UserMarshal win8-64:HBITMAP_UserSize64
+1027 win8-32:HGLOBAL_UserSize win8-64:HBITMAP_UserUnmarshal
+1028 win8-32:HGLOBAL_UserUnmarshal win8-64:HBITMAP_UserUnmarshal64
+1029 win8-32:HICON_UserFree win8-64:HBRUSH_UserFree
+1030 win8-32:HICON_UserMarshal win8-64:HBRUSH_UserFree64
+1031 win8-32:HICON_UserSize win8-64:HBRUSH_UserMarshal
+1032 win8-32:HICON_UserUnmarshal win8-64:HBRUSH_UserMarshal64
+1033 win8-32:HMENU_UserFree win8-64:HBRUSH_UserSize
+1034 win8-32:HMENU_UserMarshal win8-64:HBRUSH_UserSize64
+1035 win8-32:HMENU_UserSize win8-64:HBRUSH_UserUnmarshal
+1036 win8-32:HMENU_UserUnmarshal win8-64:HBRUSH_UserUnmarshal64
+1037 win8-32:HMETAFILEPICT_UserFree win8-64:HDC_UserFree
+1038 win8-32:HMETAFILEPICT_UserMarshal win8-64:HDC_UserFree64
+1039 win8-32:HMETAFILEPICT_UserSize win8-64:HDC_UserMarshal
+1040 win8-32:HMETAFILEPICT_UserUnmarshal win8-64:HDC_UserMarshal64
+1041 win8-32:HMETAFILE_UserFree win8-64:HDC_UserSize
+1042 win8-32:HMETAFILE_UserMarshal win8-64:HDC_UserSize64
+1043 win8-32:HMETAFILE_UserSize win8-64:HDC_UserUnmarshal
+1044 win8-32:HMETAFILE_UserUnmarshal win8-64:HDC_UserUnmarshal64
+1045 win8-32:HMONITOR_UserFree win8-64:HENHMETAFILE_UserFree
+1046 win8-32:HMONITOR_UserMarshal win8-64:HENHMETAFILE_UserFree64
+1047 win8-32:HMONITOR_UserSize win8-64:HENHMETAFILE_UserMarshal
+1048 win8-32:HMONITOR_UserUnmarshal win8-64:HENHMETAFILE_UserMarshal64
+1049 win8-32:HPALETTE_UserFree win8-64:HENHMETAFILE_UserSize
+1050 win8-32:HPALETTE_UserMarshal win8-64:HENHMETAFILE_UserSize64
+1051 win8-32:HPALETTE_UserSize win8-64:HENHMETAFILE_UserUnmarshal
+1052 win8-32:HPALETTE_UserUnmarshal win8-64:HENHMETAFILE_UserUnmarshal64
+1053 win8-32:HWND_UserFree win8-64:HGLOBAL_UserFree
+1054 win8-32:HWND_UserMarshal win8-64:HGLOBAL_UserFree64
+1055 win8-32:HWND_UserSize win8-64:HGLOBAL_UserMarshal
+1056 win8-32:HWND_UserUnmarshal win8-64:HGLOBAL_UserMarshal64
+1057 win8-32:HkOleRegisterObject win8-64:HGLOBAL_UserSize
+1058 win8-32:IIDFromString win8-64:HGLOBAL_UserSize64
+1059 win8-32:IsAccelerator win8-64:HGLOBAL_UserUnmarshal
+1060 win8-32:IsEqualGUID win8-64:HGLOBAL_UserUnmarshal64
+1061 win8-32:IsValidIid win8-64:HICON_UserFree
+1062 win8-32:IsValidInterface win8-64:HICON_UserFree64
+1063 win8-32:IsValidPtrIn win8-64:HICON_UserMarshal
+1064 win8-32:IsValidPtrOut win8-64:HICON_UserMarshal64
+1065 win8-32:MkParseDisplayName win8-64:HICON_UserSize
+1066 win8-32:MonikerCommonPrefixWith win8-64:HICON_UserSize64
+1067 win8-32:MonikerRelativePathTo win8-64:HICON_UserUnmarshal
+1068 win8-32:NdrOleInitializeExtension win8-64:HICON_UserUnmarshal64
+1069 win8-32:NdrProxyForwardingFunction10 win8-64:HMENU_UserFree
+1070 win8-32:NdrProxyForwardingFunction11 win8-64:HMENU_UserFree64
+1071 win8-32:NdrProxyForwardingFunction12 win8-64:HMENU_UserMarshal
+1072 win8-32:NdrProxyForwardingFunction13 win8-64:HMENU_UserMarshal64
+1073 win8-32:NdrProxyForwardingFunction14 win8-64:HMENU_UserSize
+1074 win8-32:NdrProxyForwardingFunction15 win8-64:HMENU_UserSize64
+1075 win8-32:NdrProxyForwardingFunction16 win8-64:HMENU_UserUnmarshal
+1076 win8-32:NdrProxyForwardingFunction17 win8-64:HMENU_UserUnmarshal64
+1077 win8-32:NdrProxyForwardingFunction18 win8-64:HMETAFILEPICT_UserFree
+1078 win8-32:NdrProxyForwardingFunction19 win8-64:HMETAFILEPICT_UserFree64
+1079 win8-32:NdrProxyForwardingFunction20 win8-64:HMETAFILEPICT_UserMarshal
+1080 win8-32:NdrProxyForwardingFunction21 win8-64:HMETAFILEPICT_UserMarshal64
+1081 win8-32:NdrProxyForwardingFunction22 win8-64:HMETAFILEPICT_UserSize
+1082 win8-32:NdrProxyForwardingFunction23 win8-64:HMETAFILEPICT_UserSize64
+1083 win8-32:NdrProxyForwardingFunction24 win8-64:HMETAFILEPICT_UserUnmarshal
+1084 win8-32:NdrProxyForwardingFunction25 win8-64:HMETAFILEPICT_UserUnmarshal64
+1085 win8-32:NdrProxyForwardingFunction26 win8-64:HMETAFILE_UserFree
+1086 win8-32:NdrProxyForwardingFunction27 win8-64:HMETAFILE_UserFree64
+1087 win8-32:NdrProxyForwardingFunction28 win8-64:HMETAFILE_UserMarshal
+1088 win8-32:NdrProxyForwardingFunction29 win8-64:HMETAFILE_UserMarshal64
+1089 win8-32:NdrProxyForwardingFunction30 win8-64:HMETAFILE_UserSize
+1090 win8-32:NdrProxyForwardingFunction31 win8-64:HMETAFILE_UserSize64
+1091 win8-32:NdrProxyForwardingFunction32 win8-64:HMETAFILE_UserUnmarshal
+1092 win8-32:NdrProxyForwardingFunction3 win8-64:HMETAFILE_UserUnmarshal64
+1093 win8-32:NdrProxyForwardingFunction4 win8-64:HMONITOR_UserFree
+1094 win8-32:NdrProxyForwardingFunction5 win8-64:HMONITOR_UserFree64
+1095 win8-32:NdrProxyForwardingFunction6 win8-64:HMONITOR_UserMarshal
+1096 win8-32:NdrProxyForwardingFunction7 win8-64:HMONITOR_UserMarshal64
+1097 win8-32:NdrProxyForwardingFunction8 win8-64:HMONITOR_UserSize
+1098 win8-32:NdrProxyForwardingFunction9 win8-64:HMONITOR_UserSize64
+1099 win8-32:ObjectStublessClient10 win8-64:HMONITOR_UserUnmarshal
+1100 win8-32:ObjectStublessClient11 win8-64:HMONITOR_UserUnmarshal64
+1101 win8-32:ObjectStublessClient12 win8-64:HPALETTE_UserFree
+1102 win8-32:ObjectStublessClient13 win8-64:HPALETTE_UserFree64
+1103 win8-32:ObjectStublessClient14 win8-64:HPALETTE_UserMarshal
+1104 win8-32:ObjectStublessClient15 win8-64:HPALETTE_UserMarshal64
+1105 win8-32:ObjectStublessClient16 win8-64:HPALETTE_UserSize
+1106 win8-32:ObjectStublessClient17 win8-64:HPALETTE_UserSize64
+1107 win8-32:ObjectStublessClient18 win8-64:HPALETTE_UserUnmarshal
+1108 win8-32:ObjectStublessClient19 win8-64:HPALETTE_UserUnmarshal64
+1109 win8-32:ObjectStublessClient20 win8-64:HWND_UserFree
+1110 win8-32:ObjectStublessClient21 win8-64:HWND_UserFree64
+1111 win8-32:ObjectStublessClient22 win8-64:HWND_UserMarshal
+1112 win8-32:ObjectStublessClient23 win8-64:HWND_UserMarshal64
+1113 win8-32:ObjectStublessClient24 win8-64:HWND_UserSize
+1114 win8-32:ObjectStublessClient25 win8-64:HWND_UserSize64
+1115 win8-32:ObjectStublessClient26 win8-64:HWND_UserUnmarshal
+1116 win8-32:ObjectStublessClient27 win8-64:HWND_UserUnmarshal64
+1117 win8-32:ObjectStublessClient28 win8-64:HkOleRegisterObject
+1118 win8-32:ObjectStublessClient29 win8-64:IIDFromString
+1119 win8-32:ObjectStublessClient30 win8-64:IsAccelerator
+1120 win8-32:ObjectStublessClient31 win8-64:IsEqualGUID
+1121 win8-32:ObjectStublessClient32 win8-64:IsValidIid
+1122 win8-32:ObjectStublessClient3 win8-64:IsValidInterface
+1123 win8-32:ObjectStublessClient4 win8-64:IsValidPtrIn
+1124 win8-32:ObjectStublessClient5 win8-64:IsValidPtrOut
+1125 win8-32:ObjectStublessClient6 win8-64:MkParseDisplayName
+1126 win8-32:ObjectStublessClient7 win8-64:MonikerCommonPrefixWith
+1127 win8-32:ObjectStublessClient8 win8-64:MonikerRelativePathTo
+1128 win8-32:ObjectStublessClient9 win8-64:NdrOleInitializeExtension
+1129 win8-32:Ole32DllGetClassObject win8-64:NdrProxyForwardingFunction10
+1130 win8-32:OleBuildVersion win8-64:NdrProxyForwardingFunction11
+1131 win8-32:OleConvertIStorageToOLESTREAM win8-64:NdrProxyForwardingFunction12
+1132 win8-32:OleConvertIStorageToOLESTREAMEx win8-64:NdrProxyForwardingFunction13
+1133 win8-32:OleConvertOLESTREAMToIStorage win8-64:NdrProxyForwardingFunction14
+1134 win8-32:OleConvertOLESTREAMToIStorageEx win8-64:NdrProxyForwardingFunction15
+1135 win8-32:OleCreate win8-64:NdrProxyForwardingFunction16
+1136 win8-32:OleCreateDefaultHandler win8-64:NdrProxyForwardingFunction17
+1137 win8-32:OleCreateEmbeddingHelper win8-64:NdrProxyForwardingFunction18
+1138 win8-32:OleCreateEx win8-64:NdrProxyForwardingFunction19
+1139 win8-32:OleCreateFontIndirectExt win8-64:NdrProxyForwardingFunction20
+1140 win8-32:OleCreateFromData win8-64:NdrProxyForwardingFunction21
+1141 win8-32:OleCreateFromDataEx win8-64:NdrProxyForwardingFunction22
+1142 win8-32:OleCreateFromFile win8-64:NdrProxyForwardingFunction23
+1143 win8-32:OleCreateFromFileEx win8-64:NdrProxyForwardingFunction24
+1144 win8-32:OleCreateLink win8-64:NdrProxyForwardingFunction25
+1145 win8-32:OleCreateLinkEx win8-64:NdrProxyForwardingFunction26
+1146 win8-32:OleCreateLinkFromData win8-64:NdrProxyForwardingFunction27
+1147 win8-32:OleCreateLinkFromDataEx win8-64:NdrProxyForwardingFunction28
+1148 win8-32:OleCreateLinkToFile win8-64:NdrProxyForwardingFunction29
+1149 win8-32:OleCreateLinkToFileEx win8-64:NdrProxyForwardingFunction3
+1150 win8-32:OleCreateMenuDescriptor win8-64:NdrProxyForwardingFunction30
+1151 win8-32:OleCreatePictureIndirectExt win8-64:NdrProxyForwardingFunction31
+1152 win8-32:OleCreatePropertyFrameIndirectExt win8-64:NdrProxyForwardingFunction32
+1153 win8-32:OleCreateStaticFromData win8-64:NdrProxyForwardingFunction4
+1154 win8-32:OleDestroyMenuDescriptor win8-64:NdrProxyForwardingFunction5
+1155 win8-32:OleDoAutoConvert win8-64:NdrProxyForwardingFunction6
+1156 win8-32:OleDraw win8-64:NdrProxyForwardingFunction7
+1157 win8-32:OleDuplicateData win8-64:NdrProxyForwardingFunction8
+1158 win8-32:OleFlushClipboard win8-64:NdrProxyForwardingFunction9
+1159 win8-32:OleGetAutoConvert win8-64:ObjectStublessClient10
+1160 win8-32:OleGetClipboard win8-64:ObjectStublessClient11
+1161 win8-32:OleGetIconOfClass win8-64:ObjectStublessClient12
+1162 win8-32:OleGetIconOfFile win8-64:ObjectStublessClient13
+1163 win8-32:OleIconToCursorExt win8-64:ObjectStublessClient14
+1164 win8-32:OleInitialize win8-64:ObjectStublessClient15
+1165 win8-32:OleInitializeWOW win8-64:ObjectStublessClient16
+1166 win8-32:OleIsCurrentClipboard win8-64:ObjectStublessClient17
+1167 win8-32:OleIsRunning win8-64:ObjectStublessClient18
+1168 win8-32:OleLoad win8-64:ObjectStublessClient19
+1169 win8-32:OleLoadFromStream win8-64:ObjectStublessClient20
+1170 win8-32:OleLoadPictureExt win8-64:ObjectStublessClient21
+1171 win8-32:OleLoadPictureFileExt win8-64:ObjectStublessClient22
+1172 win8-32:OleLoadPicturePathExt win8-64:ObjectStublessClient23
+1173 win8-32:OleLockRunning win8-64:ObjectStublessClient24
+1174 win8-32:OleMetafilePictFromIconAndLabel win8-64:ObjectStublessClient25
+1175 win8-32:OleNoteObjectVisible win8-64:ObjectStublessClient26
+1176 win8-32:OleQueryCreateFromData win8-64:ObjectStublessClient27
+1177 win8-32:OleQueryLinkFromData win8-64:ObjectStublessClient28
+1178 win8-32:OleRegEnumFormatEtc win8-64:ObjectStublessClient29
+1179 win8-32:OleRegEnumVerbs win8-64:ObjectStublessClient3
+1180 win8-32:OleRegGetMiscStatus win8-64:ObjectStublessClient30
+1181 win8-32:OleRegGetUserType win8-64:ObjectStublessClient31
+1182 win8-32:OleReleaseEnumVerbCache win8-64:ObjectStublessClient32
+1183 win8-32:OleRun win8-64:ObjectStublessClient4
+1184 win8-32:OleSave win8-64:ObjectStublessClient5
+1185 win8-32:OleSavePictureFileExt win8-64:ObjectStublessClient6
+1186 win8-32:OleSaveToStream win8-64:ObjectStublessClient7
+1187 win8-32:OleSetAutoConvert win8-64:ObjectStublessClient8
+1188 win8-32:OleSetClipboard win8-64:ObjectStublessClient9
+1189 win8-32:OleSetContainedObject win8-64:Ole32DllGetClassObject
+1190 win8-32:OleSetMenuDescriptor win8-64:OleBuildVersion
+1191 win8-32:OleTranslateAccelerator win8-64:OleConvertIStorageToOLESTREAM
+1192 win8-32:OleTranslateColorExt win8-64:OleConvertIStorageToOLESTREAMEx
+1193 win8-32:OleUninitialize win8-64:OleConvertOLESTREAMToIStorage
+1194 win8-32:OpenOrCreateStream win8-64:OleConvertOLESTREAMToIStorageEx
+1195 win8-32:ProgIDFromCLSID win8-64:OleCreate
+1196 win8-32:PropStgNameToFmtId win8-64:OleCreateDefaultHandler
+1197 win8-32:PropSysAllocString win8-64:OleCreateEmbeddingHelper
+1198 win8-32:PropSysFreeString win8-64:OleCreateEx
+1199 win8-32:PropVariantClear win8-64:OleCreateFontIndirectExt
+1200 win8-32:PropVariantCopy win8-64:OleCreateFromData
+1201 win8-32:ReadClassStg win8-64:OleCreateFromDataEx
+1202 win8-32:ReadClassStm win8-64:OleCreateFromFile
+1203 win8-32:ReadFmtUserTypeStg win8-64:OleCreateFromFileEx
+1204 win8-32:ReadOleStg win8-64:OleCreateLink
+1205 win8-32:ReadStringStream win8-64:OleCreateLinkEx
+1206 win8-32:RegisterActiveObjectExt win8-64:OleCreateLinkFromData
+1207 win8-32:RegisterDragDrop win8-64:OleCreateLinkFromDataEx
+1208 win8-32:ReleaseStgMedium win8-64:OleCreateLinkToFile
+1209 win8-32:RevokeActiveObjectExt win8-64:OleCreateLinkToFileEx
+1210 win8-32:RevokeDragDrop win8-64:OleCreateMenuDescriptor
+1211 win8-32:SNB_UserFree win8-64:OleCreatePictureIndirectExt
+1212 win8-32:SNB_UserMarshal win8-64:OleCreatePropertyFrameIndirectExt
+1213 win8-32:SNB_UserSize win8-64:OleCreateStaticFromData
+1214 win8-32:SNB_UserUnmarshal win8-64:OleDestroyMenuDescriptor
+1215 win8-32:STGMEDIUM_UserFree win8-64:OleDoAutoConvert
+1216 win8-32:STGMEDIUM_UserMarshal win8-64:OleDraw
+1217 win8-32:STGMEDIUM_UserSize win8-64:OleDuplicateData
+1218 win8-32:STGMEDIUM_UserUnmarshal win8-64:OleFlushClipboard
+1219 win8-32:SetConvertStg win8-64:OleGetAutoConvert
+1220 win8-32:SetDocumentBitStg win8-64:OleGetClipboard
+1221 win8-32:SetErrorInfo win8-64:OleGetIconOfClass
+1222 win8-32:SetWOWThunkGlobalPtr win8-64:OleGetIconOfFile
+1223 win8-32:StgConvertPropertyToVariant win8-64:OleIconToCursorExt
+1224 win8-32:StgConvertVariantToProperty win8-64:OleInitialize
+1225 win8-32:StgCreateDocfile win8-64:OleInitializeWOW
+1226 win8-32:StgCreateDocfileOnILockBytes win8-64:OleIsCurrentClipboard
+1227 win8-32:StgCreatePropSetStg win8-64:OleIsRunning
+1228 win8-32:StgCreatePropStg win8-64:OleLoad
+1229 win8-32:StgCreateStorageEx win8-64:OleLoadFromStream
+1230 win8-32:StgGetIFillLockBytesOnFile win8-64:OleLoadPictureExt
+1231 win8-32:StgGetIFillLockBytesOnILockBytes win8-64:OleLoadPictureFileExt
+1232 win8-32:StgIsStorageFile win8-64:OleLoadPicturePathExt
+1233 win8-32:StgIsStorageILockBytes win8-64:OleLockRunning
+1234 win8-32:StgOpenAsyncDocfileOnIFillLockBytes win8-64:OleMetafilePictFromIconAndLabel
+1235 win8-32:StgOpenPropStg win8-64:OleNoteObjectVisible
+1236 win8-32:StgOpenStorage win8-64:OleQueryCreateFromData
+1237 win8-32:StgOpenStorageEx win8-64:OleQueryLinkFromData
+1238 win8-32:StgOpenStorageOnHandle win8-64:OleRegEnumFormatEtc
+1239 win8-32:StgOpenStorageOnILockBytes win8-64:OleRegEnumVerbs
+1240 win8-32:StgPropertyLengthAsVariant win8-64:OleRegGetMiscStatus
+1241 win8-32:StgSetTimes win8-64:OleRegGetUserType
+1242 win8-32:StringFromCLSID win8-64:OleReleaseEnumVerbCache
+1243 win8-32:StringFromGUID2 win8-64:OleRun
+1244 win8-32:StringFromIID win8-64:OleSave
+1245 win8-32:UpdateDCOMSettings win8-64:OleSavePictureFileExt
+1246 win8-32:UpdateProcessTracing win8-64:OleSaveToStream
+1247 win8-32:UtConvertDvtd16toDvtd32 win8-64:OleSetAutoConvert
+1248 win8-32:UtConvertDvtd32toDvtd16 win8-64:OleSetClipboard
+1249 win8-32:UtGetDvtd16Info win8-64:OleSetContainedObject
+1250 win8-32:UtGetDvtd32Info win8-64:OleSetMenuDescriptor
+1251 win8-32:WdtpInterfacePointer_UserFree win8-64:OleTranslateAccelerator
+1252 win8-32:WdtpInterfacePointer_UserMarshal win8-64:OleTranslateColorExt
+1253 win8-32:WdtpInterfacePointer_UserSize win8-64:OleUninitialize
+1254 win8-32:WdtpInterfacePointer_UserUnmarshal win8-64:OpenOrCreateStream
+1255 win8-32:WriteClassStg win8-64:ProgIDFromCLSID
+1256 win8-32:WriteClassStm win8-64:PropStgNameToFmtId
+1257 win8-32:WriteFmtUserTypeStg win8-64:PropSysAllocString
+1258 win8-32:WriteOleStg win8-64:PropSysFreeString
+1259 win8-32:WriteStringStream win8-64:PropVariantClear
+1260 win8-64:PropVariantCopy
+1261 win8-64:ReadClassStg
+1262 win8-64:ReadClassStm
+1263 win8-64:ReadFmtUserTypeStg
+1264 win8-64:ReadOleStg
+1265 win8-64:ReadStringStream
+1266 win8-64:RegisterActiveObjectExt
+1267 win8-64:RegisterDragDrop
+1268 win8-64:ReleaseStgMedium
+1269 win8-64:RevokeActiveObjectExt
+1270 win8-64:RevokeDragDrop
+1271 win8-64:SNB_UserFree
+1272 win8-64:SNB_UserFree64
+1273 win8-64:SNB_UserMarshal
+1274 win8-64:SNB_UserMarshal64
+1275 win8-64:SNB_UserSize
+1276 win8-64:SNB_UserSize64
+1277 win8-64:SNB_UserUnmarshal
+1278 win8-64:SNB_UserUnmarshal64
+1279 win8-64:STGMEDIUM_UserFree
+1280 win8-64:STGMEDIUM_UserFree64
+1281 win8-64:STGMEDIUM_UserMarshal
+1282 win8-64:STGMEDIUM_UserMarshal64
+1283 win8-64:STGMEDIUM_UserSize
+1284 win8-64:STGMEDIUM_UserSize64
+1285 win8-64:STGMEDIUM_UserUnmarshal
+1286 win8-64:STGMEDIUM_UserUnmarshal64
+1287 win8-64:SetConvertStg
+1288 win8-64:SetDocumentBitStg
+1289 win8-64:SetErrorInfo
+1290 win8-64:SetWOWThunkGlobalPtr
+1291 win8-64:StgConvertPropertyToVariant
+1292 win8-64:StgConvertVariantToProperty
+1293 win8-64:StgCreateDocfile
+1294 win8-64:StgCreateDocfileOnILockBytes
+1295 win8-64:StgCreatePropSetStg
+1296 win8-64:StgCreatePropStg
+1297 win8-64:StgCreateStorageEx
+1298 win8-64:StgGetIFillLockBytesOnFile
+1299 win8-64:StgGetIFillLockBytesOnILockBytes
+1300 win8-64:StgIsStorageFile
+1301 win8-64:StgIsStorageILockBytes
+1302 win8-64:StgOpenAsyncDocfileOnIFillLockBytes
+1303 win8-64:StgOpenPropStg
+1304 win8-64:StgOpenStorage
+1305 win8-64:StgOpenStorageEx
+1306 win8-64:StgOpenStorageOnHandle
+1307 win8-64:StgOpenStorageOnILockBytes
+1308 win8-64:StgPropertyLengthAsVariant
+1309 win8-64:StgSetTimes
+1310 win8-64:StringFromCLSID
+1311 win8-64:StringFromGUID2
+1312 win8-64:StringFromIID
+1313 win8-64:UpdateDCOMSettings
+1314 win8-64:UpdateProcessTracing
+1315 win8-64:UtConvertDvtd16toDvtd32
+1316 win8-64:UtConvertDvtd32toDvtd16
+1317 win8-64:UtGetDvtd16Info
+1318 win8-64:UtGetDvtd32Info
+1319 win8-64:WdtpInterfacePointer_UserFree
+1320 win8-64:WdtpInterfacePointer_UserFree64
+1321 win8-64:WdtpInterfacePointer_UserMarshal
+1322 win8-64:WdtpInterfacePointer_UserMarshal64
+1323 win8-64:WdtpInterfacePointer_UserSize
+1324 win8-64:WdtpInterfacePointer_UserSize64
+1325 win8-64:WdtpInterfacePointer_UserUnmarshal
+1326 win8-64:WdtpInterfacePointer_UserUnmarshal64
+1327 win8-64:WriteClassStg
+1328 win8-64:WriteClassStm
+1329 win8-64:WriteFmtUserTypeStg
+1330 win8-64:WriteOleStg
+1331 win8-64:WriteStringStream

@@ -175,14 +175,14 @@ VX_EXPORT BOOL WINAPI vx_DeleteSynchronizationBarrier(VX_SYNCHRONIZATION_BARRIER
  * waiter/wake flags, bits 4+ = shared owner count. To stay safe these only
  * succeed in the uncontended cases and report "busy" otherwise, which callers
  * of a Try function always handle. */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOLEAN WINAPI vx_TryAcquireSRWLockExclusive(PSRWLOCK l)
 { VX_NATIVE(K32, TryAcquireSRWLockExclusive, BOOLEAN, (PSRWLOCK l), (l));
     return InterlockedCompareExchangePointer(&l->Ptr, (PVOID)1, NULL) == NULL;
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT BOOLEAN WINAPI vx_TryAcquireSRWLockShared(PSRWLOCK l)
 { VX_NATIVE(K32, TryAcquireSRWLockShared, BOOLEAN, (PSRWLOCK l), (l));
     ULONG_PTR v = (ULONG_PTR)l->Ptr;

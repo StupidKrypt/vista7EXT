@@ -46,6 +46,7 @@ for B in vista:x86_64:x86_64:x64 vista:i686:i386:x86 win7:x86_64:x86_64:x64 win7
     clang "${CF[@]}" -c tests/vxtest.c -o "$W/obj/vxtest.o"
     clang "${CF[@]}" -c src/common/console.c -o "$W/obj/console.o"
     clang "${CF[@]}" -c src/common/common.c -o "$W/obj/common.o"
+    clang "${CF[@]}" -c src/common/pin.c -o "$W/obj/pin.o"
     python3 -I - "$W" "$arch" <<'PY'
 import subprocess, sys, re
 W, arch = sys.argv[1], sys.argv[2]
@@ -66,7 +67,7 @@ for dll, names in want.items():
 PY
     m=i386:x86-64; [ $arch = i686 ] && m=i386
     for d in kernel32 user32; do llvm-dlltool -m $m -k -d "$W/obj/test_$d.def" -l "$W/obj/libtest_$d.a"; done
-    clang "${LF[@]}" -o "$W/app/vxtest.exe" "$W/obj/vxtest.o" "$W/obj/console.o" "$W/obj/common.o" \
+    clang "${LF[@]}" -o "$W/app/vxtest.exe" "$W/obj/vxtest.o" "$W/obj/console.o" "$W/obj/common.o" "$W/obj/pin.o" \
         -Wl,--entry=mainCRTStartup -Wl,--subsystem,console:6.0 "$W/obj/libtest_kernel32.a" "$W/obj/libtest_user32.a" \
         -lkernel32 -luser32 -lshell32 -ladvapi32 -lversion -lntdll -lshlwapi -lole32 -loleaut32 -luuid -lwbemuuid
 
@@ -88,7 +89,7 @@ for dll, comp in (('kernel32', 'kernelvx'), ('user32', 'uservx')):
 PY
     clang "${CF[@]}" -c src/kernelbase/kernelbase.c -o "$W/obj/stub.o"
     for d in kernel32 user32; do
-        clang "${LF[@]}" -shared -o "$W/fakesys/$d.dll" "$W/obj/stub.o" "$W/obj/common.o" "$W/obj/fake_$d.def" \
+        clang "${LF[@]}" -shared -o "$W/fakesys/$d.dll" "$W/obj/stub.o" "$W/obj/common.o" "$W/obj/pin.o" "$W/obj/fake_$d.def" \
             -Wl,--entry=$entry -lkernel32 -ladvapi32
     done
 

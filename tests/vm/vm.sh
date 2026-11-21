@@ -66,6 +66,8 @@ run_qemu() {
     arch=$(cat "$D/arch")
     [ "$arch" = x86 ] && mem=2048
     [ "${VX_VM_MEM:-}" ] && mem=$VX_VM_MEM
+    # VX_VM_SLOW=1: an old PC - one processor, 1 GB of memory (and a slow disk, see boot_cd)
+    [ "${VX_VM_SLOW:-0}" = 1 ] && { smp=1; mem=1024; }
     if [ -f "$D/vnc" ]; then vnc=$(cat "$D/vnc")
     else for n in $(seq 1 30); do ss -ltn 2>/dev/null | grep -q "127.0.0.1:$((5900 + n)) " || { vnc=$n; break; }; done; fi
     [ "${VX_VM_NET:-0}" = 1 ] && nic="-nic user,model=e1000"
@@ -175,11 +177,11 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
                   -I"$WINEINC/windows" -I"$WINEINC/msvcrt" -D_ACRTIMP= -D_ACRTIMP_ALT=)
         local LF=(--target=$arch-w64-windows-gnu -fuse-ld=lld -nostdlib -L/usr/lib/wine/$winarch-windows
                   -Wl,--entry=mainCRTStartup -Wl,--subsystem,console:6.0 -Xlinker --stack -Xlinker 0x100000,0x40000)
-        for c in src/common/console.c src/common/common.c tests/vm/nofault.c tests/guishot.c tests/msitest.c tests/vm/apitest.c tests/vm/vxdbg.c; do
+        for c in src/common/console.c src/common/common.c src/common/pin.c tests/vm/nofault.c tests/guishot.c tests/msitest.c tests/vm/apitest.c tests/vm/vxdbg.c; do
             clang "${CF[@]}" -c "$c" -o "$O/obj/$(basename "${c%.c}").o" || return 1
         done
         for t in nofault guishot msitest vxdbg; do
-            clang "${LF[@]}" -o "$O/$t.exe" "$O/obj/$t.o" "$O/obj/console.o" "$O/obj/common.o" \
+            clang "${LF[@]}" -o "$O/$t.exe" "$O/obj/$t.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
                 -lmsi -lkernel32 -luser32 -lgdi32 -lshell32 -ladvapi32 || return 1
         done
         # apitest imports through API-set DLL names: import libraries for them
@@ -189,7 +191,7 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
         printf 'LIBRARY api-ms-win-core-sysinfo-l1-2-0.dll\nEXPORTS\n  %s\n' $d3 > "$O/obj/sysinfo.def"
         llvm-dlltool -m $m -k -d "$O/obj/synch.def" -l "$O/obj/libsynch.a" || return 1
         llvm-dlltool -m $m -k -d "$O/obj/sysinfo.def" -l "$O/obj/libsysinfo.a" || return 1
-        clang "${LF[@]}" -o "$O/apitest.exe" "$O/obj/apitest.o" "$O/obj/console.o" "$O/obj/common.o" \
+        clang "${LF[@]}" -o "$O/apitest.exe" "$O/obj/apitest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             "$O/obj/libsynch.a" "$O/obj/libsysinfo.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         python3 -I tools/peexp.py "$O/apitest.exe" imports | grep -q '^api-ms-win-core-synch-l1-2-0.dll' ||
             { echo "apitest.exe does not import through the API set"; return 1; }
@@ -201,22 +203,28 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
         local dentry=DllMainCRTStartup; [ "$arch" = i686 ] && dentry=DllMainCRTStartup@12
         clang "${LF[@]}" -shared -Wl,--entry=$dentry -o "$O/memdll.dll" "$O/obj/memdll.o" \
             -Wl,--out-implib,"$O/obj/libmemdll.a" "$O/obj/libk32new.a" -lkernel32 || return 1
-        clang "${LF[@]}" -o "$O/memhost.exe" "$O/obj/memhost.o" "$O/obj/console.o" "$O/obj/common.o" \
+        clang "${LF[@]}" -o "$O/memhost.exe" "$O/obj/memhost.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             "$O/obj/libmemdll.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         clang "${LF[@]}" -Wl,--entry=WinMainCRTStartup -Wl,--subsystem,windows:6.0 -o "$O/crashtest.exe" \
-            "$O/obj/crashtest.o" "$O/obj/libk32new.a" -lkernel32 || return 1
-        clang "${LF[@]}" -o "$O/spawntest.exe" "$O/obj/spawntest.o" "$O/obj/console.o" "$O/obj/common.o" \
+            "$O/obj/crashtest.o" "$O/obj/libk32new.a" -lkernel32 -luser32 || return 1
+        clang "${CF[@]}" -c tests/vm/procstat.c -o "$O/obj/procstat.o" || return 1
+        clang "${LF[@]}" -o "$O/procstat.exe" "$O/obj/procstat.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
+            -lntdll -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
+        clang "${LF[@]}" -o "$O/spawntest.exe" "$O/obj/spawntest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             "$O/obj/libk32new.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
+        clang "${CF[@]}" -c tests/vm/nettest.c -o "$O/obj/nettest.o" || return 1
+        clang "${LF[@]}" -o "$O/nettest.exe" "$O/obj/nettest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
+            -lwinhttp -lwininet -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         clang "${CF[@]}" -c tests/vm/vercheck.c -o "$O/obj/vercheck.o" || return 1
-        clang "${LF[@]}" -o "$O/vercheck.exe" "$O/obj/vercheck.o" "$O/obj/console.o" "$O/obj/common.o" \
+        clang "${LF[@]}" -o "$O/vercheck.exe" "$O/obj/vercheck.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         # vxbench: VistaExt's cost (vxbench-native.exe is the plain-Windows baseline)
         clang "${CF[@]}" -c tests/vm/vxbench.c -o "$O/obj/vxbench.o" || return 1
         clang "${CF[@]}" -DVX_BENCH_NATIVE -c tests/vm/vxbench.c -o "$O/obj/vxbench-native.o" || return 1
         clang "${CF[@]}" -c tests/vm/benchdll.c -o "$O/obj/benchdll.o" || return 1
-        clang "${LF[@]}" -o "$O/vxbench.exe" "$O/obj/vxbench.o" "$O/obj/console.o" "$O/obj/common.o" \
+        clang "${LF[@]}" -o "$O/vxbench.exe" "$O/obj/vxbench.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             "$O/obj/libk32new.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
-        clang "${LF[@]}" -o "$O/vxbench-native.exe" "$O/obj/vxbench-native.o" "$O/obj/console.o" "$O/obj/common.o" \
+        clang "${LF[@]}" -o "$O/vxbench-native.exe" "$O/obj/vxbench-native.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         clang "${LF[@]}" -shared -Wl,--entry=$dentry -o "$O/benchdll.dll" "$O/obj/benchdll.o" -lkernel32 || return 1
         # the test program from run_wine.sh, which leaves it unpatched
@@ -234,7 +242,8 @@ make_testcd() {
     [ -f out/dist/VistaExt/install.cmd ] || { echo "run ./package.sh first"; return 1; }
     build_tools || { echo "could not build the test tools"; return 1; }
     rm -rf "$S"; mkdir -p "$S/vxvm/bin"
-    cp -r out/dist/VistaExt "$S/vxvm/VistaExt"
+    # VX_DIST: another release folder (measuring an older build)
+    cp -r "${VX_DIST:-out/dist}/VistaExt" "$S/vxvm/VistaExt"
     cp -r "$VMS/bin/x64" "$VMS/bin/x86" "$S/vxvm/bin/"
     rm -rf "$S/vxvm/bin/x64/obj" "$S/vxvm/bin/x86/obj"
     crlf "$H/run.cmd" "$S/vxvm/run.cmd"
@@ -242,6 +251,10 @@ make_testcd() {
     [ "${VX_VM_ONLY:-}" = bench ] && echo bench > "$S/vxvm/only-bench.txt"
     # VX_VM_ONLY=diag: install, then the version/helper diagnostics under vxdbg
     [ "${VX_VM_ONLY:-}" = diag ] && echo diag > "$S/vxvm/only-diag.txt"
+    # VX_VM_ONLY=watch: install, then which crash watchers of a 32-bit program exist when
+    [ "${VX_VM_ONLY:-}" = watch ] && echo watch > "$S/vxvm/only-watch.txt"
+    # VX_VM_ONLY=uninst: uninstalling with VistaExtSetup.exe while a program uses VistaExt (one restart)
+    [ "${VX_VM_ONLY:-}" = uninst ] && echo uninst > "$S/vxvm/only-uninst.txt" && cp out/dist/VistaExtSetup.exe "$S/vxvm/"
     genisoimage -quiet -J -r -V VXTEST -o "$VMS/test.iso" "$S" || return 1
     echo "test CD: $VMS/test.iso"
 }
@@ -262,12 +275,18 @@ boot_cd() {
     rm -f "$D/run.qcow2"; rm -rf "$D/shots"
     local back="$D/base.qcow2"
     [ -f "$D/prepared.qcow2" ] && [ "${VX_VM_CLEAN:-0}" != 1 ] && back="$D/prepared.qcow2"
+    # the dependency baseline (cmd_deps), unless a layer is asked for by name
+    [ -f "$D/deps.qcow2" ] && [ "${VX_VM_CLEAN:-0}" != 1 ] && back="$D/deps.qcow2"
+    [ -n "${VX_VM_BACK:-}" ] && back="$D/$VX_VM_BACK"
     echo "VM $name starts from $(basename "$back")"
     # the backing file by name only (relative to the VM's folder): the VM
     # folders keep working when the project is moved or copied
     qemu-img create -q -f qcow2 -b "$(basename "$back")" -F qcow2 "$D/run.qcow2" || die "qemu-img failed"
+    # VX_VM_SLOW=1: a laptop hard disk - 20 MB/s, 100 operations per second
+    local slow=""
+    [ "${VX_VM_SLOW:-0}" = 1 ] && slow=",throttling.bps-total=20971520,throttling.iops-total=100"
     run_qemu "$D" "$limit" \
-        -drive file="$D/run.qcow2",if=ide,index=0,media=disk,format=qcow2 \
+        -drive file="$D/run.qcow2",if=ide,index=0,media=disk,format=qcow2$slow \
         -drive file="$R",if=ide,index=1,media=disk,format=raw \
         -drive file="$iso",if=ide,index=2,media=cdrom,readonly=on
     rc=$?
@@ -314,6 +333,21 @@ make_appscd() {
     if ls $A/dl/prereq/*.msu >/dev/null 2>&1; then mkdir -p "$S/prereq"; cp $A/dl/prereq/*.msu "$S/prereq/"; fi
     # VX_APPS="brave discord": only these programs (default: all)
     printf '%s\r\n' ${VX_APPS:-brave discord firefox epic steam} > "$S/vxvm/apps.txt"
+    # VX_APPS="trace": the programs of tests/vm/trace-apps.txt for this VM's
+    # architecture (VX_TRACE_ARCH, set by cmd_apps), each run traced;
+    # VX_TRACE_ONLY="obs zoom": only these names from the list
+    case " ${VX_APPS:-} " in *" trace "*)
+        : > "$S/vxvm/trace.txt"
+        grep -v '^#' "$H/trace-apps.txt" | while IFS='|' read -r n a d e args; do
+            [ -n "$n" ] && [ "$a" = "${VX_TRACE_ARCH:-x64}" ] && [ -d "$d" ] || continue
+            [ -z "${VX_TRACE_ONLY:-}" ] || case " $VX_TRACE_ONLY " in *" $n "*) ;; *) continue ;; esac
+            cp -r "$d" "$S/apps/trace-$n"
+            printf '%s|%s|%s\r\n' "$n" "$e" "$args" >> "$S/vxvm/trace.txt"
+        done
+        echo "traced programs: $(grep -c . "$S/vxvm/trace.txt") ($(du -sh "$S/apps" | cut -f1))"
+        genisoimage -quiet -udf -J -joliet-long -r -V VXAPPS -o "$VMS/apps.iso" "$S" || return 1
+        echo "apps CD: $VMS/apps.iso ($(du -h "$VMS/apps.iso" | cut -f1))"
+        return 0 ;; esac
     [ -d $A/x/brave ] && cp -r $A/x/brave "$S/apps/brave"
     [ -d $A/x/firefox/core ] && cp -r $A/x/firefox/core "$S/apps/firefox"
     if [ -d $A/x/discord/pkg/lib/net45 ]; then
@@ -360,6 +394,55 @@ cmd_prepare() {
     fi
 }
 
+# perf: VistaExt's cost on a slow PC (tests/vm/perf.cmd); VX_DIST picks the
+# build (default out/dist). Results: results/perf.txt
+cmd_perf() {
+    local name=${1:?vm name}
+    local D=$VMS/$name S=$VMS/perfcd
+    [ -f "$D/base.qcow2" ] || die "no VM $name: run '$0 install $name ...' first"
+    ( flock 9
+      make_testcd >/dev/null || exit 1
+      rm -rf "$S"; cp -r "$VMS/testcd" "$S"
+      crlf "$H/perf.cmd" "$S/vxvm/run.cmd"
+      [ -n "${VX_PERF_ONLY:-}" ] && echo x > "$S/vxvm/only-${VX_PERF_ONLY}.txt"
+      genisoimage -quiet -J -r -V VXPERF -o "$D/perf.iso" "$S" ) 9>"$VMS/.testcd.lock" || die "could not make the CD"
+    VX_VM_SLOW=${VX_VM_SLOW:-1} boot_cd "$name" "$D/perf.iso" 7200
+}
+
+# deps: the runtimes and updates programs expect (tests/vm/deps.cmd), from
+# out/apps/dl/deps/<vista|win7>-<x86|x64>/ (see deps.cmd), installed on top of
+# prepared.qcow2 into deps.qcow2; later runs start from deps.qcow2.
+# VX_DEPS_ONLY=survey: only record the VM's state (results/survey-before.txt).
+cmd_deps() {
+    local name=${1:?vm name}
+    local D=$VMS/$name S=$VMS/depscd arch os back
+    [ -f "$D/base.qcow2" ] || die "no VM $name: run '$0 install $name ...' first"
+    arch=$(cat "$D/arch"); case $name in vista*) os=vista ;; *) os=win7 ;; esac
+    ( flock 9
+      build_tools >/dev/null || exit 1
+      rm -rf "$S"; mkdir -p "$S/vxvm/bin"
+      crlf "$H/deps.cmd" "$S/vxvm/run.cmd"
+      cp -r "$VMS/bin/x64" "$VMS/bin/x86" "$S/vxvm/bin/"; rm -rf "$S/vxvm/bin/x64/obj" "$S/vxvm/bin/x86/obj"
+      [ "${VX_DEPS_ONLY:-}" = survey ] && echo survey > "$S/vxvm/only-survey.txt"
+      if [ -d "out/apps/dl/deps/$os-$arch" ] && [ "${VX_DEPS_ONLY:-}" != survey ]; then
+          mkdir -p "$S/deps"; cp -r "out/apps/dl/deps/$os-$arch/." "$S/deps/"; fi
+      genisoimage -quiet -udf -J -joliet-long -r -V VXDEPS -o "$D/deps.iso" "$S" ) 9>"$VMS/.testcd.lock" || die "could not make the CD"
+    if [ "${VX_DEPS_ONLY:-}" = survey ]; then
+        VX_VM_NET=1 boot_cd "$name" "$D/deps.iso" 1200
+        return
+    fi
+    # on top of prepared.qcow2 (kept as it is: the snapshot to go back to)
+    back=prepared.qcow2; [ -f "$D/$back" ] || back=base.qcow2
+    chmod u+w "$D/deps.qcow2" 2>/dev/null; rm -f "$D/deps.qcow2"
+    VX_VM_NET=1 VX_VM_KEEP=1 VX_VM_BACK=$back boot_cd "$name" "$D/deps.iso" 10800
+    if grep -q "DEPS ok" <(tr -d '\r' < "$D/results/install.txt" 2>/dev/null); then
+        mv "$D/run.qcow2" "$D/deps.qcow2" && chmod a-w "$D/deps.qcow2"
+        echo "baseline: $D/deps.qcow2 (later runs start from it; delete it to go back to $back)"
+    else
+        echo "installing the dependencies on $name did not finish: see $D/results/install.txt"; return 1
+    fi
+}
+
 # The video CD: the apps CD's Brave and Firefox, with video.cmd as run.cmd
 make_videocd() {
     local S=$VMS/videocd
@@ -401,9 +484,9 @@ cmd_apps() {
     local D=$VMS/$name
     [ -f "$D/base.qcow2" ] || die "no VM $name: run '$0 install $name ...' first"
     mkdir -p "$VMS"
-    ( flock 9; make_appscd && cp "$VMS/apps.iso" "$D/apps.iso" ) 9>"$VMS/.testcd.lock" || die "could not make the apps CD"
+    ( flock 9; VX_TRACE_ARCH=$(cat "$D/arch") make_appscd && cp "$VMS/apps.iso" "$D/apps.iso" ) 9>"$VMS/.testcd.lock" || die "could not make the apps CD"
     echo "Testing programs on $name (with network access) ..."
-    VX_VM_NET=1 VX_VM_MEM=${VX_VM_MEM:-4096} boot_cd "$name" "$D/apps.iso" 5400
+    VX_VM_NET=1 VX_VM_MEM=${VX_VM_MEM:-4096} boot_cd "$name" "$D/apps.iso" "${VX_VM_TIMEOUT:-5400}"
 }
 
 # one run per VM at a time (they share the VM's disk files)
@@ -420,6 +503,8 @@ case ${1:-} in
     testcd) mkdir -p "$VMS"; make_testcd ;;
     video) shift; lock_vm "${1:?vm name}"; cmd_video "$@" ;;
     prepare) shift; lock_vm "${1:?vm name}"; cmd_prepare "$@" ;;
+    deps) shift; lock_vm "${1:?vm name}"; cmd_deps "$@" ;;
+    perf) shift; lock_vm "${1:?vm name}"; cmd_perf "$@" ;;
     shot) D=$VMS/${2:?vm name}; shot "$D" "${3:-$D/screen.png}" && echo "${3:-$D/screen.png}" ;;
     *) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
 esac

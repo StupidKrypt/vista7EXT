@@ -1,652 +1,698 @@
-# shell32.dll export ordinals: vista-32, vista-64, win7-32, win7-64.
+# shell32.dll export ordinals: vista-32, vista-64, win7-32, win7-64, win8-32, win8-64.
 # Each line: ordinal, then <windows>:<name> ("-" = exported by number only).
-2 vista-32:SHChangeNotifyRegister vista-64:SHChangeNotifyRegister win7-32:SHChangeNotifyRegister win7-64:SHChangeNotifyRegister
-3 vista-32:SHDefExtractIconA vista-64:SHDefExtractIconA win7-32:SHDefExtractIconA win7-64:SHDefExtractIconA
-4 vista-32:SHChangeNotifyDeregister vista-64:SHChangeNotifyDeregister win7-32:SHChangeNotifyDeregister win7-64:SHChangeNotifyDeregister
-5 vista-32:- vista-64:- win7-32:- win7-64:-
-6 vista-32:SHDefExtractIconW vista-64:SHDefExtractIconW win7-32:SHDefExtractIconW win7-64:SHDefExtractIconW
-7 vista-32:- vista-64:- win7-32:- win7-64:-
-8 vista-32:- vista-64:- win7-32:- win7-64:-
-9 vista-32:PifMgr_OpenProperties vista-64:PifMgr_OpenProperties win7-32:PifMgr_OpenProperties win7-64:PifMgr_OpenProperties
-10 vista-32:PifMgr_GetProperties vista-64:PifMgr_GetProperties win7-32:PifMgr_GetProperties win7-64:PifMgr_GetProperties
-11 vista-32:PifMgr_SetProperties vista-64:PifMgr_SetProperties win7-32:PifMgr_SetProperties win7-64:PifMgr_SetProperties
-12 vista-32:- vista-64:- win7-32:- win7-64:-
-13 vista-32:PifMgr_CloseProperties vista-64:PifMgr_CloseProperties win7-32:PifMgr_CloseProperties win7-64:PifMgr_CloseProperties
-14 vista-32:SHStartNetConnectionDialogW vista-64:SHStartNetConnectionDialogW win7-32:SHStartNetConnectionDialogW win7-64:SHStartNetConnectionDialogW
-15 vista-32:- vista-64:- win7-32:- win7-64:-
-16 vista-32:ILFindLastID vista-64:ILFindLastID win7-32:ILFindLastID win7-64:ILFindLastID
-17 vista-32:ILRemoveLastID vista-64:ILRemoveLastID win7-32:ILRemoveLastID win7-64:ILRemoveLastID
-18 vista-32:ILClone vista-64:ILClone win7-32:ILClone win7-64:ILClone
-19 vista-32:ILCloneFirst vista-64:ILCloneFirst win7-32:ILCloneFirst win7-64:ILCloneFirst
-20 vista-32:- vista-64:- win7-32:- win7-64:-
-21 vista-32:ILIsEqual vista-64:ILIsEqual win7-32:ILIsEqual win7-64:ILIsEqual
-22 vista-32:DAD_DragEnterEx2 vista-64:DAD_DragEnterEx2 win7-32:DAD_DragEnterEx2 win7-64:DAD_DragEnterEx2
-23 vista-32:ILIsParent vista-64:ILIsParent win7-32:ILIsParent win7-64:ILIsParent
-24 vista-32:ILFindChild vista-64:ILFindChild win7-32:ILFindChild win7-64:ILFindChild
-25 vista-32:ILCombine vista-64:ILCombine win7-32:ILCombine win7-64:ILCombine
-26 vista-32:- vista-64:- win7-32:- win7-64:-
-27 vista-32:ILSaveToStream vista-64:ILSaveToStream win7-32:ILSaveToStream win7-64:ILSaveToStream
-28 vista-32:SHILCreateFromPath vista-64:SHILCreateFromPath win7-32:SHILCreateFromPath win7-64:SHILCreateFromPath
-29 vista-32:- vista-64:- win7-32:- win7-64:-
-30 vista-32:- vista-64:- win7-32:- win7-64:-
-31 vista-32:- vista-64:- win7-32:- win7-64:-
-32 vista-32:- vista-64:- win7-32:- win7-64:-
-33 vista-32:- vista-64:- win7-32:- win7-64:-
-34 vista-32:- vista-64:- win7-32:- win7-64:-
-35 vista-32:- vista-64:- win7-32:- win7-64:-
-36 vista-32:- vista-64:- win7-32:- win7-64:-
-37 vista-32:- vista-64:- win7-32:- win7-64:-
-38 vista-32:- vista-64:- win7-32:- win7-64:-
-39 vista-32:- vista-64:- win7-32:- win7-64:-
-40 vista-32:- vista-64:- win7-32:- win7-64:-
-41 vista-32:IsLFNDriveA vista-64:IsLFNDriveA win7-32:IsLFNDriveA win7-64:IsLFNDriveA
-42 vista-32:IsLFNDriveW vista-64:IsLFNDriveW win7-32:IsLFNDriveW win7-64:IsLFNDriveW
-43 vista-32:PathIsExe vista-64:PathIsExe win7-32:PathIsExe win7-64:PathIsExe
-44 vista-32:- vista-64:- win7-32:- win7-64:-
-45 vista-32:- vista-64:- win7-32:- win7-64:-
-46 vista-32:- vista-64:- win7-32:- win7-64:-
-47 vista-32:PathMakeUniqueName vista-64:PathMakeUniqueName win7-32:PathMakeUniqueName win7-64:PathMakeUniqueName
-48 vista-32:- vista-64:- win7-32:- win7-64:-
-49 vista-32:PathQualify vista-64:PathQualify win7-32:PathQualify win7-64:PathQualify
-50 vista-32:- vista-64:- win7-32:- win7-64:-
-51 vista-32:PathResolve vista-64:PathResolve win7-32:PathResolve win7-64:PathResolve
-52 vista-32:- vista-64:- win7-32:- win7-64:-
-53 vista-32:- vista-64:- win7-32:- win7-64:-
-54 vista-32:- vista-64:- win7-32:- win7-64:-
-55 vista-32:- vista-64:- win7-32:- win7-64:-
-56 vista-32:- vista-64:- win7-32:- win7-64:-
-57 vista-32:- vista-64:- win7-32:- win7-64:-
-58 vista-32:- vista-64:- win7-32:- win7-64:-
-59 vista-32:RestartDialog vista-64:RestartDialog win7-32:RestartDialog win7-64:RestartDialog
-60 vista-32:- vista-64:- win7-32:- win7-64:-
-61 vista-32:- vista-64:- win7-32:- win7-64:-
-62 vista-32:PickIconDlg vista-64:PickIconDlg win7-32:PickIconDlg win7-64:PickIconDlg
-63 vista-32:GetFileNameFromBrowse vista-64:GetFileNameFromBrowse win7-32:GetFileNameFromBrowse win7-64:GetFileNameFromBrowse
-64 vista-32:DriveType vista-64:DriveType win7-32:DriveType win7-64:DriveType
-65 vista-32:- vista-64:- win7-32:- win7-64:-
-66 vista-32:IsNetDrive vista-64:IsNetDrive win7-32:IsNetDrive win7-64:IsNetDrive
-67 vista-32:Shell_MergeMenus vista-64:Shell_MergeMenus win7-32:Shell_MergeMenus win7-64:Shell_MergeMenus
-68 vista-32:SHGetSetSettings vista-64:SHGetSetSettings win7-32:SHGetSetSettings win7-64:SHGetSetSettings
-69 vista-32:- vista-64:- win7-32:- win7-64:-
-70 vista-32:- vista-64:- win7-32:- win7-64:-
-71 vista-32:Shell_GetImageLists vista-64:Shell_GetImageLists win7-32:Shell_GetImageLists win7-64:Shell_GetImageLists
-72 vista-32:Shell_GetCachedImageIndex vista-64:Shell_GetCachedImageIndex win7-32:Shell_GetCachedImageIndex win7-64:Shell_GetCachedImageIndex
-73 vista-32:SHShellFolderView_Message vista-64:SHShellFolderView_Message win7-32:SHShellFolderView_Message win7-64:SHShellFolderView_Message
-74 vista-32:SHCreateStdEnumFmtEtc vista-64:SHCreateStdEnumFmtEtc win7-32:SHCreateStdEnumFmtEtc win7-64:SHCreateStdEnumFmtEtc
-75 vista-32:PathYetAnotherMakeUniqueName vista-64:PathYetAnotherMakeUniqueName win7-32:PathYetAnotherMakeUniqueName win7-64:PathYetAnotherMakeUniqueName
-76 vista-32:- vista-64:- win7-32:- win7-64:-
-77 vista-32:SHMapPIDLToSystemImageListIndex vista-64:SHMapPIDLToSystemImageListIndex win7-32:SHMapPIDLToSystemImageListIndex win7-64:SHMapPIDLToSystemImageListIndex
-78 vista-32:- vista-64:- win7-32:- win7-64:-
-79 vista-32:- vista-64:- win7-32:- win7-64:-
-80 vista-32:SHOpenPropSheetW vista-64:SHOpenPropSheetW win7-32:SHOpenPropSheetW win7-64:SHOpenPropSheetW
-81 vista-32:OpenAs_RunDLL vista-64:OpenAs_RunDLL win7-32:OpenAs_RunDLL win7-64:OpenAs_RunDLL
-82 vista-32:- vista-64:- win7-32:- win7-64:-
-83 vista-32:CIDLData_CreateFromIDArray vista-64:CIDLData_CreateFromIDArray win7-32:CIDLData_CreateFromIDArray win7-64:CIDLData_CreateFromIDArray
-84 vista-32:- vista-64:- win7-32:- win7-64:-
-85 vista-32:OpenRegStream vista-64:OpenRegStream win7-32:OpenRegStream win7-64:OpenRegStream
-86 vista-32:- vista-64:- win7-32:- win7-64:-
-87 vista-32:- vista-64:- win7-32:- win7-64:-
-88 vista-32:SHDoDragDrop vista-64:SHDoDragDrop win7-32:SHDoDragDrop win7-64:SHDoDragDrop
-89 vista-32:SHCloneSpecialIDList vista-64:SHCloneSpecialIDList win7-32:SHCloneSpecialIDList win7-64:SHCloneSpecialIDList
-90 vista-32:SHFindFiles vista-64:SHFindFiles win7-32:SHFindFiles win7-64:SHFindFiles
-91 vista-32:- vista-64:- win7-32:- win7-64:-
-92 vista-32:PathGetShortPath vista-64:PathGetShortPath win7-32:PathGetShortPath win7-64:PathGetShortPath
-93 vista-32:- vista-64:- win7-32:- win7-64:-
-94 vista-32:- vista-64:- win7-32:- win7-64:-
-95 vista-32:- vista-64:- win7-32:- win7-64:-
-96 vista-32:- vista-64:- win7-32:- win7-64:-
-97 vista-32:- vista-64:- win7-32:- win7-64:-
-98 vista-32:SHGetRealIDL vista-64:SHGetRealIDL win7-32:SHGetRealIDL win7-64:SHGetRealIDL
-99 vista-32:- vista-64:- win7-32:- win7-64:-
-100 vista-32:SHRestricted vista-64:SHRestricted win7-32:SHRestricted win7-64:SHRestricted
-101 vista-32:- vista-64:- win7-32:- win7-64:-
-102 vista-32:SHCoCreateInstance vista-64:SHCoCreateInstance win7-32:SHCoCreateInstance win7-64:SHCoCreateInstance
-103 vista-32:SignalFileOpen vista-64:SignalFileOpen win7-32:SignalFileOpen win7-64:SignalFileOpen
-104 vista-32:- vista-64:- win7-32:- win7-64:-
-105 vista-32:- vista-64:- win7-32:- win7-64:-
-106 vista-32:- vista-64:- win7-32:- win7-64:-
-107 vista-32:- vista-64:- win7-32:- win7-64:-
-108 vista-32:- vista-64:- win7-32:- win7-64:-
-109 vista-32:- vista-64:- win7-32:- win7-64:-
-110 vista-32:- vista-64:- win7-32:- win7-64:-
-111 vista-32:- vista-64:- win7-32:- win7-64:-
-112 vista-32:- vista-64:- win7-32:- win7-64:-
-113 vista-32:- vista-64:- win7-32:- win7-64:-
-114 vista-32:- vista-64:- win7-32:- win7-64:-
-115 vista-32:- vista-64:- win7-32:- win7-64:-
-116 vista-32:- vista-64:- win7-32:- win7-64:-
-117 vista-32:- vista-64:- win7-32:- win7-64:-
-118 vista-32:- vista-64:- win7-32:- win7-64:-
-119 vista-32:IsLFNDrive vista-64:IsLFNDrive win7-32:IsLFNDrive win7-64:IsLFNDrive
-120 vista-32:- vista-64:- win7-32:- win7-64:-
-121 vista-32:- vista-64:- win7-32:- win7-64:-
-122 vista-32:- vista-64:- win7-32:- win7-64:-
-123 vista-32:- vista-64:- win7-32:- win7-64:-
-124 vista-32:- vista-64:- win7-32:- win7-64:-
-125 vista-32:OpenAs_RunDLLA vista-64:OpenAs_RunDLLA win7-32:OpenAs_RunDLLA win7-64:OpenAs_RunDLLA
-126 vista-32:- vista-64:- win7-32:- win7-64:-
-127 vista-32:- vista-64:- win7-32:- win7-64:-
-128 vista-32:- vista-64:- win7-32:- win7-64:-
-129 vista-32:DAD_AutoScroll vista-64:DAD_AutoScroll win7-32:DAD_AutoScroll win7-64:DAD_AutoScroll
-130 vista-32:- vista-64:- win7-32:- win7-64:-
-131 vista-32:DAD_DragEnterEx vista-64:DAD_DragEnterEx win7-32:DAD_DragEnterEx win7-64:DAD_DragEnterEx
-132 vista-32:DAD_DragLeave vista-64:DAD_DragLeave win7-32:DAD_DragLeave win7-64:DAD_DragLeave
-133 vista-32:OpenAs_RunDLLW vista-64:OpenAs_RunDLLW win7-32:OpenAs_RunDLLW win7-64:OpenAs_RunDLLW
-134 vista-32:DAD_DragMove vista-64:DAD_DragMove win7-32:DAD_DragMove win7-64:DAD_DragMove
-135 vista-32:PrepareDiscForBurnRunDllW vista-64:PrepareDiscForBurnRunDllW win7-32:PrepareDiscForBurnRunDllW win7-64:PrepareDiscForBurnRunDllW
-136 vista-32:DAD_SetDragImage vista-64:DAD_SetDragImage win7-32:DAD_SetDragImage win7-64:DAD_SetDragImage
-137 vista-32:DAD_ShowDragImage vista-64:DAD_ShowDragImage win7-32:DAD_ShowDragImage win7-64:DAD_ShowDragImage
-138 vista-32:SHHelpShortcuts_RunDLL vista-64:SHHelpShortcuts_RunDLL win7-32:PrintersGetCommand_RunDLL win7-64:PrintersGetCommand_RunDLL
-139 vista-32:SHHelpShortcuts_RunDLLA vista-64:SHHelpShortcuts_RunDLLA win7-32:PrintersGetCommand_RunDLLA win7-64:PrintersGetCommand_RunDLLA
-140 vista-32:- vista-64:- win7-32:- win7-64:-
-141 vista-32:- vista-64:- win7-32:- win7-64:-
-142 vista-32:- vista-64:- win7-32:- win7-64:-
-143 vista-32:- vista-64:- win7-32:- win7-64:-
-144 vista-32:- vista-64:- win7-32:- win7-64:-
-145 vista-32:- vista-64:- win7-32:- win7-64:-
-146 vista-32:- vista-64:- win7-32:- win7-64:-
-147 vista-32:SHCLSIDFromString vista-64:SHCLSIDFromString win7-32:SHCLSIDFromString win7-64:SHCLSIDFromString
-148 vista-32:- vista-64:- win7-32:- win7-64:-
-149 vista-32:SHFind_InitMenuPopup vista-64:SHFind_InitMenuPopup win7-32:SHFind_InitMenuPopup win7-64:SHFind_InitMenuPopup
-150 vista-32:SHHelpShortcuts_RunDLLW vista-64:SHHelpShortcuts_RunDLLW win7-32:PrintersGetCommand_RunDLLW win7-64:PrintersGetCommand_RunDLLW
-151 vista-32:- vista-64:- win7-32:- win7-64:-
-152 vista-32:ILGetSize vista-64:ILGetSize win7-32:ILGetSize win7-64:ILGetSize
-153 vista-32:ILGetNext vista-64:ILGetNext win7-32:ILGetNext win7-64:ILGetNext
-154 vista-32:ILAppendID vista-64:ILAppendID win7-32:ILAppendID win7-64:ILAppendID
-155 vista-32:ILFree vista-64:ILFree win7-32:ILFree win7-64:ILFree
-156 vista-32:- vista-64:- win7-32:- win7-64:-
-157 vista-32:ILCreateFromPath vista-64:ILCreateFromPath win7-32:ILCreateFromPath win7-64:ILCreateFromPath
-158 vista-32:- vista-64:- win7-32:- win7-64:-
-159 vista-32:- vista-64:- win7-32:- win7-64:-
-160 vista-32:- vista-64:- win7-32:- win7-64:-
-161 vista-32:- vista-64:- win7-32:- win7-64:-
-162 vista-32:SHSimpleIDListFromPath vista-64:SHSimpleIDListFromPath win7-32:SHSimpleIDListFromPath win7-64:SHSimpleIDListFromPath
-163 vista-32:- vista-64:- win7-32:- win7-64:-
-164 vista-32:Win32DeleteFile vista-64:Win32DeleteFile win7-32:Win32DeleteFile win7-64:Win32DeleteFile
-165 vista-32:SHCreateDirectory vista-64:SHCreateDirectory win7-32:SHCreateDirectory win7-64:SHCreateDirectory
-166 vista-32:- vista-64:- win7-32:- win7-64:-
-167 vista-32:SHAddFromPropSheetExtArray vista-64:SHAddFromPropSheetExtArray win7-32:SHAddFromPropSheetExtArray win7-64:SHAddFromPropSheetExtArray
-168 vista-32:SHCreatePropSheetExtArray vista-64:SHCreatePropSheetExtArray win7-32:SHCreatePropSheetExtArray win7-64:SHCreatePropSheetExtArray
-169 vista-32:SHDestroyPropSheetExtArray vista-64:SHDestroyPropSheetExtArray win7-32:SHDestroyPropSheetExtArray win7-64:SHDestroyPropSheetExtArray
-170 vista-32:SHReplaceFromPropSheetExtArray vista-64:SHReplaceFromPropSheetExtArray win7-32:SHReplaceFromPropSheetExtArray win7-64:SHReplaceFromPropSheetExtArray
-171 vista-32:PathCleanupSpec vista-64:PathCleanupSpec win7-32:PathCleanupSpec win7-64:PathCleanupSpec
-172 vista-32:- vista-64:- win7-32:- win7-64:-
-173 vista-32:SHValidateUNC vista-64:SHValidateUNC win7-32:SHValidateUNC win7-64:SHValidateUNC
-174 vista-32:SHCreateShellFolderViewEx vista-64:SHCreateShellFolderViewEx win7-32:SHCreateShellFolderViewEx win7-64:SHCreateShellFolderViewEx
-175 vista-32:- vista-64:- win7-32:- win7-64:-
-176 vista-32:SHSetInstanceExplorer vista-64:SHSetInstanceExplorer win7-32:SHSetInstanceExplorer win7-64:SHSetInstanceExplorer
-177 vista-32:- vista-64:- win7-32:- win7-64:-
-178 vista-32:SHObjectProperties vista-64:SHObjectProperties win7-32:SHObjectProperties win7-64:SHObjectProperties
-179 vista-32:SHGetNewLinkInfoA vista-64:SHGetNewLinkInfoA win7-32:SHGetNewLinkInfoA win7-64:SHGetNewLinkInfoA
-180 vista-32:SHGetNewLinkInfoW vista-64:SHGetNewLinkInfoW win7-32:SHGetNewLinkInfoW win7-64:SHGetNewLinkInfoW
-181 vista-32:- vista-64:- win7-32:- win7-64:-
-182 vista-32:ShellMessageBoxW vista-64:ShellMessageBoxW win7-32:ShellMessageBoxW win7-64:ShellMessageBoxW
-183 vista-32:ShellMessageBoxA vista-64:ShellMessageBoxA win7-32:ShellMessageBoxA win7-64:ShellMessageBoxA
-184 vista-32:- vista-64:- win7-32:- win7-64:-
-185 vista-32:- vista-64:- win7-32:- win7-64:-
-186 vista-32:- vista-64:- win7-32:- win7-64:-
-187 vista-32:- vista-64:- win7-32:- win7-64:-
-188 vista-32:- vista-64:- win7-32:- win7-64:-
-189 vista-32:ILCreateFromPathA vista-64:ILCreateFromPathA win7-32:ILCreateFromPathA win7-64:ILCreateFromPathA
-190 vista-32:ILCreateFromPathW vista-64:ILCreateFromPathW win7-32:ILCreateFromPathW win7-64:ILCreateFromPathW
-191 vista-32:SHUpdateImageA vista-64:SHUpdateImageA win7-32:SHUpdateImageA win7-64:SHUpdateImageA
-192 vista-32:SHUpdateImageW vista-64:SHUpdateImageW win7-32:SHUpdateImageW win7-64:SHUpdateImageW
-193 vista-32:SHHandleUpdateImage vista-64:SHHandleUpdateImage win7-32:SHHandleUpdateImage win7-64:SHHandleUpdateImage
-194 vista-32:- vista-64:- win7-32:- win7-64:-
-195 vista-32:SHFree vista-64:SHFree win7-32:SHFree win7-64:SHFree
-196 vista-32:SHAlloc vista-64:SHAlloc win7-32:SHAlloc win7-64:SHAlloc
-197 vista-32:- vista-64:- win7-32:- win7-64:-
-198 vista-32:- vista-64:- win7-32:- win7-64:-
-199 vista-32:AppCompat_RunDLLW vista-64:AppCompat_RunDLLW win7-32:SHHelpShortcuts_RunDLL win7-64:SHHelpShortcuts_RunDLL
-200 vista-32:- vista-64:- win7-32:- win7-64:-
-201 vista-32:- vista-64:- win7-32:- win7-64:-
-202 vista-32:- vista-64:- win7-32:- win7-64:-
-203 vista-32:- vista-64:- win7-32:- win7-64:-
-204 vista-32:- vista-64:- win7-32:- win7-64:-
-205 vista-32:- vista-64:- win7-32:- win7-64:-
-206 vista-32:AssocCreateForClasses vista-64:AssocCreateForClasses win7-32:SHHelpShortcuts_RunDLLA win7-64:SHHelpShortcuts_RunDLLA
-207 vista-32:AssocGetDetailsOfPropKey vista-64:AssocGetDetailsOfPropKey win7-32:SHHelpShortcuts_RunDLLW win7-64:SHHelpShortcuts_RunDLLW
-208 vista-32:CheckEscapesW vista-64:CheckEscapesW win7-32:AppCompat_RunDLLW win7-64:AppCompat_RunDLLW
-209 vista-32:- vista-64:- win7-32:- win7-64:-
-210 vista-32:- vista-64:- win7-32:- win7-64:-
-211 vista-32:- vista-64:- win7-32:- win7-64:-
-212 vista-32:- vista-64:- win7-32:- win7-64:-
-213 vista-32:- vista-64:- win7-32:- win7-64:-
-214 vista-32:- vista-64:- win7-32:- win7-64:-
-215 vista-32:- vista-64:- win7-32:- win7-64:-
-216 vista-32:- vista-64:- win7-32:- win7-64:-
-217 vista-32:- vista-64:- win7-32:- win7-64:-
-218 vista-32:- vista-64:- win7-32:- win7-64:-
-219 vista-32:- vista-64:- win7-32:- win7-64:-
-220 vista-32:- vista-64:- win7-32:- win7-64:-
-221 vista-32:- vista-64:- win7-32:- win7-64:-
-222 vista-32:- vista-64:- win7-32:- win7-64:-
-223 vista-32:- vista-64:- win7-32:- win7-64:-
-224 vista-32:- vista-64:- win7-32:- win7-64:-
-225 vista-32:- vista-64:- win7-32:- win7-64:-
-226 vista-32:CommandLineToArgvW vista-64:CommandLineToArgvW win7-32:AssocCreateForClasses win7-64:AssocCreateForClasses
-227 vista-32:- vista-64:- win7-32:- win7-64:-
-228 vista-32:Control_RunDLL vista-64:Control_RunDLL win7-32:AssocGetDetailsOfPropKey win7-64:AssocGetDetailsOfPropKey
-229 vista-32:Control_RunDLLA vista-64:Control_RunDLLA win7-32:CheckEscapesW win7-64:CheckEscapesW
-230 vista-32:- vista-64:- win7-32:- win7-64:-
-231 vista-32:SHSetFolderPathA vista-64:SHSetFolderPathA win7-32:SHSetFolderPathA win7-64:SHSetFolderPathA
-232 vista-32:SHSetFolderPathW vista-64:SHSetFolderPathW win7-32:SHSetFolderPathW win7-64:SHSetFolderPathW
-233 vista-32:- vista-64:- win7-32:- win7-64:-
-234 vista-32:- vista-64:- win7-32:- win7-64:-
-235 vista-32:- vista-64:- win7-32:- win7-64:-
-236 vista-32:- vista-64:- win7-32:- win7-64:-
-237 vista-32:- vista-64:- win7-32:- win7-64:-
-238 vista-32:Control_RunDLLAsUserW vista-64:Control_RunDLLAsUserW win7-32:CommandLineToArgvW win7-64:CommandLineToArgvW
-239 vista-32:PathIsSlowW vista-64:PathIsSlowW win7-32:PathIsSlowW win7-64:PathIsSlowW
-240 vista-32:PathIsSlowA vista-64:PathIsSlowA win7-32:PathIsSlowA win7-64:PathIsSlowA
-241 vista-32:- vista-64:- win7-32:- win7-64:-
-242 vista-32:- vista-64:- win7-32:- win7-64:-
-243 vista-32:- vista-64:- win7-32:- win7-64:-
-244 vista-32:- vista-64:- win7-32:- win7-64:-
-245 vista-32:SHTestTokenMembership vista-64:SHTestTokenMembership win7-32:SHTestTokenMembership win7-64:SHTestTokenMembership
-246 vista-32:- vista-64:- win7-32:- win7-64:-
-247 vista-32:- vista-64:- win7-32:- win7-64:-
-248 vista-32:- vista-64:- win7-32:- win7-64:-
-249 vista-32:- vista-64:- win7-32:- win7-64:-
-250 vista-32:- vista-64:- win7-32:- win7-64:-
-251 vista-32:- vista-64:- win7-32:- win7-64:-
-252 vista-32:- vista-64:- win7-32:- win7-64:-
-253 vista-32:- vista-64:- win7-32:- win7-64:-
-254 vista-32:- vista-64:- win7-32:- win7-64:-
-255 vista-32:Control_RunDLLW vista-64:Control_RunDLLW win7-32:Control_RunDLL win7-64:Control_RunDLL
-256 vista-32:SHCreateShellFolderView vista-64:SHCreateShellFolderView win7-32:SHCreateShellFolderView win7-64:SHCreateShellFolderView
-257 vista-32:- vista-64:- win7-32:- win7-64:-
-258 vista-32:- vista-64:- win7-32:- win7-64:-
-259 vista-32:- vista-64:- win7-32:- win7-64:-
-260 vista-32:- vista-64:- win7-32:- win7-64:-
-261 vista-32:- vista-64:- win7-32:- win7-64:-
-262 vista-32:- vista-64:- win7-32:- win7-64:-
-263 vista-32:DllCanUnloadNow vista-64:DllCanUnloadNow win7-32:Control_RunDLLA win7-64:Control_RunDLLA
-264 vista-32:- vista-64:- win7-32:- win7-64:-
-265 vista-32:- vista-64:- win7-32:- win7-64:-
-266 vista-32:- vista-64:- win7-32:- win7-64:-
-267 vista-32:DllGetClassObject vista-64:DllGetClassObject win7-32:Control_RunDLLAsUserW win7-64:Control_RunDLLAsUserW
-268 vista-32:DllGetVersion vista-64:DllGetVersion win7-32:Control_RunDLLW win7-64:Control_RunDLLW
-269 vista-32:DllInstall vista-64:DllInstall win7-32:DllCanUnloadNow win7-64:DllCanUnloadNow
-270 vista-32:- vista-64:- win7-32:- win7-64:-
-271 vista-32:DllRegisterServer vista-64:DllRegisterServer win7-32:DllGetClassObject win7-64:DllGetClassObject
-272 vista-32:DllUnregisterServer vista-64:DllUnregisterServer win7-32:DllGetVersion win7-64:DllGetVersion
-273 vista-32:DoEnvironmentSubstA vista-64:DoEnvironmentSubstA win7-32:DllInstall win7-64:DllInstall
-274 vista-32:DoEnvironmentSubstW vista-64:DoEnvironmentSubstW win7-32:DllRegisterServer win7-64:DllRegisterServer
-275 vista-32:DragAcceptFiles vista-64:DragAcceptFiles win7-32:DllUnregisterServer win7-64:DllUnregisterServer
-276 vista-32:DragFinish vista-64:DragFinish win7-32:DoEnvironmentSubstA win7-64:DoEnvironmentSubstA
-277 vista-32:DragQueryFile vista-64:DragQueryFile win7-32:DoEnvironmentSubstW win7-64:DoEnvironmentSubstW
-278 vista-32:DragQueryFileA vista-64:DragQueryFileA win7-32:DragAcceptFiles win7-64:DragAcceptFiles
-279 vista-32:DragQueryFileAorW vista-64:DragQueryFileAorW win7-32:DragFinish win7-64:DragFinish
-280 vista-32:DragQueryFileW vista-64:DragQueryFileW win7-32:DragQueryFile win7-64:DragQueryFile
-281 vista-32:DragQueryPoint vista-64:DragQueryPoint win7-32:DragQueryFileA win7-64:DragQueryFileA
-282 vista-32:DuplicateIcon vista-64:DuplicateIcon win7-32:DragQueryFileAorW win7-64:DragQueryFileAorW
-283 vista-32:ExtractAssociatedIconA vista-64:ExtractAssociatedIconA win7-32:DragQueryFileW win7-64:DragQueryFileW
-284 vista-32:ExtractAssociatedIconExA vista-64:ExtractAssociatedIconExA win7-32:DragQueryPoint win7-64:DragQueryPoint
-285 vista-32:ExtractAssociatedIconExW vista-64:ExtractAssociatedIconExW win7-32:DuplicateIcon win7-64:DuplicateIcon
-286 vista-32:ExtractAssociatedIconW vista-64:ExtractAssociatedIconW win7-32:ExtractAssociatedIconA win7-64:ExtractAssociatedIconA
-287 vista-32:ExtractIconA vista-64:ExtractIconA win7-32:ExtractAssociatedIconExA win7-64:ExtractAssociatedIconExA
-288 vista-32:ExtractIconEx vista-64:ExtractIconEx win7-32:ExtractAssociatedIconExW win7-64:ExtractAssociatedIconExW
-289 vista-32:ExtractIconExA vista-64:ExtractIconExA win7-32:ExtractAssociatedIconW win7-64:ExtractAssociatedIconW
-290 vista-32:ExtractIconExW vista-64:ExtractIconExW win7-32:ExtractIconA win7-64:ExtractIconA
-291 vista-32:ExtractIconW vista-64:ExtractIconW win7-32:ExtractIconEx win7-64:ExtractIconEx
-292 vista-32:FindExecutableA vista-64:FindExecutableA win7-32:ExtractIconExA win7-64:ExtractIconExA
-293 vista-32:FindExecutableW vista-64:FindExecutableW win7-32:ExtractIconExW win7-64:ExtractIconExW
-294 vista-32:FreeIconList vista-64:FreeIconList win7-32:ExtractIconW win7-64:ExtractIconW
-295 vista-32:InitNetworkAddressControl vista-64:InitNetworkAddressControl win7-32:FindExecutableA win7-64:FindExecutableA
-296 vista-32:InternalExtractIconListA vista-64:InternalExtractIconListA win7-32:FindExecutableW win7-64:FindExecutableW
-297 vista-32:InternalExtractIconListW vista-64:InternalExtractIconListW win7-32:FreeIconList win7-64:FreeIconList
-298 vista-32:Options_RunDLL vista-64:Options_RunDLL win7-32:GetCurrentProcessExplicitAppUserModelID win7-64:GetCurrentProcessExplicitAppUserModelID
-299 vista-32:Options_RunDLLA vista-64:Options_RunDLLA win7-32:InitNetworkAddressControl win7-64:InitNetworkAddressControl
-300 vista-32:Options_RunDLLW vista-64:Options_RunDLLW win7-32:InternalExtractIconListA win7-64:InternalExtractIconListA
-301 vista-32:PrintersGetCommand_RunDLL vista-64:PrintersGetCommand_RunDLL win7-32:InternalExtractIconListW win7-64:InternalExtractIconListW
-302 vista-32:PrintersGetCommand_RunDLLA vista-64:PrintersGetCommand_RunDLLA win7-32:LaunchMSHelp_RunDLLW win7-64:LaunchMSHelp_RunDLLW
-303 vista-32:PrintersGetCommand_RunDLLW vista-64:PrintersGetCommand_RunDLLW win7-32:Options_RunDLL win7-64:Options_RunDLL
-304 vista-32:RealShellExecuteA vista-64:RealShellExecuteA win7-32:Options_RunDLLA win7-64:Options_RunDLLA
-305 vista-32:RealShellExecuteExA vista-64:RealShellExecuteExA win7-32:Options_RunDLLW win7-64:Options_RunDLLW
-306 vista-32:RealShellExecuteExW vista-64:RealShellExecuteExW win7-32:RealShellExecuteA win7-64:RealShellExecuteA
-307 vista-32:RealShellExecuteW vista-64:RealShellExecuteW win7-32:RealShellExecuteExA win7-64:RealShellExecuteExA
-308 vista-32:RegenerateUserEnvironment vista-64:RegenerateUserEnvironment win7-32:RealShellExecuteExW win7-64:RealShellExecuteExW
-309 vista-32:SHAddDefaultPropertiesByExt vista-64:SHAddDefaultPropertiesByExt win7-32:RealShellExecuteW win7-64:RealShellExecuteW
-310 vista-32:SHAddToRecentDocs vista-64:SHAddToRecentDocs win7-32:RegenerateUserEnvironment win7-64:RegenerateUserEnvironment
-311 vista-32:SHAppBarMessage vista-64:SHAppBarMessage win7-32:RunAsNewUser_RunDLLW win7-64:RunAsNewUser_RunDLLW
-312 vista-32:SHAssocEnumHandlers vista-64:SHAssocEnumHandlers win7-32:SHAddDefaultPropertiesByExt win7-64:SHAddDefaultPropertiesByExt
-313 vista-32:SHBindToFolderIDListParent vista-64:SHBindToFolderIDListParent win7-32:SHAddToRecentDocs win7-64:SHAddToRecentDocs
-314 vista-32:SHBindToFolderIDListParentEx vista-64:SHBindToFolderIDListParentEx win7-32:SHAppBarMessage win7-64:SHAppBarMessage
-315 vista-32:SHBindToObject vista-64:SHBindToObject win7-32:SHAssocEnumHandlers win7-64:SHAssocEnumHandlers
-316 vista-32:SHBindToParent vista-64:SHBindToParent win7-32:SHAssocEnumHandlersForProtocolByApplication win7-64:SHAssocEnumHandlersForProtocolByApplication
-317 vista-32:SHBrowseForFolder vista-64:SHBrowseForFolder win7-32:SHBindToFolderIDListParent win7-64:SHBindToFolderIDListParent
-318 vista-32:SHBrowseForFolderA vista-64:SHBrowseForFolderA win7-32:SHBindToFolderIDListParentEx win7-64:SHBindToFolderIDListParentEx
-319 vista-32:SHBrowseForFolderW vista-64:SHBrowseForFolderW win7-32:SHBindToObject win7-64:SHBindToObject
-320 vista-32:SHChangeNotify vista-64:SHChangeNotify win7-32:SHBindToParent win7-64:SHBindToParent
-321 vista-32:SHChangeNotifyRegisterThread vista-64:SHChangeNotifyRegisterThread win7-32:SHBrowseForFolder win7-64:SHBrowseForFolder
-322 vista-32:SHChangeNotifySuspendResume vista-64:SHChangeNotifySuspendResume win7-32:SHBrowseForFolderA win7-64:SHBrowseForFolderA
-323 vista-32:SHCreateAssociationRegistration vista-64:SHCreateAssociationRegistration win7-32:SHBrowseForFolderW win7-64:SHBrowseForFolderW
-324 vista-32:SHCreateDataObject vista-64:SHCreateDataObject win7-32:SHChangeNotify win7-64:SHChangeNotify
-325 vista-32:SHCreateDefaultContextMenu vista-64:SHCreateDefaultContextMenu win7-32:SHChangeNotifyRegisterThread win7-64:SHChangeNotifyRegisterThread
-326 vista-32:SHCreateDefaultExtractIcon vista-64:SHCreateDefaultExtractIcon win7-32:SHChangeNotifySuspendResume win7-64:SHChangeNotifySuspendResume
-327 vista-32:SHCreateDefaultPropertiesOp vista-64:SHCreateDefaultPropertiesOp win7-32:SHCreateAssociationRegistration win7-64:SHCreateAssociationRegistration
-328 vista-32:SHCreateDirectoryExA vista-64:SHCreateDirectoryExA win7-32:SHCreateDataObject win7-64:SHCreateDataObject
-329 vista-32:SHCreateDirectoryExW vista-64:SHCreateDirectoryExW win7-32:SHCreateDefaultContextMenu win7-64:SHCreateDefaultContextMenu
-330 vista-32:SHCreateItemFromIDList vista-64:SHCreateItemFromIDList win7-32:SHCreateDefaultExtractIcon win7-64:SHCreateDefaultExtractIcon
-331 vista-32:SHCreateItemFromParsingName vista-64:SHCreateItemFromParsingName win7-32:SHCreateDefaultPropertiesOp win7-64:SHCreateDefaultPropertiesOp
-332 vista-32:SHCreateItemFromRelativeName vista-64:SHCreateItemFromRelativeName win7-32:SHCreateDirectoryExA win7-64:SHCreateDirectoryExA
-333 vista-32:SHCreateItemInKnownFolder vista-64:SHCreateItemInKnownFolder win7-32:SHCreateDirectoryExW win7-64:SHCreateDirectoryExW
-334 vista-32:SHCreateItemWithParent vista-64:SHCreateItemWithParent win7-32:SHCreateItemFromIDList win7-64:SHCreateItemFromIDList
-335 vista-32:SHCreateLocalServerRunDll vista-64:SHCreateLocalServerRunDll win7-32:SHCreateItemFromParsingName win7-64:SHCreateItemFromParsingName
-336 vista-32:SHCreateProcessAsUserW vista-64:SHCreateProcessAsUserW win7-32:SHCreateItemFromRelativeName win7-64:SHCreateItemFromRelativeName
-337 vista-32:SHCreateQueryCancelAutoPlayMoniker vista-64:SHCreateQueryCancelAutoPlayMoniker win7-32:SHCreateItemInKnownFolder win7-64:SHCreateItemInKnownFolder
-338 vista-32:SHCreateShellItem vista-64:SHCreateShellItem win7-32:SHCreateItemWithParent win7-64:SHCreateItemWithParent
-339 vista-32:SHCreateShellItemArray vista-64:SHCreateShellItemArray win7-32:SHCreateLocalServerRunDll win7-64:SHCreateLocalServerRunDll
-340 vista-32:SHCreateShellItemArrayFromDataObject vista-64:SHCreateShellItemArrayFromDataObject win7-32:SHCreateProcessAsUserW win7-64:SHCreateProcessAsUserW
-341 vista-32:SHCreateShellItemArrayFromIDLists vista-64:SHCreateShellItemArrayFromIDLists win7-32:SHCreateQueryCancelAutoPlayMoniker win7-64:SHCreateQueryCancelAutoPlayMoniker
-342 vista-32:SHCreateShellItemArrayFromShellItem vista-64:SHCreateShellItemArrayFromShellItem win7-32:SHCreateShellItem win7-64:SHCreateShellItem
-343 vista-32:SHEmptyRecycleBinA vista-64:SHEmptyRecycleBinA win7-32:SHCreateShellItemArray win7-64:SHCreateShellItemArray
-344 vista-32:SHEmptyRecycleBinW vista-64:SHEmptyRecycleBinW win7-32:SHCreateShellItemArrayFromDataObject win7-64:SHCreateShellItemArrayFromDataObject
-345 vista-32:SHEnableServiceObject vista-64:SHEnableServiceObject win7-32:SHCreateShellItemArrayFromIDLists win7-64:SHCreateShellItemArrayFromIDLists
-346 vista-32:SHEnumerateUnreadMailAccountsW vista-64:SHEnumerateUnreadMailAccountsW win7-32:SHCreateShellItemArrayFromShellItem win7-64:SHCreateShellItemArrayFromShellItem
-347 vista-32:SHEvaluateSystemCommandTemplate vista-64:SHEvaluateSystemCommandTemplate win7-32:SHEmptyRecycleBinA win7-64:SHEmptyRecycleBinA
-348 vista-32:SHExtractIconsW vista-64:SHExtractIconsW win7-32:SHEmptyRecycleBinW win7-64:SHEmptyRecycleBinW
-349 vista-32:SHFileOperation vista-64:SHFileOperation win7-32:SHEnableServiceObject win7-64:SHEnableServiceObject
-350 vista-32:SHFileOperationA vista-64:SHFileOperationA win7-32:SHEnumerateUnreadMailAccountsW win7-64:SHEnumerateUnreadMailAccountsW
-351 vista-32:SHFileOperationW vista-64:SHFileOperationW win7-32:SHEvaluateSystemCommandTemplate win7-64:SHEvaluateSystemCommandTemplate
-352 vista-32:SHFormatDrive vista-64:SHFormatDrive win7-32:SHExtractIconsW win7-64:SHExtractIconsW
-353 vista-32:SHFreeNameMappings vista-64:SHFreeNameMappings win7-32:SHFileOperation win7-64:SHFileOperation
-354 vista-32:SHGetDataFromIDListA vista-64:SHGetDataFromIDListA win7-32:SHFileOperationA win7-64:SHFileOperationA
-355 vista-32:SHGetDataFromIDListW vista-64:SHGetDataFromIDListW win7-32:SHFileOperationW win7-64:SHFileOperationW
-356 vista-32:SHGetDesktopFolder vista-64:SHGetDesktopFolder win7-32:SHFormatDrive win7-64:SHFormatDrive
-357 vista-32:SHGetDiskFreeSpaceA vista-64:SHGetDiskFreeSpaceA win7-32:SHFreeNameMappings win7-64:SHFreeNameMappings
-358 vista-32:SHGetDiskFreeSpaceExA vista-64:SHGetDiskFreeSpaceExA win7-32:SHGetDataFromIDListA win7-64:SHGetDataFromIDListA
-359 vista-32:SHGetDiskFreeSpaceExW vista-64:SHGetDiskFreeSpaceExW win7-32:SHGetDataFromIDListW win7-64:SHGetDataFromIDListW
-360 vista-32:SHGetDriveMedia vista-64:SHGetDriveMedia win7-32:SHGetDesktopFolder win7-64:SHGetDesktopFolder
-361 vista-32:SHGetFileInfo vista-64:SHGetFileInfo win7-32:SHGetDiskFreeSpaceA win7-64:SHGetDiskFreeSpaceA
-362 vista-32:SHGetFileInfoA vista-64:SHGetFileInfoA win7-32:SHGetDiskFreeSpaceExA win7-64:SHGetDiskFreeSpaceExA
-363 vista-32:SHGetFileInfoW vista-64:SHGetFileInfoW win7-32:SHGetDiskFreeSpaceExW win7-64:SHGetDiskFreeSpaceExW
-364 vista-32:SHGetFolderLocation vista-64:SHGetFolderLocation win7-32:SHGetDriveMedia win7-64:SHGetDriveMedia
-365 vista-32:SHGetFolderPathA vista-64:SHGetFolderPathA win7-32:SHGetFileInfo win7-64:SHGetFileInfo
-366 vista-32:SHGetFolderPathAndSubDirA vista-64:SHGetFolderPathAndSubDirA win7-32:SHGetFileInfoA win7-64:SHGetFileInfoA
-367 vista-32:SHGetFolderPathAndSubDirW vista-64:SHGetFolderPathAndSubDirW win7-32:SHGetFileInfoW win7-64:SHGetFileInfoW
-368 vista-32:SHGetFolderPathEx vista-64:SHGetFolderPathEx win7-32:SHGetFolderLocation win7-64:SHGetFolderLocation
-369 vista-32:SHGetFolderPathW vista-64:SHGetFolderPathW win7-32:SHGetFolderPathA win7-64:SHGetFolderPathA
-370 vista-32:SHGetIDListFromObject vista-64:SHGetIDListFromObject win7-32:SHGetFolderPathAndSubDirA win7-64:SHGetFolderPathAndSubDirA
-371 vista-32:SHGetIconOverlayIndexA vista-64:SHGetIconOverlayIndexA win7-32:SHGetFolderPathAndSubDirW win7-64:SHGetFolderPathAndSubDirW
-372 vista-32:SHGetIconOverlayIndexW vista-64:SHGetIconOverlayIndexW win7-32:SHGetFolderPathEx win7-64:SHGetFolderPathEx
-373 vista-32:SHGetInstanceExplorer vista-64:SHGetInstanceExplorer win7-32:SHGetFolderPathW win7-64:SHGetFolderPathW
-374 vista-32:SHGetKnownFolderIDList vista-64:SHGetKnownFolderIDList win7-32:SHGetIDListFromObject win7-64:SHGetIDListFromObject
-375 vista-32:SHGetKnownFolderPath vista-64:SHGetKnownFolderPath win7-32:SHGetIconOverlayIndexA win7-64:SHGetIconOverlayIndexA
-376 vista-32:SHGetLocalizedName vista-64:SHGetLocalizedName win7-32:SHGetIconOverlayIndexW win7-64:SHGetIconOverlayIndexW
-377 vista-32:SHGetMalloc vista-64:SHGetMalloc win7-32:SHGetInstanceExplorer win7-64:SHGetInstanceExplorer
-378 vista-32:SHGetNameFromIDList vista-64:SHGetNameFromIDList win7-32:SHGetItemFromDataObject win7-64:SHGetItemFromDataObject
-379 vista-32:SHGetNewLinkInfo vista-64:SHGetNewLinkInfo win7-32:SHGetItemFromObject win7-64:SHGetItemFromObject
-380 vista-32:SHGetPathFromIDList vista-64:SHGetPathFromIDList win7-32:SHGetKnownFolderIDList win7-64:SHGetKnownFolderIDList
-381 vista-32:SHGetPathFromIDListA vista-64:SHGetPathFromIDListA win7-32:SHGetKnownFolderItem win7-64:SHGetKnownFolderItem
-382 vista-32:SHGetPathFromIDListEx vista-64:SHGetPathFromIDListEx win7-32:SHGetKnownFolderPath win7-64:SHGetKnownFolderPath
-383 vista-32:SHGetPathFromIDListW vista-64:SHGetPathFromIDListW win7-32:SHGetLocalizedName win7-64:SHGetLocalizedName
-384 vista-32:SHGetPropertyStoreFromIDList vista-64:SHGetPropertyStoreFromIDList win7-32:SHGetMalloc win7-64:SHGetMalloc
-385 vista-32:SHGetPropertyStoreFromParsingName vista-64:SHGetPropertyStoreFromParsingName win7-32:SHGetNameFromIDList win7-64:SHGetNameFromIDList
-386 vista-32:SHGetSettings vista-64:SHGetSettings win7-32:SHGetNewLinkInfo win7-64:SHGetNewLinkInfo
-387 vista-32:SHGetSpecialFolderLocation vista-64:SHGetSpecialFolderLocation win7-32:SHGetPathFromIDList win7-64:SHGetPathFromIDList
-388 vista-32:SHGetSpecialFolderPathA vista-64:SHGetSpecialFolderPathA win7-32:SHGetPathFromIDListA win7-64:SHGetPathFromIDListA
-389 vista-32:SHGetSpecialFolderPathW vista-64:SHGetSpecialFolderPathW win7-32:SHGetPathFromIDListEx win7-64:SHGetPathFromIDListEx
-390 vista-32:SHGetStockIconInfo vista-64:SHGetStockIconInfo win7-32:SHGetPathFromIDListW win7-64:SHGetPathFromIDListW
-391 vista-32:SHGetTemporaryPropertyForItem vista-64:SHGetTemporaryPropertyForItem win7-32:SHGetPropertyStoreForWindow win7-64:SHGetPropertyStoreForWindow
-392 vista-32:SHGetUnreadMailCountW vista-64:SHGetUnreadMailCountW win7-32:SHGetPropertyStoreFromIDList win7-64:SHGetPropertyStoreFromIDList
-393 vista-32:SHInvokePrinterCommandA vista-64:SHInvokePrinterCommandA win7-32:SHGetPropertyStoreFromParsingName win7-64:SHGetPropertyStoreFromParsingName
-394 vista-32:SHInvokePrinterCommandW vista-64:SHInvokePrinterCommandW win7-32:SHGetSettings win7-64:SHGetSettings
-395 vista-32:SHIsFileAvailableOffline vista-64:SHIsFileAvailableOffline win7-32:SHGetSpecialFolderLocation win7-64:SHGetSpecialFolderLocation
-396 vista-32:SHLoadInProc vista-64:SHLoadInProc win7-32:SHGetSpecialFolderPathA win7-64:SHGetSpecialFolderPathA
-397 vista-32:SHLoadNonloadedIconOverlayIdentifiers vista-64:SHLoadNonloadedIconOverlayIdentifiers win7-32:SHGetSpecialFolderPathW win7-64:SHGetSpecialFolderPathW
-398 vista-32:SHOpenFolderAndSelectItems vista-64:SHOpenFolderAndSelectItems win7-32:SHGetStockIconInfo win7-64:SHGetStockIconInfo
-399 vista-32:SHOpenWithDialog vista-64:SHOpenWithDialog win7-32:SHGetTemporaryPropertyForItem win7-64:SHGetTemporaryPropertyForItem
-400 vista-32:SHParseDisplayName vista-64:SHParseDisplayName win7-32:SHGetUnreadMailCountW win7-64:SHGetUnreadMailCountW
-401 vista-32:SHPathPrepareForWriteA vista-64:SHPathPrepareForWriteA win7-32:SHInvokePrinterCommandA win7-64:SHInvokePrinterCommandA
-402 vista-32:SHPathPrepareForWriteW vista-64:SHPathPrepareForWriteW win7-32:SHInvokePrinterCommandW win7-64:SHInvokePrinterCommandW
-403 vista-32:SHQueryRecycleBinA vista-64:SHQueryRecycleBinA win7-32:SHIsFileAvailableOffline win7-64:SHIsFileAvailableOffline
-404 vista-32:SHQueryRecycleBinW vista-64:SHQueryRecycleBinW win7-32:SHLoadInProc win7-64:SHLoadInProc
-405 vista-32:SHQueryUserNotificationState vista-64:SHQueryUserNotificationState win7-32:SHLoadNonloadedIconOverlayIdentifiers win7-64:SHLoadNonloadedIconOverlayIdentifiers
-406 vista-32:SHRemoveLocalizedName vista-64:SHRemoveLocalizedName win7-32:SHOpenFolderAndSelectItems win7-64:SHOpenFolderAndSelectItems
-407 vista-32:SHSetDefaultProperties vista-64:SHSetDefaultProperties win7-32:SHOpenWithDialog win7-64:SHOpenWithDialog
-408 vista-32:SHSetKnownFolderPath vista-64:SHSetKnownFolderPath win7-32:SHParseDisplayName win7-64:SHParseDisplayName
-409 vista-32:SHSetLocalizedName vista-64:SHSetLocalizedName win7-32:SHPathPrepareForWriteA win7-64:SHPathPrepareForWriteA
-410 vista-32:SHSetTemporaryPropertyForItem vista-64:SHSetTemporaryPropertyForItem win7-32:SHPathPrepareForWriteW win7-64:SHPathPrepareForWriteW
-411 vista-32:SHSetUnreadMailCountW vista-64:SHSetUnreadMailCountW win7-32:SHQueryRecycleBinA win7-64:SHQueryRecycleBinA
-412 vista-32:SHUpdateRecycleBinIcon vista-64:SHUpdateRecycleBinIcon win7-32:SHQueryRecycleBinW win7-64:SHQueryRecycleBinW
-413 vista-32:SheChangeDirA vista-64:SheChangeDirA win7-32:SHQueryUserNotificationState win7-64:SHQueryUserNotificationState
-414 vista-32:SheChangeDirExW vista-64:SheChangeDirExW win7-32:SHRemoveLocalizedName win7-64:SHRemoveLocalizedName
-415 vista-32:SheGetDirA vista-64:SheGetDirA win7-32:SHResolveLibrary win7-64:SHResolveLibrary
-416 vista-32:SheSetCurDrive vista-64:SheSetCurDrive win7-32:SHSetDefaultProperties win7-64:SHSetDefaultProperties
-417 vista-32:ShellAboutA vista-64:ShellAboutA win7-32:SHSetKnownFolderPath win7-64:SHSetKnownFolderPath
-418 vista-32:ShellAboutW vista-64:ShellAboutW win7-32:SHSetLocalizedName win7-64:SHSetLocalizedName
-419 vista-32:ShellExec_RunDLL vista-64:ShellExec_RunDLL win7-32:SHSetTemporaryPropertyForItem win7-64:SHSetTemporaryPropertyForItem
-420 vista-32:ShellExec_RunDLLA vista-64:ShellExec_RunDLLA win7-32:SHSetUnreadMailCountW win7-64:SHSetUnreadMailCountW
-421 vista-32:ShellExec_RunDLLW vista-64:ShellExec_RunDLLW win7-32:SHShowManageLibraryUI win7-64:SHShowManageLibraryUI
-422 vista-32:ShellExecuteA vista-64:ShellExecuteA win7-32:SHUpdateRecycleBinIcon win7-64:SHUpdateRecycleBinIcon
-423 vista-32:ShellExecuteEx vista-64:ShellExecuteEx win7-32:SetCurrentProcessExplicitAppUserModelID win7-64:SetCurrentProcessExplicitAppUserModelID
-424 vista-32:ShellExecuteExA vista-64:ShellExecuteExA win7-32:SheChangeDirA win7-64:SheChangeDirA
-425 vista-32:ShellExecuteExW vista-64:ShellExecuteExW win7-32:SheChangeDirExW win7-64:SheChangeDirExW
-426 vista-32:ShellExecuteW vista-64:ShellExecuteW win7-32:SheGetDirA win7-64:SheGetDirA
-427 vista-32:ShellHookProc vista-64:ShellHookProc win7-32:SheSetCurDrive win7-64:SheSetCurDrive
-428 vista-32:Shell_GetCachedImageIndexA vista-64:Shell_GetCachedImageIndexA win7-32:ShellAboutA win7-64:ShellAboutA
-429 vista-32:Shell_GetCachedImageIndexW vista-64:Shell_GetCachedImageIndexW win7-32:ShellAboutW win7-64:ShellAboutW
-430 vista-32:Shell_NotifyIcon vista-64:Shell_NotifyIcon win7-32:ShellExec_RunDLL win7-64:ShellExec_RunDLL
-431 vista-32:Shell_NotifyIconA vista-64:Shell_NotifyIconA win7-32:ShellExec_RunDLLA win7-64:ShellExec_RunDLLA
-432 vista-32:Shell_NotifyIconW vista-64:Shell_NotifyIconW win7-32:ShellExec_RunDLLW win7-64:ShellExec_RunDLLW
-433 vista-32:StrChrA vista-64:StrChrA win7-32:ShellExecuteA win7-64:ShellExecuteA
-434 vista-32:StrChrIA vista-64:StrChrIA win7-32:ShellExecuteEx win7-64:ShellExecuteEx
-435 vista-32:StrChrIW vista-64:StrChrIW win7-32:ShellExecuteExA win7-64:ShellExecuteExA
-436 vista-32:StrChrW vista-64:StrChrW win7-32:ShellExecuteExW win7-64:ShellExecuteExW
-437 vista-32:StrCmpNA vista-64:StrCmpNA win7-32:ShellExecuteW win7-64:ShellExecuteW
-438 vista-32:StrCmpNIA vista-64:StrCmpNIA win7-32:ShellHookProc win7-64:ShellHookProc
-439 vista-32:StrCmpNIW vista-64:StrCmpNIW win7-32:Shell_GetCachedImageIndexA win7-64:Shell_GetCachedImageIndexA
-440 vista-32:StrCmpNW vista-64:StrCmpNW win7-32:Shell_GetCachedImageIndexW win7-64:Shell_GetCachedImageIndexW
-441 vista-32:StrNCmpA vista-64:StrNCmpA win7-32:Shell_NotifyIcon win7-64:Shell_NotifyIcon
-442 vista-32:StrNCmpIA vista-64:StrNCmpIA win7-32:Shell_NotifyIconA win7-64:Shell_NotifyIconA
-443 vista-32:StrNCmpIW vista-64:StrNCmpIW win7-32:Shell_NotifyIconGetRect win7-64:Shell_NotifyIconGetRect
-444 vista-32:StrNCmpW vista-64:StrNCmpW win7-32:Shell_NotifyIconW win7-64:Shell_NotifyIconW
-445 vista-32:StrRChrA vista-64:StrRChrA win7-32:StrChrA win7-64:StrChrA
-446 vista-32:StrRChrIA vista-64:StrRChrIA win7-32:StrChrIA win7-64:StrChrIA
-447 vista-32:StrRChrIW vista-64:StrRChrIW win7-32:StrChrIW win7-64:StrChrIW
-448 vista-32:StrRChrW vista-64:StrRChrW win7-32:StrChrW win7-64:StrChrW
-449 vista-32:StrRStrA vista-64:StrRStrA win7-32:StrCmpNA win7-64:StrCmpNA
-450 vista-32:StrRStrIA vista-64:StrRStrIA win7-32:StrCmpNIA win7-64:StrCmpNIA
-451 vista-32:StrRStrIW vista-64:StrRStrIW win7-32:StrCmpNIW win7-64:StrCmpNIW
-452 vista-32:StrRStrW vista-64:StrRStrW win7-32:StrCmpNW win7-64:StrCmpNW
-453 vista-32:StrStrA vista-64:StrStrA win7-32:StrNCmpA win7-64:StrNCmpA
-454 vista-32:StrStrIA vista-64:StrStrIA win7-32:StrNCmpIA win7-64:StrNCmpIA
-455 vista-32:StrStrIW vista-64:StrStrIW win7-32:StrNCmpIW win7-64:StrNCmpIW
-456 vista-32:StrStrW vista-64:StrStrW win7-32:StrNCmpW win7-64:StrNCmpW
-457 vista-32:WOWShellExecute vista-64:WOWShellExecute win7-32:StrRChrA win7-64:StrRChrA
-458 vista-32:WaitForExplorerRestartW vista-64:WaitForExplorerRestartW win7-32:StrRChrIA win7-64:StrRChrIA
-459 win7-32:StrRChrIW win7-64:StrRChrIW
-460 win7-32:StrRChrW win7-64:StrRChrW
-461 win7-32:StrRStrA win7-64:StrRStrA
-462 win7-32:StrRStrIA win7-64:StrRStrIA
-463 win7-32:StrRStrIW win7-64:StrRStrIW
-464 win7-32:StrRStrW win7-64:StrRStrW
-465 win7-32:StrStrA win7-64:StrStrA
-466 win7-32:StrStrIA win7-64:StrStrIA
-467 win7-32:StrStrIW win7-64:StrStrIW
-468 win7-32:StrStrW win7-64:StrStrW
-469 win7-32:WOWShellExecute win7-64:WOWShellExecute
-470 win7-32:WaitForExplorerRestartW win7-64:WaitForExplorerRestartW
-520 vista-32:- vista-64:- win7-32:- win7-64:-
-521 vista-32:- vista-64:- win7-32:- win7-64:-
-522 vista-32:- vista-64:- win7-32:- win7-64:-
-523 vista-32:- vista-64:- win7-32:- win7-64:-
-524 vista-32:RealDriveType vista-64:RealDriveType win7-32:RealDriveType win7-64:RealDriveType
-525 vista-32:- vista-64:- win7-32:- win7-64:-
-526 vista-32:SHFlushSFCache vista-64:SHFlushSFCache win7-32:SHFlushSFCache win7-64:SHFlushSFCache
-640 vista-32:- vista-64:- win7-32:- win7-64:-
-641 vista-32:- vista-64:- win7-32:- win7-64:-
-643 vista-32:- vista-64:- win7-32:- win7-64:-
-644 vista-32:SHChangeNotification_Lock vista-64:SHChangeNotification_Lock win7-32:SHChangeNotification_Lock win7-64:SHChangeNotification_Lock
-645 vista-32:SHChangeNotification_Unlock vista-64:SHChangeNotification_Unlock win7-32:SHChangeNotification_Unlock win7-64:SHChangeNotification_Unlock
-646 vista-32:- vista-64:- win7-32:- win7-64:-
-648 vista-32:- vista-64:- win7-32:- win7-64:-
-650 vista-32:- vista-64:- win7-32:- win7-64:-
-651 vista-32:- vista-64:- win7-32:- win7-64:-
-652 vista-32:WriteCabinetState vista-64:WriteCabinetState win7-32:WriteCabinetState win7-64:WriteCabinetState
-653 vista-32:- vista-64:- win7-32:- win7-64:-
-654 vista-32:ReadCabinetState vista-64:ReadCabinetState win7-32:ReadCabinetState win7-64:ReadCabinetState
-660 vista-32:- vista-64:- win7-32:- win7-64:-
-680 vista-32:IsUserAnAdmin vista-64:IsUserAnAdmin win7-32:IsUserAnAdmin win7-64:IsUserAnAdmin
-681 vista-32:- vista-64:- win7-32:- win7-64:-
-682 win7-32:StgMakeUniqueName win7-64:StgMakeUniqueName
-683 vista-32:- vista-64:- win7-32:- win7-64:-
-684 vista-32:- vista-64:- win7-32:- win7-64:-
-685 vista-32:SHPropStgCreate vista-64:SHPropStgCreate win7-32:SHPropStgCreate win7-64:SHPropStgCreate
-688 vista-32:SHPropStgReadMultiple vista-64:SHPropStgReadMultiple win7-32:SHPropStgReadMultiple win7-64:SHPropStgReadMultiple
-689 vista-32:SHPropStgWriteMultiple vista-64:SHPropStgWriteMultiple win7-32:SHPropStgWriteMultiple win7-64:SHPropStgWriteMultiple
-690 vista-32:- vista-64:- win7-32:- win7-64:-
-691 vista-32:- vista-64:- win7-32:- win7-64:-
-700 vista-32:CDefFolderMenu_Create vista-64:CDefFolderMenu_Create win7-32:- win7-64:-
-701 vista-32:CDefFolderMenu_Create2 vista-64:CDefFolderMenu_Create2 win7-32:CDefFolderMenu_Create2 win7-64:CDefFolderMenu_Create2
-702 vista-32:- vista-64:- win7-32:- win7-64:-
-703 vista-32:- vista-64:- win7-32:- win7-64:-
-704 vista-32:- vista-64:- win7-32:- win7-64:-
-707 vista-32:- vista-64:- win7-32:- win7-64:-
-708 vista-32:- vista-64:- win7-32:- win7-64:-
-709 vista-32:SHGetSetFolderCustomSettings vista-64:SHGetSetFolderCustomSettings win7-32:SHGetSetFolderCustomSettings win7-64:SHGetSetFolderCustomSettings
-711 vista-32:- vista-64:- win7-32:- win7-64:-
-712 vista-32:- vista-64:- win7-32:- win7-64:-
-713 vista-32:- vista-64:- win7-32:- win7-64:-
-714 vista-32:- vista-64:- win7-32:- win7-64:-
-715 vista-32:- vista-64:- win7-32:- win7-64:-
-716 vista-32:SHMultiFileProperties vista-64:SHMultiFileProperties win7-32:SHMultiFileProperties win7-64:SHMultiFileProperties
-719 vista-32:- vista-64:- win7-32:- win7-64:-
-720 vista-32:- vista-64:- win7-32:- win7-64:-
-721 vista-32:- vista-64:- win7-32:- win7-64:-
-722 vista-32:- vista-64:- win7-32:- win7-64:-
-723 vista-32:- vista-64:- win7-32:- win7-64:-
-724 vista-32:- vista-64:- win7-32:- win7-64:-
-725 vista-32:- vista-64:- win7-32:- win7-64:-
-726 vista-32:- vista-64:- win7-32:- win7-64:-
-727 vista-32:SHGetImageList vista-64:SHGetImageList win7-32:SHGetImageList win7-64:SHGetImageList
-730 vista-32:RestartDialogEx vista-64:RestartDialogEx win7-32:RestartDialogEx win7-64:RestartDialogEx
-731 vista-32:- vista-64:- win7-32:- win7-64:-
-732 vista-32:- vista-64:- win7-32:- win7-64:-
-733 vista-32:- vista-64:- win7-32:- win7-64:-
-740 vista-32:- vista-64:- win7-32:- win7-64:-
-743 vista-32:SHCreateFileExtractIconW vista-64:SHCreateFileExtractIconW win7-32:SHCreateFileExtractIconW win7-64:SHCreateFileExtractIconW
-744 vista-32:- vista-64:- win7-32:- win7-64:-
-745 vista-32:- vista-64:- win7-32:- win7-64:-
-747 vista-32:SHLimitInputEdit vista-64:SHLimitInputEdit win7-32:SHLimitInputEdit win7-64:SHLimitInputEdit
-748 vista-32:- vista-64:- win7-32:- win7-64:-
-749 vista-32:- vista-64:- win7-32:- win7-64:-
-750 vista-32:SHGetAttributesFromDataObject vista-64:SHGetAttributesFromDataObject win7-32:SHGetAttributesFromDataObject win7-64:SHGetAttributesFromDataObject
-751 vista-32:- vista-64:- win7-32:- win7-64:-
-752 vista-32:- vista-64:- win7-32:- win7-64:-
-753 vista-32:- vista-64:- win7-32:- win7-64:-
-754 vista-32:- vista-64:- win7-32:- win7-64:-
-755 vista-32:- vista-64:- win7-32:- win7-64:-
-756 vista-32:- vista-64:- win7-32:- win7-64:-
-757 vista-32:- vista-64:- win7-32:- win7-64:-
-758 vista-32:- vista-64:- win7-32:- win7-64:-
-759 vista-32:- vista-64:- win7-32:- win7-64:-
-760 vista-32:- vista-64:- win7-32:- win7-64:-
-761 vista-32:- vista-64:- win7-32:- win7-64:-
-762 vista-32:- vista-64:- win7-32:- win7-64:-
-763 vista-32:- vista-64:- win7-32:- win7-64:-
-764 vista-32:- vista-64:- win7-32:- win7-64:-
-766 vista-32:- vista-64:- win7-32:- win7-64:-
-767 win7-32:- win7-64:-
-777 vista-32:- vista-64:- win7-32:- win7-64:-
-778 vista-32:- vista-64:- win7-32:- win7-64:-
-781 vista-32:- vista-64:- win7-32:- win7-64:-
-786 vista-32:- vista-64:- win7-32:- win7-64:-
-787 vista-32:- vista-64:- win7-32:- win7-64:-
-788 vista-32:- vista-64:- win7-32:- win7-64:-
-789 vista-32:- vista-64:- win7-32:- win7-64:-
-790 vista-32:- vista-64:- win7-32:- win7-64:-
-791 win7-32:- win7-64:-
-810 vista-32:- vista-64:- win7-32:- win7-64:-
-811 vista-32:- vista-64:- win7-32:- win7-64:-
-812 vista-32:- vista-64:- win7-32:- win7-64:-
-813 vista-32:- vista-64:- win7-32:- win7-64:-
-814 vista-32:- vista-64:- win7-32:- win7-64:-
-815 vista-32:- vista-64:- win7-32:- win7-64:-
-816 vista-32:- vista-64:- win7-32:- win7-64:-
-817 vista-32:- vista-64:- win7-32:- win7-64:-
-818 vista-32:- vista-64:- win7-32:- win7-64:-
-819 vista-32:- vista-64:- win7-32:- win7-64:-
-820 vista-32:- vista-64:- win7-32:- win7-64:-
-821 vista-32:- vista-64:- win7-32:- win7-64:-
-822 vista-32:- vista-64:- win7-32:- win7-64:-
-823 vista-32:- vista-64:- win7-32:- win7-64:-
-824 vista-32:- vista-64:- win7-32:- win7-64:-
-825 vista-32:- vista-64:- win7-32:- win7-64:-
-826 vista-32:- vista-64:- win7-32:- win7-64:-
-827 vista-32:- vista-64:- win7-32:- win7-64:-
-828 vista-32:- vista-64:- win7-32:- win7-64:-
-829 vista-32:- vista-64:- win7-32:- win7-64:-
-830 vista-32:- vista-64:- win7-32:- win7-64:-
-831 vista-32:- vista-64:- win7-32:- win7-64:-
-832 vista-32:- vista-64:- win7-32:- win7-64:-
-833 vista-32:- vista-64:- win7-32:- win7-64:-
-834 vista-32:- vista-64:- win7-32:- win7-64:-
-835 vista-32:- vista-64:- win7-32:- win7-64:-
-836 vista-32:- vista-64:- win7-32:- win7-64:-
-837 vista-32:- vista-64:- win7-32:- win7-64:-
-838 vista-32:- vista-64:- win7-32:- win7-64:-
-839 vista-32:- vista-64:- win7-32:- win7-64:-
-840 vista-32:- vista-64:- win7-32:- win7-64:-
-841 vista-32:- vista-64:- win7-32:- win7-64:-
-842 vista-32:- vista-64:- win7-32:- win7-64:-
-843 vista-32:- vista-64:- win7-32:- win7-64:-
-844 vista-32:- vista-64:- win7-32:- win7-64:-
-845 vista-32:- vista-64:- win7-32:- win7-64:-
-846 vista-32:ILLoadFromStreamEx vista-64:ILLoadFromStreamEx win7-32:ILLoadFromStreamEx win7-64:ILLoadFromStreamEx
-847 vista-32:- vista-64:- win7-32:- win7-64:-
-848 vista-32:- vista-64:- win7-32:- win7-64:-
-849 vista-32:- vista-64:- win7-32:- win7-64:-
-850 vista-32:- vista-64:- win7-32:- win7-64:-
-851 win7-32:- win7-64:-
-852 vista-32:- vista-64:- win7-32:- win7-64:-
-854 vista-32:- vista-64:- win7-32:- win7-64:-
-856 vista-32:- vista-64:- win7-32:- win7-64:-
-857 vista-32:- vista-64:- win7-32:- win7-64:-
-858 vista-32:- vista-64:- win7-32:- win7-64:-
-859 vista-32:- vista-64:- win7-32:- win7-64:-
-860 vista-32:- vista-64:- win7-32:- win7-64:-
-861 vista-32:- vista-64:- win7-32:- win7-64:-
-862 vista-32:- vista-64:- win7-32:- win7-64:-
-863 vista-32:- vista-64:- win7-32:- win7-64:-
-864 vista-32:- vista-64:- win7-32:- win7-64:-
-865 vista-32:- vista-64:- win7-32:- win7-64:-
-866 vista-32:- vista-64:- win7-32:- win7-64:-
-867 vista-32:- vista-64:- win7-32:- win7-64:-
-868 vista-32:- vista-64:- win7-32:- win7-64:-
-869 vista-32:- vista-64:- win7-32:- win7-64:-
-870 vista-32:- vista-64:- win7-32:- win7-64:-
-871 vista-32:- vista-64:- win7-32:- win7-64:-
-872 vista-32:- vista-64:- win7-32:- win7-64:-
-873 vista-32:- vista-64:- win7-32:- win7-64:-
-874 vista-32:- vista-64:- win7-32:- win7-64:-
-875 win7-32:- win7-64:-
-876 win7-32:- win7-64:-
-877 win7-32:- win7-64:-
-878 win7-32:- win7-64:-
-880 win7-32:- win7-64:-
-881 win7-32:- win7-64:-
-882 win7-32:- win7-64:-
-883 win7-32:- win7-64:-
-884 win7-32:- win7-64:-
-885 win7-32:- win7-64:-
-886 win7-32:- win7-64:-
-887 win7-32:- win7-64:-
-888 win7-32:- win7-64:-
-889 win7-32:- win7-64:-
-890 win7-32:- win7-64:-
-891 win7-32:- win7-64:-
-892 win7-32:- win7-64:-
-893 win7-32:- win7-64:-
-894 win7-32:- win7-64:-
-895 win7-32:- win7-64:-
-896 win7-32:- win7-64:-
-897 win7-32:- win7-64:-
-898 win7-32:- win7-64:-
-899 win7-32:- win7-64:-
-900 win7-32:- win7-64:-
-901 win7-32:- win7-64:-
-902 win7-32:- win7-64:-
-903 win7-32:- win7-64:-
+2 vista-32:SHChangeNotifyRegister vista-64:SHChangeNotifyRegister win7-32:SHChangeNotifyRegister win7-64:SHChangeNotifyRegister win8-32:SHChangeNotifyRegister win8-64:SHChangeNotifyRegister
+3 vista-32:SHDefExtractIconA vista-64:SHDefExtractIconA win7-32:SHDefExtractIconA win7-64:SHDefExtractIconA win8-32:SHDefExtractIconA win8-64:SHDefExtractIconA
+4 vista-32:SHChangeNotifyDeregister vista-64:SHChangeNotifyDeregister win7-32:SHChangeNotifyDeregister win7-64:SHChangeNotifyDeregister win8-32:SHChangeNotifyDeregister win8-64:SHChangeNotifyDeregister
+5 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+6 vista-32:SHDefExtractIconW vista-64:SHDefExtractIconW win7-32:SHDefExtractIconW win7-64:SHDefExtractIconW win8-32:SHDefExtractIconW win8-64:SHDefExtractIconW
+7 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+8 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+9 vista-32:PifMgr_OpenProperties vista-64:PifMgr_OpenProperties win7-32:PifMgr_OpenProperties win7-64:PifMgr_OpenProperties win8-32:PifMgr_OpenProperties win8-64:PifMgr_OpenProperties
+10 vista-32:PifMgr_GetProperties vista-64:PifMgr_GetProperties win7-32:PifMgr_GetProperties win7-64:PifMgr_GetProperties win8-32:PifMgr_GetProperties win8-64:PifMgr_GetProperties
+11 vista-32:PifMgr_SetProperties vista-64:PifMgr_SetProperties win7-32:PifMgr_SetProperties win7-64:PifMgr_SetProperties win8-32:PifMgr_SetProperties win8-64:PifMgr_SetProperties
+12 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+13 vista-32:PifMgr_CloseProperties vista-64:PifMgr_CloseProperties win7-32:PifMgr_CloseProperties win7-64:PifMgr_CloseProperties win8-32:PifMgr_CloseProperties win8-64:PifMgr_CloseProperties
+14 vista-32:SHStartNetConnectionDialogW vista-64:SHStartNetConnectionDialogW win7-32:SHStartNetConnectionDialogW win7-64:SHStartNetConnectionDialogW win8-32:SHStartNetConnectionDialogW win8-64:SHStartNetConnectionDialogW
+15 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+16 vista-32:ILFindLastID vista-64:ILFindLastID win7-32:ILFindLastID win7-64:ILFindLastID win8-32:ILFindLastID win8-64:ILFindLastID
+17 vista-32:ILRemoveLastID vista-64:ILRemoveLastID win7-32:ILRemoveLastID win7-64:ILRemoveLastID win8-32:ILRemoveLastID win8-64:ILRemoveLastID
+18 vista-32:ILClone vista-64:ILClone win7-32:ILClone win7-64:ILClone win8-32:ILClone win8-64:ILClone
+19 vista-32:ILCloneFirst vista-64:ILCloneFirst win7-32:ILCloneFirst win7-64:ILCloneFirst win8-32:ILCloneFirst win8-64:ILCloneFirst
+20 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+21 vista-32:ILIsEqual vista-64:ILIsEqual win7-32:ILIsEqual win7-64:ILIsEqual win8-32:ILIsEqual win8-64:ILIsEqual
+22 vista-32:DAD_DragEnterEx2 vista-64:DAD_DragEnterEx2 win7-32:DAD_DragEnterEx2 win7-64:DAD_DragEnterEx2 win8-32:DAD_DragEnterEx2 win8-64:DAD_DragEnterEx2
+23 vista-32:ILIsParent vista-64:ILIsParent win7-32:ILIsParent win7-64:ILIsParent win8-32:ILIsParent win8-64:ILIsParent
+24 vista-32:ILFindChild vista-64:ILFindChild win7-32:ILFindChild win7-64:ILFindChild win8-32:ILFindChild win8-64:ILFindChild
+25 vista-32:ILCombine vista-64:ILCombine win7-32:ILCombine win7-64:ILCombine win8-32:ILCombine win8-64:ILCombine
+26 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+27 vista-32:ILSaveToStream vista-64:ILSaveToStream win7-32:ILSaveToStream win7-64:ILSaveToStream win8-32:ILSaveToStream win8-64:ILSaveToStream
+28 vista-32:SHILCreateFromPath vista-64:SHILCreateFromPath win7-32:SHILCreateFromPath win7-64:SHILCreateFromPath win8-32:SHILCreateFromPath win8-64:SHILCreateFromPath
+29 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+30 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+31 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+32 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+33 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+34 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+35 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+36 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+37 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+38 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+39 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+40 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+41 vista-32:IsLFNDriveA vista-64:IsLFNDriveA win7-32:IsLFNDriveA win7-64:IsLFNDriveA win8-32:IsLFNDriveA win8-64:IsLFNDriveA
+42 vista-32:IsLFNDriveW vista-64:IsLFNDriveW win7-32:IsLFNDriveW win7-64:IsLFNDriveW win8-32:IsLFNDriveW win8-64:IsLFNDriveW
+43 vista-32:PathIsExe vista-64:PathIsExe win7-32:PathIsExe win7-64:PathIsExe win8-32:PathIsExe win8-64:PathIsExe
+44 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+45 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+46 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+47 vista-32:PathMakeUniqueName vista-64:PathMakeUniqueName win7-32:PathMakeUniqueName win7-64:PathMakeUniqueName win8-32:PathMakeUniqueName win8-64:PathMakeUniqueName
+48 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+49 vista-32:PathQualify vista-64:PathQualify win7-32:PathQualify win7-64:PathQualify win8-32:PathQualify win8-64:PathQualify
+50 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+51 vista-32:PathResolve vista-64:PathResolve win7-32:PathResolve win7-64:PathResolve win8-32:PathResolve win8-64:PathResolve
+52 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+53 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+54 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+55 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+56 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+57 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+58 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+59 vista-32:RestartDialog vista-64:RestartDialog win7-32:RestartDialog win7-64:RestartDialog win8-32:RestartDialog win8-64:RestartDialog
+60 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+61 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+62 vista-32:PickIconDlg vista-64:PickIconDlg win7-32:PickIconDlg win7-64:PickIconDlg win8-32:PickIconDlg win8-64:PickIconDlg
+63 vista-32:GetFileNameFromBrowse vista-64:GetFileNameFromBrowse win7-32:GetFileNameFromBrowse win7-64:GetFileNameFromBrowse win8-32:GetFileNameFromBrowse win8-64:GetFileNameFromBrowse
+64 vista-32:DriveType vista-64:DriveType win7-32:DriveType win7-64:DriveType win8-32:DriveType win8-64:DriveType
+65 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+66 vista-32:IsNetDrive vista-64:IsNetDrive win7-32:IsNetDrive win7-64:IsNetDrive win8-32:IsNetDrive win8-64:IsNetDrive
+67 vista-32:Shell_MergeMenus vista-64:Shell_MergeMenus win7-32:Shell_MergeMenus win7-64:Shell_MergeMenus win8-32:Shell_MergeMenus win8-64:Shell_MergeMenus
+68 vista-32:SHGetSetSettings vista-64:SHGetSetSettings win7-32:SHGetSetSettings win7-64:SHGetSetSettings win8-32:SHGetSetSettings win8-64:SHGetSetSettings
+69 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+70 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+71 vista-32:Shell_GetImageLists vista-64:Shell_GetImageLists win7-32:Shell_GetImageLists win7-64:Shell_GetImageLists win8-32:Shell_GetImageLists win8-64:Shell_GetImageLists
+72 vista-32:Shell_GetCachedImageIndex vista-64:Shell_GetCachedImageIndex win7-32:Shell_GetCachedImageIndex win7-64:Shell_GetCachedImageIndex win8-32:Shell_GetCachedImageIndex win8-64:Shell_GetCachedImageIndex
+73 vista-32:SHShellFolderView_Message vista-64:SHShellFolderView_Message win7-32:SHShellFolderView_Message win7-64:SHShellFolderView_Message win8-32:SHShellFolderView_Message win8-64:SHShellFolderView_Message
+74 vista-32:SHCreateStdEnumFmtEtc vista-64:SHCreateStdEnumFmtEtc win7-32:SHCreateStdEnumFmtEtc win7-64:SHCreateStdEnumFmtEtc win8-32:SHCreateStdEnumFmtEtc win8-64:SHCreateStdEnumFmtEtc
+75 vista-32:PathYetAnotherMakeUniqueName vista-64:PathYetAnotherMakeUniqueName win7-32:PathYetAnotherMakeUniqueName win7-64:PathYetAnotherMakeUniqueName win8-32:PathYetAnotherMakeUniqueName win8-64:PathYetAnotherMakeUniqueName
+76 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+77 vista-32:SHMapPIDLToSystemImageListIndex vista-64:SHMapPIDLToSystemImageListIndex win7-32:SHMapPIDLToSystemImageListIndex win7-64:SHMapPIDLToSystemImageListIndex win8-32:SHMapPIDLToSystemImageListIndex win8-64:SHMapPIDLToSystemImageListIndex
+78 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+79 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+80 vista-32:SHOpenPropSheetW vista-64:SHOpenPropSheetW win7-32:SHOpenPropSheetW win7-64:SHOpenPropSheetW win8-32:SHOpenPropSheetW win8-64:SHOpenPropSheetW
+81 vista-32:OpenAs_RunDLL vista-64:OpenAs_RunDLL win7-32:OpenAs_RunDLL win7-64:OpenAs_RunDLL win8-32:OpenAs_RunDLL win8-64:OpenAs_RunDLL
+82 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+83 vista-32:CIDLData_CreateFromIDArray vista-64:CIDLData_CreateFromIDArray win7-32:CIDLData_CreateFromIDArray win7-64:CIDLData_CreateFromIDArray win8-32:CIDLData_CreateFromIDArray win8-64:CIDLData_CreateFromIDArray
+84 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+85 vista-32:OpenRegStream vista-64:OpenRegStream win7-32:OpenRegStream win7-64:OpenRegStream win8-32:OpenRegStream win8-64:OpenRegStream
+86 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+87 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+88 vista-32:SHDoDragDrop vista-64:SHDoDragDrop win7-32:SHDoDragDrop win7-64:SHDoDragDrop win8-32:SHDoDragDrop win8-64:SHDoDragDrop
+89 vista-32:SHCloneSpecialIDList vista-64:SHCloneSpecialIDList win7-32:SHCloneSpecialIDList win7-64:SHCloneSpecialIDList win8-32:SHCloneSpecialIDList win8-64:SHCloneSpecialIDList
+90 vista-32:SHFindFiles vista-64:SHFindFiles win7-32:SHFindFiles win7-64:SHFindFiles win8-32:SHFindFiles win8-64:SHFindFiles
+91 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+92 vista-32:PathGetShortPath vista-64:PathGetShortPath win7-32:PathGetShortPath win7-64:PathGetShortPath win8-32:PathGetShortPath win8-64:PathGetShortPath
+93 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+94 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+95 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+96 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+97 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+98 vista-32:SHGetRealIDL vista-64:SHGetRealIDL win7-32:SHGetRealIDL win7-64:SHGetRealIDL win8-32:SHGetRealIDL win8-64:SHGetRealIDL
+99 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+100 vista-32:SHRestricted vista-64:SHRestricted win7-32:SHRestricted win7-64:SHRestricted win8-32:SHRestricted win8-64:SHRestricted
+101 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+102 vista-32:SHCoCreateInstance vista-64:SHCoCreateInstance win7-32:SHCoCreateInstance win7-64:SHCoCreateInstance win8-32:SHCoCreateInstance win8-64:SHCoCreateInstance
+103 vista-32:SignalFileOpen vista-64:SignalFileOpen win7-32:SignalFileOpen win7-64:SignalFileOpen win8-32:SignalFileOpen win8-64:SignalFileOpen
+104 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+105 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+106 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+107 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+108 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+109 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+110 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+111 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+112 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+113 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+114 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+115 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+116 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+117 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+118 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+119 vista-32:IsLFNDrive vista-64:IsLFNDrive win7-32:IsLFNDrive win7-64:IsLFNDrive win8-32:IsLFNDrive win8-64:IsLFNDrive
+120 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+121 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+122 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+123 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+124 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+125 vista-32:OpenAs_RunDLLA vista-64:OpenAs_RunDLLA win7-32:OpenAs_RunDLLA win7-64:OpenAs_RunDLLA win8-32:OpenAs_RunDLLA win8-64:OpenAs_RunDLLA
+126 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+127 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+128 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+129 vista-32:DAD_AutoScroll vista-64:DAD_AutoScroll win7-32:DAD_AutoScroll win7-64:DAD_AutoScroll win8-32:DAD_AutoScroll win8-64:DAD_AutoScroll
+130 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+131 vista-32:DAD_DragEnterEx vista-64:DAD_DragEnterEx win7-32:DAD_DragEnterEx win7-64:DAD_DragEnterEx win8-32:DAD_DragEnterEx win8-64:DAD_DragEnterEx
+132 vista-32:DAD_DragLeave vista-64:DAD_DragLeave win7-32:DAD_DragLeave win7-64:DAD_DragLeave win8-32:DAD_DragLeave win8-64:DAD_DragLeave
+133 vista-32:OpenAs_RunDLLW vista-64:OpenAs_RunDLLW win7-32:OpenAs_RunDLLW win7-64:OpenAs_RunDLLW win8-32:OpenAs_RunDLLW win8-64:OpenAs_RunDLLW
+134 vista-32:DAD_DragMove vista-64:DAD_DragMove win7-32:DAD_DragMove win7-64:DAD_DragMove win8-32:DAD_DragMove win8-64:DAD_DragMove
+135 vista-32:PrepareDiscForBurnRunDllW vista-64:PrepareDiscForBurnRunDllW win7-32:PrepareDiscForBurnRunDllW win7-64:PrepareDiscForBurnRunDllW win8-32:PrepareDiscForBurnRunDllW win8-64:PrepareDiscForBurnRunDllW
+136 vista-32:DAD_SetDragImage vista-64:DAD_SetDragImage win7-32:DAD_SetDragImage win7-64:DAD_SetDragImage win8-32:DAD_SetDragImage win8-64:DAD_SetDragImage
+137 vista-32:DAD_ShowDragImage vista-64:DAD_ShowDragImage win7-32:DAD_ShowDragImage win7-64:DAD_ShowDragImage win8-32:DAD_ShowDragImage win8-64:DAD_ShowDragImage
+138 vista-32:SHHelpShortcuts_RunDLL vista-64:SHHelpShortcuts_RunDLL win7-32:PrintersGetCommand_RunDLL win7-64:PrintersGetCommand_RunDLL win8-32:PrintersGetCommand_RunDLL win8-64:PrintersGetCommand_RunDLL
+139 vista-32:SHHelpShortcuts_RunDLLA vista-64:SHHelpShortcuts_RunDLLA win7-32:PrintersGetCommand_RunDLLA win7-64:PrintersGetCommand_RunDLLA win8-32:PrintersGetCommand_RunDLLA win8-64:PrintersGetCommand_RunDLLA
+140 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+141 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+142 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+143 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+144 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+145 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+146 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+147 vista-32:SHCLSIDFromString vista-64:SHCLSIDFromString win7-32:SHCLSIDFromString win7-64:SHCLSIDFromString win8-32:SHCLSIDFromString win8-64:SHCLSIDFromString
+148 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+149 vista-32:SHFind_InitMenuPopup vista-64:SHFind_InitMenuPopup win7-32:SHFind_InitMenuPopup win7-64:SHFind_InitMenuPopup win8-32:SHFind_InitMenuPopup win8-64:SHFind_InitMenuPopup
+150 vista-32:SHHelpShortcuts_RunDLLW vista-64:SHHelpShortcuts_RunDLLW win7-32:PrintersGetCommand_RunDLLW win7-64:PrintersGetCommand_RunDLLW win8-32:PrintersGetCommand_RunDLLW win8-64:PrintersGetCommand_RunDLLW
+151 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+152 vista-32:ILGetSize vista-64:ILGetSize win7-32:ILGetSize win7-64:ILGetSize win8-32:ILGetSize win8-64:ILGetSize
+153 vista-32:ILGetNext vista-64:ILGetNext win7-32:ILGetNext win7-64:ILGetNext win8-32:ILGetNext win8-64:ILGetNext
+154 vista-32:ILAppendID vista-64:ILAppendID win7-32:ILAppendID win7-64:ILAppendID win8-32:ILAppendID win8-64:ILAppendID
+155 vista-32:ILFree vista-64:ILFree win7-32:ILFree win7-64:ILFree win8-32:ILFree win8-64:ILFree
+156 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+157 vista-32:ILCreateFromPath vista-64:ILCreateFromPath win7-32:ILCreateFromPath win7-64:ILCreateFromPath win8-32:ILCreateFromPath win8-64:ILCreateFromPath
+158 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+159 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+160 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+161 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+162 vista-32:SHSimpleIDListFromPath vista-64:SHSimpleIDListFromPath win7-32:SHSimpleIDListFromPath win7-64:SHSimpleIDListFromPath win8-32:SHSimpleIDListFromPath win8-64:SHSimpleIDListFromPath
+163 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+164 vista-32:Win32DeleteFile vista-64:Win32DeleteFile win7-32:Win32DeleteFile win7-64:Win32DeleteFile win8-32:Win32DeleteFile win8-64:Win32DeleteFile
+165 vista-32:SHCreateDirectory vista-64:SHCreateDirectory win7-32:SHCreateDirectory win7-64:SHCreateDirectory win8-32:SHCreateDirectory win8-64:SHCreateDirectory
+166 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+167 vista-32:SHAddFromPropSheetExtArray vista-64:SHAddFromPropSheetExtArray win7-32:SHAddFromPropSheetExtArray win7-64:SHAddFromPropSheetExtArray win8-32:SHAddFromPropSheetExtArray win8-64:SHAddFromPropSheetExtArray
+168 vista-32:SHCreatePropSheetExtArray vista-64:SHCreatePropSheetExtArray win7-32:SHCreatePropSheetExtArray win7-64:SHCreatePropSheetExtArray win8-32:SHCreatePropSheetExtArray win8-64:SHCreatePropSheetExtArray
+169 vista-32:SHDestroyPropSheetExtArray vista-64:SHDestroyPropSheetExtArray win7-32:SHDestroyPropSheetExtArray win7-64:SHDestroyPropSheetExtArray win8-32:SHDestroyPropSheetExtArray win8-64:SHDestroyPropSheetExtArray
+170 vista-32:SHReplaceFromPropSheetExtArray vista-64:SHReplaceFromPropSheetExtArray win7-32:SHReplaceFromPropSheetExtArray win7-64:SHReplaceFromPropSheetExtArray win8-32:SHReplaceFromPropSheetExtArray win8-64:SHReplaceFromPropSheetExtArray
+171 vista-32:PathCleanupSpec vista-64:PathCleanupSpec win7-32:PathCleanupSpec win7-64:PathCleanupSpec win8-32:PathCleanupSpec win8-64:PathCleanupSpec
+172 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+173 vista-32:SHValidateUNC vista-64:SHValidateUNC win7-32:SHValidateUNC win7-64:SHValidateUNC win8-32:SHValidateUNC win8-64:SHValidateUNC
+174 vista-32:SHCreateShellFolderViewEx vista-64:SHCreateShellFolderViewEx win7-32:SHCreateShellFolderViewEx win7-64:SHCreateShellFolderViewEx win8-32:SHCreateShellFolderViewEx win8-64:SHCreateShellFolderViewEx
+175 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+176 vista-32:SHSetInstanceExplorer vista-64:SHSetInstanceExplorer win7-32:SHSetInstanceExplorer win7-64:SHSetInstanceExplorer win8-32:SHSetInstanceExplorer win8-64:SHSetInstanceExplorer
+177 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+178 vista-32:SHObjectProperties vista-64:SHObjectProperties win7-32:SHObjectProperties win7-64:SHObjectProperties win8-32:SHObjectProperties win8-64:SHObjectProperties
+179 vista-32:SHGetNewLinkInfoA vista-64:SHGetNewLinkInfoA win7-32:SHGetNewLinkInfoA win7-64:SHGetNewLinkInfoA win8-32:SHGetNewLinkInfoA win8-64:SHGetNewLinkInfoA
+180 vista-32:SHGetNewLinkInfoW vista-64:SHGetNewLinkInfoW win7-32:SHGetNewLinkInfoW win7-64:SHGetNewLinkInfoW win8-32:SHGetNewLinkInfoW win8-64:SHGetNewLinkInfoW
+181 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+182 vista-32:ShellMessageBoxW vista-64:ShellMessageBoxW win7-32:ShellMessageBoxW win7-64:ShellMessageBoxW win8-32:ShellMessageBoxW win8-64:ShellMessageBoxW
+183 vista-32:ShellMessageBoxA vista-64:ShellMessageBoxA win7-32:ShellMessageBoxA win7-64:ShellMessageBoxA win8-32:ShellMessageBoxA win8-64:ShellMessageBoxA
+184 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+185 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+186 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+187 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+188 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+189 vista-32:ILCreateFromPathA vista-64:ILCreateFromPathA win7-32:ILCreateFromPathA win7-64:ILCreateFromPathA win8-32:ILCreateFromPathA win8-64:ILCreateFromPathA
+190 vista-32:ILCreateFromPathW vista-64:ILCreateFromPathW win7-32:ILCreateFromPathW win7-64:ILCreateFromPathW win8-32:ILCreateFromPathW win8-64:ILCreateFromPathW
+191 vista-32:SHUpdateImageA vista-64:SHUpdateImageA win7-32:SHUpdateImageA win7-64:SHUpdateImageA win8-32:SHUpdateImageA win8-64:SHUpdateImageA
+192 vista-32:SHUpdateImageW vista-64:SHUpdateImageW win7-32:SHUpdateImageW win7-64:SHUpdateImageW win8-32:SHUpdateImageW win8-64:SHUpdateImageW
+193 vista-32:SHHandleUpdateImage vista-64:SHHandleUpdateImage win7-32:SHHandleUpdateImage win7-64:SHHandleUpdateImage win8-32:SHHandleUpdateImage win8-64:SHHandleUpdateImage
+194 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+195 vista-32:SHFree vista-64:SHFree win7-32:SHFree win7-64:SHFree win8-32:SHFree win8-64:SHFree
+196 vista-32:SHAlloc vista-64:SHAlloc win7-32:SHAlloc win7-64:SHAlloc win8-32:SHAlloc win8-64:SHAlloc
+197 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+198 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+199 vista-32:AppCompat_RunDLLW vista-64:AppCompat_RunDLLW win7-32:SHHelpShortcuts_RunDLL win7-64:SHHelpShortcuts_RunDLL win8-32:RealShellExecuteA win8-64:RealShellExecuteA
+200 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+201 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+202 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+203 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+204 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+205 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+206 vista-32:AssocCreateForClasses vista-64:AssocCreateForClasses win7-32:SHHelpShortcuts_RunDLLA win7-64:SHHelpShortcuts_RunDLLA win8-32:- win8-64:-
+207 vista-32:AssocGetDetailsOfPropKey vista-64:AssocGetDetailsOfPropKey win7-32:SHHelpShortcuts_RunDLLW win7-64:SHHelpShortcuts_RunDLLW win8-32:RealShellExecuteExA win8-64:RealShellExecuteExA
+208 vista-32:CheckEscapesW vista-64:CheckEscapesW win7-32:AppCompat_RunDLLW win7-64:AppCompat_RunDLLW win8-32:RealShellExecuteExW win8-64:RealShellExecuteExW
+209 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+210 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+211 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+212 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+213 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+214 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+215 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+216 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+217 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+218 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+219 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+220 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+221 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+222 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+223 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+224 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+225 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+226 vista-32:CommandLineToArgvW vista-64:CommandLineToArgvW win7-32:AssocCreateForClasses win7-64:AssocCreateForClasses win8-32:RealShellExecuteW win8-64:RealShellExecuteW
+227 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+228 vista-32:Control_RunDLL vista-64:Control_RunDLL win7-32:AssocGetDetailsOfPropKey win7-64:AssocGetDetailsOfPropKey win8-32:SHHelpShortcuts_RunDLL win8-64:SHHelpShortcuts_RunDLL
+229 vista-32:Control_RunDLLA vista-64:Control_RunDLLA win7-32:CheckEscapesW win7-64:CheckEscapesW win8-32:SHHelpShortcuts_RunDLLA win8-64:SHHelpShortcuts_RunDLLA
+230 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+231 vista-32:SHSetFolderPathA vista-64:SHSetFolderPathA win7-32:SHSetFolderPathA win7-64:SHSetFolderPathA win8-32:SHSetFolderPathA win8-64:SHSetFolderPathA
+232 vista-32:SHSetFolderPathW vista-64:SHSetFolderPathW win7-32:SHSetFolderPathW win7-64:SHSetFolderPathW win8-32:SHSetFolderPathW win8-64:SHSetFolderPathW
+233 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+234 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+235 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+236 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+237 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+238 vista-32:Control_RunDLLAsUserW vista-64:Control_RunDLLAsUserW win7-32:CommandLineToArgvW win7-64:CommandLineToArgvW win8-32:SHHelpShortcuts_RunDLLW win8-64:SHHelpShortcuts_RunDLLW
+239 vista-32:PathIsSlowW vista-64:PathIsSlowW win7-32:PathIsSlowW win7-64:PathIsSlowW win8-32:PathIsSlowW win8-64:PathIsSlowW
+240 vista-32:PathIsSlowA vista-64:PathIsSlowA win7-32:PathIsSlowA win7-64:PathIsSlowA win8-32:PathIsSlowA win8-64:PathIsSlowA
+241 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+242 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+243 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+244 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+245 vista-32:SHTestTokenMembership vista-64:SHTestTokenMembership win7-32:SHTestTokenMembership win7-64:SHTestTokenMembership win8-32:SHTestTokenMembership win8-64:SHTestTokenMembership
+246 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+247 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+248 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+249 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+250 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+251 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+252 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+253 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+254 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+255 vista-32:Control_RunDLLW vista-64:Control_RunDLLW win7-32:Control_RunDLL win7-64:Control_RunDLL win8-32:AppCompat_RunDLLW win8-64:AppCompat_RunDLLW
+256 vista-32:SHCreateShellFolderView vista-64:SHCreateShellFolderView win7-32:SHCreateShellFolderView win7-64:SHCreateShellFolderView win8-32:SHCreateShellFolderView win8-64:SHCreateShellFolderView
+257 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+258 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+259 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+260 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+261 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+262 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+263 vista-32:DllCanUnloadNow vista-64:DllCanUnloadNow win7-32:Control_RunDLLA win7-64:Control_RunDLLA win8-32:AssocCreateForClasses win8-64:AssocCreateForClasses
+264 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+265 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+266 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+267 vista-32:DllGetClassObject vista-64:DllGetClassObject win7-32:Control_RunDLLAsUserW win7-64:Control_RunDLLAsUserW win8-32:AssocGetDetailsOfPropKey win8-64:AssocGetDetailsOfPropKey
+268 vista-32:DllGetVersion vista-64:DllGetVersion win7-32:Control_RunDLLW win7-64:Control_RunDLLW win8-32:CheckEscapesW win8-64:CheckEscapesW
+269 vista-32:DllInstall vista-64:DllInstall win7-32:DllCanUnloadNow win7-64:DllCanUnloadNow win8-32:CommandLineToArgvW win8-64:CommandLineToArgvW
+270 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+271 vista-32:DllRegisterServer vista-64:DllRegisterServer win7-32:DllGetClassObject win7-64:DllGetClassObject win8-32:- win8-64:-
+272 vista-32:DllUnregisterServer vista-64:DllUnregisterServer win7-32:DllGetVersion win7-64:DllGetVersion win8-32:Control_RunDLL win8-64:Control_RunDLL
+273 vista-32:DoEnvironmentSubstA vista-64:DoEnvironmentSubstA win7-32:DllInstall win7-64:DllInstall win8-32:Control_RunDLLA win8-64:Control_RunDLLA
+274 vista-32:DoEnvironmentSubstW vista-64:DoEnvironmentSubstW win7-32:DllRegisterServer win7-64:DllRegisterServer win8-32:Control_RunDLLAsUserW win8-64:Control_RunDLLAsUserW
+275 vista-32:DragAcceptFiles vista-64:DragAcceptFiles win7-32:DllUnregisterServer win7-64:DllUnregisterServer win8-32:Control_RunDLLW win8-64:Control_RunDLLW
+276 vista-32:DragFinish vista-64:DragFinish win7-32:DoEnvironmentSubstA win7-64:DoEnvironmentSubstA win8-32:DllCanUnloadNow win8-64:DllCanUnloadNow
+277 vista-32:DragQueryFile vista-64:DragQueryFile win7-32:DoEnvironmentSubstW win7-64:DoEnvironmentSubstW win8-32:DllGetActivationFactory win8-64:DllGetActivationFactory
+278 vista-32:DragQueryFileA vista-64:DragQueryFileA win7-32:DragAcceptFiles win7-64:DragAcceptFiles win8-32:DllGetClassObject win8-64:DllGetClassObject
+279 vista-32:DragQueryFileAorW vista-64:DragQueryFileAorW win7-32:DragFinish win7-64:DragFinish win8-32:DllGetVersion win8-64:DllGetVersion
+280 vista-32:DragQueryFileW vista-64:DragQueryFileW win7-32:DragQueryFile win7-64:DragQueryFile win8-32:DllInstall win8-64:DllInstall
+281 vista-32:DragQueryPoint vista-64:DragQueryPoint win7-32:DragQueryFileA win7-64:DragQueryFileA win8-32:DllRegisterServer win8-64:DllRegisterServer
+282 vista-32:DuplicateIcon vista-64:DuplicateIcon win7-32:DragQueryFileAorW win7-64:DragQueryFileAorW win8-32:DllUnregisterServer win8-64:DllUnregisterServer
+283 vista-32:ExtractAssociatedIconA vista-64:ExtractAssociatedIconA win7-32:DragQueryFileW win7-64:DragQueryFileW win8-32:DoEnvironmentSubstA win8-64:DoEnvironmentSubstA
+284 vista-32:ExtractAssociatedIconExA vista-64:ExtractAssociatedIconExA win7-32:DragQueryPoint win7-64:DragQueryPoint win8-32:DoEnvironmentSubstW win8-64:DoEnvironmentSubstW
+285 vista-32:ExtractAssociatedIconExW vista-64:ExtractAssociatedIconExW win7-32:DuplicateIcon win7-64:DuplicateIcon win8-32:DragAcceptFiles win8-64:DragAcceptFiles
+286 vista-32:ExtractAssociatedIconW vista-64:ExtractAssociatedIconW win7-32:ExtractAssociatedIconA win7-64:ExtractAssociatedIconA win8-32:DragFinish win8-64:DragFinish
+287 vista-32:ExtractIconA vista-64:ExtractIconA win7-32:ExtractAssociatedIconExA win7-64:ExtractAssociatedIconExA win8-32:DragQueryFile win8-64:DragQueryFile
+288 vista-32:ExtractIconEx vista-64:ExtractIconEx win7-32:ExtractAssociatedIconExW win7-64:ExtractAssociatedIconExW win8-32:DragQueryFileA win8-64:DragQueryFileA
+289 vista-32:ExtractIconExA vista-64:ExtractIconExA win7-32:ExtractAssociatedIconW win7-64:ExtractAssociatedIconW win8-32:DragQueryFileAorW win8-64:DragQueryFileAorW
+290 vista-32:ExtractIconExW vista-64:ExtractIconExW win7-32:ExtractIconA win7-64:ExtractIconA win8-32:DragQueryFileW win8-64:DragQueryFileW
+291 vista-32:ExtractIconW vista-64:ExtractIconW win7-32:ExtractIconEx win7-64:ExtractIconEx win8-32:DragQueryPoint win8-64:DragQueryPoint
+292 vista-32:FindExecutableA vista-64:FindExecutableA win7-32:ExtractIconExA win7-64:ExtractIconExA win8-32:DuplicateIcon win8-64:DuplicateIcon
+293 vista-32:FindExecutableW vista-64:FindExecutableW win7-32:ExtractIconExW win7-64:ExtractIconExW win8-32:ExtractAssociatedIconA win8-64:ExtractAssociatedIconA
+294 vista-32:FreeIconList vista-64:FreeIconList win7-32:ExtractIconW win7-64:ExtractIconW win8-32:ExtractAssociatedIconExA win8-64:ExtractAssociatedIconExA
+295 vista-32:InitNetworkAddressControl vista-64:InitNetworkAddressControl win7-32:FindExecutableA win7-64:FindExecutableA win8-32:ExtractAssociatedIconExW win8-64:ExtractAssociatedIconExW
+296 vista-32:InternalExtractIconListA vista-64:InternalExtractIconListA win7-32:FindExecutableW win7-64:FindExecutableW win8-32:ExtractAssociatedIconW win8-64:ExtractAssociatedIconW
+297 vista-32:InternalExtractIconListW vista-64:InternalExtractIconListW win7-32:FreeIconList win7-64:FreeIconList win8-32:ExtractIconA win8-64:ExtractIconA
+298 vista-32:Options_RunDLL vista-64:Options_RunDLL win7-32:GetCurrentProcessExplicitAppUserModelID win7-64:GetCurrentProcessExplicitAppUserModelID win8-32:ExtractIconEx win8-64:ExtractIconEx
+299 vista-32:Options_RunDLLA vista-64:Options_RunDLLA win7-32:InitNetworkAddressControl win7-64:InitNetworkAddressControl win8-32:ExtractIconExA win8-64:ExtractIconExA
+300 vista-32:Options_RunDLLW vista-64:Options_RunDLLW win7-32:InternalExtractIconListA win7-64:InternalExtractIconListA win8-32:ExtractIconExW win8-64:ExtractIconExW
+301 vista-32:PrintersGetCommand_RunDLL vista-64:PrintersGetCommand_RunDLL win7-32:InternalExtractIconListW win7-64:InternalExtractIconListW win8-32:ExtractIconW win8-64:ExtractIconW
+302 vista-32:PrintersGetCommand_RunDLLA vista-64:PrintersGetCommand_RunDLLA win7-32:LaunchMSHelp_RunDLLW win7-64:LaunchMSHelp_RunDLLW win8-32:FindExecutableA win8-64:FindExecutableA
+303 vista-32:PrintersGetCommand_RunDLLW vista-64:PrintersGetCommand_RunDLLW win7-32:Options_RunDLL win7-64:Options_RunDLL win8-32:FindExecutableW win8-64:FindExecutableW
+304 vista-32:RealShellExecuteA vista-64:RealShellExecuteA win7-32:Options_RunDLLA win7-64:Options_RunDLLA win8-32:FreeIconList win8-64:FreeIconList
+305 vista-32:RealShellExecuteExA vista-64:RealShellExecuteExA win7-32:Options_RunDLLW win7-64:Options_RunDLLW win8-32:GetCurrentProcessExplicitAppUserModelID win8-64:GetCurrentProcessExplicitAppUserModelID
+306 vista-32:RealShellExecuteExW vista-64:RealShellExecuteExW win7-32:RealShellExecuteA win7-64:RealShellExecuteA win8-32:InitNetworkAddressControl win8-64:InitNetworkAddressControl
+307 vista-32:RealShellExecuteW vista-64:RealShellExecuteW win7-32:RealShellExecuteExA win7-64:RealShellExecuteExA win8-32:InternalExtractIconListA win8-64:InternalExtractIconListA
+308 vista-32:RegenerateUserEnvironment vista-64:RegenerateUserEnvironment win7-32:RealShellExecuteExW win7-64:RealShellExecuteExW win8-32:InternalExtractIconListW win8-64:InternalExtractIconListW
+309 vista-32:SHAddDefaultPropertiesByExt vista-64:SHAddDefaultPropertiesByExt win7-32:RealShellExecuteW win7-64:RealShellExecuteW win8-32:LaunchMSHelp_RunDLLW win8-64:LaunchMSHelp_RunDLLW
+310 vista-32:SHAddToRecentDocs vista-64:SHAddToRecentDocs win7-32:RegenerateUserEnvironment win7-64:RegenerateUserEnvironment win8-32:Options_RunDLL win8-64:Options_RunDLL
+311 vista-32:SHAppBarMessage vista-64:SHAppBarMessage win7-32:RunAsNewUser_RunDLLW win7-64:RunAsNewUser_RunDLLW win8-32:Options_RunDLLA win8-64:Options_RunDLLA
+312 vista-32:SHAssocEnumHandlers vista-64:SHAssocEnumHandlers win7-32:SHAddDefaultPropertiesByExt win7-64:SHAddDefaultPropertiesByExt win8-32:Options_RunDLLW win8-64:Options_RunDLLW
+313 vista-32:SHBindToFolderIDListParent vista-64:SHBindToFolderIDListParent win7-32:SHAddToRecentDocs win7-64:SHAddToRecentDocs win8-32:PathCleanupSpecWorker win8-64:PathCleanupSpecWorker
+314 vista-32:SHBindToFolderIDListParentEx vista-64:SHBindToFolderIDListParentEx win7-32:SHAppBarMessage win7-64:SHAppBarMessage win8-32:PathIsExeWorker win8-64:PathIsExeWorker
+315 vista-32:SHBindToObject vista-64:SHBindToObject win7-32:SHAssocEnumHandlers win7-64:SHAssocEnumHandlers win8-32:RegenerateUserEnvironment win8-64:RegenerateUserEnvironment
+316 vista-32:SHBindToParent vista-64:SHBindToParent win7-32:SHAssocEnumHandlersForProtocolByApplication win7-64:SHAssocEnumHandlersForProtocolByApplication win8-32:RunAsNewUser_RunDLLW win8-64:RunAsNewUser_RunDLLW
+317 vista-32:SHBrowseForFolder vista-64:SHBrowseForFolder win7-32:SHBindToFolderIDListParent win7-64:SHBindToFolderIDListParent win8-32:SHAddDefaultPropertiesByExt win8-64:SHAddDefaultPropertiesByExt
+318 vista-32:SHBrowseForFolderA vista-64:SHBrowseForFolderA win7-32:SHBindToFolderIDListParentEx win7-64:SHBindToFolderIDListParentEx win8-32:SHAddToRecentDocs win8-64:SHAddToRecentDocs
+319 vista-32:SHBrowseForFolderW vista-64:SHBrowseForFolderW win7-32:SHBindToObject win7-64:SHBindToObject win8-32:SHAppBarMessage win8-64:SHAppBarMessage
+320 vista-32:SHChangeNotify vista-64:SHChangeNotify win7-32:SHBindToParent win7-64:SHBindToParent win8-32:SHAssocEnumHandlers win8-64:SHAssocEnumHandlers
+321 vista-32:SHChangeNotifyRegisterThread vista-64:SHChangeNotifyRegisterThread win7-32:SHBrowseForFolder win7-64:SHBrowseForFolder win8-32:SHAssocEnumHandlersForProtocolByApplication win8-64:SHAssocEnumHandlersForProtocolByApplication
+322 vista-32:SHChangeNotifySuspendResume vista-64:SHChangeNotifySuspendResume win7-32:SHBrowseForFolderA win7-64:SHBrowseForFolderA win8-32:SHBindToFolderIDListParent win8-64:SHBindToFolderIDListParent
+323 vista-32:SHCreateAssociationRegistration vista-64:SHCreateAssociationRegistration win7-32:SHBrowseForFolderW win7-64:SHBrowseForFolderW win8-32:SHBindToFolderIDListParentEx win8-64:SHBindToFolderIDListParentEx
+324 vista-32:SHCreateDataObject vista-64:SHCreateDataObject win7-32:SHChangeNotify win7-64:SHChangeNotify win8-32:SHBindToObject win8-64:SHBindToObject
+325 vista-32:SHCreateDefaultContextMenu vista-64:SHCreateDefaultContextMenu win7-32:SHChangeNotifyRegisterThread win7-64:SHChangeNotifyRegisterThread win8-32:SHBindToParent win8-64:SHBindToParent
+326 vista-32:SHCreateDefaultExtractIcon vista-64:SHCreateDefaultExtractIcon win7-32:SHChangeNotifySuspendResume win7-64:SHChangeNotifySuspendResume win8-32:SHBrowseForFolder win8-64:SHBrowseForFolder
+327 vista-32:SHCreateDefaultPropertiesOp vista-64:SHCreateDefaultPropertiesOp win7-32:SHCreateAssociationRegistration win7-64:SHCreateAssociationRegistration win8-32:SHBrowseForFolderA win8-64:SHBrowseForFolderA
+328 vista-32:SHCreateDirectoryExA vista-64:SHCreateDirectoryExA win7-32:SHCreateDataObject win7-64:SHCreateDataObject win8-32:SHBrowseForFolderW win8-64:SHBrowseForFolderW
+329 vista-32:SHCreateDirectoryExW vista-64:SHCreateDirectoryExW win7-32:SHCreateDefaultContextMenu win7-64:SHCreateDefaultContextMenu win8-32:SHChangeNotify win8-64:SHChangeNotify
+330 vista-32:SHCreateItemFromIDList vista-64:SHCreateItemFromIDList win7-32:SHCreateDefaultExtractIcon win7-64:SHCreateDefaultExtractIcon win8-32:SHChangeNotifyRegisterThread win8-64:SHChangeNotifyRegisterThread
+331 vista-32:SHCreateItemFromParsingName vista-64:SHCreateItemFromParsingName win7-32:SHCreateDefaultPropertiesOp win7-64:SHCreateDefaultPropertiesOp win8-32:SHChangeNotifySuspendResume win8-64:SHChangeNotifySuspendResume
+332 vista-32:SHCreateItemFromRelativeName vista-64:SHCreateItemFromRelativeName win7-32:SHCreateDirectoryExA win7-64:SHCreateDirectoryExA win8-32:SHCoCreateInstanceWorker win8-64:SHCoCreateInstanceWorker
+333 vista-32:SHCreateItemInKnownFolder vista-64:SHCreateItemInKnownFolder win7-32:SHCreateDirectoryExW win7-64:SHCreateDirectoryExW win8-32:SHCreateAssociationRegistration win8-64:SHCreateAssociationRegistration
+334 vista-32:SHCreateItemWithParent vista-64:SHCreateItemWithParent win7-32:SHCreateItemFromIDList win7-64:SHCreateItemFromIDList win8-32:SHCreateDataObject win8-64:SHCreateDataObject
+335 vista-32:SHCreateLocalServerRunDll vista-64:SHCreateLocalServerRunDll win7-32:SHCreateItemFromParsingName win7-64:SHCreateItemFromParsingName win8-32:SHCreateDefaultContextMenu win8-64:SHCreateDefaultContextMenu
+336 vista-32:SHCreateProcessAsUserW vista-64:SHCreateProcessAsUserW win7-32:SHCreateItemFromRelativeName win7-64:SHCreateItemFromRelativeName win8-32:SHCreateDefaultExtractIcon win8-64:SHCreateDefaultExtractIcon
+337 vista-32:SHCreateQueryCancelAutoPlayMoniker vista-64:SHCreateQueryCancelAutoPlayMoniker win7-32:SHCreateItemInKnownFolder win7-64:SHCreateItemInKnownFolder win8-32:SHCreateDefaultPropertiesOp win8-64:SHCreateDefaultPropertiesOp
+338 vista-32:SHCreateShellItem vista-64:SHCreateShellItem win7-32:SHCreateItemWithParent win7-64:SHCreateItemWithParent win8-32:SHCreateDirectoryExA win8-64:SHCreateDirectoryExA
+339 vista-32:SHCreateShellItemArray vista-64:SHCreateShellItemArray win7-32:SHCreateLocalServerRunDll win7-64:SHCreateLocalServerRunDll win8-32:SHCreateDirectoryExW win8-64:SHCreateDirectoryExW
+340 vista-32:SHCreateShellItemArrayFromDataObject vista-64:SHCreateShellItemArrayFromDataObject win7-32:SHCreateProcessAsUserW win7-64:SHCreateProcessAsUserW win8-32:SHCreateDirectoryExWWorker win8-64:SHCreateDirectoryExWWorker
+341 vista-32:SHCreateShellItemArrayFromIDLists vista-64:SHCreateShellItemArrayFromIDLists win7-32:SHCreateQueryCancelAutoPlayMoniker win7-64:SHCreateQueryCancelAutoPlayMoniker win8-32:SHCreateItemFromIDList win8-64:SHCreateItemFromIDList
+342 vista-32:SHCreateShellItemArrayFromShellItem vista-64:SHCreateShellItemArrayFromShellItem win7-32:SHCreateShellItem win7-64:SHCreateShellItem win8-32:SHCreateItemFromParsingName win8-64:SHCreateItemFromParsingName
+343 vista-32:SHEmptyRecycleBinA vista-64:SHEmptyRecycleBinA win7-32:SHCreateShellItemArray win7-64:SHCreateShellItemArray win8-32:SHCreateItemFromRelativeName win8-64:SHCreateItemFromRelativeName
+344 vista-32:SHEmptyRecycleBinW vista-64:SHEmptyRecycleBinW win7-32:SHCreateShellItemArrayFromDataObject win7-64:SHCreateShellItemArrayFromDataObject win8-32:SHCreateItemInKnownFolder win8-64:SHCreateItemInKnownFolder
+345 vista-32:SHEnableServiceObject vista-64:SHEnableServiceObject win7-32:SHCreateShellItemArrayFromIDLists win7-64:SHCreateShellItemArrayFromIDLists win8-32:SHCreateItemWithParent win8-64:SHCreateItemWithParent
+346 vista-32:SHEnumerateUnreadMailAccountsW vista-64:SHEnumerateUnreadMailAccountsW win7-32:SHCreateShellItemArrayFromShellItem win7-64:SHCreateShellItemArrayFromShellItem win8-32:SHCreateLocalServerRunDll win8-64:SHCreateLocalServerRunDll
+347 vista-32:SHEvaluateSystemCommandTemplate vista-64:SHEvaluateSystemCommandTemplate win7-32:SHEmptyRecycleBinA win7-64:SHEmptyRecycleBinA win8-32:SHCreateProcessAsUserW win8-64:SHCreateProcessAsUserW
+348 vista-32:SHExtractIconsW vista-64:SHExtractIconsW win7-32:SHEmptyRecycleBinW win7-64:SHEmptyRecycleBinW win8-32:SHCreateQueryCancelAutoPlayMoniker win8-64:SHCreateQueryCancelAutoPlayMoniker
+349 vista-32:SHFileOperation vista-64:SHFileOperation win7-32:SHEnableServiceObject win7-64:SHEnableServiceObject win8-32:SHCreateShellItem win8-64:SHCreateShellItem
+350 vista-32:SHFileOperationA vista-64:SHFileOperationA win7-32:SHEnumerateUnreadMailAccountsW win7-64:SHEnumerateUnreadMailAccountsW win8-32:SHCreateShellItemArray win8-64:SHCreateShellItemArray
+351 vista-32:SHFileOperationW vista-64:SHFileOperationW win7-32:SHEvaluateSystemCommandTemplate win7-64:SHEvaluateSystemCommandTemplate win8-32:SHCreateShellItemArrayFromDataObject win8-64:SHCreateShellItemArrayFromDataObject
+352 vista-32:SHFormatDrive vista-64:SHFormatDrive win7-32:SHExtractIconsW win7-64:SHExtractIconsW win8-32:SHCreateShellItemArrayFromIDLists win8-64:SHCreateShellItemArrayFromIDLists
+353 vista-32:SHFreeNameMappings vista-64:SHFreeNameMappings win7-32:SHFileOperation win7-64:SHFileOperation win8-32:SHCreateShellItemArrayFromShellItem win8-64:SHCreateShellItemArrayFromShellItem
+354 vista-32:SHGetDataFromIDListA vista-64:SHGetDataFromIDListA win7-32:SHFileOperationA win7-64:SHFileOperationA win8-32:SHEmptyRecycleBinA win8-64:SHEmptyRecycleBinA
+355 vista-32:SHGetDataFromIDListW vista-64:SHGetDataFromIDListW win7-32:SHFileOperationW win7-64:SHFileOperationW win8-32:SHEmptyRecycleBinW win8-64:SHEmptyRecycleBinW
+356 vista-32:SHGetDesktopFolder vista-64:SHGetDesktopFolder win7-32:SHFormatDrive win7-64:SHFormatDrive win8-32:SHEnableServiceObject win8-64:SHEnableServiceObject
+357 vista-32:SHGetDiskFreeSpaceA vista-64:SHGetDiskFreeSpaceA win7-32:SHFreeNameMappings win7-64:SHFreeNameMappings win8-32:SHEnumerateUnreadMailAccountsW win8-64:SHEnumerateUnreadMailAccountsW
+358 vista-32:SHGetDiskFreeSpaceExA vista-64:SHGetDiskFreeSpaceExA win7-32:SHGetDataFromIDListA win7-64:SHGetDataFromIDListA win8-32:SHEvaluateSystemCommandTemplate win8-64:SHEvaluateSystemCommandTemplate
+359 vista-32:SHGetDiskFreeSpaceExW vista-64:SHGetDiskFreeSpaceExW win7-32:SHGetDataFromIDListW win7-64:SHGetDataFromIDListW win8-32:SHExtractIconsW win8-64:SHExtractIconsW
+360 vista-32:SHGetDriveMedia vista-64:SHGetDriveMedia win7-32:SHGetDesktopFolder win7-64:SHGetDesktopFolder win8-32:SHFileOperation win8-64:SHFileOperation
+361 vista-32:SHGetFileInfo vista-64:SHGetFileInfo win7-32:SHGetDiskFreeSpaceA win7-64:SHGetDiskFreeSpaceA win8-32:SHFileOperationA win8-64:SHFileOperationA
+362 vista-32:SHGetFileInfoA vista-64:SHGetFileInfoA win7-32:SHGetDiskFreeSpaceExA win7-64:SHGetDiskFreeSpaceExA win8-32:SHFileOperationW win8-64:SHFileOperationW
+363 vista-32:SHGetFileInfoW vista-64:SHGetFileInfoW win7-32:SHGetDiskFreeSpaceExW win7-64:SHGetDiskFreeSpaceExW win8-32:SHFormatDrive win8-64:SHFormatDrive
+364 vista-32:SHGetFolderLocation vista-64:SHGetFolderLocation win7-32:SHGetDriveMedia win7-64:SHGetDriveMedia win8-32:SHFreeNameMappings win8-64:SHFreeNameMappings
+365 vista-32:SHGetFolderPathA vista-64:SHGetFolderPathA win7-32:SHGetFileInfo win7-64:SHGetFileInfo win8-32:SHGetDataFromIDListA win8-64:SHGetDataFromIDListA
+366 vista-32:SHGetFolderPathAndSubDirA vista-64:SHGetFolderPathAndSubDirA win7-32:SHGetFileInfoA win7-64:SHGetFileInfoA win8-32:SHGetDataFromIDListW win8-64:SHGetDataFromIDListW
+367 vista-32:SHGetFolderPathAndSubDirW vista-64:SHGetFolderPathAndSubDirW win7-32:SHGetFileInfoW win7-64:SHGetFileInfoW win8-32:SHGetDesktopFolder win8-64:SHGetDesktopFolder
+368 vista-32:SHGetFolderPathEx vista-64:SHGetFolderPathEx win7-32:SHGetFolderLocation win7-64:SHGetFolderLocation win8-32:SHGetDesktopFolderWorker win8-64:SHGetDesktopFolderWorker
+369 vista-32:SHGetFolderPathW vista-64:SHGetFolderPathW win7-32:SHGetFolderPathA win7-64:SHGetFolderPathA win8-32:SHGetDiskFreeSpaceA win8-64:SHGetDiskFreeSpaceA
+370 vista-32:SHGetIDListFromObject vista-64:SHGetIDListFromObject win7-32:SHGetFolderPathAndSubDirA win7-64:SHGetFolderPathAndSubDirA win8-32:SHGetDiskFreeSpaceExA win8-64:SHGetDiskFreeSpaceExA
+371 vista-32:SHGetIconOverlayIndexA vista-64:SHGetIconOverlayIndexA win7-32:SHGetFolderPathAndSubDirW win7-64:SHGetFolderPathAndSubDirW win8-32:SHGetDiskFreeSpaceExW win8-64:SHGetDiskFreeSpaceExW
+372 vista-32:SHGetIconOverlayIndexW vista-64:SHGetIconOverlayIndexW win7-32:SHGetFolderPathEx win7-64:SHGetFolderPathEx win8-32:SHGetDriveMedia win8-64:SHGetDriveMedia
+373 vista-32:SHGetInstanceExplorer vista-64:SHGetInstanceExplorer win7-32:SHGetFolderPathW win7-64:SHGetFolderPathW win8-32:SHGetFileInfo win8-64:SHGetFileInfo
+374 vista-32:SHGetKnownFolderIDList vista-64:SHGetKnownFolderIDList win7-32:SHGetIDListFromObject win7-64:SHGetIDListFromObject win8-32:SHGetFileInfoA win8-64:SHGetFileInfoA
+375 vista-32:SHGetKnownFolderPath vista-64:SHGetKnownFolderPath win7-32:SHGetIconOverlayIndexA win7-64:SHGetIconOverlayIndexA win8-32:SHGetFileInfoW win8-64:SHGetFileInfoW
+376 vista-32:SHGetLocalizedName vista-64:SHGetLocalizedName win7-32:SHGetIconOverlayIndexW win7-64:SHGetIconOverlayIndexW win8-32:SHGetFileInfoWWorker win8-64:SHGetFileInfoWWorker
+377 vista-32:SHGetMalloc vista-64:SHGetMalloc win7-32:SHGetInstanceExplorer win7-64:SHGetInstanceExplorer win8-32:SHGetFolderLocation win8-64:SHGetFolderLocation
+378 vista-32:SHGetNameFromIDList vista-64:SHGetNameFromIDList win7-32:SHGetItemFromDataObject win7-64:SHGetItemFromDataObject win8-32:SHGetFolderLocationWorker win8-64:SHGetFolderLocationWorker
+379 vista-32:SHGetNewLinkInfo vista-64:SHGetNewLinkInfo win7-32:SHGetItemFromObject win7-64:SHGetItemFromObject win8-32:SHGetFolderPathA win8-64:SHGetFolderPathA
+380 vista-32:SHGetPathFromIDList vista-64:SHGetPathFromIDList win7-32:SHGetKnownFolderIDList win7-64:SHGetKnownFolderIDList win8-32:SHGetFolderPathAWorker win8-64:SHGetFolderPathAWorker
+381 vista-32:SHGetPathFromIDListA vista-64:SHGetPathFromIDListA win7-32:SHGetKnownFolderItem win7-64:SHGetKnownFolderItem win8-32:SHGetFolderPathAndSubDirA win8-64:SHGetFolderPathAndSubDirA
+382 vista-32:SHGetPathFromIDListEx vista-64:SHGetPathFromIDListEx win7-32:SHGetKnownFolderPath win7-64:SHGetKnownFolderPath win8-32:SHGetFolderPathAndSubDirW win8-64:SHGetFolderPathAndSubDirW
+383 vista-32:SHGetPathFromIDListW vista-64:SHGetPathFromIDListW win7-32:SHGetLocalizedName win7-64:SHGetLocalizedName win8-32:SHGetFolderPathAndSubDirWWorker win8-64:SHGetFolderPathAndSubDirWWorker
+384 vista-32:SHGetPropertyStoreFromIDList vista-64:SHGetPropertyStoreFromIDList win7-32:SHGetMalloc win7-64:SHGetMalloc win8-32:SHGetFolderPathEx win8-64:SHGetFolderPathEx
+385 vista-32:SHGetPropertyStoreFromParsingName vista-64:SHGetPropertyStoreFromParsingName win7-32:SHGetNameFromIDList win7-64:SHGetNameFromIDList win8-32:SHGetFolderPathW win8-64:SHGetFolderPathW
+386 vista-32:SHGetSettings vista-64:SHGetSettings win7-32:SHGetNewLinkInfo win7-64:SHGetNewLinkInfo win8-32:SHGetFolderPathWWorker win8-64:SHGetFolderPathWWorker
+387 vista-32:SHGetSpecialFolderLocation vista-64:SHGetSpecialFolderLocation win7-32:SHGetPathFromIDList win7-64:SHGetPathFromIDList win8-32:SHGetIDListFromObject win8-64:SHGetIDListFromObject
+388 vista-32:SHGetSpecialFolderPathA vista-64:SHGetSpecialFolderPathA win7-32:SHGetPathFromIDListA win7-64:SHGetPathFromIDListA win8-32:SHGetIconOverlayIndexA win8-64:SHGetIconOverlayIndexA
+389 vista-32:SHGetSpecialFolderPathW vista-64:SHGetSpecialFolderPathW win7-32:SHGetPathFromIDListEx win7-64:SHGetPathFromIDListEx win8-32:SHGetIconOverlayIndexW win8-64:SHGetIconOverlayIndexW
+390 vista-32:SHGetStockIconInfo vista-64:SHGetStockIconInfo win7-32:SHGetPathFromIDListW win7-64:SHGetPathFromIDListW win8-32:SHGetInstanceExplorer win8-64:SHGetInstanceExplorer
+391 vista-32:SHGetTemporaryPropertyForItem vista-64:SHGetTemporaryPropertyForItem win7-32:SHGetPropertyStoreForWindow win7-64:SHGetPropertyStoreForWindow win8-32:SHGetInstanceExplorerWorker win8-64:SHGetInstanceExplorerWorker
+392 vista-32:SHGetUnreadMailCountW vista-64:SHGetUnreadMailCountW win7-32:SHGetPropertyStoreFromIDList win7-64:SHGetPropertyStoreFromIDList win8-32:SHGetItemFromDataObject win8-64:SHGetItemFromDataObject
+393 vista-32:SHInvokePrinterCommandA vista-64:SHInvokePrinterCommandA win7-32:SHGetPropertyStoreFromParsingName win7-64:SHGetPropertyStoreFromParsingName win8-32:SHGetItemFromObject win8-64:SHGetItemFromObject
+394 vista-32:SHInvokePrinterCommandW vista-64:SHInvokePrinterCommandW win7-32:SHGetSettings win7-64:SHGetSettings win8-32:SHGetKnownFolderIDList win8-64:SHGetKnownFolderIDList
+395 vista-32:SHIsFileAvailableOffline vista-64:SHIsFileAvailableOffline win7-32:SHGetSpecialFolderLocation win7-64:SHGetSpecialFolderLocation win8-32:SHGetKnownFolderItem win8-64:SHGetKnownFolderItem
+396 vista-32:SHLoadInProc vista-64:SHLoadInProc win7-32:SHGetSpecialFolderPathA win7-64:SHGetSpecialFolderPathA win8-32:SHGetKnownFolderPath win8-64:SHGetKnownFolderPath
+397 vista-32:SHLoadNonloadedIconOverlayIdentifiers vista-64:SHLoadNonloadedIconOverlayIdentifiers win7-32:SHGetSpecialFolderPathW win7-64:SHGetSpecialFolderPathW win8-32:SHGetKnownFolderPathWorker win8-64:SHGetKnownFolderPathWorker
+398 vista-32:SHOpenFolderAndSelectItems vista-64:SHOpenFolderAndSelectItems win7-32:SHGetStockIconInfo win7-64:SHGetStockIconInfo win8-32:SHGetLocalizedName win8-64:SHGetLocalizedName
+399 vista-32:SHOpenWithDialog vista-64:SHOpenWithDialog win7-32:SHGetTemporaryPropertyForItem win7-64:SHGetTemporaryPropertyForItem win8-32:SHGetMalloc win8-64:SHGetMalloc
+400 vista-32:SHParseDisplayName vista-64:SHParseDisplayName win7-32:SHGetUnreadMailCountW win7-64:SHGetUnreadMailCountW win8-32:SHGetNameFromIDList win8-64:SHGetNameFromIDList
+401 vista-32:SHPathPrepareForWriteA vista-64:SHPathPrepareForWriteA win7-32:SHInvokePrinterCommandA win7-64:SHInvokePrinterCommandA win8-32:SHGetNewLinkInfo win8-64:SHGetNewLinkInfo
+402 vista-32:SHPathPrepareForWriteW vista-64:SHPathPrepareForWriteW win7-32:SHInvokePrinterCommandW win7-64:SHInvokePrinterCommandW win8-32:SHGetPathFromIDList win8-64:SHGetPathFromIDList
+403 vista-32:SHQueryRecycleBinA vista-64:SHQueryRecycleBinA win7-32:SHIsFileAvailableOffline win7-64:SHIsFileAvailableOffline win8-32:SHGetPathFromIDListA win8-64:SHGetPathFromIDListA
+404 vista-32:SHQueryRecycleBinW vista-64:SHQueryRecycleBinW win7-32:SHLoadInProc win7-64:SHLoadInProc win8-32:SHGetPathFromIDListEx win8-64:SHGetPathFromIDListEx
+405 vista-32:SHQueryUserNotificationState vista-64:SHQueryUserNotificationState win7-32:SHLoadNonloadedIconOverlayIdentifiers win7-64:SHLoadNonloadedIconOverlayIdentifiers win8-32:SHGetPathFromIDListW win8-64:SHGetPathFromIDListW
+406 vista-32:SHRemoveLocalizedName vista-64:SHRemoveLocalizedName win7-32:SHOpenFolderAndSelectItems win7-64:SHOpenFolderAndSelectItems win8-32:SHGetPropertyStoreForWindow win8-64:SHGetPropertyStoreForWindow
+407 vista-32:SHSetDefaultProperties vista-64:SHSetDefaultProperties win7-32:SHOpenWithDialog win7-64:SHOpenWithDialog win8-32:SHGetPropertyStoreFromIDList win8-64:SHGetPropertyStoreFromIDList
+408 vista-32:SHSetKnownFolderPath vista-64:SHSetKnownFolderPath win7-32:SHParseDisplayName win7-64:SHParseDisplayName win8-32:SHGetPropertyStoreFromParsingName win8-64:SHGetPropertyStoreFromParsingName
+409 vista-32:SHSetLocalizedName vista-64:SHSetLocalizedName win7-32:SHPathPrepareForWriteA win7-64:SHPathPrepareForWriteA win8-32:SHGetSettings win8-64:SHGetSettings
+410 vista-32:SHSetTemporaryPropertyForItem vista-64:SHSetTemporaryPropertyForItem win7-32:SHPathPrepareForWriteW win7-64:SHPathPrepareForWriteW win8-32:SHGetSpecialFolderLocation win8-64:SHGetSpecialFolderLocation
+411 vista-32:SHSetUnreadMailCountW vista-64:SHSetUnreadMailCountW win7-32:SHQueryRecycleBinA win7-64:SHQueryRecycleBinA win8-32:SHGetSpecialFolderPathA win8-64:SHGetSpecialFolderPathA
+412 vista-32:SHUpdateRecycleBinIcon vista-64:SHUpdateRecycleBinIcon win7-32:SHQueryRecycleBinW win7-64:SHQueryRecycleBinW win8-32:SHGetSpecialFolderPathAWorker win8-64:SHGetSpecialFolderPathAWorker
+413 vista-32:SheChangeDirA vista-64:SheChangeDirA win7-32:SHQueryUserNotificationState win7-64:SHQueryUserNotificationState win8-32:SHGetSpecialFolderPathW win8-64:SHGetSpecialFolderPathW
+414 vista-32:SheChangeDirExW vista-64:SheChangeDirExW win7-32:SHRemoveLocalizedName win7-64:SHRemoveLocalizedName win8-32:SHGetSpecialFolderPathWWorker win8-64:SHGetSpecialFolderPathWWorker
+415 vista-32:SheGetDirA vista-64:SheGetDirA win7-32:SHResolveLibrary win7-64:SHResolveLibrary win8-32:SHGetStockIconInfo win8-64:SHGetStockIconInfo
+416 vista-32:SheSetCurDrive vista-64:SheSetCurDrive win7-32:SHSetDefaultProperties win7-64:SHSetDefaultProperties win8-32:SHGetTemporaryPropertyForItem win8-64:SHGetTemporaryPropertyForItem
+417 vista-32:ShellAboutA vista-64:ShellAboutA win7-32:SHSetKnownFolderPath win7-64:SHSetKnownFolderPath win8-32:SHGetUnreadMailCountW win8-64:SHGetUnreadMailCountW
+418 vista-32:ShellAboutW vista-64:ShellAboutW win7-32:SHSetLocalizedName win7-64:SHSetLocalizedName win8-32:SHInvokePrinterCommandA win8-64:SHInvokePrinterCommandA
+419 vista-32:ShellExec_RunDLL vista-64:ShellExec_RunDLL win7-32:SHSetTemporaryPropertyForItem win7-64:SHSetTemporaryPropertyForItem win8-32:SHInvokePrinterCommandW win8-64:SHInvokePrinterCommandW
+420 vista-32:ShellExec_RunDLLA vista-64:ShellExec_RunDLLA win7-32:SHSetUnreadMailCountW win7-64:SHSetUnreadMailCountW win8-32:SHIsFileAvailableOffline win8-64:SHIsFileAvailableOffline
+421 vista-32:ShellExec_RunDLLW vista-64:ShellExec_RunDLLW win7-32:SHShowManageLibraryUI win7-64:SHShowManageLibraryUI win8-32:SHLoadInProc win8-64:SHLoadInProc
+422 vista-32:ShellExecuteA vista-64:ShellExecuteA win7-32:SHUpdateRecycleBinIcon win7-64:SHUpdateRecycleBinIcon win8-32:SHLoadNonloadedIconOverlayIdentifiers win8-64:SHLoadNonloadedIconOverlayIdentifiers
+423 vista-32:ShellExecuteEx vista-64:ShellExecuteEx win7-32:SetCurrentProcessExplicitAppUserModelID win7-64:SetCurrentProcessExplicitAppUserModelID win8-32:SHOpenFolderAndSelectItems win8-64:SHOpenFolderAndSelectItems
+424 vista-32:ShellExecuteExA vista-64:ShellExecuteExA win7-32:SheChangeDirA win7-64:SheChangeDirA win8-32:SHOpenWithDialog win8-64:SHOpenWithDialog
+425 vista-32:ShellExecuteExW vista-64:ShellExecuteExW win7-32:SheChangeDirExW win7-64:SheChangeDirExW win8-32:SHParseDisplayName win8-64:SHParseDisplayName
+426 vista-32:ShellExecuteW vista-64:ShellExecuteW win7-32:SheGetDirA win7-64:SheGetDirA win8-32:SHPathPrepareForWriteA win8-64:SHPathPrepareForWriteA
+427 vista-32:ShellHookProc vista-64:ShellHookProc win7-32:SheSetCurDrive win7-64:SheSetCurDrive win8-32:SHPathPrepareForWriteW win8-64:SHPathPrepareForWriteW
+428 vista-32:Shell_GetCachedImageIndexA vista-64:Shell_GetCachedImageIndexA win7-32:ShellAboutA win7-64:ShellAboutA win8-32:SHQueryRecycleBinA win8-64:SHQueryRecycleBinA
+429 vista-32:Shell_GetCachedImageIndexW vista-64:Shell_GetCachedImageIndexW win7-32:ShellAboutW win7-64:ShellAboutW win8-32:SHQueryRecycleBinW win8-64:SHQueryRecycleBinW
+430 vista-32:Shell_NotifyIcon vista-64:Shell_NotifyIcon win7-32:ShellExec_RunDLL win7-64:ShellExec_RunDLL win8-32:SHQueryUserNotificationState win8-64:SHQueryUserNotificationState
+431 vista-32:Shell_NotifyIconA vista-64:Shell_NotifyIconA win7-32:ShellExec_RunDLLA win7-64:ShellExec_RunDLLA win8-32:SHRemoveLocalizedName win8-64:SHRemoveLocalizedName
+432 vista-32:Shell_NotifyIconW vista-64:Shell_NotifyIconW win7-32:ShellExec_RunDLLW win7-64:ShellExec_RunDLLW win8-32:SHResolveLibrary win8-64:SHResolveLibrary
+433 vista-32:StrChrA vista-64:StrChrA win7-32:ShellExecuteA win7-64:ShellExecuteA win8-32:SHSetDefaultProperties win8-64:SHSetDefaultProperties
+434 vista-32:StrChrIA vista-64:StrChrIA win7-32:ShellExecuteEx win7-64:ShellExecuteEx win8-32:SHSetKnownFolderPath win8-64:SHSetKnownFolderPath
+435 vista-32:StrChrIW vista-64:StrChrIW win7-32:ShellExecuteExA win7-64:ShellExecuteExA win8-32:SHSetKnownFolderPathWorker win8-64:SHSetKnownFolderPathWorker
+436 vista-32:StrChrW vista-64:StrChrW win7-32:ShellExecuteExW win7-64:ShellExecuteExW win8-32:SHSetLocalizedName win8-64:SHSetLocalizedName
+437 vista-32:StrCmpNA vista-64:StrCmpNA win7-32:ShellExecuteW win7-64:ShellExecuteW win8-32:SHSetTemporaryPropertyForItem win8-64:SHSetTemporaryPropertyForItem
+438 vista-32:StrCmpNIA vista-64:StrCmpNIA win7-32:ShellHookProc win7-64:ShellHookProc win8-32:SHSetUnreadMailCountW win8-64:SHSetUnreadMailCountW
+439 vista-32:StrCmpNIW vista-64:StrCmpNIW win7-32:Shell_GetCachedImageIndexA win7-64:Shell_GetCachedImageIndexA win8-32:SHShowManageLibraryUI win8-64:SHShowManageLibraryUI
+440 vista-32:StrCmpNW vista-64:StrCmpNW win7-32:Shell_GetCachedImageIndexW win7-64:Shell_GetCachedImageIndexW win8-32:SHUpdateRecycleBinIcon win8-64:SHUpdateRecycleBinIcon
+441 vista-32:StrNCmpA vista-64:StrNCmpA win7-32:Shell_NotifyIcon win7-64:Shell_NotifyIcon win8-32:SetCurrentProcessExplicitAppUserModelID win8-64:SetCurrentProcessExplicitAppUserModelID
+442 vista-32:StrNCmpIA vista-64:StrNCmpIA win7-32:Shell_NotifyIconA win7-64:Shell_NotifyIconA win8-32:SheChangeDirA win8-64:SheChangeDirA
+443 vista-32:StrNCmpIW vista-64:StrNCmpIW win7-32:Shell_NotifyIconGetRect win7-64:Shell_NotifyIconGetRect win8-32:SheChangeDirExW win8-64:SheChangeDirExW
+444 vista-32:StrNCmpW vista-64:StrNCmpW win7-32:Shell_NotifyIconW win7-64:Shell_NotifyIconW win8-32:SheGetDirA win8-64:SheGetDirA
+445 vista-32:StrRChrA vista-64:StrRChrA win7-32:StrChrA win7-64:StrChrA win8-32:SheSetCurDrive win8-64:SheSetCurDrive
+446 vista-32:StrRChrIA vista-64:StrRChrIA win7-32:StrChrIA win7-64:StrChrIA win8-32:ShellAboutA win8-64:ShellAboutA
+447 vista-32:StrRChrIW vista-64:StrRChrIW win7-32:StrChrIW win7-64:StrChrIW win8-32:ShellAboutW win8-64:ShellAboutW
+448 vista-32:StrRChrW vista-64:StrRChrW win7-32:StrChrW win7-64:StrChrW win8-32:ShellExec_RunDLL win8-64:ShellExec_RunDLL
+449 vista-32:StrRStrA vista-64:StrRStrA win7-32:StrCmpNA win7-64:StrCmpNA win8-32:ShellExec_RunDLLA win8-64:ShellExec_RunDLLA
+450 vista-32:StrRStrIA vista-64:StrRStrIA win7-32:StrCmpNIA win7-64:StrCmpNIA win8-32:ShellExec_RunDLLW win8-64:ShellExec_RunDLLW
+451 vista-32:StrRStrIW vista-64:StrRStrIW win7-32:StrCmpNIW win7-64:StrCmpNIW win8-32:ShellExecuteA win8-64:ShellExecuteA
+452 vista-32:StrRStrW vista-64:StrRStrW win7-32:StrCmpNW win7-64:StrCmpNW win8-32:ShellExecuteEx win8-64:ShellExecuteEx
+453 vista-32:StrStrA vista-64:StrStrA win7-32:StrNCmpA win7-64:StrNCmpA win8-32:ShellExecuteExA win8-64:ShellExecuteExA
+454 vista-32:StrStrIA vista-64:StrStrIA win7-32:StrNCmpIA win7-64:StrNCmpIA win8-32:ShellExecuteExW win8-64:ShellExecuteExW
+455 vista-32:StrStrIW vista-64:StrStrIW win7-32:StrNCmpIW win7-64:StrNCmpIW win8-32:ShellExecuteW win8-64:ShellExecuteW
+456 vista-32:StrStrW vista-64:StrStrW win7-32:StrNCmpW win7-64:StrNCmpW win8-32:ShellHookProc win8-64:ShellHookProc
+457 vista-32:WOWShellExecute vista-64:WOWShellExecute win7-32:StrRChrA win7-64:StrRChrA win8-32:Shell_GetCachedImageIndexA win8-64:Shell_GetCachedImageIndexA
+458 vista-32:WaitForExplorerRestartW vista-64:WaitForExplorerRestartW win7-32:StrRChrIA win7-64:StrRChrIA win8-32:Shell_GetCachedImageIndexW win8-64:Shell_GetCachedImageIndexW
+459 win7-32:StrRChrIW win7-64:StrRChrIW win8-32:Shell_NotifyIcon win8-64:Shell_NotifyIcon
+460 win7-32:StrRChrW win7-64:StrRChrW win8-32:Shell_NotifyIconA win8-64:Shell_NotifyIconA
+461 win7-32:StrRStrA win7-64:StrRStrA win8-32:Shell_NotifyIconGetRect win8-64:Shell_NotifyIconGetRect
+462 win7-32:StrRStrIA win7-64:StrRStrIA win8-32:Shell_NotifyIconW win8-64:Shell_NotifyIconW
+463 win7-32:StrRStrIW win7-64:StrRStrIW win8-32:StrChrA win8-64:StrChrA
+464 win7-32:StrRStrW win7-64:StrRStrW win8-32:StrChrIA win8-64:StrChrIA
+465 win7-32:StrStrA win7-64:StrStrA win8-32:StrChrIW win8-64:StrChrIW
+466 win7-32:StrStrIA win7-64:StrStrIA win8-32:StrChrW win8-64:StrChrW
+467 win7-32:StrStrIW win7-64:StrStrIW win8-32:StrCmpNA win8-64:StrCmpNA
+468 win7-32:StrStrW win7-64:StrStrW win8-32:StrCmpNIA win8-64:StrCmpNIA
+469 win7-32:WOWShellExecute win7-64:WOWShellExecute win8-32:StrCmpNIW win8-64:StrCmpNIW
+470 win7-32:WaitForExplorerRestartW win7-64:WaitForExplorerRestartW win8-32:StrCmpNW win8-64:StrCmpNW
+471 win8-32:StrNCmpA win8-64:StrNCmpA
+472 win8-32:StrNCmpIA win8-64:StrNCmpIA
+473 win8-32:StrNCmpIW win8-64:StrNCmpIW
+474 win8-32:StrNCmpW win8-64:StrNCmpW
+475 win8-32:StrRChrA win8-64:StrRChrA
+476 win8-32:StrRChrIA win8-64:StrRChrIA
+477 win8-32:StrRChrIW win8-64:StrRChrIW
+478 win8-32:StrRChrW win8-64:StrRChrW
+479 win8-32:StrRStrA win8-64:StrRStrA
+480 win8-32:StrRStrIA win8-64:StrRStrIA
+481 win8-32:StrRStrIW win8-64:StrRStrIW
+482 win8-32:StrRStrW win8-64:StrRStrW
+483 win8-32:StrStrA win8-64:StrStrA
+484 win8-32:StrStrIA win8-64:StrStrIA
+485 win8-32:StrStrIW win8-64:StrStrIW
+486 win8-32:StrStrW win8-64:StrStrW
+487 win8-32:WOWShellExecute win8-64:WOWShellExecute
+488 win8-32:WaitForExplorerRestartW win8-64:WaitForExplorerRestartW
+520 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+521 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+522 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+523 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+524 vista-32:RealDriveType vista-64:RealDriveType win7-32:RealDriveType win7-64:RealDriveType win8-32:RealDriveType win8-64:RealDriveType
+525 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+526 vista-32:SHFlushSFCache vista-64:SHFlushSFCache win7-32:SHFlushSFCache win7-64:SHFlushSFCache win8-32:SHFlushSFCache win8-64:SHFlushSFCache
+640 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+641 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+643 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+644 vista-32:SHChangeNotification_Lock vista-64:SHChangeNotification_Lock win7-32:SHChangeNotification_Lock win7-64:SHChangeNotification_Lock win8-32:SHChangeNotification_Lock win8-64:SHChangeNotification_Lock
+645 vista-32:SHChangeNotification_Unlock vista-64:SHChangeNotification_Unlock win7-32:SHChangeNotification_Unlock win7-64:SHChangeNotification_Unlock win8-32:SHChangeNotification_Unlock win8-64:SHChangeNotification_Unlock
+646 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+648 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+650 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+651 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+652 vista-32:WriteCabinetState vista-64:WriteCabinetState win7-32:WriteCabinetState win7-64:WriteCabinetState win8-32:WriteCabinetState win8-64:WriteCabinetState
+653 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+654 vista-32:ReadCabinetState vista-64:ReadCabinetState win7-32:ReadCabinetState win7-64:ReadCabinetState win8-32:ReadCabinetState win8-64:ReadCabinetState
+660 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+680 vista-32:IsUserAnAdmin vista-64:IsUserAnAdmin win7-32:IsUserAnAdmin win7-64:IsUserAnAdmin win8-32:IsUserAnAdmin win8-64:IsUserAnAdmin
+681 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+682 win7-32:StgMakeUniqueName win7-64:StgMakeUniqueName win8-32:StgMakeUniqueName win8-64:StgMakeUniqueName
+683 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+684 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+685 vista-32:SHPropStgCreate vista-64:SHPropStgCreate win7-32:SHPropStgCreate win7-64:SHPropStgCreate win8-32:SHPropStgCreate win8-64:SHPropStgCreate
+688 vista-32:SHPropStgReadMultiple vista-64:SHPropStgReadMultiple win7-32:SHPropStgReadMultiple win7-64:SHPropStgReadMultiple win8-32:SHPropStgReadMultiple win8-64:SHPropStgReadMultiple
+689 vista-32:SHPropStgWriteMultiple vista-64:SHPropStgWriteMultiple win7-32:SHPropStgWriteMultiple win7-64:SHPropStgWriteMultiple win8-32:SHPropStgWriteMultiple win8-64:SHPropStgWriteMultiple
+690 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+691 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+700 vista-32:CDefFolderMenu_Create vista-64:CDefFolderMenu_Create win7-32:- win7-64:- win8-32:- win8-64:-
+701 vista-32:CDefFolderMenu_Create2 vista-64:CDefFolderMenu_Create2 win7-32:CDefFolderMenu_Create2 win7-64:CDefFolderMenu_Create2 win8-32:CDefFolderMenu_Create2 win8-64:CDefFolderMenu_Create2
+702 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+703 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+704 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+707 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+708 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+709 vista-32:SHGetSetFolderCustomSettings vista-64:SHGetSetFolderCustomSettings win7-32:SHGetSetFolderCustomSettings win7-64:SHGetSetFolderCustomSettings win8-32:SHGetSetFolderCustomSettings win8-64:SHGetSetFolderCustomSettings
+711 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+712 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+713 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+714 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+715 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+716 vista-32:SHMultiFileProperties vista-64:SHMultiFileProperties win7-32:SHMultiFileProperties win7-64:SHMultiFileProperties win8-32:SHMultiFileProperties win8-64:SHMultiFileProperties
+719 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+720 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+721 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+722 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+723 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+724 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+725 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+726 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+727 vista-32:SHGetImageList vista-64:SHGetImageList win7-32:SHGetImageList win7-64:SHGetImageList win8-32:SHGetImageList win8-64:SHGetImageList
+730 vista-32:RestartDialogEx vista-64:RestartDialogEx win7-32:RestartDialogEx win7-64:RestartDialogEx win8-32:RestartDialogEx win8-64:RestartDialogEx
+731 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+732 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+733 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+740 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+743 vista-32:SHCreateFileExtractIconW vista-64:SHCreateFileExtractIconW win7-32:SHCreateFileExtractIconW win7-64:SHCreateFileExtractIconW win8-32:SHCreateFileExtractIconW win8-64:SHCreateFileExtractIconW
+744 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+745 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+747 vista-32:SHLimitInputEdit vista-64:SHLimitInputEdit win7-32:SHLimitInputEdit win7-64:SHLimitInputEdit win8-32:SHLimitInputEdit win8-64:SHLimitInputEdit
+748 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+749 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+750 vista-32:SHGetAttributesFromDataObject vista-64:SHGetAttributesFromDataObject win7-32:SHGetAttributesFromDataObject win7-64:SHGetAttributesFromDataObject win8-32:SHGetAttributesFromDataObject win8-64:SHGetAttributesFromDataObject
+751 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+752 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+753 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+754 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+755 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+756 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+757 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+758 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+759 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+760 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+761 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+762 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+763 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+764 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+765 win8-32:- win8-64:-
+766 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+767 win7-32:- win7-64:- win8-32:- win8-64:-
+777 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+778 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+779 win8-32:- win8-64:-
+781 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+782 win8-32:- win8-64:-
+786 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+787 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+788 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+789 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+790 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+791 win7-32:- win7-64:- win8-32:- win8-64:-
+792 win8-32:- win8-64:-
+810 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+811 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+812 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+813 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+814 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+815 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+816 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+817 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+818 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+819 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+820 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+821 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+822 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+823 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+824 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+825 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+826 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+827 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+828 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+829 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+830 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+831 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+832 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+833 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+834 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+835 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+836 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+837 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+838 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+839 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+840 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+841 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+842 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+843 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+844 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+845 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+846 vista-32:ILLoadFromStreamEx vista-64:ILLoadFromStreamEx win7-32:ILLoadFromStreamEx win7-64:ILLoadFromStreamEx win8-32:ILLoadFromStreamEx win8-64:ILLoadFromStreamEx
+847 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+848 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+849 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+850 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+851 win7-32:- win7-64:- win8-32:- win8-64:-
+852 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+854 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+856 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+857 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+858 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+859 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+860 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+861 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+862 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+863 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+864 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+865 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+866 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+867 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+868 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+869 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+870 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+871 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+872 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+873 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+874 vista-32:- vista-64:- win7-32:- win7-64:- win8-32:- win8-64:-
+875 win7-32:- win7-64:- win8-32:- win8-64:-
+876 win7-32:- win7-64:- win8-32:- win8-64:-
+877 win7-32:- win7-64:- win8-32:- win8-64:-
+878 win7-32:- win7-64:- win8-32:- win8-64:-
+880 win7-32:- win7-64:- win8-32:- win8-64:-
+881 win7-32:- win7-64:- win8-32:- win8-64:-
+882 win7-32:- win7-64:- win8-32:- win8-64:-
+883 win7-32:- win7-64:- win8-32:- win8-64:-
+884 win7-32:- win7-64:- win8-32:- win8-64:-
+885 win7-32:- win7-64:- win8-32:- win8-64:-
+886 win7-32:- win7-64:- win8-32:- win8-64:-
+887 win7-32:- win7-64:- win8-32:- win8-64:-
+888 win7-32:- win7-64:- win8-32:- win8-64:-
+889 win7-32:- win7-64:- win8-32:- win8-64:-
+890 win7-32:- win7-64:- win8-32:- win8-64:-
+891 win7-32:- win7-64:- win8-32:- win8-64:-
+892 win7-32:- win7-64:- win8-32:- win8-64:-
+893 win7-32:- win7-64:- win8-32:- win8-64:-
+894 win7-32:- win7-64:- win8-32:- win8-64:-
+895 win7-32:- win7-64:- win8-32:- win8-64:-
+896 win7-32:- win7-64:- win8-32:- win8-64:-
+897 win7-32:- win7-64:- win8-32:- win8-64:-
+898 win7-32:- win7-64:- win8-32:- win8-64:-
+899 win7-32:- win7-64:- win8-32:- win8-64:-
+900 win7-32:- win7-64:- win8-32:- win8-64:-
+901 win7-32:- win7-64:- win8-32:- win8-64:-
+902 win7-32:- win7-64:- win8-32:- win8-64:-
+903 win7-32:- win7-64:- win8-32:- win8-64:-
+904 win8-32:- win8-64:-
+905 win8-32:- win8-64:-
+906 win8-32:- win8-64:-
+907 win8-32:- win8-64:-
+909 win8-32:- win8-64:-
+910 win8-32:- win8-64:-
+911 win8-32:- win8-64:-
+912 win8-32:- win8-64:-
+913 win8-32:- win8-64:-
+914 win8-32:- win8-64:-
+915 win8-32:- win8-64:-
+919 win8-32:- win8-64:-
+920 win8-32:- win8-64:-
+921 win8-32:- win8-64:-
+922 win8-32:- win8-64:-
+923 win8-32:- win8-64:-
+924 win8-32:- win8-64:-
+925 win8-32:- win8-64:-
+926 win8-32:- win8-64:-
+927 win8-32:- win8-64:-
+928 win8-32:- win8-64:-
+929 win8-32:- win8-64:-
+930 win8-32:- win8-64:-
+931 win8-32:- win8-64:-

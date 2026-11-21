@@ -1,16 +1,18 @@
-# version.dll export names: Windows Vista SP2 and Windows 7 SP1
-GetFileVersionInfoA vista,win7
-GetFileVersionInfoByHandle vista,win7
-GetFileVersionInfoExW vista,win7
-GetFileVersionInfoSizeA vista,win7
-GetFileVersionInfoSizeExW vista,win7
-GetFileVersionInfoSizeW vista,win7
-GetFileVersionInfoW vista,win7
-VerFindFileA vista,win7
-VerFindFileW vista,win7
-VerInstallFileA vista,win7
-VerInstallFileW vista,win7
-VerLanguageNameA vista,win7
-VerLanguageNameW vista,win7
-VerQueryValueA vista,win7
-VerQueryValueW vista,win7
+# version.dll export names: Windows Vista SP2 and Windows 7 SP1; Windows 8 RTM (6.2.9200), x86 and x64.
+GetFileVersionInfoA vista,win7,win8
+GetFileVersionInfoByHandle vista,win7,win8
+GetFileVersionInfoExA win8
+GetFileVersionInfoExW vista,win7,win8
+GetFileVersionInfoSizeA vista,win7,win8
+GetFileVersionInfoSizeExA win8
+GetFileVersionInfoSizeExW vista,win7,win8
+GetFileVersionInfoSizeW vista,win7,win8
+GetFileVersionInfoW vista,win7,win8
+VerFindFileA vista,win7,win8
+VerFindFileW vista,win7,win8
+VerInstallFileA vista,win7,win8
+VerInstallFileW vista,win7,win8
+VerLanguageNameA vista,win7,win8
+VerLanguageNameW vista,win7,win8
+VerQueryValueA vista,win7,win8
+VerQueryValueW vista,win7,win8

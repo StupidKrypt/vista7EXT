@@ -1,0 +1,30 @@
+# Programs for the traced runs (tests/vm/vm.sh apps <vm> with VX_APPS="trace").
+# name|arch (x64, x86)|folder on the host (from the repository root)|main program in it|arguments
+# Each runs from C:\Apps\<name>, registered for VistaExt's in-memory mode, under
+# vxdbg with VX_TRACE=1 and the loader's messages: every lookup VistaExt cannot
+# answer ("GetProcAddress <name>: NOT FOUND"), crashes, exit codes and screenshots.
+brave|x64|out/apps/x/brave|brave.exe|--no-first-run
+discord|x64|out/apps/x/discord/pkg/lib/net45|Discord.exe|
+edge|x64|out/apps/x/edge-x64|msedge.exe|--no-first-run
+edge32|x86|out/apps/x/edge-x86|msedge.exe|--no-first-run
+firefox|x64|out/apps/x/firefox/core|firefox.exe|
+steam|x86|out/apps/x/steam|Steam.exe|
+vscode|x64|out/apps/x2/vscode|Code.exe|
+telegram|x64|out/apps/x2/telegram/Telegram|Telegram.exe|
+slack|x64|out/apps/x2/slack/pkg/lib/net45|slack.exe|
+nodejs|x64|out/apps/x2/nodejs/node-v22.21.1-win-x64|node.exe|-p process.version
+powershell|x64|out/apps/x2/powershell|pwsh.exe|-NoProfile -Command [Environment]::OSVersion
+godot|x64|out/apps/x2/godot|Godot_v4.3-stable_win64.exe|
+obs|x64|out/apps/x2/obs/bin/64bit|obs64.exe|
+chrome|x64|out/apps/x2/chrome/browser/Chrome-bin|chrome.exe|--no-first-run
+zoom|x64|out/apps/x2/zoom/app|Zoom.exe|
+signal|x64|out/apps/x2/signal/app|Signal.exe|
+obsidian|x64|out/apps/x2/obsidian/app|Obsidian.exe|
+localsend|x64|out/apps/x2/localsend|localsend_app.exe|
+java21|x64|out/apps/x2/temurin21/jdk-21.0.13.1+2|bin\java.exe|-XshowSettings:properties -version
+ubisoft|x86|out/apps/x2/ubisoft|UbisoftConnect.exe|
+supertuxkart|x64|out/apps/x2/supertuxkart|supertuxkart.exe|
+luanti|x64|out/apps/x2/luanti64/luanti-5.18.0-win64|bin\luanti.exe|
+luanti32|x86|out/apps/x2/luanti32/luanti-5.18.0-win32|bin\luanti.exe|
+xonotic|x64|out/apps/x2/xonotic/Xonotic|xonotic-wgl.exe|
+xonotic32|x86|out/apps/x2/xonotic/Xonotic|xonotic-x86-wgl.exe|

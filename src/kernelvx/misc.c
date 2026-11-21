@@ -9,7 +9,11 @@
  * itself used to name such sections on Windows 7 for exactly this reason,
  * but skips that when it believes it runs on Windows 10. So: an unnamed
  * section created with a DACL gets an unguessable random name, which makes
- * Vista/7 apply the DACL. Everything else is passed through unchanged. */
+ * Vista/7 apply the DACL. Everything else is passed through unchanged.
+ * The cost: about 15 µs per such call instead of under 1 µs (creating a
+ * named object; measured on Windows 7, one slow processor). There is no
+ * cheaper way to get the DACL applied on Vista/7, and programs make these a
+ * few hundred times a second at most. */
 typedef LONG (WINAPI *rtl_dacl_fn)(PSECURITY_DESCRIPTOR, PBOOLEAN, PACL *, PBOOLEAN);
 typedef BOOLEAN (WINAPI *gen_random_fn)(PVOID, ULONG);
 
@@ -278,7 +282,7 @@ VX_EXPORT LONG WINAPI vx_AppPolicyGetClrCompat(HANDLE t, int *p) { VX_NATIVE(K32
 VX_EXPORT LONG WINAPI vx_AppPolicyGetLifecycleManagement(HANDLE t, int *p) { VX_NATIVE(K32, AppPolicyGetLifecycleManagement, LONG, (HANDLE t, int *p), (t, p)); *p = 0; return ERROR_SUCCESS; }
 
 /* ---- locale ---------------------------------------------------------------- */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT int WINAPI vx_ResolveLocaleName(LPCWSTR name, LPWSTR out, int cch)
 { VX_NATIVE(K32, ResolveLocaleName, int, (LPCWSTR name, LPWSTR out, int cch), (name, out, cch));
     WCHAR tmp[LOCALE_NAME_MAX_LENGTH];
@@ -315,7 +319,7 @@ VX_EXPORT int WINAPI vx_GetUserDefaultGeoName(LPWSTR buf, int cch)
 #define VX_FIND_FROMSTART  0x00400000
 #define VX_FIND_FROMEND    0x00800000
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT int WINAPI vx_FindStringOrdinal(DWORD flags, LPCWSTR src, int cs, LPCWSTR val, int cv, BOOL ic)
 { VX_NATIVE(K32, FindStringOrdinal, int, (DWORD flags, LPCWSTR src, int cs, LPCWSTR val, int cv, BOOL ic), (flags, src, cs, val, cv, ic));
     int i;
@@ -396,7 +400,7 @@ VX_EXPORT HRESULT WINAPI vx_ResizePseudoConsole(PVOID pc, COORD size) { VX_NATIV
 VX_EXPORT void WINAPI vx_ClosePseudoConsole(PVOID pc) { VX_NATIVE_VOID(K32, ClosePseudoConsole, (PVOID pc), (pc)); }
 
 /* ---- error reporting (Windows 7+) ---------------------------------------- */
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT HRESULT WINAPI vx_WerRegisterRuntimeExceptionModule(PCWSTR dll, PVOID ctx) { VX_NATIVE(K32, WerRegisterRuntimeExceptionModule, HRESULT, (PCWSTR dll, PVOID ctx), (dll, ctx)); return S_OK; }
 VX_EXPORT HRESULT WINAPI vx_WerUnregisterRuntimeExceptionModule(PCWSTR dll, PVOID ctx) { VX_NATIVE(K32, WerUnregisterRuntimeExceptionModule, HRESULT, (PCWSTR dll, PVOID ctx), (dll, ctx)); return S_OK; }
 #endif
@@ -427,7 +431,8 @@ static void trace_hex(const char *what, DWORD v)
 }
 
 /* the attributes this build's Windows knows (Vista: the first two; Windows
- * 7 adds processor groups, NUMA, UMS and the mitigation policy) */
+ * 7 adds processor groups, NUMA, UMS and the mitigation policy; 8 adds
+ * AppContainer security capabilities) */
 static BOOL attr_known_here(DWORD_PTR attr)
 {
     switch (attr) {
@@ -439,7 +444,9 @@ static BOOL attr_known_here(DWORD_PTR attr)
     case 0x00030005:            /* IDEAL_PROCESSOR */
     case 0x00030006:            /* UMS_THREAD */
     case VX_ATTR_MITIGATION:
-        return VX_WIN7;
+        return VX_OS >= 601;
+    case 0x00020009:            /* SECURITY_CAPABILITIES */
+        return VX_OS >= 602;
     default:
         return FALSE;
     }
@@ -481,6 +488,22 @@ VX_EXPORT BOOL WINAPI vx_UpdateProcThreadAttribute(LPPROC_THREAD_ATTRIBUTE_LIST 
             trace_hex("UpdateProcThreadAttribute: mitigation mask reduced to Windows 7's, was", (DWORD)*(ULONGLONG *)value);
             if (!*keep) { SetLastError(ERROR_SUCCESS); return TRUE; }
             if (UpdateProcThreadAttribute(list, flags, attr, keep, sizeof(DWORD), NULL, NULL)) return TRUE;
+        }
+    }
+#elif VX_WIN8
+    if (attr == VX_ATTR_MITIGATION && value && size >= sizeof(ULONGLONG)) {
+        /* Windows 8 takes a 64-bit mask with its own policies: DEP, ATL
+         * thunks, SEHOP (0x7), forced relocation, heap termination, bottom-up
+         * and high-entropy ASLR, strict handle checks, win32k calls and
+         * extension points (2 bits each from bit 8 to 33). Later ones (8.1's
+         * dynamic code and CFG, Windows 10's) are left out. Not yet verified
+         * on Windows 8. */
+        ULONGLONG *keep = HeapAlloc(GetProcessHeap(), 0, sizeof(ULONGLONG));
+        if (keep) {
+            *keep = *(ULONGLONG *)value & 0x333333307ULL;
+            trace_hex("UpdateProcThreadAttribute: mitigation mask reduced to Windows 8's, was", (DWORD)*(ULONGLONG *)value);
+            if (!*keep) { SetLastError(ERROR_SUCCESS); return TRUE; }
+            if (UpdateProcThreadAttribute(list, flags, attr, keep, sizeof(ULONGLONG), NULL, NULL)) return TRUE;
         }
     }
 #endif
@@ -565,18 +588,21 @@ static BOOL i_am_setup(void)
 VX_EXPORT void WINAPI vx_VxPrepareChild(LPCWSTR file, LPCWSTR dir)
 {
     WCHAR path[MAX_PATH], win[MAX_PATH], req[MAX_PATH + 16], rep[64];
-    DWORD got, on = 1;
+    DWORD got;
     SIZE_T n;
     if (!resolve_child(file, dir, path)) return;
     n = vx_wcslen(path);
     if (n < 5 || vx_wcsnicmp(path + n - 4, L".exe", 4)) return;
     if (GetWindowsDirectoryW(win, MAX_PATH) && !vx_wcsnicmp(path, win, vx_wcslen(win)) && path[vx_wcslen(win)] == '\\') return;
-    if (reg_has(VX_REG_ROOT, L"Enabled", &on) && !on) return;
+    if (!vx_setting(L"Enabled", 1)) return;
     if (reg_has(VX_REG_ROOT L"\\Memory", path, NULL)) return;     /* already registered */
     vx_wcscpyn(req, i_am_setup() ? L"PREPARE setup " : L"PREPARE ", MAX_PATH + 16);
     vx_wcscatn(req, path, MAX_PATH + 16);
     VX_TRACE("asking VistaExt's service about a program about to start");
-    CallNamedPipeW(L"\\\\.\\pipe\\VistaExt", req, (DWORD)((vx_wcslen(req) + 1) * sizeof(WCHAR)), rep, sizeof(rep), &got, 15000);
+    /* the time-out is only for a free pipe instance (the service makes the
+     * next one right after each connection); the service bounds its own work
+     * (5 s for its lock) and answers "runs as it is" when busy */
+    CallNamedPipeW(L"\\\\.\\pipe\\VistaExt", req, (DWORD)((vx_wcslen(req) + 1) * sizeof(WCHAR)), rep, sizeof(rep), &got, 3000);
 }
 
 static void prepare_child(LPCWSTR app, LPCWSTR cmd, LPCWSTR dir)

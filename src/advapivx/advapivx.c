@@ -13,7 +13,7 @@ VX_EXPORT ULONG WINAPI vx_EventWriteTransfer(REGHANDLE h, PCEVENT_DESCRIPTOR d, 
     return EventWrite(h, d, n, data);
 }
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT ULONG WINAPI vx_EventWriteEx(REGHANDLE h, PCEVENT_DESCRIPTOR d, ULONG64 filter, ULONG flags,
         LPCGUID act, LPCGUID rel, ULONG n, PEVENT_DATA_DESCRIPTOR data)
 { VX_NATIVE(L"advapi32.dll", EventWriteEx, ULONG, (REGHANDLE h, PCEVENT_DESCRIPTOR d, ULONG64 filter, ULONG flags,         LPCGUID act, LPCGUID rel, ULONG n, PEVENT_DATA_DESCRIPTOR data), (h, d, filter, flags, act, rel, n, data));
@@ -21,7 +21,7 @@ VX_EXPORT ULONG WINAPI vx_EventWriteEx(REGHANDLE h, PCEVENT_DESCRIPTOR d, ULONG6
 }
 #endif
 
-#if !VX_WIN7     /* Windows 7 has it: its .def forwards there */
+#if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
 VX_EXPORT ULONG WINAPI vx_TraceSetInformation(ULONG64 h, int cls, PVOID info, ULONG len) { VX_NATIVE(L"advapi32.dll", TraceSetInformation, ULONG, (ULONG64 h, int cls, PVOID info, ULONG len), (h, cls, info, len)); return ERROR_NOT_SUPPORTED; }
 #endif
 VX_EXPORT ULONG WINAPI vx_TraceQueryInformation(ULONG64 h, int cls, PVOID info, ULONG len, PULONG ret) { VX_NATIVE(L"advapi32.dll", TraceQueryInformation, ULONG, (ULONG64 h, int cls, PVOID info, ULONG len, PULONG ret), (h, cls, info, len, ret)); return ERROR_NOT_SUPPORTED; }
@@ -39,26 +39,16 @@ static BOOL version_told(WCHAR *label, SIZE_T cch)
     typedef void (NTAPI *fn)(DWORD *, DWORD *, DWORD *);
     static fn real;
     DWORD rmaj = 0, rmin = 0, rbld = 0, maj, min, bld;
-    BYTE *peb = *(BYTE **)((BYTE *)NtCurrentTeb() + (sizeof(void *) == 8 ? 0x60 : 0x30));
     if (!real) real = (fn)(void *)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlGetNtVersionNumbers");
     if (!real) return FALSE;
     real(&rmaj, &rmin, &rbld);
-    maj = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x118 : 0xA4));
-    min = *(ULONG *)(peb + (sizeof(void *) == 8 ? 0x11C : 0xA8));
-    bld = *(USHORT *)(peb + (sizeof(void *) == 8 ? 0x120 : 0xAC));
+    vx_peb_version(&maj, &min, &bld);
     if (maj == rmaj && min == rmin && bld == (rbld & 0xFFFF)) return FALSE;
     {   /* "10.0.19045" without wsprintf (no user32 here) */
-        DWORD v[3] = { maj, min, bld };
-        int i;
         label[0] = 0;
-        for (i = 0; i < 3; i++) {
-            WCHAR t[12], one[2] = { 0, 0 };
-            int n = 0;
-            DWORD x = v[i];
-            do { t[n++] = (WCHAR)('0' + x % 10); x /= 10; } while (x);
-            while (n) { one[0] = t[--n]; vx_wcscatn(label, one, cch); }
-            if (i < 2) vx_wcscatn(label, L".", cch);
-        }
+        vx_cat_num(label, cch, maj); vx_wcscatn(label, L".", cch);
+        vx_cat_num(label, cch, min); vx_wcscatn(label, L".", cch);
+        vx_cat_num(label, cch, bld);
     }
     return TRUE;
 }

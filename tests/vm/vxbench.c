@@ -151,6 +151,40 @@ static void bench_getproc(void)
     }
 }
 
+/* ---- what VistaExt's hooks cost every call ---------------------------------
+ * registry values of the CurrentVersion key (answered by vxload while a
+ * version is told), another value of the same key, a value elsewhere, and
+ * GetVersionEx (kernelvx) */
+static void bench_registry(void)
+{
+    HKEY cv = NULL, other = NULL;
+    WCHAR buf[128];
+    DWORD cb, type;
+    LONGLONG t;
+    int i;
+    RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_QUERY_VALUE, &cv);
+    RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager", 0, KEY_QUERY_VALUE, &other);
+    if (!cv || !other) return;
+    t = now();
+    for (i = 0; i < 100000; i++) { cb = sizeof(buf); RegQueryValueExW(cv, L"CurrentBuildNumber", NULL, &type, (BYTE *)buf, &cb); }
+    report(L"registry: CurrentVersion\\CurrentBuildNumber", per_op(now() - t, 100000, 1000000000), L"ns");
+    t = now();
+    for (i = 0; i < 100000; i++) { cb = sizeof(buf); RegQueryValueExW(cv, L"SystemRoot", NULL, &type, (BYTE *)buf, &cb); }
+    report(L"registry: CurrentVersion\\SystemRoot (not a version value)", per_op(now() - t, 100000, 1000000000), L"ns");
+    t = now();
+    for (i = 0; i < 100000; i++) { cb = sizeof(buf); RegQueryValueExW(other, L"PendingFileRenameOperationsX", NULL, &type, (BYTE *)buf, &cb); }
+    report(L"registry: a value elsewhere (missing)", per_op(now() - t, 100000, 1000000000), L"ns");
+    RegCloseKey(cv);
+    RegCloseKey(other);
+    {
+        OSVERSIONINFOEXW vi;
+        t = now();
+        for (i = 0; i < 1000000; i++) { vi.dwOSVersionInfoSize = sizeof(vi); GetVersionExW((OSVERSIONINFOW *)&vi); }
+        report(L"GetVersionEx", per_op(now() - t, 1000000, 1000000000), L"ns");
+        con_print(L"BENCH info: told Windows %u.%u.%u\r\n", vi.dwMajorVersion, vi.dwMinorVersion, vi.dwBuildNumber);
+    }
+}
+
 static void bench_mapping(void)
 {
     /* an unnamed section with a DACL (as Chromium makes them) */
@@ -426,6 +460,7 @@ int wmain(int argc, WCHAR **argv)
     bench_threads();
     bench_loadlib();
     bench_getproc();
+    bench_registry();
     bench_mapping();
     bench_dpi();
     if (HAVE_WIN8) {
