@@ -115,6 +115,11 @@ VX_EXPORT HRESULT WINAPI vx_SHCreateItemInKnownFolder(REFKNOWNFOLDERID id, DWORD
     HRESULT hr = SHGetKnownFolderPath(id, flags, NULL, &path);
     *ppv = NULL;
     if (FAILED(hr)) return hr;
+    /* never a shortened path: that would be another file */
+    if (vx_wcslen(path) + 1 + (item ? vx_wcslen(item) : 0) >= MAX_PATH * 2) {
+        CoTaskMemFree(path);
+        return HRESULT_FROM_WIN32(ERROR_FILENAME_EXCED_RANGE);
+    }
     vx_wcscpyn(full, path, MAX_PATH * 2);
     CoTaskMemFree(path);
     if (item && *item) {

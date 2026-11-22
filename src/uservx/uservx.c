@@ -128,6 +128,8 @@ VX_EXPORT BOOL WINAPI vx_GetPointerInfo(UINT32 id, PVOID i) { VX_NATIVE(U32, Get
 VX_EXPORT BOOL WINAPI vx_GetPointerInfoHistory(UINT32 id, UINT32 *n, PVOID i) { VX_NATIVE(U32, GetPointerInfoHistory, BOOL, (UINT32 id, UINT32 *n, PVOID i), (id, n, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
 VX_EXPORT BOOL WINAPI vx_GetPointerFrameInfo(UINT32 id, UINT32 *n, PVOID i) { VX_NATIVE(U32, GetPointerFrameInfo, BOOL, (UINT32 id, UINT32 *n, PVOID i), (id, n, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
 VX_EXPORT BOOL WINAPI vx_GetPointerFrameInfoHistory(UINT32 id, UINT32 *e, UINT32 *n, PVOID i) { VX_NATIVE(U32, GetPointerFrameInfoHistory, BOOL, (UINT32 id, UINT32 *e, UINT32 *n, PVOID i), (id, e, n, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
+VX_EXPORT BOOL WINAPI vx_GetPointerFrameTouchInfoHistory(UINT32 id, UINT32 *e, UINT32 *n, PVOID i) { VX_NATIVE(U32, GetPointerFrameTouchInfoHistory, BOOL, (UINT32 id, UINT32 *e, UINT32 *n, PVOID i), (id, e, n, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
+VX_EXPORT BOOL WINAPI vx_GetPointerPenInfoHistory(UINT32 id, UINT32 *e, PVOID i) { VX_NATIVE(U32, GetPointerPenInfoHistory, BOOL, (UINT32 id, UINT32 *e, PVOID i), (id, e, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
 VX_EXPORT BOOL WINAPI vx_GetPointerTouchInfo(UINT32 id, PVOID i) { VX_NATIVE(U32, GetPointerTouchInfo, BOOL, (UINT32 id, PVOID i), (id, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
 VX_EXPORT BOOL WINAPI vx_GetPointerFrameTouchInfo(UINT32 id, UINT32 *n, PVOID i) { VX_NATIVE(U32, GetPointerFrameTouchInfo, BOOL, (UINT32 id, UINT32 *n, PVOID i), (id, n, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
 VX_EXPORT BOOL WINAPI vx_GetPointerPenInfo(UINT32 id, PVOID i) { VX_NATIVE(U32, GetPointerPenInfo, BOOL, (UINT32 id, PVOID i), (id, i)); SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
@@ -152,11 +154,78 @@ VX_EXPORT BOOL WINAPI vx_GetCIMSSM(VX_INPUT_MESSAGE_SOURCE *s) { VX_NATIVE(U32, 
 VX_EXPORT BOOL WINAPI vx_SetDisplayAutoRotationPreferences(int o) { VX_NATIVE(U32, SetDisplayAutoRotationPreferences, BOOL, (int o), (o)); return TRUE; }
 VX_EXPORT BOOL WINAPI vx_GetDisplayAutoRotationPreferences(int *o) { VX_NATIVE(U32, GetDisplayAutoRotationPreferences, BOOL, (int *o), (o)); *o = 0; return TRUE; }
 VX_EXPORT BOOL WINAPI vx_GetAutoRotationState(int *s) { VX_NATIVE(U32, GetAutoRotationState, BOOL, (int *s), (s)); *s = 0x10; /* AR_NOSENSOR */ return TRUE; }
-VX_EXPORT HANDLE WINAPI vx_RegisterSuspendResumeNotification(HANDLE r, DWORD f) { VX_NATIVE(U32, RegisterSuspendResumeNotification, HANDLE, (HANDLE r, DWORD f), (r, f)); return (HANDLE)(ULONG_PTR)0x5658; }
-VX_EXPORT BOOL WINAPI vx_UnregisterSuspendResumeNotification(HANDLE h) { VX_NATIVE(U32, UnregisterSuspendResumeNotification, BOOL, (HANDLE h), (h)); return TRUE; }
+/* Suspend/resume notifications (Windows 8). Vista and 7 broadcast them
+ * (WM_POWERBROADCAST) to every top-level window, so a top-level window needs
+ * nothing more. The callback form, and a window that gets no broadcasts
+ * (message-only or a child), go to kernelvx's notification window, which
+ * calls the callback or passes the message on. */
+typedef ULONG (CALLBACK *sr_cb)(PVOID, ULONG, PVOID);
+typedef struct { sr_cb cb; PVOID ctx; } VX_SR_PARAMS;
+static BYTE g_toplevel_reg;         /* the handle for a top-level window's registration */
+
+static ULONG CALLBACK forward_to_window(PVOID ctx, ULONG type, PVOID setting)
+{
+    SendMessageW((HWND)ctx, WM_POWERBROADCAST, type, 0);
+    return 0;
+}
+
+static FARPROC kvx(const char *name)
+{
+    HMODULE k = GetModuleHandleW(L"kernelvx.dll");
+    if (!k) k = LoadLibraryW(L"kernelvx.dll");
+    return k ? GetProcAddress(k, name) : NULL;
+}
+
+VX_EXPORT HANDLE WINAPI vx_RegisterSuspendResumeNotification(HANDLE r, DWORD f)
+{ VX_NATIVE(U32, RegisterSuspendResumeNotification, HANDLE, (HANDLE r, DWORD f), (r, f));
+    DWORD (WINAPI *reg)(PVOID, PVOID *) = (DWORD (WINAPI *)(PVOID, PVOID *))(void *)kvx("VxSuspendResumeRegister");
+    VX_SR_PARAMS fw, *p = r;
+    PVOID h = NULL;
+    DWORD e;
+    if (f == 0 /* DEVICE_NOTIFY_WINDOW_HANDLE */) {
+        if (!IsWindow((HWND)r)) { SetLastError(ERROR_INVALID_WINDOW_HANDLE); return NULL; }
+        if (GetAncestor((HWND)r, GA_PARENT) == GetDesktopWindow()) return (HANDLE)&g_toplevel_reg;
+        fw.cb = forward_to_window;
+        fw.ctx = r;
+        p = &fw;
+    } else if (f != 2 /* DEVICE_NOTIFY_CALLBACK */ || !p || !p->cb) {
+        SetLastError(ERROR_INVALID_PARAMETER);
+        return NULL;
+    }
+    if (!reg) { SetLastError(ERROR_NOT_SUPPORTED); return NULL; }
+    if ((e = reg(p, &h))) { SetLastError(e); return NULL; }
+    return h;
+}
+
+VX_EXPORT BOOL WINAPI vx_UnregisterSuspendResumeNotification(HANDLE h)
+{ VX_NATIVE(U32, UnregisterSuspendResumeNotification, BOOL, (HANDLE h), (h));
+    DWORD (WINAPI *unreg)(PVOID) = (DWORD (WINAPI *)(PVOID))(void *)kvx("VxSuspendResumeUnregister");
+    DWORD e;
+    if (h == (HANDLE)&g_toplevel_reg) return TRUE;
+    if (!h || !unreg) { SetLastError(ERROR_INVALID_HANDLE); return FALSE; }
+    if ((e = unreg(h))) { SetLastError(e); return FALSE; }
+    return TRUE;
+}
 #if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
-VX_EXPORT BOOL WINAPI vx_SetWindowDisplayAffinity(HWND h, DWORD a) { VX_NATIVE(U32, SetWindowDisplayAffinity, BOOL, (HWND h, DWORD a), (h, a)); return TRUE; }
-VX_EXPORT BOOL WINAPI vx_GetWindowDisplayAffinity(HWND h, DWORD *a) { VX_NATIVE(U32, GetWindowDisplayAffinity, BOOL, (HWND h, DWORD *a), (h, a)); *a = 0; return TRUE; }
+/* Keeping a window out of screen captures (Windows 7, with desktop
+ * composition): Vista cannot, so asking for it fails, as on Windows 7 with
+ * composition off. A program (a password manager, a messenger's "screen
+ * security") must not believe its window is hidden from captures when it is
+ * not. WDA_NONE, the state every window has here, succeeds. */
+VX_EXPORT BOOL WINAPI vx_SetWindowDisplayAffinity(HWND h, DWORD a)
+{ VX_NATIVE(U32, SetWindowDisplayAffinity, BOOL, (HWND h, DWORD a), (h, a));
+    if (!IsWindow(h)) { SetLastError(ERROR_INVALID_WINDOW_HANDLE); return FALSE; }
+    if (a == 0 /* WDA_NONE */) return TRUE;
+    SetLastError(a == 1 /* WDA_MONITOR */ || a == 0x11 /* WDA_EXCLUDEFROMCAPTURE */ ? ERROR_NOT_SUPPORTED : ERROR_INVALID_PARAMETER);
+    return FALSE;
+}
+VX_EXPORT BOOL WINAPI vx_GetWindowDisplayAffinity(HWND h, DWORD *a)
+{ VX_NATIVE(U32, GetWindowDisplayAffinity, BOOL, (HWND h, DWORD *a), (h, a));
+    if (!a) { SetLastError(ERROR_INVALID_PARAMETER); return FALSE; }
+    if (!IsWindow(h)) { SetLastError(ERROR_INVALID_WINDOW_HANDLE); return FALSE; }
+    *a = 0;
+    return TRUE;
+}
 VX_EXPORT LONG WINAPI vx_GetDisplayConfigBufferSizes(UINT32 f, UINT32 *np, UINT32 *nm) { VX_NATIVE(U32, GetDisplayConfigBufferSizes, LONG, (UINT32 f, UINT32 *np, UINT32 *nm), (f, np, nm)); return ERROR_NOT_SUPPORTED; }
 VX_EXPORT LONG WINAPI vx_QueryDisplayConfig(UINT32 f, UINT32 *np, PVOID p, UINT32 *nm, PVOID m, PVOID t) { VX_NATIVE(U32, QueryDisplayConfig, LONG, (UINT32 f, UINT32 *np, PVOID p, UINT32 *nm, PVOID m, PVOID t), (f, np, p, nm, m, t)); return ERROR_NOT_SUPPORTED; }
 VX_EXPORT LONG WINAPI vx_DisplayConfigGetDeviceInfo(PVOID p) { VX_NATIVE(U32, DisplayConfigGetDeviceInfo, LONG, (PVOID p), (p)); return ERROR_NOT_SUPPORTED; }

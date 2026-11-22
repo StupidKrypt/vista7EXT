@@ -418,7 +418,8 @@ goto :eof
 :trace_one
 set "N=%~1"
 set "AD=%APPS%\trace-!N!"
-xcopy "%CDR%\apps\trace-!N!" "!AD!\" /e /i /q /y >nul
+xcopy "%CDR%\apps\trace-!N!" "!AD!\" /e /i /q /y /c >nul
+if errorlevel 1 call :say "!N!: copying it from the CD failed (xcopy !errorlevel!)"
 "%VX%\vxpatch.exe" /memory /auto /q "!AD!" > "%R%\!N!-memory.txt" 2>&1
 call :launch "!N!" "!AD!\%~2" "%~3"
 goto :eof

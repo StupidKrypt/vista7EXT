@@ -5,6 +5,7 @@
 #       One-time unattended install of Windows into a clean base disk
 #       (20-40 minutes). <edition> is the image name on the disc, e.g.
 #       "Windows Vista ULTIMATE" or "Windows 7 ULTIMATE".
+#       Windows 8 ("Windows 8") also needs VX_WIN_KEY=<product key>.
 #   tests/vm/vm.sh test <vm>
 #       Boots a throw-away copy of the base disk with a test CD: the VM
 #       installs VistaExt, runs the tests, uninstalls it and shuts down.
@@ -140,7 +141,16 @@ cmd_install() {
     # in OOBE, which the answer file skips. Vista's setup always shows its key
     # page (an empty key with WillShowUI=Never is rejected as invalid), so
     # vista_key_page answers it.
-    case $image in *Vista*) key=$'\n        <ProductKey>\n          <Key></Key>\n          <WillShowUI>OnError</WillShowUI>\n        </ProductKey>' ;; esac
+    # Windows 8 setup cannot go on without a key; it comes from VX_WIN_KEY
+    # (your own key, or Microsoft's generic install key for the edition) and
+    # is only written into this VM's setup CD, never into the repository.
+    case $image in
+        *Vista*) key=$'\n        <ProductKey>\n          <Key></Key>\n          <WillShowUI>OnError</WillShowUI>\n        </ProductKey>' ;;
+        *"Windows 8"*)
+            [[ ${VX_WIN_KEY:-} =~ ^[A-Z0-9]{5}(-[A-Z0-9]{5}){4}$ ]] ||
+                die "Windows 8 setup needs a product key: VX_WIN_KEY=XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+            key=$'\n        <ProductKey>\n          <Key>'"$VX_WIN_KEY"$'</Key>\n          <WillShowUI>OnError</WillShowUI>\n        </ProductKey>' ;;
+    esac
     ARCH=$arch IMAGE=$image KEY=$key python3 -I -c '
 import os, sys
 t = open(sys.argv[1]).read()
@@ -185,14 +195,18 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
                 -lmsi -lkernel32 -luser32 -lgdi32 -lshell32 -ladvapi32 || return 1
         done
         # apitest imports through API-set DLL names: import libraries for them
-        local m=i386:x86-64 d1=WaitOnAddress d2=WakeByAddressAll d3=GetSystemTimePreciseAsFileTime d4=WakeByAddressSingle
-        [ "$arch" = i686 ] && { m=i386; d1=WaitOnAddress@16; d2=WakeByAddressAll@4; d3=GetSystemTimePreciseAsFileTime@4; d4=WakeByAddressSingle@4; }
+        # (SetThreadDescription is Windows 10's, through a contract Vista, 7 and
+        # 8 lack: so apitest needs VistaExt on all of them)
+        local m=i386:x86-64 d1=WaitOnAddress d2=WakeByAddressAll d3=GetSystemTimePreciseAsFileTime d4=WakeByAddressSingle d5=SetThreadDescription
+        [ "$arch" = i686 ] && { m=i386; d1=WaitOnAddress@16; d2=WakeByAddressAll@4; d3=GetSystemTimePreciseAsFileTime@4; d4=WakeByAddressSingle@4; d5=SetThreadDescription@8; }
         printf 'LIBRARY api-ms-win-core-synch-l1-2-0.dll\nEXPORTS\n  %s\n  %s\n' $d1 $d2 > "$O/obj/synch.def"
         printf 'LIBRARY api-ms-win-core-sysinfo-l1-2-0.dll\nEXPORTS\n  %s\n' $d3 > "$O/obj/sysinfo.def"
         llvm-dlltool -m $m -k -d "$O/obj/synch.def" -l "$O/obj/libsynch.a" || return 1
+        printf 'LIBRARY api-ms-win-core-processthreads-l1-1-3.dll\nEXPORTS\n  %s\n' $d5 > "$O/obj/pt13.def"
         llvm-dlltool -m $m -k -d "$O/obj/sysinfo.def" -l "$O/obj/libsysinfo.a" || return 1
+        llvm-dlltool -m $m -k -d "$O/obj/pt13.def" -l "$O/obj/libpt13.a" || return 1
         clang "${LF[@]}" -o "$O/apitest.exe" "$O/obj/apitest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
-            "$O/obj/libsynch.a" "$O/obj/libsysinfo.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
+            "$O/obj/libsynch.a" "$O/obj/libsysinfo.a" "$O/obj/libpt13.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         python3 -I tools/peexp.py "$O/apitest.exe" imports | grep -q '^api-ms-win-core-synch-l1-2-0.dll' ||
             { echo "apitest.exe does not import through the API set"; return 1; }
         # in-memory mode: a DLL needing Windows 8 functions from kernel32, a
@@ -341,7 +355,8 @@ make_appscd() {
         grep -v '^#' "$H/trace-apps.txt" | while IFS='|' read -r n a d e args; do
             [ -n "$n" ] && [ "$a" = "${VX_TRACE_ARCH:-x64}" ] && [ -d "$d" ] || continue
             [ -z "${VX_TRACE_ONLY:-}" ] || case " $VX_TRACE_ONLY " in *" $n "*) ;; *) continue ;; esac
-            cp -r "$d" "$S/apps/trace-$n"
+            # -L: links (a macOS app bundle inside a game folder) as the files they name
+            cp -rL "$d" "$S/apps/trace-$n"
             printf '%s|%s|%s\r\n' "$n" "$e" "$args" >> "$S/vxvm/trace.txt"
         done
         echo "traced programs: $(grep -c . "$S/vxvm/trace.txt") ($(du -sh "$S/apps" | cut -f1))"

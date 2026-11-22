@@ -1,0 +1,12 @@
+# d3d12.dll export numbers (numbers only). Taken from Wine's d3d12.dll,
+# which keeps Windows' numbering; they agree with the numbers Qt 6 imports
+# (#101 D3D12CreateDevice, #102 D3D12GetDebugInterface). Not checked against
+# a Windows 10 copy.
+101 D3D12CreateDevice
+102 D3D12GetDebugInterface
+106 D3D12CreateRootSignatureDeserializer
+107 D3D12CreateVersionedRootSignatureDeserializer
+108 D3D12EnableExperimentalFeatures
+109 D3D12GetInterface
+110 D3D12SerializeRootSignature
+111 D3D12SerializeVersionedRootSignature

@@ -154,6 +154,24 @@ void vx_trace(const char *what);
  * Vista/7 these DLLs are VistaExt's, and nothing else holds them). */
 void vx_pin(void *addr_in_dll);
 
+/* A hidden window on its own thread for notifications Vista/7 deliver only
+ * to windows (src/common/notifywnd.c). Fill in cls, proc, module, toplevel;
+ * vx_notify_window starts it once and returns it (NULL if it cannot be).
+ * Work for the window's thread goes through vx_send (SendMessageW), which
+ * serializes it with the window's own messages. user32 is loaded on demand. */
+typedef struct {
+    const WCHAR *cls;
+    WNDPROC proc;
+    HINSTANCE module;
+    BOOL toplevel;
+    HWND hwnd;
+    volatile LONG state;
+} vx_notifywnd;
+HWND vx_notify_window(vx_notifywnd *w);
+FARPROC vx_user32(const char *name);
+LRESULT vx_defproc(HWND h, UINT msg, WPARAM wp, LPARAM lp);
+LRESULT vx_send(HWND h, UINT msg, WPARAM wp, LPARAM lp);
+
 /* Real Windows version, unaffected by the version a program is told. */
 void vx_real_version(DWORD *major, DWORD *minor);
 

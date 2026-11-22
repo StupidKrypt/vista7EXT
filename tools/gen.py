@@ -32,6 +32,7 @@ APISET_EXTRA = {
 }
 # Newer contracts One-Core-API has no spec for: (the contract it extends, added functions)
 APISET_NEW = {
+    'api-ms-win-core-fibers-l1-1-2': ('api-ms-win-core-fibers-l1-1-1', {'FlsGetValue2': 'kernelvx'}),
     'api-ms-win-power-setting-l1-1-1': ('api-ms-win-power-setting-l1-1-0',
                                         {'PowerRegisterForEffectivePowerModeNotifications': 'kernelvx',
                                          'PowerUnregisterFromEffectivePowerModeNotifications': 'kernelvx'}),
@@ -79,6 +80,33 @@ def spec_entries(path, arch):
             continue
         dll, func = after.split('.', 1)
         yield name, dll.lower(), func
+
+
+def spec_stubs(path, arch):
+    """Names a .spec lists as "stub" (One-Core-API has no code for them),
+    with the same -arch rules as spec_entries."""
+    for raw in open(path, encoding='latin1'):
+        line = raw.split('#')[0].split(';')[0].strip()
+        m = LINE.match(line)
+        if not m or m.group(2) != 'stub':
+            continue
+        rest = m.group(3).split()
+        flags = [r for r in rest if r.startswith('-')]
+        rest = [r for r in rest if not r.startswith('-')]
+        if not rest or '-noname' in flags:
+            continue
+        ok = True
+        for f in flags:
+            if f.startswith('-arch='):
+                archs = f[6:].split(',')
+                sa = SPEC_ARCH[arch]
+                aliases = {sa, 'win32' if arch == 'i686' else 'win64'}
+                neg = {x[1:] for x in archs if x.startswith('!')}
+                pos = {x for x in archs if not x.startswith('!')}
+                if (neg and aliases & neg) or (pos and not aliases & pos):
+                    ok = False
+        if ok:
+            yield rest[0].split('(')[0]
 
 
 def oca_refs(dlls, arch):
@@ -144,7 +172,11 @@ def other_os_only(dll, os_):
 # companion -> the Windows DLL it stands in for
 BASE = {'kernelvx': 'kernel32', 'uservx': 'user32', 'advapivx': 'advapi32', 'shellvx': 'shell32',
         'bcryptprimvx': 'bcryptprimitives', 'ntvx': 'ntdll', 'ws2vx': 'ws2_32', 'cfgmgrvx': 'cfgmgr32',
-        'olevx': 'ole32', 'versvx': 'version'}
+        'olevx': 'ole32', 'versvx': 'version',
+        'dxvx': 'dxgi', 'dnsvx': 'dnsapi', 'winhtvx': 'winhttp', 'uenvvx': 'userenv'}
+# companions whose forwarders come only from the real export lists (no Wine
+# or One-Core-API names: every name of these DLLs is in third_party/winexports)
+REAL_ONLY = {'dxvx', 'dnsvx', 'winhtvx', 'uenvvx'}
 # the oldest Windows VistaExt supports: a function it implements that this
 # Windows has too is a deliberate wrapper (version reporting, GetProcAddress,
 # CreateProcess...), kept on every build
@@ -164,8 +196,15 @@ def native_newer(comp, os_):
     if not os_ or os_ == OLDEST or comp not in BASE:
         return out
     dlls = [BASE[comp]] + (['kernelbase'] if comp == 'kernelvx' else [])
+    # "the oldest lacks it" means none of these DLLs has it there: Vista has
+    # no kernelbase at all, and what Windows 8 moved into kernelbase
+    # (GetProcAddress, GetVersionExW, CreateProcessW...) is in Vista's
+    # kernel32. Counting those as new forwarded VistaExt's wrappers away.
+    oldest = set()
     for dll in dlls:
-        for n in real_exports(dll, os_) - real_exports(dll, OLDEST):
+        oldest |= real_exports(dll, OLDEST)
+    for dll in dlls:
+        for n in real_exports(dll, os_) - oldest:
             out.setdefault(n, '%s.%s' % (dll, n))
     return out
 
@@ -178,13 +217,26 @@ def forwards_for(comp, arch, outdir, os_=None):
         for n in other_os_only(base, os_):
             if f.get(n, '').split('.', 1)[0] == base:
                 del f[n]
+    if comp == 'kernelvx' and os_:
+        # Newer Windows' kernel32 has functions this Windows keeps only in
+        # advapi32 (Windows 7 moved OpenProcessToken, SetThreadToken and the
+        # Reg* functions there): a program looking them up in kernel32 finds
+        # them through kernelvx, as on that Windows.
+        here_k, here_a = real_exports('kernel32', os_), real_exports('advapi32', os_)
+        for n in (real_exports('kernel32') - here_k) & here_a:
+            if n not in f or f[n].split('.', 1)[0] == 'kernel32':
+                f[n] = 'advapi32.' + n
     return f
 
 
 def forwards_all(comp, arch, outdir):
     f = {}
     simple = {'ntvx': 'ntdll', 'ws2vx': 'ws2_32', 'cfgmgrvx': 'cfgmgr32', 'olevx': 'ole32', 'versvx': 'version'}
-    if comp in simple:
+    if comp in REAL_ONLY:
+        dll = BASE[comp]
+        for n in real_exports(dll):
+            f[n] = '%s.%s' % (dll, n)
+    elif comp in simple:
         dll = simple[comp]
         for n in wine_exports(dll, arch) | real_exports(dll):
             f[n] = '%s.%s' % (dll, n)
@@ -297,9 +349,10 @@ def cmd_component(a):
     for n in native:                    # Windows' own one wins
         del impl[n]
         fwd[n] = newer[n]
-    ords = fixed_ordinals('ws2_32') if a.comp == 'ws2vx' else {}
-    for n in ords:
-        fwd.setdefault(n, 'ws2_32.' + n)
+    ords = fixed_ordinals('ws2_32') if a.comp == 'ws2vx' else fixed_ordinals('d3d12') if a.comp == 'd3d12' else {}
+    if a.comp == 'ws2vx':
+        for n in ords:
+            fwd.setdefault(n, 'ws2_32.' + n)
     by_number = {}
     if a.comp in ORDINAL_DLL:
         ords, by_number = keep_ordinals(a.comp, a.arch, impl, fwd, a.os)
@@ -320,6 +373,18 @@ def kernel_host(func, kvx, os_='vista'):
         if func in real_exports(dll, os_):
             return comp
     return 'kernelvx'
+
+
+_HOST_EXPORTS = {}
+
+
+def host_exports(bindir, dll):
+    """Export names of a DLL this build makes (a VistaExt companion), or of
+    nothing for a system DLL that has none here."""
+    if dll not in _HOST_EXPORTS:
+        p = os.path.join(bindir, dll + '.dll')
+        _HOST_EXPORTS[dll] = set(PE(p).exports()) if os.path.exists(p) else set()
+    return _HOST_EXPORTS[dll]
 
 
 def cmd_apisets(a):
@@ -344,6 +409,21 @@ def cmd_apisets(a):
             fwd[exp] = '%s.%s' % (target, func)
         for exp, dll in APISET_EXTRA.get(name, {}).items():
             fwd.setdefault(exp, '%s.%s' % (dll, exp))
+        # A "stub" in the spec only means One-Core-API has no code for it.
+        # When a DLL this contract already forwards to has the function on
+        # this Windows (VistaExt implements it, or Windows' own DLL has it
+        # and the companion forwards there), the contract forwards it too:
+        # a program importing it through the contract would otherwise not
+        # load (Edge: RoFailFastWithErrorContext in winrt-error).
+        hosts = sorted({v.split('.', 1)[0] for v in fwd.values()})
+        for exp in spec_stubs(p, a.arch):
+            if exp in fwd:
+                continue
+            for h in hosts:
+                have = host_exports(outbin, h) if h in COMPANIONS else real_exports(h, a.os)
+                if exp in have:
+                    fwd[exp] = '%s.%s' % (h, exp)
+                    break
         if not fwd:
             continue
         sets[name] = fwd

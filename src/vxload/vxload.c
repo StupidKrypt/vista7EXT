@@ -34,6 +34,11 @@
  *   - ole32's export entries for CoCreateInstance(Ex) and CoSetProxyBlanket
  *     (WMI's Win32_OperatingSystem), when ole32 is loaded.
  *
+ * Windows 8's loader resolves a DLL's imports before it reports the DLL as
+ * loaded (Vista and 7 report it first), so on Windows 8 the names are also
+ * rewritten right after the loader maps the DLL: ntdll's NtMapViewOfSection
+ * gets the same kind of jump as NtQueryValueKey (see "map_hook" below).
+ *
  * This DLL is loaded before kernel32: it may only use ntdll. */
 #include <windows.h>
 #include <winternl.h>
@@ -485,10 +490,15 @@ static BOOL in_windows(const UNICODE_STRING *full)
     return i < n && full->Buffer[i] == '\\';
 }
 
+/* one rewrite at a time (the loader's lock covers most, not every mapping) */
+static RTL_SRWLOCK g_rw_lock = RTL_SRWLOCK_INIT;
+
 static void loaded(PVOID base, const UNICODE_STRING *full)
 {
     if (!g_on || !base || in_windows(full)) return;
-    rewrite(base);
+    RtlAcquireSRWLockExclusive(&g_rw_lock);
+    rewrite(base);                    /* (names already rewritten at mapping are left as they are) */
+    RtlReleaseSRWLockExclusive(&g_rw_lock);
 }
 
 static void ole32_loaded(PVOID base, const UNICODE_STRING *full);
@@ -1075,7 +1085,10 @@ static void ole32_loaded(PVOID base, const UNICODE_STRING *full)
  *   x64:         mov r10,rcx / mov eax,N / syscall / ret
  *   x86:         mov eax,N / mov edx,7FFE0300h / call [edx] / ret 14h
  *   x86 (WOW64): mov eax,N / mov ecx,M (or xor ecx,ecx) / lea edx,[esp+4] /
- *                call fs:[0C0h] / add esp,4 / ret 14h */
+ *                call fs:[0C0h] / add esp,4 / ret 14h
+ * and Windows 8's 32-bit stub on 64-bit Windows (read from its SysWOW64\ntdll.dll):
+ *   x86 (WOW64): mov eax,N / call fs:[0C0h] / ret n
+ * (Windows 8's x64 stub has the x64 shape above.) */
 static SIZE_T stub_length(const BYTE *p)
 {
 #ifdef _WIN64
@@ -1087,6 +1100,7 @@ static SIZE_T stub_length(const BYTE *p)
         p[15] == 0xFF && p[16] == 0x15 && p[21] == 0x83 && p[22] == 0xC4 && p[23] == 0x04 && p[24] == 0xC2) return 27;
     if (p[5] == 0x33 && p[6] == 0xC9 && p[7] == 0x8D && p[8] == 0x54 && p[9] == 0x24 && p[10] == 0x04 && p[11] == 0x64 &&
         p[12] == 0xFF && p[13] == 0x15 && p[18] == 0x83 && p[19] == 0xC4 && p[20] == 0x04 && p[21] == 0xC2) return 24;
+    if (p[5] == 0x64 && p[6] == 0xFF && p[7] == 0x15 && p[8] == 0xC0 && p[9] == 0 && p[10] == 0 && p[11] == 0 && p[12] == 0xC2) return 15;
 #endif
     return 0;
 }
@@ -1117,6 +1131,75 @@ static BOOL stub_hook(BYTE *nt, const char *name, void *hook, void **real)
     return TRUE;
 }
 
+#if VX_OS >= 602 || VX_OS == 0
+/* ---- rewriting a DLL's imports as soon as it is mapped (Windows 8) --------
+ * After every successful mapping into this process of an image from
+ * outside the Windows folder, its import names are rewritten, before the
+ * loader resolves them. The Windows folder is recognised by the same kind
+ * of name the mapping reports (\Device\HarddiskVolumeN\Windows\...): the
+ * folder ntdll itself was mapped from, one level up. */
+typedef NTSTATUS (NTAPI *mvs_fn)(HANDLE, HANDLE, PVOID *, ULONG_PTR, SIZE_T, const LARGE_INTEGER *, SIZE_T *,
+                                 SECTION_INHERIT, ULONG, ULONG);
+static void *g_real_mvs;
+static WCHAR g_winnt[300];
+static SIZE_T g_winnt_len;
+typedef union { UNICODE_STRING us; BYTE raw[sizeof(UNICODE_STRING) + 1040]; } mapped_name;
+
+static BOOL name_of_mapping(void *base, mapped_name *nb)
+{
+    return NtQueryVirtualMemory(NtCurrentProcess(), base, (MEMORY_INFORMATION_CLASS)2 /* MemoryMappedFilenameInformation */,
+                                nb, sizeof(*nb) - sizeof(WCHAR), NULL) >= 0 && nb->us.Buffer && nb->us.Length;
+}
+
+static BOOL windows_folder_nt(void)
+{
+    LDR_DATA_TABLE_ENTRY *nt = find_module(L"ntdll.dll");
+    mapped_name nb;
+    SIZE_T n, i, cut = 0, seen = 0;
+    if (!nt || !name_of_mapping(nt->DllBase, &nb)) return FALSE;
+    n = nb.us.Length / sizeof(WCHAR);
+    for (i = n; i > 0; i--) if (nb.us.Buffer[i - 1] == '\\' && ++seen == 2) { cut = i - 1; break; }   /* drop \System32\ntdll.dll */
+    if (!cut || cut >= sizeof(g_winnt) / sizeof(WCHAR)) return FALSE;
+    for (i = 0; i < cut; i++) g_winnt[i] = nb.us.Buffer[i];
+    g_winnt[cut] = 0;
+    g_winnt_len = cut;
+    return TRUE;
+}
+
+static BOOL in_windows_nt(const UNICODE_STRING *u)
+{
+    SIZE_T i, n = u->Length / sizeof(WCHAR);
+    if (!g_winnt_len || n <= g_winnt_len) return !g_winnt_len;          /* unknown: never touched */
+    for (i = 0; i < g_winnt_len; i++) if (lcw(u->Buffer[i]) != lcw(g_winnt[i])) return FALSE;
+    return u->Buffer[g_winnt_len] == '\\';
+}
+
+static NTSTATUS NTAPI hook_mvs(HANDLE sec, HANDLE proc, PVOID *base, ULONG_PTR zb, SIZE_T commit, const LARGE_INTEGER *off,
+                               SIZE_T *view, SECTION_INHERIT inh, ULONG at, ULONG prot)
+{
+    NTSTATUS st = ((mvs_fn)g_real_mvs)(sec, proc, base, zb, commit, off, view, inh, at, prot);
+    MEMORY_BASIC_INFORMATION mbi;
+    mapped_name nb;
+    if (st >= 0 && g_on && proc == NtCurrentProcess() && base && *base &&
+        NtQueryVirtualMemory(proc, *base, MemoryBasicInformation, &mbi, sizeof(mbi), NULL) >= 0 &&
+        mbi.Type == MEM_IMAGE && mbi.AllocationBase == *base && name_of_mapping(*base, &nb) && !in_windows_nt(&nb.us)) {
+        trace_w("mapped:", nb.us.Buffer, nb.us.Length / sizeof(WCHAR));
+        RtlAcquireSRWLockExclusive(&g_rw_lock);
+        rewrite(*base);
+        RtlReleaseSRWLockExclusive(&g_rw_lock);
+    }
+    return st;
+}
+
+static void map_hook(void)
+{
+    LDR_DATA_TABLE_ENTRY *nt = find_module(L"ntdll.dll");
+    if (env_set(L"VX_NO_MAPHOOK")) return;
+    if (!nt || !windows_folder_nt()) { trace("Windows folder not found: DLLs are rewritten when loaded only", NULL, NULL); return; }
+    stub_hook(nt->DllBase, "NtMapViewOfSection", (void *)hook_mvs, &g_real_mvs);
+}
+#endif
+
 static void version_hooks(void)
 {
     LDR_DATA_TABLE_ENTRY *nt = find_module(L"ntdll.dll"), *ole = find_module(L"ole32.dll");
@@ -1141,6 +1224,9 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
             RtlGetNtVersionNumbers(&a, &b, &g_real_build);
             g_real_build &= 0xFFFF;
             if (!env_set(L"VX_NO_REGHOOK")) { g_hooks_on = TRUE; version_hooks(); }
+#if VX_OS >= 602 || VX_OS == 0
+            map_hook();
+#endif
             rewrite((BYTE *)NtCurrentTeb()->Peb->ImageBaseAddress);
             LdrRegisterDllNotification(0, dll_notification, NULL, &g_cookie);
         }

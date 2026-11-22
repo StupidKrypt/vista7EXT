@@ -37,7 +37,8 @@ RUNTIME = ('api-ms-win-crt-', 'ucrtbase.dll', 'vcruntime140', 'msvcp140', 'concr
 COMPANION = {'kernel32.dll': 'kernelvx.dll', 'kernelbase.dll': 'kernelvx.dll', 'user32.dll': 'uservx.dll',
              'advapi32.dll': 'advapivx.dll', 'shell32.dll': 'shellvx.dll',
              'bcryptprimitives.dll': 'bcryptprimvx.dll', 'ntdll.dll': 'ntvx.dll', 'ws2_32.dll': 'ws2vx.dll',
-             'cfgmgr32.dll': 'cfgmgrvx.dll', 'ole32.dll': 'olevx.dll', 'version.dll': 'versvx.dll'}
+             'cfgmgr32.dll': 'cfgmgrvx.dll', 'ole32.dll': 'olevx.dll', 'version.dll': 'versvx.dll',
+             'dxgi.dll': 'dxvx.dll', 'dnsapi.dll': 'dnsvx.dll', 'winhttp.dll': 'winhtvx.dll', 'userenv.dll': 'uenvvx.dll'}
 
 
 def delay_imports(pe):

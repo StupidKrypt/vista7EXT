@@ -3,7 +3,14 @@
  * separates path parts, as in Windows' own versions. */
 #include "../common/vx.h"
 
-#define PATHCCH_ALLOW_LONG_PATHS   0x01
+#define PATHCCH_ALLOW_LONG_PATHS                0x01
+#define PATHCCH_FORCE_ENABLE_LONG_NAME_PROCESS  0x02
+#define PATHCCH_FORCE_DISABLE_LONG_NAME_PROCESS 0x04
+#define PATHCCH_DO_NOT_NORMALIZE_SEGMENTS       0x08
+#define PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH  0x10
+#define PATHCCH_ENSURE_TRAILING_SLASH           0x20
+#define PATHCCH_CANONICALIZE_SLASHES            0x40
+#define PATHCCH_KNOWN_FLAGS                     0x7F
 #define PATHCCH_MAX_CCH            0x8000
 #define E_TOOSMALL   HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER)
 #define E_TOOLONG    HRESULT_FROM_WIN32(ERROR_FILENAME_EXCED_RANGE)
@@ -51,14 +58,38 @@ static SIZE_T root_len(const WCHAR *s)
     return 0;
 }
 
+/* The flags (PathCchCanonicalizeEx, PathAllocCanonicalize):
+ *  - CANONICALIZE_SLASHES: '/' counts as '\' (done first);
+ *  - ENSURE_TRAILING_SLASH: the result ends in '\';
+ *  - ENSURE_IS_EXTENDED_LENGTH_PATH: "C:\x" -> "\\?\C:\x", "\\srv\sh" ->
+ *    "\\?\UNC\srv\sh" (a relative path stays as it is);
+ *  - DO_NOT_NORMALIZE_SEGMENTS: segments are never changed here anyway
+ *    (no trailing dots or spaces are removed), so nothing to do;
+ *  - FORCE_ENABLE/DISABLE_LONG_NAME_PROCESS: the process-wide long-path
+ *    setting of Windows 10, which this Windows doesn't have: the limit is
+ *    the one ALLOW_LONG_PATHS gives. Both at once are refused.
+ * Unknown flags are refused (E_INVALIDARG), as Windows does. */
 static HRESULT canon(PWSTR out, SIZE_T cch, PCWSTR in, ULONG flags)
 {
-    SIZE_T n, r, o, i, max = (flags & PATHCCH_ALLOW_LONG_PATHS) ? PATHCCH_MAX_CCH : MAX_PATH;
-    WCHAR *buf;
+    SIZE_T n, r, o, i, max = (flags & (PATHCCH_ALLOW_LONG_PATHS | PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH)) ? PATHCCH_MAX_CCH : MAX_PATH;
+    WCHAR *buf, *conv = NULL;
     BOOL trail;
     if (!out || !in || !cch || cch > PATHCCH_MAX_CCH) return E_INVALIDARG;
+    if ((flags & ~PATHCCH_KNOWN_FLAGS) ||
+        (flags & (PATHCCH_FORCE_ENABLE_LONG_NAME_PROCESS | PATHCCH_FORCE_DISABLE_LONG_NAME_PROCESS)) ==
+            (PATHCCH_FORCE_ENABLE_LONG_NAME_PROCESS | PATHCCH_FORCE_DISABLE_LONG_NAME_PROCESS))
+        return E_INVALIDARG;
     n = vx_wcslen(in);
-    if (!(buf = HeapAlloc(GetProcessHeap(), 0, (n + 4) * sizeof(WCHAR)))) return E_OUTOFMEMORY;
+    if (flags & PATHCCH_CANONICALIZE_SLASHES) {
+        if (!(conv = HeapAlloc(GetProcessHeap(), 0, (n + 1) * sizeof(WCHAR)))) return E_OUTOFMEMORY;
+        for (i = 0; i <= n; i++) conv[i] = in[i] == '/' ? '\\' : in[i];
+        in = conv;
+    }
+    /* room for "\\?\UNC" in front and a '\\' at the end */
+    if (!(buf = HeapAlloc(GetProcessHeap(), 0, (n + 16) * sizeof(WCHAR)))) {
+        if (conv) HeapFree(GetProcessHeap(), 0, conv);
+        return E_OUTOFMEMORY;
+    }
     r = root_len(in);
     for (o = 0; o < r; o++) buf[o] = in[o];
     if (r == 2 && drive(in)) buf[o++] = '\\';          /* "C:" -> "C:\" */
@@ -82,7 +113,23 @@ static HRESULT canon(PWSTR out, SIZE_T cch, PCWSTR in, ULONG flags)
     }
     if (trail && o > r && buf[o - 1] != '\\') buf[o++] = '\\';
     if (!o) buf[o++] = '\\';
+    if ((flags & PATHCCH_ENSURE_TRAILING_SLASH) && buf[o - 1] != '\\') buf[o++] = '\\';
     buf[o] = 0;
+    if (flags & PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH) {
+        const WCHAR *pfx = NULL;
+        SIZE_T skip = 0, pl;
+        if (drive(buf) && buf[2] == '\\') pfx = L"\\\\?\\";                       /* C:\... */
+        else if (buf[0] == '\\' && buf[1] == '\\' && buf[2] != '?' && buf[2] != '.') {
+            pfx = L"\\\\?\\UNC\\"; skip = 2;                                     /* \\server\share */
+        }
+        if (pfx) {
+            pl = vx_wcslen(pfx);
+            memmove(buf + pl, buf + skip, (o - skip + 1) * sizeof(WCHAR));
+            vx_memcpy(buf, pfx, pl * sizeof(WCHAR));
+            o = o - skip + pl;
+        }
+    }
+    if (conv) HeapFree(GetProcessHeap(), 0, conv);
     if (o + 1 > max) { HeapFree(GetProcessHeap(), 0, buf); return E_TOOLONG; }
     if (o + 1 > cch) { HeapFree(GetProcessHeap(), 0, buf); return E_TOOSMALL; }
     vx_memcpy(out, buf, (o + 1) * sizeof(WCHAR));

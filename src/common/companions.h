@@ -10,7 +10,11 @@
  * Per Windows (build.sh: -DVX_OS): Vista has no bcryptprimitives.dll at all;
  * VistaExt installs its own, which programs then use directly. Windows 7 has
  * one without ProcessPrng, which bcryptprimvx adds (on 8, the generator
- * forwards it to Windows where Windows 8 has it). */
+ * forwards it to Windows where Windows 8 has it).
+ *
+ * A companion's name is never longer than its DLL's (the in-memory mode
+ * renames imports in place): dxgi -> dxvx, winhttp -> winhtvx, userenv ->
+ * uenvvx. These four keep no export numbers (no list of them is kept). */
 #ifndef VX_COMPANIONS_H
 #define VX_COMPANIONS_H
 
@@ -31,6 +35,10 @@
     VX_COMPANION(ws2_32,     ws2vx,    1) \
     VX_COMPANION(cfgmgr32,   cfgmgrvx, 1) \
     VX_COMPANION(ole32,      olevx,    1) \
-    VX_COMPANION(version,    versvx,   1)
+    VX_COMPANION(version,    versvx,   1) \
+    VX_COMPANION(dxgi,       dxvx,     0) \
+    VX_COMPANION(dnsapi,     dnsvx,    0) \
+    VX_COMPANION(winhttp,    winhtvx,  0) \
+    VX_COMPANION(userenv,    uenvvx,   0)
 
 #endif

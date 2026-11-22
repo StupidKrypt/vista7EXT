@@ -53,6 +53,19 @@ static BOOL same(volatile const void *a, const void *b, SIZE_T n)
     }
 }
 
+/* how long to look before sleeping: not at all on one processor (the other
+ * thread cannot run meanwhile) */
+static unsigned spin_count(void)
+{
+    static volatile LONG n = -1;
+    if (n < 0) {
+        SYSTEM_INFO si;
+        GetSystemInfo(&si);
+        InterlockedExchange(&n, si.dwNumberOfProcessors > 1 ? 128 : 0);
+    }
+    return (unsigned)n;
+}
+
 VX_EXPORT BOOL WINAPI vx_WaitOnAddress(volatile VOID *addr, PVOID cmp, SIZE_T size, DWORD ms)
 { VX_NATIVE(K32, WaitOnAddress, BOOL, (volatile VOID *addr, PVOID cmp, SIZE_T size, DWORD ms), (addr, cmp, size, ms));
     unsigned b;
@@ -64,6 +77,18 @@ VX_EXPORT BOOL WINAPI vx_WaitOnAddress(volatile VOID *addr, PVOID cmp, SIZE_T si
     }
     if (!same(addr, cmp, size)) return TRUE;         /* already changed: no lock needed */
     if (!ms) { SetLastError(ERROR_TIMEOUT); return FALSE; }
+    /* With more than one processor, the value often changes within a few
+     * hundred nanoseconds (a lock handed over, a reply): a short look before
+     * going to sleep saves the sleep and the wake-up (ping-pong benchmark:
+     * ~700-1000 ns per round trip in the VMs). Returning on a changed value
+     * is what WaitOnAddress does anyway. */
+    {
+        unsigned k;
+        for (k = spin_count(); k; k--) {
+            YieldProcessor();
+            if (!same(addr, cmp, size)) return TRUE;
+        }
+    }
     b = bucket(addr);
     w.addr = addr;
     w.next = NULL;

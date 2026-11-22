@@ -37,15 +37,16 @@ build_arch() {
 
     clang "${CFLAGS[@]}" -c src/common/common.c -o "$OBJ/common.o"
     clang "${CFLAGS[@]}" -c src/common/pin.c -o "$OBJ/pin.o"
+    clang "${CFLAGS[@]}" -c src/common/notifywnd.c -o "$OBJ/notifywnd.o"
     # the shared code as a library: each program or DLL takes only the parts it uses
     rm -f "$OBJ/libvxcommon.a"
-    llvm-ar rcs "$OBJ/libvxcommon.a" "$OBJ/common.o" "$OBJ/pin.o"
+    llvm-ar rcs "$OBJ/libvxcommon.a" "$OBJ/common.o" "$OBJ/pin.o" "$OBJ/notifywnd.o"
     # version info + ownership marker for every DLL (see src/common/dll.rc)
     llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/common/dll.rc -o "$OBJ/dll.res.o"
 
     # name : sources : extra cflags : libs
     local comps=(
-        "kernelvx:src/kernelvx/main.c src/kernelvx/synch.c src/kernelvx/sysinfo.c src/kernelvx/thread.c src/kernelvx/misc.c src/kernelvx/path.c src/kernelvx/power.c::-lkernel32 -ladvapi32 -lntdll"
+        "kernelvx:src/kernelvx/main.c src/kernelvx/synch.c src/kernelvx/sysinfo.c src/kernelvx/thread.c src/kernelvx/misc.c src/kernelvx/path.c src/kernelvx/power.c src/kernelvx/pool.c src/kernelvx/xstate.c::-lkernel32 -ladvapi32 -lntdll"
         "uservx:src/uservx/uservx.c::-luser32 -lgdi32 -lkernel32 -ladvapi32"
         "advapivx:src/advapivx/advapivx.c::-ladvapi32 -lkernel32"
         "shellvx:src/shellvx/shellvx.c::-lshell32 -lole32 -luser32 -lkernel32 -ladvapi32"
@@ -56,6 +57,12 @@ build_arch() {
         "cfgmgrvx:src/cfgmgrvx/cfgmgrvx.c::-lkernel32 -ladvapi32"
         "olevx:src/olevx/olevx.c src/olevx/wmi.c::-lole32 -lkernel32 -ladvapi32 -luuid -lwbemuuid"
         "versvx:src/versvx/versvx.c::-lversion -lkernel32 -ladvapi32"
+        "dxvx:src/dxvx/dxvx.c::-lkernel32 -ladvapi32"
+        "dnsvx:src/dnsvx/dnsvx.c::-ldnsapi -lkernel32 -ladvapi32"
+        "winhtvx:src/winhtvx/winhtvx.c::-lwinhttp -lkernel32 -ladvapi32"
+        "uenvvx:src/uenvvx/uenvvx.c::-lkernel32 -ladvapi32"
+        # no Windows before 10 has Direct3D 12: a d3d12.dll that says so
+        "d3d12:src/d3d12/d3d12.c::-lkernel32 -ladvapi32"
     )
     if [ "$os" = vista ]; then
         # DLLs Vista lacks entirely: kernelbase (forwards to kernelvx) and

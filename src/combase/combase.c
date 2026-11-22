@@ -161,7 +161,29 @@ VX_EXPORT HRESULT WINAPI vx_RoGetActivationFactory(HSTR cls, REFIID riid, void *
 VX_EXPORT HRESULT WINAPI vx_RoActivateInstance(HSTR cls, void **inst) { VX_TRACE("RoActivateInstance"); if (inst) *inst = NULL; return REGDB_E_CLASSNOTREG; }
 VX_EXPORT HRESULT WINAPI vx_RoRegisterActivationFactories(HSTR *c, void *f, UINT32 n, void *cookie) { return E_NOTIMPL; }
 VX_EXPORT void WINAPI vx_RoRevokeActivationFactories(void *cookie) { }
-VX_EXPORT HRESULT WINAPI vx_RoGetApartmentIdentifier(UINT64 *id) { *id = GetCurrentThreadId(); return S_OK; }
+/* The calling thread's apartment, as COM itself sees it (IComThreadingInfo,
+ * Vista): every thread in the multithreaded apartment shares one identifier,
+ * as do callers in the neutral one; a single-threaded apartment is its
+ * thread. Without COM there is no apartment: CO_E_NOTINITIALIZED. The
+ * values are opaque, as Microsoft documents them. */
+static HRESULT apartment_id(UINT64 *id)
+{
+    IComThreadingInfo *ti;
+    APTTYPE t;
+    HRESULT hr;
+    if (!id) return E_POINTER;
+    *id = 0;
+    if (FAILED(CoGetObjectContext(&IID_IComThreadingInfo, (void **)&ti))) return CO_E_NOTINITIALIZED;
+    hr = ti->lpVtbl->GetCurrentApartmentType(ti, &t);
+    ti->lpVtbl->Release(ti);
+    if (FAILED(hr)) return hr;
+    if (t == APTTYPE_MTA) *id = 0x4D54410000000000ULL | GetCurrentProcessId();        /* "MTA" */
+    else if (t == APTTYPE_NA) *id = 0x4E41000000000000ULL | GetCurrentProcessId();    /* "NA" */
+    else *id = GetCurrentThreadId();                                               /* STA, main STA */
+    return S_OK;
+}
+
+VX_EXPORT HRESULT WINAPI vx_RoGetApartmentIdentifier(UINT64 *id) { return apartment_id(id); }
 VX_EXPORT BOOL WINAPI vx_RoOriginateError(HRESULT hr, HSTR msg) { return FALSE; }
 VX_EXPORT BOOL WINAPI vx_RoOriginateErrorW(HRESULT hr, UINT n, PCWSTR msg) { return FALSE; }
 VX_EXPORT BOOL WINAPI vx_RoOriginateLanguageException(HRESULT hr, HSTR msg, void *e) { return FALSE; }
@@ -268,8 +290,9 @@ VX_EXPORT HRESULT WINAPI vx_RoGetAgileReference(int options, REFIID riid, IUnkno
 static LONG g_shutdown_cookie;
 VX_EXPORT HRESULT WINAPI vx_RoRegisterForApartmentShutdown(IUnknown *cb, UINT64 *id, HANDLE *cookie)
 {
+    HRESULT hr;
     if (!cb || !id || !cookie) return E_INVALIDARG;
-    *id = GetCurrentThreadId();
+    if (FAILED(hr = apartment_id(id))) return hr;
     *cookie = (HANDLE)(ULONG_PTR)InterlockedIncrement(&g_shutdown_cookie);
     return S_OK;
 }

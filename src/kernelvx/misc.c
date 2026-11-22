@@ -54,9 +54,13 @@ static void random_name(WCHAR *out)
         InterlockedExchange(&state, 2);
     }
     while (state != 2) SwitchToThread();
-    QueryPerformanceCounter(&t);
+    /* per name: the counter (unique in this process) and the interrupt clock,
+     * a plain read of the shared system page. Not the performance counter:
+     * where it is a hardware timer (HPET/ACPI, virtual machines) each read
+     * costs microseconds, which made every such section ~15 us instead of
+     * ~1 us (measured in the test VMs). */
     r[0] = secret[0] ^ (DWORD)InterlockedIncrement(&counter);
-    r[1] = secret[1] ^ t.LowPart;
+    r[1] = secret[1] ^ (DWORD)VX_KUSER_INTERRUPT_TIME[0];
     r[2] = secret[2] ^ GetCurrentProcessId();
     r[3] = secret[3];
     /* mix, so that consecutive names share no visible pattern */
@@ -172,6 +176,64 @@ VX_EXPORT HRESULT WINAPI vx_CopyFile2(PCWSTR src, PCWSTR dst, VX_COPYFILE2_EXTEN
 VX_EXPORT DWORD WINAPI vx_GetTempPath2W(DWORD n, LPWSTR buf) { VX_NATIVE(K32, GetTempPath2W, DWORD, (DWORD n, LPWSTR buf), (n, buf)); return GetTempPathW(n, buf); }
 VX_EXPORT DWORD WINAPI vx_GetTempPath2A(DWORD n, LPSTR buf) { VX_NATIVE(K32, GetTempPath2A, DWORD, (DWORD n, LPSTR buf), (n, buf)); return GetTempPathA(n, buf); }
 
+/* ---- FileStorageInfo from what Vista can tell ---------------------------------
+ * Logical sector size: the volume's (NtQueryVolumeInformationFile,
+ * FileFsSizeInformation). Physical sector size and the sector offset: the
+ * disk's access-alignment descriptor (IOCTL_STORAGE_QUERY_PROPERTY,
+ * StorageAccessAlignmentProperty, Vista and later), asked through the
+ * file's volume. A disk or driver that doesn't report it gets the logical
+ * size as physical, as Windows 8 does then. The partition's offset is not
+ * looked up: reported as unknown (STORAGE_INFO_OFFSET_UNKNOWN). */
+typedef struct { LONG_PTR Status; ULONG_PTR Information; } IO_STATUS_BLOCK_;
+LONG WINAPI NtQueryInformationFile(HANDLE, IO_STATUS_BLOCK_ *, PVOID, ULONG, int);
+LONG WINAPI NtQueryVolumeInformationFile(HANDLE, IO_STATUS_BLOCK_ *, PVOID, ULONG, int);
+ULONG WINAPI RtlNtStatusToDosError(LONG);
+
+static BOOL storage_info(HANDLE h, ULONG *u)
+{
+    struct { LARGE_INTEGER total, avail; ULONG spc, bps; } fs;     /* FILE_FS_SIZE_INFORMATION */
+    struct { DWORD ver, size, cacheline, cacheoff, logical, physical, secoff; } ad;   /* STORAGE_ACCESS_ALIGNMENT_DESCRIPTOR */
+    struct { DWORD prop, type; BYTE extra[4]; } q = { 6 /* StorageAccessAlignmentProperty */, 0 /* standard query */ };
+    IO_STATUS_BLOCK_ iosb;
+    WCHAR path[MAX_PATH + 8];
+    ULONG logical, physical, secoff = 0xFFFFFFFF;
+    DWORD got, n, i;
+    LONG st;
+    HANDLE vol;
+    if ((st = NtQueryVolumeInformationFile(h, &iosb, &fs, sizeof(fs), 3 /* FileFsSizeInformation */)) < 0) {
+        SetLastError(RtlNtStatusToDosError(st));
+        return FALSE;
+    }
+    logical = physical = fs.bps;
+    /* "\\?\Volume{...}\dir\file" -> "\\?\Volume{...}": the volume, opened
+     * with no access rights (enough for this query) */
+    n = GetFinalPathNameByHandleW(h, path, MAX_PATH, 1 /* VOLUME_NAME_GUID */);
+    if (n && n < MAX_PATH && !vx_wcsnicmp(path, L"\\\\?\\Volume{", 11)) {
+        for (i = 11; path[i] && path[i] != '}'; i++) ;
+        if (path[i] == '}') {
+            path[i + 1] = 0;
+            vol = CreateFileW(path, 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
+            if (vol != INVALID_HANDLE_VALUE) {
+                vx_memset(&ad, 0, sizeof(ad));
+                if (DeviceIoControl(vol, 0x2D1400 /* IOCTL_STORAGE_QUERY_PROPERTY */, &q, sizeof(q), &ad, sizeof(ad), &got, NULL) &&
+                    got >= sizeof(ad) && ad.logical == logical && ad.physical >= logical) {
+                    physical = ad.physical;
+                    secoff = ad.secoff;
+                }
+                CloseHandle(vol);
+            }
+        }
+    }
+    u[0] = logical;                       /* LogicalBytesPerSector */
+    u[1] = physical;                      /* PhysicalBytesPerSectorForAtomicity */
+    u[2] = physical;                      /* PhysicalBytesPerSectorForPerformance */
+    u[3] = physical;                      /* FileSystemEffectivePhysicalBytesPerSectorForAtomicity */
+    u[4] = secoff == 0 ? 1 : 0;           /* Flags: STORAGE_INFO_FLAGS_ALIGNED_DEVICE */
+    u[5] = secoff;                        /* ByteOffsetForSectorAlignment */
+    u[6] = 0xFFFFFFFF;                    /* ByteOffsetForPartitionAlignment: unknown */
+    return TRUE;
+}
+
 /* GetFileInformationByHandleEx: Vista knows classes up to 11. Windows 8 added
  * FileIdInfo (18), FileStorageInfo (16) and FileAlignmentInfo (17), which
  * Rust, Python and Chromium use. */
@@ -181,7 +243,8 @@ VX_EXPORT BOOL WINAPI vx_GetFileInformationByHandleEx(HANDLE h, FILE_INFO_BY_HAN
     DWORD err;
     if (GetFileInformationByHandleEx(h, cls, buf, size)) return TRUE;
     err = GetLastError();
-    if (err != ERROR_INVALID_PARAMETER && err != ERROR_NOT_SUPPORTED && err != ERROR_INVALID_FUNCTION) return FALSE;
+    if (err != ERROR_INVALID_PARAMETER && err != ERROR_NOT_SUPPORTED && err != ERROR_INVALID_FUNCTION &&
+        err != ERROR_CALL_NOT_IMPLEMENTED) return FALSE;
     switch ((int)cls) {
     case 18: { /* FileIdInfo: ULONGLONG VolumeSerialNumber; BYTE FileId[16] */
         BYTE *b = buf;
@@ -193,17 +256,18 @@ VX_EXPORT BOOL WINAPI vx_GetFileInformationByHandleEx(HANDLE h, FILE_INFO_BY_HAN
         *(DWORD *)(b + 12) = bhi.nFileIndexHigh;
         return TRUE;
     }
-    case 16: { /* FileStorageInfo: 7 ULONGs */
-        ULONG *u = buf;
+    case 16: /* FileStorageInfo: 7 ULONGs */
         if (size < 28) { SetLastError(ERROR_BAD_LENGTH); return FALSE; }
-        u[0] = u[1] = u[2] = u[3] = 512;   /* logical / physical sector sizes */
-        u[4] = 0; u[5] = 0; u[6] = 0;
+        return storage_info(h, buf);
+    case 17: { /* FileAlignmentInfo = ntdll's FileAlignmentInformation (17), which every NT has */
+        IO_STATUS_BLOCK_ iosb;
+        ULONG a;
+        LONG st;
+        if (size < 4) { SetLastError(ERROR_BAD_LENGTH); return FALSE; }
+        if ((st = NtQueryInformationFile(h, &iosb, &a, sizeof(a), 17)) < 0) { SetLastError(RtlNtStatusToDosError(st)); return FALSE; }
+        *(ULONG *)buf = a;
         return TRUE;
     }
-    case 17: /* FileAlignmentInfo: ULONG AlignmentRequirement */
-        if (size < 4) { SetLastError(ERROR_BAD_LENGTH); return FALSE; }
-        *(ULONG *)buf = 0;
-        return TRUE;
     }
     SetLastError(err);
     return FALSE;
@@ -283,21 +347,63 @@ VX_EXPORT LONG WINAPI vx_AppPolicyGetLifecycleManagement(HANDLE t, int *p) { VX_
 
 /* ---- locale ---------------------------------------------------------------- */
 #if VX_OS < 601   /* Windows 7 and later have it: their .def forwards there */
+/* ResolveLocaleName (Windows 7): the specific locale that best matches a
+ * name. Vista's LocaleNameToLCID knows specific names ("de-AT") but not
+ * every language-only one ("de"), nor names with unknown parts ("en-XX").
+ * So: drop parts from the end until a name is known; if only the language
+ * is left and Vista doesn't know it alone, find the language among the
+ * installed locales. Then ConvertDefaultLocale (Vista) turns a language into
+ * its default locale ("de" -> "de-DE", "en" -> "en-US"), as Windows 7 does. */
+typedef struct { const WCHAR *lang; SIZE_T n; LCID lcid; } lang_find;
+
+static BOOL CALLBACK find_lang(LPWSTR name, DWORD flags, LPARAM lp)
+{
+    lang_find *f = (lang_find *)lp;
+    if (!vx_wcsnicmp(name, f->lang, f->n) && (name[f->n] == '-' || !name[f->n])) {
+        f->lcid = LocaleNameToLCID(name, 0);
+        if (f->lcid) return FALSE;                    /* found: stop */
+    }
+    return TRUE;
+}
+
 VX_EXPORT int WINAPI vx_ResolveLocaleName(LPCWSTR name, LPWSTR out, int cch)
 { VX_NATIVE(K32, ResolveLocaleName, int, (LPCWSTR name, LPWSTR out, int cch), (name, out, cch));
     WCHAR tmp[LOCALE_NAME_MAX_LENGTH];
-    LCID lcid;
-    if (!name) return GetUserDefaultLocaleName(out, cch);
-    lcid = LocaleNameToLCID(name, 0);
+    LCID lcid = 0;
+    SIZE_T n;
+    if (cch < 0 || (cch && !out)) { SetLastError(ERROR_INVALID_PARAMETER); return 0; }
+    if (!name) {                                       /* the user's default locale */
+        if (!GetUserDefaultLocaleName(tmp, LOCALE_NAME_MAX_LENGTH)) return 0;
+        name = tmp;
+    }
+    if (!name[0]) {                                    /* the invariant locale: "" */
+        if (!cch) return 1;
+        out[0] = 0;
+        return 1;
+    }
+    n = vx_wcslen(name);
+    if (n >= LOCALE_NAME_MAX_LENGTH) { SetLastError(ERROR_INVALID_PARAMETER); return 0; }
+    if (name != tmp) vx_wcscpyn(tmp, name, LOCALE_NAME_MAX_LENGTH);
+    for (;;) {
+        if ((lcid = LocaleNameToLCID(tmp, 0))) break;
+        while (n && tmp[n - 1] != '-') n--;            /* drop the last "-part" */
+        if (!n) break;
+        tmp[--n] = 0;
+    }
     if (!lcid) {
-        /* "en" -> try the language's default region via a short scan */
-        SIZE_T n = vx_wcslen(name);
-        if (n >= LOCALE_NAME_MAX_LENGTH) return 0;
-        vx_wcscpyn(tmp, name, LOCALE_NAME_MAX_LENGTH);
-        while (n && tmp[n - 1] != '-') n--;
-        if (n) { tmp[n - 1] = 0; lcid = LocaleNameToLCID(tmp, 0); }
+        lang_find f;
+        SIZE_T k = 0;
+        while (name[k] && name[k] != '-') k++;
+        f.lang = name; f.n = k; f.lcid = 0;
+        if (k) EnumSystemLocalesEx(find_lang, 1 /* LOCALE_WINDOWS */, (LPARAM)&f, NULL);
+        /* only the language is known to match: its default locale, not
+         * whichever of its locales was listed first ("en-029") */
+        if (f.lcid) lcid = MAKELCID(MAKELANGID(PRIMARYLANGID(LANGIDFROMLCID(f.lcid)), SUBLANG_NEUTRAL), SORT_DEFAULT);
     }
     if (!lcid) { SetLastError(ERROR_INVALID_PARAMETER); return 0; }
+    /* a language alone ("de", sublanguage neutral) -> its default locale */
+    if (SUBLANGID(LANGIDFROMLCID(lcid)) == SUBLANG_NEUTRAL)
+        lcid = ConvertDefaultLocale(MAKELCID(MAKELANGID(PRIMARYLANGID(LANGIDFROMLCID(lcid)), SUBLANG_NEUTRAL), SORT_DEFAULT));
     return LCIDToLocaleName(lcid, out, cch, 0);
 }
 #endif

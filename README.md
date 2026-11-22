@@ -130,7 +130,7 @@ In each VM, `tests/vm/run.cmd` checks:
 - VistaExt Center opens and shows what the program needs
 - `uninstall.cmd` stops and removes nothing while a patched program is running; once it is closed, it restores the patched programs and removes every file, setting and Explorer entry it added
 
-Results so far: Vista SP2 x64 199/199, Vista SP2 x86 163/163, Windows 7 SP1 x64 197/197, Windows 7 SP1 x86 161/161. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
+Results so far (Beta 1.1): Vista SP2 x64 200/200, Vista SP2 x86 164/164, Windows 7 SP1 x64 198/198, Windows 7 SP1 x86 162/162, Windows 8 x64 193/193. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
 
 ### Real programs
 
@@ -170,7 +170,8 @@ The test CD also works on its own, for another VM program or a spare PC: `tests/
 - **Coverage is what's listed.** About 290 functions are added. Big frameworks (recent Chromium/Electron, .NET 8+, Qt 6) may need more; `vxpatch /check` and VistaExt Center list what's still missing.
 - **Imports by ordinal** (some `shell32` imports) are left unpatched and reported.
 - **Extra start-up options** reach programs that read their command line through `GetCommandLine` in their own code, which includes Chromium, Electron and statically linked programs. Programs built with the shared C runtime (`ucrtbase.dll`, `msvcrt.dll`) get `argv` from the runtime, which reads the command line itself, so they don't see the extra options.
-- **Some features are stubbed:** touch, pointer and gesture input; per-monitor DPI (Vista has one DPI); display configuration APIs; Windows Runtime classes (`RoGetActivationFactory` returns "class not registered"); `CreatePseudoConsole`; process mitigation policies. Programs are told the feature isn't available.
+- **Some features are stubbed:** touch, pointer and gesture input; per-monitor DPI (Vista has one DPI); display configuration APIs; Windows Runtime classes (`RoGetActivationFactory` returns "class not registered"); `CreatePseudoConsole`. Programs are told the feature isn't available.
+- **Protections this Windows can't give are refused, not faked:** process mitigation policies other than DEP (`SetProcessMitigationPolicy` fails with `ERROR_NOT_SUPPORTED`), and on Vista keeping a window out of screen captures (`SetWindowDisplayAffinity`). A program must not believe it is protected when it is not; one that insists on the protection stops, as it would on this Windows without VistaExt.
 - **WebView2:** Microsoft's newest runtimes need Windows 10. VistaExt can point programs at a Fixed Version runtime, but whether runtime 109 starts on Vista has not been tested, and programs built with a newer WebView2 SDK may insist on a newer runtime. Supplying the runtime is up to you (it isn't redistributed here).
 - **Custom actions inside MSI packages:** `msifix` patches the DLLs and programs stored in the package; this is verified with Windows Installer on Vista and 7. Script custom actions are not changed, and neither are the program files the package installs: run VistaExt Center on the installed program afterwards.
 - **Signed programs** lose their signature validity after patching; programs that verify their own signature may refuse to run.

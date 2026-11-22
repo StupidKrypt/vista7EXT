@@ -107,7 +107,8 @@ if __name__ == '__main__':
     allres = {}
     for folder in args:
         win, res = parse_folder(folder)
-        allres[win] = res
+        # several folders of one Windows (runs in phases): one entry, merged
+        allres.setdefault(win, {}).update(res)
         print('=== %s' % win)
         for name in sorted(res):
             r = res[name]

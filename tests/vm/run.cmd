@@ -110,14 +110,18 @@ findstr /i /l /c:"System32\kernelbase.dll" "%VX%\installed.txt" >nul
 set "KB=!errorlevel!"
 if "%CV%"=="6.0" call :expect "Vista: kernelbase.dll added (Vista has none)" 0 !KB!
 if "%CV%"=="6.1" call :expect "Windows 7: its own kernelbase.dll left alone" 1 !KB!
+if "%CV%"=="6.2" call :expect "Windows 8: its own kernelbase.dll left alone" 1 !KB!
 rem one installer, four builds: it must pick this Windows' and architecture's
 set "WANTB=win7-%OSA%"
 if "%CV%"=="6.0" set "WANTB=vista-%OSA%"
+if "%CV%"=="6.2" set "WANTB=win8-%OSA%"
+if "%CV%"=="6.3" set "WANTB=win8-%OSA%"
 reg query "HKLM\SOFTWARE\VistaExt" /v Build 2>nul | find "!WANTB!" >nul
 call :expect "the installer picked the build for this Windows (!WANTB!)" 0 !errorlevel!
 if "%CV%"=="6.0" call :absent "Vista build: no bcryptprimvx.dll (Vista uses VistaExt's bcryptprimitives.dll)" "%SYS%\bcryptprimvx.dll"
 if "%CV%"=="6.0" call :exists "Vista build: VistaExt's bcryptprimitives.dll added" "%SYS%\bcryptprimitives.dll"
 if "%CV%"=="6.1" call :exists "Windows 7 build: bcryptprimvx.dll added" "%SYS%\bcryptprimvx.dll"
+if "%CV%"=="6.2" call :exists "Windows 8 build: bcryptprimvx.dll added" "%SYS%\bcryptprimvx.dll"
 findstr /m /l /c:"VistaExt-owned-file" "%SYS%\kernelvx.dll" >nul 2>&1
 call :expect "VistaExt's DLLs carry the ownership marker" 0 !errorlevel!
 findstr /m /l /c:"VistaExt-owned-file" "%SYS%\kernel32.dll" >nul 2>&1
@@ -154,7 +158,8 @@ rem the tests below give programs their own versions; the global setting has its
 call :run 60 "%VX%\vxauto.exe" /setver REAL
 
 call :say "### a VistaExt file that Windows replaced (as Windows Update can) is left alone"
-set "REPL=%SYS%\api-ms-win-core-winrt-l1-1-0.dll"
+rem (a contract none of Vista, 7 and 8.0 has: VistaExt's own file on each)
+set "REPL=%SYS%\api-ms-win-core-winrt-string-l1-1-1.dll"
 copy /y "%SYS%\version.dll" "%REPL%" >nul
 cmd /c ""%T%\VistaExt\install.cmd"" < nul > "%R%\install2.txt" 2>&1
 call :expect "install.cmd again, over an existing install, succeeds" 0 !errorlevel!
@@ -226,10 +231,9 @@ rem -------------------------------------------------------------- uninstall
 call :say "### uninstall.cmd while a patched program is running"
 set "BUSY=%T%\busy"
 mkdir "%BUSY%" 2>nul
-copy /y "%B%\apitest.exe" "%BUSY%\vxbusy.exe" >nul
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
+rem the test program: it needs VistaExt on Vista, 7 and 8 alike (/wait keeps it open)
+copy /y "%B%\vxtest.exe" "%BUSY%\vxbusy.exe" >nul
 call :run 120 "%VX%\vxpatch.exe" /file /q "%BUSY%\vxbusy.exe"
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
 call :run 120 "%VX%\vxpatch.exe" /file /q "%T%\%OSA%\app\vxtest.exe"
 start "" "%BUSY%\vxbusy.exe" /wait:300
 ping -n 4 127.0.0.1 >nul
@@ -272,7 +276,7 @@ reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt" >nul 2>&1
 call :expect "Explorer entries removed" 1 !errorlevel!
 fc /b "%APP%" "%T%\bin\%OSA%\vxtest.exe" >nul
 call :expect "uninstall puts patched programs back" 0 !errorlevel!
-fc /b "%BUSY%\vxbusy.exe" "%B%\apitest.exe" >nul
+fc /b "%BUSY%\vxbusy.exe" "%B%\vxtest.exe" >nul
 call :expect "... including the one that was running before" 0 !errorlevel!
 call :exists "the file Windows replaced is kept" "%REPL%"
 reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v VistaExt >nul 2>&1
@@ -419,7 +423,11 @@ goto :eof
 :apiset_own
 rem Windows' own file stays: unchanged, the program can't start; patched, it runs
 call :run 60 "%W%\apitest.exe"
-call :nonzero "%A% Windows' own API-set DLL is kept, so the unchanged program cannot start" !RC!
+rem (Windows 8's own synch API set has these functions, and VistaExt's copy of
+rem the Windows 10 contract answers the rest: there it starts unchanged)
+if "%CV%"=="6.2" (
+    call :expect "%A% Windows 8: its own API sets have the Windows 8 functions, VistaExt's the rest: it runs unchanged" 0 !RC!
+) else call :nonzero "%A% Windows' own API-set DLL is kept, so the unchanged program cannot start" !RC!
 call :run 120 "%VX%\vxpatch.exe" /file "%W%\apitest.exe"
 call :expect "%A% vxpatch points the API-set import at VistaExt" 0 !RC!
 call :run 60 "%W%\apitest.exe"
@@ -625,7 +633,7 @@ if not exist "%DL%" mkdir "%DL%"
 call :run 60 "%VX%\vxauto.exe" /pipe SETVER WIN10
 copy /y "%B%\spawntest.exe" "%DL%\vxsetuptest.exe" >nul
 copy /y "%B%\vxbench-native.exe" "%DL%\vxplain.exe" >nul
-copy /y "%B%\spawntest.exe" "%DL%\notepad.exe" >nul
+copy /y "%B%\vxtest.exe" "%DL%\notepad.exe" >nul
 copy /y "%B%\vercheck.exe" "%DL%\vxver-setup.exe" >nul
 copy /y "%B%\vercheck.exe" "%DL%\vxver.exe" >nul
 copy /y "%B%\vercheck.exe" "%DL%\vxdriver-setup.exe" >nul
@@ -686,12 +694,10 @@ set "SW=%T%\switch"
 mkdir "%SW%\mem" "%SW%\file" "%SW%\busy" 2>nul
 copy /y "%B%\vxtest.exe" "%SW%\mem\vxtest.exe" >nul
 copy /y "%B%\vxtest.exe" "%SW%\file\vxfile.exe" >nul
-copy /y "%B%\apitest.exe" "%SW%\busy\vxbusy2.exe" >nul
+copy /y "%B%\vxtest.exe" "%SW%\busy\vxbusy2.exe" >nul
 call :run 120 "%VX%\vxpatch.exe" /memory /q "%SW%\mem"
 call :run 120 "%VX%\vxpatch.exe" /file /q "%SW%\file\vxfile.exe"
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
 call :run 120 "%VX%\vxpatch.exe" /file /q "%SW%\busy\vxbusy2.exe"
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
 start "" "%SW%\busy\vxbusy2.exe" /wait:300
 ping -n 4 127.0.0.1 >nul
 call :run 180 "%VX%\vxauto.exe" /pipe DISABLE
@@ -719,8 +725,8 @@ call :expect "off: a changed program that was running keeps running" 0 !errorlev
 "%VX%\vxauto.exe" /pipe STATUS 2>nul | find "waiting=1" >nul
 call :expect "off: ... and is put back once it is closed (waiting)" 0 !errorlevel!
 taskkill /f /im vxbusy2.exe >nul 2>&1
-for /l %%w in (1,1,30) do (fc /b "%SW%\busy\vxbusy2.exe" "%B%\apitest.exe" >nul 2>&1 || ping -n 3 127.0.0.1 >nul)
-fc /b "%SW%\busy\vxbusy2.exe" "%B%\apitest.exe" >nul
+for /l %%w in (1,1,30) do (fc /b "%SW%\busy\vxbusy2.exe" "%B%\vxtest.exe" >nul 2>&1 || ping -n 3 127.0.0.1 >nul)
+fc /b "%SW%\busy\vxbusy2.exe" "%B%\vxtest.exe" >nul
 call :expect "off: ... closed: its original is back" 0 !errorlevel!
 copy /y "%ProgramData%\VistaExt\VistaExt.log" "%R%\VistaExt-switch.log" >nul 2>&1
 call :run 180 "%VX%\vxauto.exe" /pipe ENABLE
@@ -811,7 +817,7 @@ call :expect "turned on again from the tray icon's switch" 0 !RC!
 call :run 60 "%SF%\vxtest.exe"
 call :expect "... and the program runs again" 0 !RC!
 call :run 120 "%VX%\vxpatch.exe" /undo /q "%SF%"
-set "REPL=%SYS%\api-ms-win-core-winrt-l1-1-0.dll"
+set "REPL=%SYS%\api-ms-win-core-winrt-string-l1-1-1.dll"
 set "OWNSYS="
 if exist "%SYS%\api-ms-win-core-synch-l1-2-0.dll" findstr /m /l /c:"VistaExt-owned-file" "%SYS%\api-ms-win-core-synch-l1-2-0.dll" >nul 2>&1 || set "OWNSYS=1"
 goto :safe_done
@@ -821,10 +827,8 @@ rem ---- uninstalling with VistaExtSetup.exe while a program VistaExt runs is op
 call :say "### uninstall (VistaExtSetup.exe) while a program VistaExt runs is open"
 set "UN=%T%\uninst"
 mkdir "%UN%" 2>nul
-copy /y "%B%\apitest.exe" "%UN%\vxbusy3.exe" >nul
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
+copy /y "%B%\vxtest.exe" "%UN%\vxbusy3.exe" >nul
 call :run 120 "%VX%\vxpatch.exe" /memory /q "%UN%"
-ren "%SYS%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
 start "" "%UN%\vxbusy3.exe" /wait:600
 ping -n 5 127.0.0.1 >nul
 tasklist /fi "imagename eq vxbusy3.exe" 2>nul | find /i "vxbusy3.exe" >nul
@@ -852,7 +856,7 @@ del /f /q "%SAFESTATE%" "%SystemDrive%\vxt-uninst.after" >nul 2>&1
 call :absent "kernelvx.dll is gone from System32" "%SYS%\kernelvx.dll"
 call :absent "vxload.dll is gone" "%SYS%\vxload.dll"
 if "%OSA%"=="x64" call :absent "32-bit kernelvx.dll is gone from SysWOW64" "%WOW%\kernelvx.dll"
-dir /b "%SYS%\api-ms-win-core-winrt-l1-1-0.dll" "%SYS%\vxs-*" > "%T%\left.txt" 2>nul
+dir /b "%SYS%\api-ms-win-core-winrt-string-l1-1-1.dll" "%SYS%\vxs-*" > "%T%\left.txt" 2>nul
 for /f %%c in ('find /c /v "" ^< "%T%\left.txt"') do call :say "    VistaExt API-set files left: %%c"
 call :absent "VistaExt's folder in Program Files is gone" "%VX%"
 call :absent "the log folder is gone" "%ProgramData%\VistaExt"
@@ -899,10 +903,20 @@ call :say "### diagnostics: vxload under vxdbg, VX_TRACE=1"
 set "DG=%T%\diag"
 mkdir "%DG%" 2>nul
 copy /y "%B%\vxtest.exe" "%DG%\vxtest.exe" >nul
+copy /y "%B%\memhost.exe" "%DG%\memhost.exe" >nul
+copy /y "%B%\memdll.dll" "%DG%\memdll.dll" >nul
+copy /y "%B%\memdll.dll" "%DG%\memdll2.dll" >nul
 call :run 120 "%VX%\vxpatch.exe" /memory /q "%DG%"
 call :run 60 "%VX%\vxauto.exe" /pipe SETVER WIN11
 set VX_TRACE=1
 "%NF%" 120 "%B%\vxdbg.exe" 60 "%DG%\vxtest.exe" /expectall:10.0.22631 > "%R%\diag-vxtest.txt" 2>&1
+rem a program with a DLL it loads at start and one it loads later, with the
+rem loader's own messages (GlobalFlag 2, added to VistaExt's 0x100)
+set "MIF=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\memhost.exe"
+reg query "%MIF%" > "%R%\diag-memhost-ifeo.txt" 2>&1
+reg add "%MIF%" /v GlobalFlag /t REG_DWORD /d 0x102 /f >nul 2>&1
+"%NF%" 120 "%B%\vxdbg.exe" 60 "%DG%\memhost.exe" > "%R%\diag-memhost.txt" 2>&1
+reg add "%MIF%" /v GlobalFlag /t REG_DWORD /d 0x100 /f >nul 2>&1
 set "DL=%USERPROFILE%\Downloads"
 if not exist "%DL%" mkdir "%DL%"
 copy /y "%B%\spawntest.exe" "%DL%\vxsetuptest.exe" >nul

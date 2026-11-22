@@ -338,7 +338,9 @@ VX_EXPORT FARPROC WINAPI vx_GetProcAddress(HMODULE h, LPCSTR name)
     unsigned m;
     if (!h || !((ULONG_PTR)name >> 16)) return p;          /* by ordinal */
     err = GetLastError();
-    if (!companion_of(h, p != NULL, &comp, &lo, &hi, &m)) { SetLastError(err); return p; }
+    /* "procedure not found" (127) means Windows read h's export table: a
+     * loaded module, so no memory query is needed to trust it */
+    if (!companion_of(h, p != NULL || err == ERROR_PROC_NOT_FOUND, &comp, &lo, &hi, &m)) { SetLastError(err); return p; }
     if (p && !implemented(m, name)) { SetLastError(err); return p; }   /* the usual case: nothing to change */
     c = GetProcAddress(comp, name);
     if (p) {
@@ -386,16 +388,27 @@ VX_EXPORT HMODULE WINAPI vx_LoadLibraryExW(LPCWSTR name, HANDLE file, DWORD flag
     if (!search && !(flags & VX_REQUIRE_SIGNED) && g_default_dirs && !(flags & LOAD_WITH_ALTERED_SEARCH_PATH))
         search = g_default_dirs;
     if (name && search) {
+        /* System32 only: the DLL comes from there or not at all. Falling back
+         * to the normal search would load a same-named DLL from the program's
+         * folder, the planting this flag exists to prevent. A DLL that is
+         * already loaded (by its name) is returned as Windows does. */
         if (search == VX_SEARCH_SYSTEM32 && !has_path(name)) {
             WCHAR path[MAX_PATH];
             UINT n = GetSystemDirectoryW(path, MAX_PATH);
-            if (n && n + vx_wcslen(name) + 2 < MAX_PATH) {
-                HMODULE h;
-                vx_wcscatn(path, L"\\", MAX_PATH);
-                vx_wcscatn(path, name, MAX_PATH);
-                h = LoadLibraryExW(path, file, plain | LOAD_WITH_ALTERED_SEARCH_PATH);
-                if (h) return h;
+            HMODULE h = NULL;
+            /* "the loaded DLL, no matter which directory it is in" (Microsoft's
+             * search-order rules); GetModuleHandleEx takes the reference in
+             * the same step, so no unload can come in between */
+            if (!(plain & (LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE | LOAD_LIBRARY_AS_IMAGE_RESOURCE)) &&
+                GetModuleHandleExW(0, name, &h))
+                return h;
+            if (!n || n >= MAX_PATH || n + vx_wcslen(name) + 2 > MAX_PATH) {
+                SetLastError(ERROR_FILENAME_EXCED_RANGE);
+                return NULL;
             }
+            vx_wcscatn(path, L"\\", MAX_PATH);
+            vx_wcscatn(path, name, MAX_PATH);
+            return LoadLibraryExW(path, file, plain | LOAD_WITH_ALTERED_SEARCH_PATH);
         }
         if ((search & VX_SEARCH_DLL_LOAD_DIR) && has_path(name))
             plain |= LOAD_WITH_ALTERED_SEARCH_PATH;
