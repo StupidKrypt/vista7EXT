@@ -129,6 +129,10 @@ build_arch() {
     # the setup program: one for all four builds (32-bit, so it runs on every
     # Vista/7); it picks the build to install (src/setup/vxsetup.c)
     if [ "$arch" = i686 ] && [ "$os" = vista ]; then
+        # the version setup compares with the installed one: the same everywhere
+        v=$(sed -n 's/^#define VX_THIS_VERSION L"\(.*\)"/\1/p' src/setup/vxsetup.c)
+        grep -q "\"FileVersion\", \"$v\"" src/common/version.rci && grep -q "DisplayVersion /d \"$v " installer/install.cmd || {
+            echo "version mismatch: vxsetup.c says '$v'; check version.rci and install.cmd" >&2; exit 1; }
         llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/setup/vxsetup.rc -o "$OBJ/vxsetup.res.o"
         clang "${CFLAGS[@]}" -c src/setup/vxsetup.c -o "$OBJ/vxsetup.o"
         clang "${LDFLAGS[@]}" "${EXEFLAGS[@]}" -o "$ROOT/out/obj/VistaExtSetup-stub.exe" "$OBJ/vxsetup.o" "$OBJ/vxsetup.res.o" "$OBJ/libvxcommon.a" "$OBJ/userrun.o" \

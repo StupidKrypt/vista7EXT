@@ -269,6 +269,13 @@ make_testcd() {
     [ "${VX_VM_ONLY:-}" = watch ] && echo watch > "$S/vxvm/only-watch.txt"
     # VX_VM_ONLY=uninst: uninstalling with VistaExtSetup.exe while a program uses VistaExt (one restart)
     [ "${VX_VM_ONLY:-}" = uninst ] && echo uninst > "$S/vxvm/only-uninst.txt" && cp out/dist/VistaExtSetup.exe "$S/vxvm/"
+    # VX_VM_ONLY=upgrade: an earlier release (VX_OLD_SETUP, default the released
+    # Beta 1.1 kept in out/old) installed and used, this one over it, then removed
+    if [ "${VX_VM_ONLY:-}" = upgrade ]; then
+        echo upgrade > "$S/vxvm/only-upgrade.txt"
+        cp out/dist/VistaExtSetup.exe "$S/vxvm/"
+        cp "${VX_OLD_SETUP:-out/old/beta1.1/VistaExtSetup.exe}" "$S/vxvm/VistaExtSetup-old.exe" || return 1
+    fi
     genisoimage -quiet -J -r -V VXTEST -o "$VMS/test.iso" "$S" || return 1
     echo "test CD: $VMS/test.iso"
 }

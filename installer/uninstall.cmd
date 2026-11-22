@@ -48,8 +48,9 @@ if exist "%VX%\vxpatch.exe" (
     )
 )
 if exist "%VX%\vxcenter.exe" start "" /wait "%VX%\vxcenter.exe" /unregister
-rem the tray icon, in every session, and its autostart
+rem the tray icon, in every session, and its autostart; an open VistaExt window
 taskkill /f /im vxtray.exe >nul 2>&1
+taskkill /f /im vxcenter.exe >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v VistaExt /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\VistaExt" /f >nul 2>&1
 rem each user's own settings (crash window choices, tray icon autostart):
@@ -64,6 +65,11 @@ if exist "%LIST%" (
     for /f "usebackq delims=" %%f in ("%LIST%") do (
         rem switched off: VistaExt's copy waits in VistaExt.off next to it
         if exist "%%~dpfVistaExt.off\%%~nxf" del /f /q "%%~dpfVistaExt.off\%%~nxf" >nul 2>&1
+        rem (moved aside while a running program had it loaded: deleted at the restart)
+        if exist "%%~dpfVistaExt.off\%%~nxf" (
+            echo   still in use: %%~dpfVistaExt.off\%%~nxf
+            set /a LEFT+=1
+        )
         if exist "%%f" (
             findstr /m /l /c:"VistaExt-owned-file" "%%f" >nul 2>&1
             if errorlevel 1 (
@@ -76,6 +82,13 @@ if exist "%LIST%" (
                 )
             )
         )
+    )
+)
+rem old copies an update set aside because they were in use (<name>.vxoldN)
+for %%d in ("%windir%\System32" "%windir%\SysWOW64" "%windir%\System32\VistaExt.off" "%windir%\SysWOW64\VistaExt.off" "%VX%") do (
+    for %%f in ("%%~d\*.vxold*") do (
+        del /f /q "%%~f" >nul 2>&1
+        if exist "%%~f" echo   still in use: %%~f
     )
 )
 for %%d in ("%windir%\System32\VistaExt.off" "%windir%\SysWOW64\VistaExt.off") do if exist %%d rd %%d >nul 2>&1
@@ -92,6 +105,7 @@ rem the patched WebView2 runtime copy, if vx-webview2-setup made one
 if exist "%VX%\WebView2" rd /s /q "%VX%\WebView2" >nul 2>&1
 for %%f in (vxcenter.exe vxpatch.exe msifix.exe vxauto.exe vxtray.exe VistaExtSetup.exe vx-webview2-setup.cmd README.txt) do (
     if exist "%VX%\%%f" del /f /q "%VX%\%%f" >nul 2>&1
+    if exist "%VX%\%%f" if /i not "%%f"=="VistaExtSetup.exe" echo   still in use: %VX%\%%f
 )
 if "!LEFT!"=="0" (
     del /f /q "%LIST%" >nul 2>&1

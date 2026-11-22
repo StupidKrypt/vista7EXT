@@ -382,7 +382,7 @@ static void show_menu(void)
                 L"Setup programs are told it too (not Microsoft's, not drivers)");
     AppendMenuW(m, MF_POPUP | (g_on ? 0 : MF_GRAYED), (UINT_PTR)vm, L"Windows &version told to programs");
     AppendMenuW(m, MF_SEPARATOR, 0, NULL);
-    AppendMenuW(m, MF_STRING, IDM_CENTER, L"&Settings for one program (VistaExt Center)...");
+    AppendMenuW(m, MF_STRING, IDM_CENTER, L"&Open VistaExt (on/off, settings for one program)...");
     AppendMenuW(m, MF_STRING, IDM_LOG, L"View &log");
     AppendMenuW(m, MF_STRING | (autostart_on() ? MF_CHECKED : 0), IDM_AUTO, L"Start with &Windows");
     AppendMenuW(m, MF_SEPARATOR, 0, NULL);

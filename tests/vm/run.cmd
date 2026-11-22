@@ -76,6 +76,7 @@ xcopy "%CDR%\vxvm" "%T%\" /e /i /q /y >nul
 attrib -r "%T%\*" /s /d >nul
 set "B=%T%\bin\%OSA%"
 set "NF=%B%\nofault.exe"
+if exist "%T%\only-upgrade.txt" goto :upgrade
 
 rem ---------------------------------------------------------- before install
 rem Microsoft's C runtime update (KB3118401, which VistaExt needs) brings its
@@ -101,11 +102,16 @@ call :exists "API-set DLL added: api-ms-win-core-synch-l1-2-0" "%SYS%\api-ms-win
 if "%OSA%"=="x64" call :exists "32-bit kernelvx.dll added to SysWOW64" "%WOW%\kernelvx.dll"
 if "%OSA%"=="x64" call :exists "32-bit API-set DLL added to SysWOW64" "%WOW%\api-ms-win-core-synch-l1-2-0.dll"
 call :exists "tools installed: vxpatch, msifix, VistaExt Center" "%VX%\vxcenter.exe"
-call :exists "Start menu shortcut" "%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\VistaExt Center.lnk"
+set "SM=%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs"
+call :startmenu
 reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt\command" >nul 2>&1
 call :expect "Explorer right-click entry for programs" 0 !errorlevel!
 reg query "HKLM\SOFTWARE\Classes\Msi.Package\shell\VistaExtInstall\command" >nul 2>&1
 call :expect "Explorer right-click entry for .msi packages" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExtRun" /ve 2>nul | find "Open with VistaExt compatibility mode" >nul
+call :expect "right-click a program: 'Open with VistaExt compatibility mode'" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun\command" /ve 2>nul | find /i "vxcenter.exe" >nul
+call :expect "right-click a shortcut: the same entry" 0 !errorlevel!
 findstr /i /l /c:"System32\kernelbase.dll" "%VX%\installed.txt" >nul
 set "KB=!errorlevel!"
 if "%CV%"=="6.0" call :expect "Vista: kernelbase.dll added (Vista has none)" 0 !KB!
@@ -131,9 +137,6 @@ call :say "### the tray icon, its autostart and the defaults"
 call :exists "the tray icon program is installed" "%VX%\vxtray.exe"
 reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v VistaExt 2>nul | find /i "vxtray.exe" >nul
 call :expect "the tray icon starts with Windows (Run entry)" 0 !errorlevel!
-set "SM=%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs"
-call :exists "Start menu: the tray icon" "%SM%\VistaExt tray icon.lnk"
-call :exists "Start menu: turn VistaExt off, also in Safe Mode" "%SM%\Turn off VistaExt (also in Safe Mode).lnk"
 reg query "HKLM\SOFTWARE\VistaExt" /v Version 2>nul | find "WIN10" >nul
 call :expect "programs are told Windows 10 by default" 0 !errorlevel!
 reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x1" >nul
@@ -227,6 +230,34 @@ call :say "### VistaExt Center window (picture: center.png)"
 >>"%LOG%" 2>&1 "%NF%" 60 "%B%\guishot.exe" "%VX%\vxcenter.exe" "%T%\%OSA%\app\vxtest.exe" "%R%\center.bmp" /onscreen
 call :expect "VistaExt Center opens and lists the program's needs" 0 !errorlevel!
 
+call :say "### right-click a program's shortcut: 'Open with VistaExt compatibility mode'"
+set "LR=%T%\lnkrun"
+mkdir "%LR%" 2>nul
+copy /y "%B%\vxtest.exe" "%LR%\vxlnk.exe" >nul
+>"%T%\mklnk.vbs" echo Set s = CreateObject("WScript.Shell").CreateShortcut(WScript.Arguments(0))
+>>"%T%\mklnk.vbs" echo s.TargetPath = WScript.Arguments(1)
+>>"%T%\mklnk.vbs" echo s.Arguments = "/wait:90"
+>>"%T%\mklnk.vbs" echo s.WorkingDirectory = WScript.Arguments(2)
+>>"%T%\mklnk.vbs" echo s.Save
+cscript //nologo "%T%\mklnk.vbs" "%LR%\VxLnk.lnk" "%LR%\vxlnk.exe" "%LR%" >>"%LOG%" 2>&1
+call :run 60 "%LR%\vxlnk.exe"
+call :nonzero "before: the program cannot start without VistaExt's mode" !RC!
+rem the command Explorer runs for the entry, %%1 = the shortcut
+set "LCMD="
+for /f "tokens=2*" %%a in ('reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun\command" /ve 2^>nul ^| find "REG_"') do set "LCMD=%%b"
+set "LCMD=!LCMD:%%1=%LR%\VxLnk.lnk!"
+>>"%LOG%" echo   command: !LCMD!
+cmd /c "!LCMD!"
+call :expect "the entry's command succeeds" 0 !errorlevel!
+set "LUP="
+for /l %%w in (1,1,15) do if not defined LUP (tasklist /fi "imagename eq vxlnk.exe" 2>nul | find /i "vxlnk.exe" >nul && set "LUP=1" || ping -n 2 127.0.0.1 >nul)
+if defined LUP (call :pass "the shortcut's program starts with VistaExt and its own arguments (/wait keeps it open)") else (call :fail "the shortcut's program starts with VistaExt and its own arguments")
+taskkill /f /im vxlnk.exe >nul 2>&1
+ping -n 3 127.0.0.1 >nul
+call :run 60 "%LR%\vxlnk.exe"
+call :expect "after: a plain double-click runs it too (it stays set up)" 0 !RC!
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%LR%"
+
 rem -------------------------------------------------------------- uninstall
 call :say "### uninstall.cmd while a patched program is running"
 set "BUSY=%T%\busy"
@@ -274,6 +305,8 @@ reg query "HKLM\SOFTWARE\VistaExt" >nul 2>&1
 call :expect "VistaExt settings removed" 1 !errorlevel!
 reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt" >nul 2>&1
 call :expect "Explorer entries removed" 1 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun" >nul 2>&1
+call :expect "... also the shortcut entry" 1 !errorlevel!
 fc /b "%APP%" "%T%\bin\%OSA%\vxtest.exe" >nul
 call :expect "uninstall puts patched programs back" 0 !errorlevel!
 fc /b "%BUSY%\vxbusy.exe" "%B%\vxtest.exe" >nul
@@ -288,8 +321,7 @@ call :expect "the service is removed (sc: no such service)" 1060 !errorlevel!
 reg query "HKCU\Software\VistaExt" >nul 2>&1
 call :expect "the user's own VistaExt settings are removed" 1 !errorlevel!
 call :absent "no VistaExt.off folder is left in System32" "%SYS%\VistaExt.off"
-call :absent "Start menu: tray icon shortcut removed" "%SM%\VistaExt tray icon.lnk"
-call :absent "Start menu: 'Turn off' shortcut removed" "%SM%\Turn off VistaExt (also in Safe Mode).lnk"
+call :absent "Start menu: the VistaExt folder is removed" "%SM%\VistaExt"
 call :absent "the change log is removed" "%ProgramData%\VistaExt\VistaExt.log"
 reg query "%IFEO%\vxtest.exe" /v VistaExt >nul 2>&1
 call :expect "no Image File Execution Options entry of VistaExt's is left" 1 !errorlevel!
@@ -718,6 +750,8 @@ call :run 60 "%B%\apitest.exe"
 call :nonzero "off: the API-set program cannot start, as before installing" !RC!
 reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt" >nul 2>&1
 call :expect "off: Explorer's VistaExt entries are gone" 1 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun" >nul 2>&1
+call :expect "off: ... also on shortcuts" 1 !errorlevel!
 reg query "HKLM\SOFTWARE\Classes\Msi.Package\shell\Open\command" /ve 2>nul | find /i "msifix" >nul
 call :expect "off: double-clicking an .msi is Windows' own again" 1 !errorlevel!
 tasklist /fi "imagename eq vxbusy2.exe" 2>nul | find /i "vxbusy2.exe" >nul
@@ -744,6 +778,8 @@ call :run 60 "%SW%\file\vxfile.exe"
 call :expect "on: the patched program runs again" 0 !RC!
 reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt" >nul 2>&1
 call :expect "on: Explorer's entries are back" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun" >nul 2>&1
+call :expect "on: ... also on shortcuts" 0 !errorlevel!
 call :say "### a switch interrupted midway (power cut) is finished when the service starts"
 reg add "HKLM\SOFTWARE\VistaExt" /v Enabled /t REG_DWORD /d 0 /f >nul
 net stop VistaExtAuto >nul 2>&1
@@ -790,7 +826,7 @@ call :expect "Safe Mode: VistaExt does nothing (the program is refused as withou
 sc query VistaExtAuto 2>nul | find "RUNNING" >nul
 call :expect "Safe Mode: VistaExt's service does not run" 1 !errorlevel!
 call :run 180 "%VX%\vxauto.exe" /disable
-call :expect "Safe Mode: 'Turn off VistaExt' from the Start menu works without the service" 0 !RC!
+call :expect "Safe Mode: turning VistaExt off (the VistaExt window's switch) works without the service" 0 !RC!
 call :absent "Safe Mode: VistaExt's files are out of System32" "%SYS%\kernelvx.dll"
 reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x0" >nul
 call :expect "Safe Mode: switched off for the next normal start too" 0 !errorlevel!
@@ -835,11 +871,11 @@ tasklist /fi "imagename eq vxbusy3.exe" 2>nul | find /i "vxbusy3.exe" >nul
 call :expect "a program VistaExt runs is open" 0 !errorlevel!
 copy /y "%T%\VistaExtSetup.exe" "%VX%\VistaExtSetup.exe" >nul
 start "" /wait "%VX%\VistaExtSetup.exe" /uninstall /quiet
-for /l %%w in (1,1,30) do (if exist "%VX%\vxpatch.exe" ping -n 3 127.0.0.1 >nul)
-ping -n 6 127.0.0.1 >nul
+call :wait_uninstaller
 copy /y "%ProgramData%\VistaExt\setup.log" "%R%\uninst-setup.log" >nul 2>&1
 reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations > "%R%\uninst-pending.txt" 2>&1
-find /i "System32\kernelvx.dll" "%R%\uninst-pending.txt" >nul
+rem (switched off first: the file is in VistaExt.off by then)
+findstr /i /r /c:"System32\\kernelvx\.dll" /c:"System32\\VistaExt\.off\\kernelvx\.dll" "%R%\uninst-pending.txt" >nul
 call :expect "a VistaExt file the open program uses is deleted when Windows restarts" 0 !errorlevel!
 call :absent "the service is gone" "%VX%\vxauto.exe"
 reg query "HKLM\SOFTWARE\VistaExt" >nul 2>&1
@@ -860,7 +896,167 @@ dir /b "%SYS%\api-ms-win-core-winrt-string-l1-1-1.dll" "%SYS%\vxs-*" > "%T%\left
 for /f %%c in ('find /c /v "" ^< "%T%\left.txt"') do call :say "    VistaExt API-set files left: %%c"
 call :absent "VistaExt's folder in Program Files is gone" "%VX%"
 call :absent "the log folder is gone" "%ProgramData%\VistaExt"
+call :absent "no VistaExt.off folder is left" "%SYS%\VistaExt.off"
+if "%OSA%"=="x64" call :absent "no VistaExt.off folder is left in SysWOW64" "%WOW%\VistaExt.off"
+call :absent "no old copy an update set aside is left" "%SYS%\*.vxold*"
 goto :finish
+
+rem ---- the Start menu: one folder "VistaExt" with exactly two entries
+:startmenu
+call :exists "Start menu: VistaExt (the window with the on/off switch)" "%SM%\VistaExt\VistaExt.lnk"
+call :exists "Start menu: Uninstall VistaExt" "%SM%\VistaExt\Uninstall VistaExt.lnk"
+set "NLNK=0"
+for %%f in ("%SM%\VistaExt\*") do set /a NLNK+=1
+call :expect "Start menu: nothing else in the VistaExt folder" 2 !NLNK!
+call :absent "Start menu: no shortcut of an earlier version (VistaExt Center)" "%SM%\VistaExt Center.lnk"
+call :absent "Start menu: ... (tray icon)" "%SM%\VistaExt tray icon.lnk"
+call :absent "Start menu: ... (Turn off)" "%SM%\Turn off VistaExt (also in Safe Mode).lnk"
+goto :eof
+
+rem ---- updating (VX_VM_ONLY=upgrade): an earlier release installed, programs
+rem ---- made compatible with it and one of them running, then this release
+rem ---- over it (also once while switched off), then the new uninstaller
+:upgrade
+set "SM=%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs"
+set "ARPK=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VistaExt"
+set "OSB=win7"
+if "%CV%"=="6.0" set "OSB=vista"
+if "%CV%"=="6.2" set "OSB=win8"
+if "%CV%"=="6.3" set "OSB=win8"
+set "NEWK=%T%\VistaExt\!OSB!\%OSA%\kernelvx.dll"
+set "UP=%T%\upgrade"
+mkdir "%UP%\file" "%UP%\mem" "%UP%\busy" 2>nul
+call :say "### update: the earlier release installed and used"
+start "" /wait "%T%\VistaExtSetup-old.exe" /quiet
+call :expect "the earlier release installs" 0 !errorlevel!
+set "OLDV=?"
+for /f "tokens=2*" %%a in ('reg query "%ARPK%" /v DisplayVersion 2^>nul ^| find "REG_"') do set "OLDV=%%b"
+call :say "    installed: VistaExt !OLDV!"
+copy /y "%B%\vxtest.exe" "%UP%\file\vxup.exe" >nul
+copy /y "%B%\vxtest.exe" "%UP%\mem\vxupmem.exe" >nul
+copy /y "%B%\vxtest.exe" "%UP%\busy\vxupbusy.exe" >nul
+call :run 120 "%VX%\vxpatch.exe" /file /q "%UP%\file\vxup.exe"
+call :run 120 "%VX%\vxpatch.exe" /memory /q "%UP%\mem"
+call :run 120 "%VX%\vxpatch.exe" /file /q "%UP%\busy\vxupbusy.exe"
+call :run 60 "%UP%\file\vxup.exe"
+rem (the test program's own checks are this release's: against the earlier
+rem release's DLLs some fail, so here only that it starts and runs counts -
+rem its exit code is then the number of failed checks, not a loader error)
+call :ran "earlier release: a patched program starts and runs" !RC!
+call :run 60 "%UP%\mem\vxupmem.exe"
+call :ran "earlier release: an in-memory program starts and runs" !RC!
+call :run 60 "%VX%\vxauto.exe" /setver WIN81
+start "" "%UP%\busy\vxupbusy.exe" /wait:900
+ping -n 5 127.0.0.1 >nul
+
+call :say "### update: the new setup sees the installed version (picture: setup-existing.png)"
+rem this release's version, from its install.cmd ("1.2.0")
+set "NEWV=?"
+for /f "tokens=7" %%a in ('findstr /c:"/v DisplayVersion /d" "%T%\VistaExt\install.cmd"') do set "NEWV=%%~a"
+call :say "    this release: VistaExt !NEWV!"
+set "WANTUPD=Update VistaExt to !NEWV!"
+echo !OLDV!| find "!NEWV!" >nul && set "WANTUPD=Reinstall VistaExt !NEWV!"
+>>"%LOG%" 2>&1 "%NF%" 60 "%B%\guishot.exe" "%T%\VistaExtSetup.exe" - "%R%\setup-existing.bmp" /onscreen /class:VistaExtSetup
+call :expect "the setup window opens" 0 !errorlevel!
+call :has "it offers: !WANTUPD!" "%LOG%" "!WANTUPD!"
+call :has "it offers: Uninstall VistaExt" "%LOG%" "ninstall VistaExt"
+
+call :say "### update to this release while a program patched by the earlier one runs"
+start "" /wait "%T%\VistaExtSetup.exe" /quiet
+call :expect "the update succeeds" 0 !errorlevel!
+copy /y "%ProgramData%\VistaExt\setup.log" "%R%\upgrade-setup.log" >nul 2>&1
+reg query "%ARPK%" /v DisplayVersion 2>nul | find "!NEWV!" >nul
+call :expect "Programs and Features shows the new version" 0 !errorlevel!
+fc /b "%SYS%\kernelvx.dll" "!NEWK!" >nul
+call :expect "the new kernelvx.dll is in place" 0 !errorlevel!
+call :has "the file the running program had loaded was set aside, not left old" "%R%\upgrade-setup.log" "old copy deleted at restart"
+reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations 2>nul | find /i ".vxold" >nul
+call :expect "... and that old copy is deleted when Windows restarts" 0 !errorlevel!
+call :hasnot "no file failed" "%R%\upgrade-setup.log" "could not"
+tasklist /fi "imagename eq vxupbusy.exe" 2>nul | find /i "vxupbusy.exe" >nul
+call :expect "the running program kept running" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\VistaExt" /v Version 2>nul | find "WIN81" >nul
+call :expect "settings kept: the Windows version programs are told" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x1" >nul
+call :expect "VistaExt is still on" 0 !errorlevel!
+call :startmenu
+call :run 60 "%UP%\file\vxup.exe"
+call :expect "a program the earlier release patched still runs" 0 !RC!
+call :run 60 "%UP%\mem\vxupmem.exe"
+call :expect "an in-memory program the earlier release registered still runs" 0 !RC!
+for /l %%w in (1,1,20) do (sc query VistaExtAuto 2>nul | find "RUNNING" >nul || ping -n 2 127.0.0.1 >nul)
+sc query VistaExtAuto 2>nul | find "RUNNING" >nul
+call :expect "the service runs again" 0 !errorlevel!
+fc /b "%VX%\VistaExtSetup.exe" "%T%\VistaExtSetup.exe" >nul
+call :expect "the uninstaller is the new one" 0 !errorlevel!
+taskkill /f /im vxupbusy.exe >nul 2>&1
+ping -n 3 127.0.0.1 >nul
+call :run 60 "%UP%\busy\vxupbusy.exe"
+call :expect "the program that was running starts again with the new version" 0 !RC!
+
+call :say "### update while VistaExt is switched off: it stays off"
+call :run 180 "%VX%\vxauto.exe" /disable
+call :absent "off: kernelvx.dll is out of System32" "%SYS%\kernelvx.dll"
+start "" /wait "%T%\VistaExtSetup.exe" /quiet
+call :expect "setup over a switched-off VistaExt succeeds" 0 !errorlevel!
+copy /y "%ProgramData%\VistaExt\setup.log" "%R%\upgrade-off-setup.log" >nul 2>&1
+reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x0" >nul
+call :expect "VistaExt stays off" 0 !errorlevel!
+call :absent "... its files stay out of System32" "%SYS%\kernelvx.dll"
+fc /b "%SYS%\VistaExt.off\kernelvx.dll" "!NEWK!" >nul
+call :expect "... the new ones wait in VistaExt.off" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\Classes\exefile\shell\VistaExt" >nul 2>&1
+call :expect "... no Explorer entries while off" 1 !errorlevel!
+call :run 60 "%UP%\file\vxup.exe"
+call :nonzero "... a program that needs VistaExt is refused, as without it" !RC!
+call :run 180 "%VX%\vxauto.exe" /enable
+call :expect "turned on again" 0 !RC!
+fc /b "%SYS%\kernelvx.dll" "!NEWK!" >nul
+call :expect "... the new kernelvx.dll is back in System32" 0 !errorlevel!
+call :run 60 "%UP%\file\vxup.exe"
+call :expect "... the patched program runs again" 0 !RC!
+call :run 60 "%UP%\mem\vxupmem.exe"
+call :expect "... the in-memory program runs again" 0 !RC!
+
+call :say "### Uninstall VistaExt (Start menu entry): restore point, off, removed"
+set "LNKT="
+for /f "delims=" %%a in ('findstr /m /l /c:"VistaExtSetup.exe" "%SM%\VistaExt\Uninstall VistaExt.lnk"') do set "LNKT=1"
+if defined LNKT (call :pass "the Uninstall entry starts VistaExtSetup.exe") else (call :fail "the Uninstall entry starts VistaExtSetup.exe")
+net stop WSearch >nul 2>&1
+taskkill /f /im SearchFilterHost.exe >nul 2>&1
+taskkill /f /im SearchProtocolHost.exe >nul 2>&1
+start "" /wait "%VX%\VistaExtSetup.exe" /uninstall /quiet /restorepoint
+call :wait_uninstaller
+copy /y "%ProgramData%\VistaExt\setup.log" "%R%\upgrade-uninstall.log" >nul 2>&1
+call :has "it turned VistaExt off first" "%R%\upgrade-uninstall.log" "Switching VistaExt off"
+fc /b "%UP%\file\vxup.exe" "%B%\vxtest.exe" >nul
+call :expect "the patched program is put back as it was" 0 !errorlevel!
+call :exists "... and stays installed" "%UP%\file\vxup.exe"
+reg query "%IFEO%\vxupmem.exe" /v VistaExt >nul 2>&1
+call :expect "the in-memory registration is removed" 1 !errorlevel!
+call :absent "kernelvx.dll is removed" "%SYS%\kernelvx.dll"
+if exist "%SYS%\VistaExt.off" (
+    >>"%LOG%" echo   in VistaExt.off until the restart:
+    dir /a "%SYS%\VistaExt.off" >>"%LOG%" 2>&1
+    reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v PendingFileRenameOperations >>"%LOG%" 2>&1
+    tasklist /m kernelvx.dll >>"%LOG%" 2>&1
+)
+rem (a file a running Windows process has loaded goes at the restart, with
+rem the folder: checked after the restart)
+if exist "%VX%" (>>"%LOG%" echo   in %VX% until the restart:& dir /b /a "%VX%" >>"%LOG%" 2>&1)
+call :absent "the Start menu folder is removed" "%SM%\VistaExt"
+reg query "HKLM\SOFTWARE\VistaExt" >nul 2>&1
+call :expect "settings are removed" 1 !errorlevel!
+reg query "%ARPK%" >nul 2>&1
+call :expect "the Programs and Features entry is removed" 1 !errorlevel!
+wmic /namespace:\\root\default path SystemRestore get Description 2>nul | find "Before removing VistaExt" >nul
+if errorlevel 1 (call :say "    info: no restore point listed (System Restore may be off in this VM)") else (call :say "    info: restore point 'Before removing VistaExt' created")
+rem what was in use goes at the restart: restart and check (as :uninst_after)
+> "%SAFESTATE%" echo !PASS! !FAIL!
+> "%SystemDrive%\vxt-uninst.after" echo after
+call :say "    restarting"
+shutdown /r /t 3 /f
+exit
 
 rem ---- diagnostics (VX_VM_ONLY=diag): the in-memory loader's own report
 :watchdiag
@@ -947,6 +1143,24 @@ rem expect <name> <wanted exit code> <exit code>
 if "%~2"=="%~3" goto :pass
 set /a FAIL+=1
 call :say "FAIL: %~1 [exit %~3, wanted %~2]"
+goto :eof
+
+:wait_uninstaller
+rem The uninstaller goes on from a copy in Temp (VistaExtUninstall.<n>.exe)
+rem and ends after closing the restore point and scheduling what was in
+rem use for the restart: wait for it to end (at most 10 minutes).
+ping -n 4 127.0.0.1 >nul
+for /l %%w in (1,1,200) do (tasklist /fi "imagename eq VistaExtUninstall*" 2>nul | find /i "VistaExtUninstall" >nul && ping -n 4 127.0.0.1 >nul)
+tasklist /fi "imagename eq VistaExtUninstall*" 2>nul | find /i "VistaExtUninstall" >nul
+call :expect "the uninstaller has finished" 1 !errorlevel!
+goto :eof
+
+:ran
+rem ran <name> <exit code>: the program started and ended by itself (0 to
+rem 999: not a loader error or crash code, which are large or negative)
+if %~2 GEQ 0 if %~2 LSS 1000 goto :pass
+set /a FAIL+=1
+call :say "FAIL: %~1 [exit %~2]"
 goto :eof
 
 :nonzero

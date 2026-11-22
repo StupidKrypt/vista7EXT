@@ -10,7 +10,7 @@ This document says where VistaExt rests on assumptions that have not been proven
 
 | Claim | Evidence | Not covered |
 |---|---|---|
-| The DLLs, vxpatch, version settings, WebView2 folder, msifix and uninstall work on Vista SP2, 7 SP1 (x86 and x64) and 8 (x64) | Test suite in VMs (Beta 1.1): Vista x64 200/200, Vista x86 164/164, 7 x64 198/198, 7 x86 162/162, 8 x64 193/193 (file mode, in-memory mode, crash window). Also Wine (file mode only: Wine has no Application Verifier). | Only freshly installed Windows without later updates. Windows 8 x86 and 8.1 not tested. Not tested on real hardware, with antivirus, or on non-English Windows. |
+| The DLLs, vxpatch, version settings, WebView2 folder, msifix and uninstall work on Vista SP2, 7 SP1 (x86 and x64) and 8 (x64) | Test suite in VMs (Beta 1.2): Vista x64 211/211, Vista x86 175/175, 7 x64 209/209, 7 x86 173/173, 8 x64 204/204; updating from Beta 1 / Beta 1.1 and uninstalling with a restart pass on all five (file mode, in-memory mode, crash window). Also Wine (file mode only: Wine has no Application Verifier). | Only freshly installed Windows without later updates. Windows 8 x86 and 8.1 not tested. Not tested on real hardware, with antivirus, or on non-English Windows. |
 | `VistaExtSetup.exe /quiet`, its Programs and Features entry, the automatic-mode service and `/uninstall` | VM program run (see section 7) | The interactive (non-quiet) dialogs were not tested; neither was uninstalling from the Control Panel. |
 | Automatic mode makes a program copied into Program Files work with no user step | VM program run (see section 7) | Real installers (MSI, Inno, NSIS, Squirrel), updates, several users, and logged-off users |
 | Chromium/Electron programs (Brave, Discord) | VM program run (see section 7) | GPU drivers (the VM has none for Direct3D 11), sign-in, video, sandbox |
@@ -277,7 +277,7 @@ Turn the rule off in the tray menu ("Setup programs are told it too"). Then only
 
 **Where setups are noticed.** In Downloads and Desktop of each user, in their Temp folder, and in Internet Explorer's download cache, 2 s after the file was written:
 - **Too quick:** a setup double-clicked within those 2 s fails the first time.
-- **Other places:** setups on a USB stick, a network share, another drive or a DVD are not noticed. Copy them to Downloads first, or use the right-click entry "Run with VistaExt".
+- **Other places:** setups on a USB stick, a network share, another drive or a DVD are not noticed. Copy them to Downloads first, or use the right-click entry "Open with VistaExt compatibility mode".
 - **Helpers of setups:** handled before they start, when the setup starts them with `CreateProcess` or `ShellExecute` through its own imports. Not when Windows' own DLLs start them for it (for example through COM or a scheduled task).
 - **Helpers of a told setup:** they are told the version too, if their file was written in the last hour (so it is part of the install). An older program the setup starts, such as a browser to show a web page, is not.
 

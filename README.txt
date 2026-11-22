@@ -19,6 +19,22 @@ INSTALL
   Silent install: VistaExtSetup.exe /quiet
   Without the automatic mode: VistaExtSetup.exe /noauto
 
+  The Start menu gets one folder, "VistaExt", with two entries:
+    VistaExt            turn VistaExt on or off for the whole PC (also in
+                        Safe Mode), and settings for one program; it also
+                        starts VistaExt's icon next to the clock
+    Uninstall VistaExt  removes it (see UNINSTALL)
+
+UPDATE
+  Run the new VistaExtSetup.exe. It sees the installed version and offers
+  "Update VistaExt" (or Uninstall). Updating keeps your settings, the
+  Windows version programs are told, whether VistaExt is on or off, and
+  the programs it made compatible. A file a running program uses is
+  swapped for the new one too (the program keeps the old copy until it is
+  closed; the old copy is deleted when Windows restarts), so old and new
+  files are never mixed. Restart Windows after an update if programs were
+  running.
+
 USING PROGRAMS
   Automatic mode: install programs as usual. A few seconds after an
   installer or updater finishes, VistaExt makes the new program work
@@ -27,8 +43,11 @@ USING PROGRAMS
   Games and programs with an anti-cheat system are NOT changed
   automatically (changed game files can get an account banned).
 
-  Setup programs: right-click a setup .exe and choose "Run with VistaExt"
-  if it refuses to start.
+  Any program, or its shortcut (desktop, Start menu): right-click it and
+  choose "Open with VistaExt compatibility mode". VistaExt sets it up
+  (recommended settings, or the ones you saved) and starts it, as you,
+  like a double-click. It asks for administrator rights once (the shield),
+  and after that the program also starts with a plain double-click.
 
   Installer packages (.msi): just double-click them. VistaExt checks the
   package and, if it refuses this Windows, installs a fixed copy (kept in
@@ -44,7 +63,7 @@ USING PROGRAMS
   Each crash is also written to %LOCALAPPDATA%\VistaExt\crashes.log.
 
   If a program still does not start: right-click it and choose "VistaExt
-  compatibility..." (or right-click its folder). VistaExt Center shows what
+  compatibility..." (or right-click its folder). The VistaExt window shows what
   is missing and lets you pick the Windows version the program is told it
   runs on, and the Chromium/Electron options. Apply, then "Run program".
   "Undo all changes" puts the original files back, and the automatic mode
@@ -73,15 +92,23 @@ COMMAND LINE
   vxauto.exe /scan                           make all installed programs work now
 
 UNINSTALL
-  Programs and Features -> VistaExt -> Uninstall
-  (or VistaExtSetup.exe /uninstall, /quiet for no questions).
-  Close the programs VistaExt changed first. It puts every one of them back
-  the way it was; if one is still running, it removes nothing (so that
-  program keeps working) and tells you to close it.
+  Start menu -> VistaExt -> Uninstall VistaExt, or Programs and Features
+  -> VistaExt -> Uninstall (or VistaExtSetup.exe /uninstall; /quiet for no
+  questions, /restorepoint to make the restore point then too).
+  It lists the programs that use VistaExt and warns you first: programs
+  you installed are NOT removed, but those made for newer Windows will no
+  longer start without VistaExt. Then it:
+    1. creates a System Restore point "Before removing VistaExt",
+    2. turns VistaExt's compatibility layer off,
+    3. removes every file VistaExt installed (DLLs, tools, service, tray
+       icon, Start menu folder, Explorer entries, settings, logs) and puts
+       back every program file it changed.
+  Close the programs VistaExt changed first. If one is still running,
+  VistaExt stays off but is not removed, and you are told to close it.
 
 GOOD TO KNOW
   * VistaExt adds about 290 functions from Windows 7, 8 and 10. Programs
-    that need more than that still will not start; VistaExt Center lists
+    that need more than that still will not start; the VistaExt window lists
     what is missing.
   * Some features cannot exist on Vista/7 (touch input, Windows Store /
     UWP apps, DirectX 12). Programs asking for them are told they are not

@@ -8,12 +8,19 @@ An add-on layer that lets programs built for Windows 7–11 run on **Windows Vis
 
 Run **`VistaExtSetup.exe`** (one file, 32-bit, for all four builds). It is a short wizard:
 
+0. **Already installed?** Setup reads the installed version (Programs and Features) and offers **Update** (or **Reinstall** for the same version; replacing a newer one with an older one is offered but not recommended) or **Uninstall**. An update skips the warning page.
 1. **Warning.** VistaExt is experimental and could damage the Windows installation. *Accept* or *Decline*; Decline changes nothing.
 2. **Backup.** "Create a System Restore point before installing" is checked by default; *Open Windows Backup...* starts Windows' own Backup and Restore for a full backup. If the restore point fails (System Restore turned off, no space), setup says why and asks whether to continue without it.
 3. **Install.** The build for this Windows and architecture, the background service, the tray icon and its start with Windows.
 4. **Finish.** "Start VistaExt's tray icon now" (checked).
 
-`/quiet` installs without screens (`/restorepoint` adds the restore point), `/noauto` leaves the automatic mode out, `/uninstall` removes VistaExt (Programs and Features runs this).
+`/quiet` installs without screens (`/restorepoint` adds the restore point), `/noauto` leaves the automatic mode out, `/uninstall` removes VistaExt (Programs and Features and the Start menu run this).
+
+**Start menu.** One folder, **VistaExt**, with two entries: **VistaExt** (the window with the on/off switch for the whole PC and the settings for one program; it also starts the tray icon if it isn't running) and **Uninstall VistaExt**. Earlier versions' three shortcuts are removed by an update.
+
+**Updating.** Running a newer setup over an installed VistaExt replaces its files and keeps the settings, the global Windows version, the on/off state and every program it made compatible (verified in the VMs from Beta 1 and Beta 1.1: `VX_VM_ONLY=upgrade` installs the earlier release, sets programs up with it and keeps one running, updates, updates again while switched off, then uninstalls and restarts). A file that a running program has loaded can't be overwritten, but it can be renamed: `install.cmd` renames it to `<name>.vxoldN`, puts the new one in its place and setup schedules the old copy for deletion at the next restart, so an update never leaves a mix of old and new DLLs. Updating while VistaExt is switched off writes the new files into `VistaExt.off`, so it stays off. (Every export earlier releases had that later ones dropped was checked: all were forwarders to functions Vista and 7 don't have, so no program patched by an earlier release used one successfully.)
+
+**Uninstalling.** It warns first and lists the programs that use VistaExt: they stay installed, but those made for newer Windows stop starting. Then it makes a System Restore point ("Before removing VistaExt"; if that fails it says why and asks), turns VistaExt off (`vxauto /disable`), and removes every file it installed and puts back every program file it changed (`uninstall.cmd`). If a changed program is running, VistaExt stays off but isn't removed, and it says which step to repeat.
 
 **Using it.** After that, nothing is needed per program. Setup programs you download and programs you install are made compatible by themselves, the way Windows' own compatibility system works. Double-click a setup as on newer Windows: it goes through the usual UAC prompt and installs into its usual folders, with its own entry in Programs and Features.
 
@@ -21,14 +28,14 @@ The only visible part is **VistaExt's icon in the notification area**. Click it 
 - **on/off** for the whole system;
 - **the Windows version programs are told**: Windows 7 SP1, 8, 8.1, 10 22H2 (10.0.19045), 11 23H2 (10.0.22631), this Windows' own version, or a custom version;
 - **"Setup programs are told it too"**;
-- **settings** (VistaExt Center);
+- **Open VistaExt** (the window: on/off, settings for one program);
 - **the log**;
 - **"Start with Windows"**;
 - **Exit**.
 
 **Turning it off.** *Off* takes VistaExt out of Windows **without a restart**. Programs that are running keep it until they are closed. A changed program that is running is put back as soon as it is closed.
 
-**Safe Mode.** VistaExt does nothing in Safe Mode, and Windows does not need it to start. If it causes trouble, start in Safe Mode and choose **Start menu > Turn off VistaExt (also in Safe Mode)**; from a command prompt as administrator: `"%ProgramFiles%\VistaExt\vxauto.exe" /disable`. VistaExt then stays off after the next normal start, until it is turned on again.
+**Safe Mode.** VistaExt does nothing in Safe Mode, and Windows does not need it to start. If it causes trouble, start in Safe Mode and choose **Start menu > VistaExt > VistaExt > Turn off** (it works without the service); from a command prompt as administrator: `"%ProgramFiles%\VistaExt\vxauto.exe" /disable`. VistaExt then stays off after the next normal start, until it is turned on again.
 
 **Logs.** Every change VistaExt makes is logged in `%ProgramData%\VistaExt\VistaExt.log` (*View log* in the tray menu); setup in `setup.log` next to it.
 
@@ -49,7 +56,7 @@ The only visible part is **VistaExt's icon in the notification area**. Click it 
 | **Setup** `VistaExtSetup.exe` | The wizard above: a stub with the whole release appended (`tools/mkpayload.py`), unpacked only after Accept. It installs or uninstalls, makes the restore point (`SRSetRestorePointW`), checks for Microsoft's C runtime and Vista's Platform Update, logs to `%ProgramData%\VistaExt\setup.log` and starts the tray icon as the signed-in user (through Explorer), not as administrator. Uninstalling removes everything it added: files, service, tray icon and its autostart, Start menu entries, Explorer entries, settings (also each signed-in user's own), logs; patched programs are put back. |
 | **In-memory mode** `vxload.dll` (default) | Instead of rewriting a program's files, VistaExt registers the program in Image File Execution Options. Windows then loads `vxload.dll`, an Application Verifier provider that imports only ntdll, before the program's imports are resolved. vxload renames the import names in memory, for the program and every DLL it loads from outside the Windows folder: `kernel32.dll` → `kernelvx.dll`, ..., and `api-ms-win-X` → `vxs-ms-win-X`, VistaExt's own copy of the API set, which Windows' API-set table ignores. That copy is used only if it exports every imported function. Windows' own DLLs are never touched. Windows' standard verifier (`verifier.dll`) loads first and would hook about a hundred functions (heap, locks, waits) even with its checks off, which made heap calls up to 35× slower. vxload empties its hook lists before Windows applies them, so programs run at normal speed (see `KNOWN_RISKS.md` §8). A program's file is still changed in one case: when its header asks for a newer Windows (subsystem 10.0), because Windows refuses to start such a file before any DLL is loaded. `HKLM\SOFTWARE\VistaExt\Mode = file` (or `vxpatch /file`) uses the old way. In Safe Mode vxload does nothing at all. |
 | **Crash window** `vxwatch.exe` | For a windowed program running with VistaExt, kernelvx starts `vxwatch.exe`, which waits for the program. If the program ends with a crash code, the window shows the error in plain words, where it happened, and the program's own last message (Chromium's `FATAL` lines). It also lists the Windows versions, so the program can be restarted told another one. The choice is saved for the user (HKCU), so it needs no administrator rights. A "don't show again" box turns it off per program. |
-| **VistaExt Center** | Win32 GUI: pick a program or folder, see what it needs, choose the Windows version and options, Apply/Undo/Run. The work runs in the background, so big folders don't freeze the window, and "Run program" starts the program as the normal user (through Explorer), not as administrator. Adds Explorer right-click entries ("VistaExt compatibility...", "Run with VistaExt" for any .exe), makes double-clicking an `.msi` go through `msifix /install` (the previous command is saved and put back on uninstall), and a Start menu shortcut. |
+| **VistaExt** (`vxcenter.exe`, "VistaExt Center" before) | The on/off switch for the whole PC (through the service, or `vxauto.exe` itself where the service doesn't run, as in Safe Mode); starts the tray icon as the signed-in user if it isn't running. Win32 GUI: pick a program or folder, see what it needs, choose the Windows version and options, Apply/Undo/Run. The work runs in the background, so big folders don't freeze the window, and "Run program" starts the program as the normal user (through Explorer), not as administrator. Adds Explorer right-click entries ("VistaExt compatibility...", "Open with VistaExt compatibility mode" for any .exe and for shortcuts to one, which sets the program up and starts it as the signed-in user, through Explorer; only while VistaExt is on), makes double-clicking an `.msi` go through `msifix /install` (the previous command is saved and put back on uninstall), and the Start menu folder. |
 | **msifix** | Copies an `.msi`, lowers `VersionNT`/`WindowsBuild` install checks to this PC, and on Vista re-marks schema 500 → 405 and removes the Windows Installer 5.0-only tables and action. Checks that are negated (`NOT (VersionNT >= 1000)`) are left alone. Properties a package fills with the build number itself (AppSearch on `Windows NT\CurrentVersion` → `CurrentBuild`, like Epic Games' `WINDOWSBUILDNUM`) are treated like `WindowsBuild`. When it lowers a check, it also removes an embedded chainer (extra installers run in the same transaction, made for newer Windows too, whose failure would undo the whole install; `/keepchainer` keeps it). It also patches custom-action DLLs stored inside the package. `/install` runs `msiexec` on the copy, which it keeps in `ProgramData\VistaExt\Packages` because Windows Installer needs it again for repairs. |
 | **WebView2** | `vx-webview2-setup.cmd` copies and patches an extracted *Fixed Version* runtime and registers it. `kernelvx` then sets `WEBVIEW2_BROWSER_EXECUTABLE_FOLDER` and the browser arguments for patched programs. |
 
@@ -116,21 +123,21 @@ The install takes about 10 minutes with KVM; a test run takes about 3. Use `x86`
 
 In each VM, `tests/vm/run.cmd` checks:
 
-- `install.cmd` adds the DLLs (both System32 and SysWOW64 on 64-bit), the tools, the Start menu shortcut and the Explorer entries; on Windows 7 it leaves Windows' own `kernelbase.dll` alone; running it again over an existing install works and leaves a file Windows has replaced alone
+- `install.cmd` adds the DLLs (both System32 and SysWOW64 on 64-bit), the tools, the Start menu folder (exactly two entries) and the Explorer entries; on Windows 7 it leaves Windows' own `kernelbase.dll` alone; running it again over an existing install works and leaves a file Windows has replaced alone
 - for 64- and 32-bit programs: Windows refuses the unpatched test program ("entry point not found"); after `vxpatch` it runs and passes every check, both with VistaExt's own code and with Windows' functions first
 - the Windows 10, 7 and folder-wide 8.1 settings, as seen through `GetVersionEx`, `RtlGetVersion` (the PEB) and `VerifyVersionInfo`
 - the WebView2 runtime folder reaches the program, and `/undo` restores the original
 - the tray icon, its autostart and the defaults; the global version (Windows 11, a custom one, 8.1, a program's own setting, "this Windows' own") agreeing everywhere, including the registry (directly and through Windows' shlwapi) and WMI
 - setups saved to Downloads: one that needs VistaExt, one that only checks the version (as Spotify's does), a driver package, one signed by Microsoft, one named like a Windows program; helpers started from Temp (CreateProcess, ShellExecute); a setup told another version that tries to install a boot driver
 - the on/off switch: everything off and back on, a running patched program put back when it is closed, an interrupted switch finished by the service
-- Safe Mode: VistaExt does nothing there, "Turn off VistaExt" works there, and it stays off after a normal start
+- Safe Mode: VistaExt does nothing there, turning it off works there without the service, and it stays off after a normal start
 - after the program "updates itself", undo keeps the new version, and patching it again renews the backup
 - a program that imports through API-set names runs with VistaExt's API-set DLLs, and still runs after `vxpatch` when the API-set DLL is missing
 - `msifix` with Windows Installer itself: the version checks, the 4.5 schema and 5.0 tables on Vista, the package's other properties, and a patched custom action that, read back out of the fixed package, runs
 - VistaExt Center opens and shows what the program needs
 - `uninstall.cmd` stops and removes nothing while a patched program is running; once it is closed, it restores the patched programs and removes every file, setting and Explorer entry it added
 
-Results so far (Beta 1.1): Vista SP2 x64 200/200, Vista SP2 x86 164/164, Windows 7 SP1 x64 198/198, Windows 7 SP1 x86 162/162, Windows 8 x64 193/193. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
+Results so far (Beta 1.2): Vista SP2 x64 211/211, Vista SP2 x86 175/175, Windows 7 SP1 x64 209/209, Windows 7 SP1 x86 173/173, Windows 8 x64 204/204. Updating (`VX_VM_ONLY=upgrade`, from Beta 1 and Beta 1.1) and uninstalling with a restart (`VX_VM_ONLY=uninst`) pass on all five. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
 
 ### Real programs
 

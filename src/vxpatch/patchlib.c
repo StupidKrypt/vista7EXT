@@ -1578,8 +1578,8 @@ DWORD vxp_flags_for_layer(const WCHAR *layer)
 }
 
 /* ---- Explorer entries and .msi double-click --------------------------------
- * "VistaExt compatibility..." on programs and folders, "Run with VistaExt" on
- * programs, "Install with VistaExt fixes" on .msi packages, and .msi
+ * "VistaExt compatibility..." on programs and folders, "Open with VistaExt
+ * compatibility mode" on programs and shortcuts, "Install with VistaExt fixes" on .msi packages, and .msi
  * double-click through msifix (a package that needs no change is installed as
  * it is). The .msi command found before is kept (MsiOpenCommand) and put back
  * when they are removed. Used by VistaExt Center (/register, /unregister) and
@@ -1623,11 +1623,12 @@ void vxp_shell_entries(BOOL on, const WCHAR *dir)
         L"SOFTWARE\\Classes\\Directory\\shell\\VistaExt",
         L"SOFTWARE\\Classes\\Msi.Package\\shell\\VistaExtInstall",
         L"SOFTWARE\\Classes\\exefile\\shell\\VistaExtRun",
+        L"SOFTWARE\\Classes\\lnkfile\\shell\\VistaExtRun",   /* shortcuts: desktop, Start menu */
     };
     WCHAR cmd[MAX_PATH * 2], sub[200], prev[MAX_PATH * 2];
     int i;
     if (!on) {
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 5; i++) {
             wsprintfW(sub, L"%s\\command", keys[i]);
             RegDeleteKeyW(HKEY_LOCAL_MACHINE, sub);
             RegDeleteKeyW(HKEY_LOCAL_MACHINE, keys[i]);
@@ -1656,10 +1657,19 @@ void vxp_shell_entries(BOOL on, const WCHAR *dir)
         set_sz(VX_REG_ROOT, L"MsiOpenCommand", prev);
     set_sz(MSI_OPEN, NULL, cmd);
 
-    wsprintfW(sub, L"%s\\command", keys[3]);
-    set_sz(keys[3], NULL, L"Run with VistaExt");
+    /* "Open with VistaExt compatibility mode": on a program and on a shortcut
+     * to one (vxcenter /run follows the shortcut). VistaExt's icon, and
+     * Windows' shield: it asks for administrator rights (the program itself
+     * then starts as the user) */
     wsprintfW(cmd, L"\"%svxcenter.exe\" /run \"%%1\"", dir);
-    set_sz(sub, NULL, cmd);
+    wsprintfW(prev, L"\"%svxcenter.exe\",0", dir);
+    for (i = 3; i < 5; i++) {
+        wsprintfW(sub, L"%s\\command", keys[i]);
+        set_sz(keys[i], NULL, L"Open with VistaExt compatibility mode");
+        set_sz(keys[i], L"Icon", prev);
+        set_sz(keys[i], L"HasLUAShield", L"");
+        set_sz(sub, NULL, cmd);
+    }
 }
 
 /* ---- programs that were removed ---------------------------------------------

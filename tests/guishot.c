@@ -1,4 +1,6 @@
-/* guishot <vxcenter.exe> <program to open> <out.bmp> [/onscreen]
+/* guishot <vxcenter.exe> <program to open> <out.bmp> [/onscreen] [/class:<window class>]
+ * (<program to open> "-": none; /class: another program's window, e.g.
+ * VistaExtSetup.exe's wizard "VistaExtSetup")
  * Starts VistaExt Center hidden (so nothing appears on screen), lists its
  * controls, captures the window with PrintWindow and closes it.
  * /onscreen (test VMs): shows it normally and copies it from the screen;
@@ -28,16 +30,22 @@ int wmain(int argc, WCHAR **argv)
     HWND w = NULL;
     RECT rc;
     int i, cw, ch, x = 0, y = 0;
-    BOOL onscreen = argc > 4 && !vx_wcsicmp(argv[4], L"/onscreen");
+    BOOL onscreen = FALSE;
+    const WCHAR *cls = L"VistaExtCenter";
     if (argc < 4) return 2;
+    for (i = 4; i < argc; i++) {
+        if (!vx_wcsicmp(argv[i], L"/onscreen")) onscreen = TRUE;
+        else if (!vx_wcsnicmp(argv[i], L"/class:", 7)) cls = argv[i] + 7;
+    }
     vx_memset(&si, 0, sizeof(si));
     si.cb = sizeof(si);
     si.dwFlags = STARTF_USESHOWWINDOW;
     si.wShowWindow = SW_HIDE;
-    wsprintfW(cmd, L"\"%s\" \"%s\"", argv[1], argv[2]);
+    if (!vx_wcsicmp(argv[2], L"-")) wsprintfW(cmd, L"\"%s\"", argv[1]);
+    else wsprintfW(cmd, L"\"%s\" \"%s\"", argv[1], argv[2]);
     if (!CreateProcessW(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) { con_print(L"start failed\r\n"); return 1; }
     WaitForInputIdle(pi.hProcess, 10000);
-    for (i = 0; i < 100 && !(w = FindWindowW(L"VistaExtCenter", NULL)); i++) Sleep(100);
+    for (i = 0; i < 100 && !(w = FindWindowW(cls, NULL)); i++) Sleep(100);
     if (!w) { con_print(L"window not found\r\n"); TerminateProcess(pi.hProcess, 1); return 1; }
     /* show it off-screen, without a taskbar button, so PrintWindow has pixels
      * but nothing appears on the desktop */

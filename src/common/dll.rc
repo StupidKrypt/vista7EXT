@@ -6,8 +6,8 @@
 #include <winver.h>
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,0
- PRODUCTVERSION 1,1,0,0
+ FILEVERSION 1,2,0,0
+ PRODUCTVERSION 1,2,0,0
  FILEOS VOS_NT_WINDOWS32
  FILETYPE VFT_DLL
 BEGIN
@@ -17,9 +17,9 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "VistaExt project"
       VALUE "FileDescription", "VistaExt add-on for running newer programs on Windows Vista and 7"
-      VALUE "FileVersion", "1.1.0"
+      VALUE "FileVersion", "1.2.0"
       VALUE "ProductName", "VistaExt"
-      VALUE "ProductVersion", "1.1.0 (Beta 1.1)"
+      VALUE "ProductVersion", "1.2.0 (Beta 1.2)"
       VALUE "LegalCopyright", "GPL-2.0"
     END
   END

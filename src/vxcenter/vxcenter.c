@@ -1,6 +1,11 @@
-/* VistaExt Center - pick a program (or folder), choose which Windows version
- * it should see, and make it run on Vista / 7. Also sets up the Explorer
- * right-click entries (/register, /unregister). */
+/* VistaExt (vxcenter.exe) - the window the Start menu's "VistaExt" opens:
+ *  - VistaExt on or off for the whole system (the compatibility layer; also
+ *    in Safe Mode, where the service does not run),
+ *  - pick a program (or folder), choose which Windows version it should see,
+ *    and make it run on Vista / 7 / 8,
+ *  - it starts the tray icon (as the signed-in user) if it is not running.
+ * Also sets up the Explorer right-click entries and the Start menu folder
+ * (/register, /unregister). */
 #include "../vxpatch/patchlib.h"
 #include "../common/userrun.h"
 #include <commctrl.h>
@@ -14,11 +19,12 @@
 #include <shlguid.h>
 
 enum { IDC_PATH = 100, IDC_BROWSE, IDC_BROWSEDIR, IDC_VER, IDC_WV2, IDC_CHROMIUM, IDC_ARGS,
-       IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN, IDC_CLOSE, IDC_LOG, IDC_STATUS };
+       IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN, IDC_CLOSE, IDC_LOG, IDC_STATUS, IDC_ONOFF, IDC_ONTEXT };
 
 #define CHROMIUM_ARGS VXP_CHROMIUM_ARGS
 
 #define WM_VX_DONE (WM_APP + 1)
+#define WM_VX_SWITCHED (WM_APP + 2)   /* the on/off switch finished: wp = it worked, lp = restart needed */
 
 static HWND g_wnd, g_log;
 static volatile LONG g_busy;    /* a check/apply/undo runs on the worker thread */
@@ -202,7 +208,7 @@ static DWORD WINAPI worker(LPVOID p)
 static void set_busy(BOOL on)
 {
     static const int ids[] = { IDC_PATH, IDC_BROWSE, IDC_BROWSEDIR, IDC_VER, IDC_WV2, IDC_CHROMIUM, IDC_ARGS,
-                               IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN };
+                               IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN, IDC_ONOFF };
     unsigned i;
     g_busy = on;
     for (i = 0; i < sizeof(ids) / sizeof(ids[0]); i++) EnableWindow(item(ids[i]), !on);
@@ -306,6 +312,108 @@ static void browse_dir(void)
     }
 }
 
+/* ---- VistaExt on / off --------------------------------------------------------
+ * The same switch as the tray icon's: asks VistaExt's service, and where it
+ * is not running (Safe Mode, automatic mode not installed) runs
+ * "vxauto.exe /disable" or "/enable" itself (this window already runs as
+ * administrator). On a worker thread: switching moves files and puts patched
+ * programs back, which takes a few seconds. */
+static void tool_path(const WCHAR *exe, WCHAR *out)
+{
+    SIZE_T n;
+    GetModuleFileNameW(NULL, out, MAX_PATH);
+    n = vx_wcslen(out);
+    while (n && out[n - 1] != '\\') n--;
+    out[n] = 0;
+    vx_wcscatn(out, exe, MAX_PATH);
+}
+
+static void show_onoff(void)
+{
+    BOOL on = vx_setting(L"Enabled", 1) != 0;
+    BOOL rs = vx_restart_state() > 0;
+    WCHAR t[200];
+    wsprintfW(t, on ? L"VistaExt is ON: programs made for newer Windows can run on this PC.%s"
+                    : L"VistaExt is OFF: Windows works exactly as it does without VistaExt.%s",
+              rs ? L" Restart Windows to finish the last change." : L"");
+    SetWindowTextW(item(IDC_ONTEXT), t);
+    SetWindowTextW(item(IDC_ONOFF), on ? L"Turn off" : L"Turn on");
+}
+
+static DWORD WINAPI switch_worker(LPVOID p)
+{
+    BOOL on = p != NULL, ok = FALSE, restart = FALSE;
+    WCHAR rep[512], exe[MAX_PATH], cmd[MAX_PATH + 32];
+    const WCHAR *req = on ? L"ENABLE" : L"DISABLE";
+    DWORD got = 0;
+    if (CallNamedPipeW(L"\\\\.\\pipe\\VistaExt", (void *)req, (DWORD)((vx_wcslen(req) + 1) * sizeof(WCHAR)), rep,
+                       sizeof(rep) - sizeof(WCHAR), &got, 120000)) {
+        rep[got / sizeof(WCHAR)] = 0;
+        ok = vx_wcsnicmp(rep, L"error=", 6) != 0;
+    }
+    if (!ok) {                                 /* no service: do it here */
+        STARTUPINFOW si;
+        PROCESS_INFORMATION pi;
+        DWORD code = 1;
+        tool_path(L"vxauto.exe", exe);
+        wsprintfW(cmd, L"\"%s\" %s", exe, on ? L"/enable" : L"/disable");
+        vx_memset(&si, 0, sizeof(si));
+        si.cb = sizeof(si);
+        si.dwFlags = STARTF_USESHOWWINDOW;
+        si.wShowWindow = SW_HIDE;
+        if (CreateProcessW(exe, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+            WaitForSingleObject(pi.hProcess, 300000);
+            GetExitCodeProcess(pi.hProcess, &code);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+        }
+        ok = code == 0 || code == 3;          /* 3: done, Windows must restart to finish */
+        restart = code == 3;
+    }
+    PostMessageW(g_wnd, WM_VX_SWITCHED, ok, restart);
+    return 0;
+}
+
+static void run_switch(void)
+{
+    BOOL on = vx_setting(L"Enabled", 1) != 0;
+    HANDLE t;
+    if (g_busy) return;
+    if (on && MessageBoxW(g_wnd, L"Turn VistaExt off?\n\nWindows then works exactly as it does without VistaExt: "
+                                 L"programs that need it will not start until you turn it on again. Your settings "
+                                 L"are kept.", L"VistaExt", MB_YESNO | MB_ICONQUESTION) != IDYES)
+        return;
+    set_busy(TRUE);
+    status(on ? L"Turning VistaExt off..." : L"Turning VistaExt on...");
+    if (!(t = CreateThread(NULL, 0, switch_worker, on ? NULL : (LPVOID)1, 0, NULL))) {
+        set_busy(FALSE);
+        status(L"Could not start the switch.");
+        return;
+    }
+    CloseHandle(t);
+}
+
+static void switched(BOOL ok, BOOL restart)
+{
+    BOOL on = vx_setting(L"Enabled", 1) != 0;
+    set_busy(FALSE);
+    show_onoff();
+    if (!ok) status(L"The switch did not finish. See the log (tray icon > View log).");
+    else if (restart || vx_restart_state() > 0) status(L"Done. Some files were in use: restart Windows to finish.");
+    else status(on ? L"VistaExt is on." : L"VistaExt is off. Programs that are running keep it until they are closed.");
+}
+
+/* the tray icon belongs to the signed-in user: started through Explorer, not
+ * as administrator like this window */
+static void ensure_tray(void)
+{
+    WCHAR exe[MAX_PATH];
+    if (FindWindowW(L"VistaExtTray", NULL)) return;
+    tool_path(L"vxtray.exe", exe);
+    if (GetFileAttributesW(exe) == INVALID_FILE_ATTRIBUTES) return;
+    vx_run_as_user(exe, NULL, NULL);
+}
+
 /* ---- window -------------------------------------------------------------- */
 static HWND add(const WCHAR *cls, const WCHAR *text, DWORD style, int x, int y, int w, int h, int id, DWORD ex)
 {
@@ -319,6 +427,11 @@ static void build_ui(void)
 {
     int i, y = 12;
     HWND h;
+    add(L"BUTTON", L"VistaExt for the whole PC", BS_GROUPBOX, 12, y, 564, 52, -1, 0);
+    add(L"STATIC", L"", SS_LEFT, 24, y + 20, 440, 28, IDC_ONTEXT, 0);
+    add(L"BUTTON", L"", WS_TABSTOP, 476, y + 17, 90, 26, IDC_ONOFF, 0);
+    show_onoff();
+    y += 62;
     h = add(L"STATIC", L"Make a program made for newer Windows run on this PC.", 0, 12, y, 560, 20, -1, 0);
     SendMessageW(h, WM_SETFONT, (WPARAM)g_bold, TRUE);
     y += 30;
@@ -354,7 +467,7 @@ static void build_ui(void)
     add(L"STATIC", L"Choose a program, then click Check to see what it needs.", SS_LEFT, 12, y, 564, 36, IDC_STATUS, 0);
     y += 40;
     g_log = add(L"EDIT", L"", WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
-                12, y, 564, 200, IDC_LOG, WS_EX_CLIENTEDGE);
+                12, y, 564, 138, IDC_LOG, WS_EX_CLIENTEDGE);
     SendMessageW(g_log, EM_SETLIMITTEXT, 0, 0);   /* no 32K cut-off for big folders */
 }
 
@@ -368,10 +481,11 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp)
         case IDC_CHECK: run_check(); return 0;
         case IDC_APPLY: run_apply(); return 0;
         case IDC_UNDO:
-            if (!g_busy && MessageBoxW(h, L"Put back the original files and remove the VistaExt settings?", L"VistaExt Center",
+            if (!g_busy && MessageBoxW(h, L"Put back the original files and remove the VistaExt settings?", L"VistaExt",
                             MB_YESNO | MB_ICONQUESTION) == IDYES) run_undo();
             return 0;
         case IDC_RUN: run_program(); return 0;
+        case IDC_ONOFF: run_switch(); return 0;
         case IDC_CLOSE: case IDCANCEL: SendMessageW(h, WM_CLOSE, 0, 0); return 0;
         case IDOK: run_apply(); return 0;
         }
@@ -380,6 +494,7 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp)
         if ((HWND)lp == g_log) return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
         break;
     case WM_VX_DONE: work_done((work *)lp); return 0;
+    case WM_VX_SWITCHED: switched((BOOL)wp, (BOOL)lp); return 0;
     case WM_CLOSE:
         /* closing now would stop the worker in the middle of writing a file */
         if (g_busy) { status(L"Please wait: VistaExt is still working on the files."); return 0; }
@@ -391,38 +506,32 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp)
 }
 
 /* ---- Explorer integration ------------------------------------------------ */
-/* Start menu (all users): VistaExt Center, the tray icon, and the switch
- * that turns VistaExt off without the tray icon - also in Safe Mode, where
- * neither the service nor the tray icon runs */
-static const struct { const WCHAR *name, *exe, *args, *desc; BOOL admin; } g_links[] = {
-    { L"VistaExt Center.lnk", L"vxcenter.exe", L"", L"Run modern programs on Windows Vista and 7", FALSE },
-    { L"VistaExt tray icon.lnk", L"vxtray.exe", L"", L"VistaExt's icon next to the clock: on/off and the Windows version", FALSE },
-    { L"Turn off VistaExt (also in Safe Mode).lnk", L"vxauto.exe", L"/disable /pause",
-      L"Takes VistaExt out of Windows until it is turned on again", TRUE },
+/* Start menu (all users): a folder "VistaExt" with two entries - VistaExt
+ * (this window: the on/off switch, also in Safe Mode, and the settings; it
+ * starts the tray icon) and its uninstaller. Earlier versions put their
+ * shortcuts straight into Programs: those are removed. */
+static const WCHAR *g_old_links[] = {
+    L"VistaExt Center.lnk", L"VistaExt tray icon.lnk", L"Turn off VistaExt (also in Safe Mode).lnk",
 };
+#define SM_FOLDER L"VistaExt"
 
-static void link_path(const WCHAR *name, WCHAR *out)
+static void link_path(const WCHAR *sub, const WCHAR *name, WCHAR *out)
 {
+    out[0] = 0;
     SHGetFolderPathW(NULL, CSIDL_COMMON_PROGRAMS, NULL, 0, out);
-    vx_wcscatn(out, L"\\", MAX_PATH);
-    vx_wcscatn(out, name, MAX_PATH);
+    if (sub) { vx_wcscatn(out, L"\\", MAX_PATH); vx_wcscatn(out, sub, MAX_PATH); }
+    if (name) { vx_wcscatn(out, L"\\", MAX_PATH); vx_wcscatn(out, name, MAX_PATH); }
 }
 
-static void make_link(const WCHAR *lnk, const WCHAR *target, const WCHAR *args, const WCHAR *desc, BOOL admin)
+static void make_link(const WCHAR *lnk, const WCHAR *target, const WCHAR *args, const WCHAR *desc, const WCHAR *icon)
 {
     IShellLinkW *sl;
     IPersistFile *pf;
-    IShellLinkDataList *dl;
     if (FAILED(CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLinkW, (void **)&sl))) return;
     sl->lpVtbl->SetPath(sl, target);
     sl->lpVtbl->SetArguments(sl, args);
     sl->lpVtbl->SetDescription(sl, desc);
-    if (admin && SUCCEEDED(sl->lpVtbl->QueryInterface(sl, &IID_IShellLinkDataList, (void **)&dl))) {
-        DWORD f = 0;
-        dl->lpVtbl->GetFlags(dl, &f);
-        dl->lpVtbl->SetFlags(dl, f | SLDF_RUNAS_USER);       /* "Run as administrator" */
-        dl->lpVtbl->Release(dl);
-    }
+    if (icon) sl->lpVtbl->SetIconLocation(sl, icon, 0);
     if (SUCCEEDED(sl->lpVtbl->QueryInterface(sl, &IID_IPersistFile, (void **)&pf))) {
         pf->lpVtbl->Save(pf, lnk, TRUE);
         pf->lpVtbl->Release(pf);
@@ -431,10 +540,11 @@ static void make_link(const WCHAR *lnk, const WCHAR *target, const WCHAR *args, 
 }
 
 /* the Explorer entries and .msi double-click (patchlib, shared with the
- * on/off switch), and the Start menu shortcuts */
+ * on/off switch: added only while VistaExt is on, so an update over a
+ * switched-off VistaExt leaves it off), and the Start menu folder */
 static int do_register(BOOL on)
 {
-    WCHAR exe[MAX_PATH], dir[MAX_PATH], lnk[MAX_PATH], target[MAX_PATH];
+    WCHAR exe[MAX_PATH], dir[MAX_PATH], lnk[MAX_PATH], target[MAX_PATH], sys[MAX_PATH], args[MAX_PATH + 40];
     SIZE_T n;
     unsigned i;
     GetModuleFileNameW(NULL, exe, MAX_PATH);
@@ -442,27 +552,112 @@ static int do_register(BOOL on)
     n = vx_wcslen(dir);
     while (n && dir[n - 1] != '\\') n--;
     dir[n] = 0;
-    vxp_shell_entries(on, dir);
-    for (i = 0; i < sizeof(g_links) / sizeof(g_links[0]); i++) {
-        link_path(g_links[i].name, lnk);
-        if (!on) { DeleteFileW(lnk); continue; }
+    vxp_shell_entries(on && vx_setting(L"Enabled", 1) != 0, dir);
+    for (i = 0; i < sizeof(g_old_links) / sizeof(g_old_links[0]); i++) {
+        link_path(NULL, g_old_links[i], lnk);
+        DeleteFileW(lnk);
+    }
+    link_path(SM_FOLDER, L"VistaExt.lnk", lnk);
+    DeleteFileW(lnk);
+    link_path(SM_FOLDER, L"Uninstall VistaExt.lnk", lnk);
+    DeleteFileW(lnk);
+    link_path(SM_FOLDER, NULL, lnk);
+    if (!on) { RemoveDirectoryW(lnk); return 0; }
+    CreateDirectoryW(lnk, NULL);
+    link_path(SM_FOLDER, L"VistaExt.lnk", lnk);
+    make_link(lnk, exe, L"", L"Turn VistaExt on or off, and set up programs made for newer Windows", NULL);
+    /* the uninstaller: VistaExtSetup.exe (it asks for administrator rights
+     * itself), or uninstall.cmd where VistaExt was installed without it */
+    vx_wcscpyn(target, dir, MAX_PATH);
+    vx_wcscatn(target, L"VistaExtSetup.exe", MAX_PATH);
+    link_path(SM_FOLDER, L"Uninstall VistaExt.lnk", lnk);
+    if (GetFileAttributesW(target) != INVALID_FILE_ATTRIBUTES)
+        make_link(lnk, target, L"/uninstall", L"Remove VistaExt from this PC", target);
+    else {
         vx_wcscpyn(target, dir, MAX_PATH);
-        vx_wcscatn(target, g_links[i].exe, MAX_PATH);
-        if (GetFileAttributesW(target) != INVALID_FILE_ATTRIBUTES)
-            make_link(lnk, target, g_links[i].args, g_links[i].desc, g_links[i].admin);
+        vx_wcscatn(target, L"uninstall.cmd", MAX_PATH);
+        GetSystemDirectoryW(sys, MAX_PATH);
+        vx_wcscatn(sys, L"\\cmd.exe", MAX_PATH);
+        wsprintfW(args, L"/c \"\"%s\"\"", target);
+        if (GetFileAttributesW(target) != INVALID_FILE_ATTRIBUTES) {
+            IShellLinkW *sl;
+            make_link(lnk, sys, args, L"Remove VistaExt from this PC (run as administrator)", exe);
+            /* uninstall.cmd needs administrator rights: "Run as administrator" */
+            if (SUCCEEDED(CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLinkW, (void **)&sl))) {
+                IPersistFile *pf;
+                IShellLinkDataList *dl;
+                if (SUCCEEDED(sl->lpVtbl->QueryInterface(sl, &IID_IPersistFile, (void **)&pf))) {
+                    if (SUCCEEDED(pf->lpVtbl->Load(pf, lnk, STGM_READWRITE)) &&
+                        SUCCEEDED(sl->lpVtbl->QueryInterface(sl, &IID_IShellLinkDataList, (void **)&dl))) {
+                        DWORD f = 0;
+                        dl->lpVtbl->GetFlags(dl, &f);
+                        dl->lpVtbl->SetFlags(dl, f | SLDF_RUNAS_USER);
+                        dl->lpVtbl->Release(dl);
+                        pf->lpVtbl->Save(pf, lnk, TRUE);
+                    }
+                    pf->lpVtbl->Release(pf);
+                }
+                sl->lpVtbl->Release(sl);
+            }
+        }
     }
     return 0;
 }
 
-/* "Run with VistaExt": the recommended settings, patch, then start it (an
- * installer usually needs administrator rights, which this already has) */
+/* "Open with VistaExt compatibility mode" (Explorer's right-click menu, on a
+ * program or a shortcut to one): the program's saved settings or the
+ * recommended ones, patch or register it, then start it - as the signed-in
+ * user, through Explorer, like a double-click (this runs as administrator;
+ * a program that needs administrator rights asks for them itself). A
+ * shortcut is followed: its program, arguments and folder. */
+static BOOL read_shortcut(const WCHAR *lnk, WCHAR *target, WCHAR *args, int cargs, WCHAR *dir)
+{
+    IShellLinkW *sl;
+    IPersistFile *pf;
+    BOOL ok = FALSE;
+    target[0] = args[0] = dir[0] = 0;
+    if (FAILED(CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLinkW, (void **)&sl))) return FALSE;
+    if (SUCCEEDED(sl->lpVtbl->QueryInterface(sl, &IID_IPersistFile, (void **)&pf))) {
+        if (SUCCEEDED(pf->lpVtbl->Load(pf, lnk, STGM_READ)) &&
+            sl->lpVtbl->GetPath(sl, target, MAX_PATH, NULL, 0) == S_OK && target[0]) {
+            sl->lpVtbl->GetArguments(sl, args, cargs);
+            sl->lpVtbl->GetWorkingDirectory(sl, dir, MAX_PATH);
+            ok = TRUE;
+        }
+        pf->lpVtbl->Release(pf);
+    }
+    sl->lpVtbl->Release(sl);
+    return ok;
+}
+
+static BOOL ends_with_i(const WCHAR *s, const WCHAR *end)
+{
+    SIZE_T n = vx_wcslen(s), e = vx_wcslen(end);
+    return n >= e && !vx_wcsicmp(s + n - e, end);
+}
+
 static int do_run(const WCHAR *file)
 {
-    WCHAR layer[600], full[MAX_PATH], dir[MAX_PATH], m[MAX_PATH + 200];
+    WCHAR layer[600], full[MAX_PATH], dir[MAX_PATH], m[MAX_PATH + 200], args[1024];
     vxp_stats st = { 0 };
     DWORD flags = 0;
     SIZE_T n;
     if (!GetFullPathNameW(file, MAX_PATH, full, NULL)) return 2;
+    args[0] = dir[0] = 0;
+    if (ends_with_i(full, L".lnk")) {
+        WCHAR lnk[MAX_PATH];
+        vx_wcscpyn(lnk, full, MAX_PATH);
+        if (!read_shortcut(lnk, full, args, 1024, dir)) {
+            wsprintfW(m, L"%s\n\nThis shortcut does not lead to a file on this PC.", lnk);
+            MessageBoxW(NULL, m, L"VistaExt", MB_ICONWARNING);
+            return 2;
+        }
+    }
+    if (!ends_with_i(full, L".exe") || GetFileAttributesW(full) == INVALID_FILE_ATTRIBUTES) {
+        wsprintfW(m, L"%s\n\nThis is not a program. VistaExt's compatibility mode is for programs (.exe).", full);
+        MessageBoxW(NULL, m, L"VistaExt", MB_ICONINFORMATION);
+        return 2;
+    }
     if (!vx_lookup_layer(full, layer, 600)) vxp_recommend(full, layer, 600);
     flags |= vxp_flags_for_layer(layer);
     flags |= vxp_mode_for(full);          /* in memory: works for setups on a CD too */
@@ -471,12 +666,16 @@ static int do_run(const WCHAR *file)
         wsprintfW(m, L"%s could not be changed (is it running, or on a CD?). It is started as it is.", full);
         MessageBoxW(NULL, m, L"VistaExt", MB_ICONWARNING);
     } else if (layer[0]) vx_set_layer(full, layer);
-    vx_wcscpyn(dir, full, MAX_PATH);
-    n = vx_wcslen(dir);
-    while (n && dir[n - 1] != '\\') n--;
-    if (n > 3) n--;
-    dir[n] = 0;
-    return (INT_PTR)ShellExecuteW(NULL, NULL, full, NULL, dir, SW_SHOWNORMAL) > 32 ? 0 : 1;
+    if (!dir[0]) {
+        vx_wcscpyn(dir, full, MAX_PATH);
+        n = vx_wcslen(dir);
+        while (n && dir[n - 1] != '\\') n--;
+        if (n > 3) n--;
+        dir[n] = 0;
+    }
+    if (vx_run_as_user(full, args, dir)) return 0;
+    /* no Explorer to ask (another shell): started from here */
+    return (INT_PTR)ShellExecuteW(NULL, NULL, full, args[0] ? args : NULL, dir, SW_SHOWNORMAL) > 32 ? 0 : 1;
 }
 
 int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cmdline, int show)
@@ -518,11 +717,12 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cmdline, int show)
 
     rc.left = rc.top = 0; rc.right = S(588); rc.bottom = S(520);
     AdjustWindowRectEx(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE, 0);
-    g_wnd = CreateWindowExW(WS_EX_CONTROLPARENT, wc.lpszClassName, L"VistaExt Center",
+    g_wnd = CreateWindowExW(WS_EX_CONTROLPARENT, wc.lpszClassName, L"VistaExt",
                             WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
                             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
                             NULL, NULL, inst, NULL);
     build_ui();
+    ensure_tray();
     if (g_path[0] && take_path()) { load_settings(); run_check(); }
     ShowWindow(g_wnd, show);
     UpdateWindow(g_wnd);
