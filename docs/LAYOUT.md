@@ -93,8 +93,8 @@ The Windows 7 build's companions are correspondingly smaller:
 
 | What | Vista build | Windows 7 build |
 |---|---|---|
-| `kernelbase.dll` | VistaExt's (Vista has none), forwarding to `kernelvx` | not built: Windows 7 has its own |
-| `bcryptprimitives` | VistaExt's own `bcryptprimitives.dll` (Vista has none), used directly | `bcryptprimvx.dll`, adding `ProcessPrng` to Windows 7's |
+| `kernelbase.dll` | none: Vista has none, and VistaExt puts no DLL with a Windows name into System32; `kernelvx` stands in for it in programs VistaExt runs | not built: Windows 7 has its own |
+| `bcryptprimitives` | VistaExt's own, as `bcryptprimvx.dll` (Vista has none; programs VistaExt runs get it for `bcryptprimitives.dll`) | `bcryptprimvx.dll`, adding `ProcessPrng` to Windows 7's |
 | child-process attributes (`UpdateProcThreadAttribute`) | only parent process and handle list exist | adds processor groups, NUMA, UMS, mitigation policy; reduces 64-bit mitigation masks to Windows 7's 32-bit one |
 | `msifix` | lowers packages to Windows Installer 4.5, removes 5.0-only tables | keeps Installer 5.0 |
 | header version `vxpatch` writes | 6.0 | 6.1 |
@@ -107,6 +107,10 @@ How it's selected: `build.sh` compiles each target with `-DVX_OS=600` (Vista) or
 ### Per architecture
 
 Same source; `build.sh` passes the target triple, and the few `#ifdef _WIN64` blocks above do the rest. `gen.py` reads stdcall-decorated names on x86 and keeps each architecture's own export numbers. `install.cmd` relaunches itself as 64-bit when started from 32-bit, so `%ProgramFiles%` and the registry are the 64-bit ones. The tools go to `Program Files\VistaExt`, settings to `HKLM\SOFTWARE\VistaExt` in the 64-bit view (`VX_REG_VIEW`).
+
+## DLLs Windows lacks: names of VistaExt's own
+
+Since 1.3, nothing VistaExt installs has the name of a DLL Windows could have: `combase` (Vista, 7) is `combvx.dll`, `shcore` is `shcrvx.dll`, `d3d12` is `d3dvx.dll`, Vista's `bcryptprimitives` is `bcryptprimvx.dll`, and the API sets are only `vxs-ms-*` / `vxe-ms-*` (no `api-ms-*` / `ext-ms-*` files). Programs VistaExt does not run find exactly what Windows has. The list is `VX_NEWDLLS` in `src/common/companions.h` (C) and `PRIVATE` in `tools/gen.py` (export tables: forwarders and library names); `build.sh` names the files. Programs VistaExt runs get them in place of the Windows name, only when Windows has no DLL of that name and the program ships none: `vxload` (imports, in memory), `vxpatch` (imports, on disk), `kernelvx` (`LoadLibrary*`, `GetModuleHandle*`: Windows is asked first). Windows' own DLLs inside such a program, told a newer Windows, load API sets by their `api-ms-win-*` names through Windows' loader: on Windows 7, `vxload` gives the program its own copy of the API-set map with VistaExt's sets added (`extend_apiset_map`), so those loads find the `vxs-ms-*` copies in that process only.
 
 ## Known consequences
 

@@ -58,6 +58,7 @@
 #include <sddl.h>
 #include <stdarg.h>
 #include <wincrypt.h>
+#include "../common/diag.h"
 #include <wintrust.h>
 #include <mscat.h>
 #ifndef WTS_SESSION_LOGON
@@ -170,12 +171,33 @@ static void logf(const WCHAR *fmt, ...)
     logw(b);
 }
 
+/* one line in the diagnostics folder's decisions.log (and VistaExt.log) */
+static void decided(const WCHAR *fmt, ...)
+{
+    WCHAR m[1400], e[1500];
+    SYSTEMTIME st;
+    va_list ap;
+    va_start(ap, fmt);
+    wvsprintfW(m, fmt, ap);
+    va_end(ap);
+    logw(m);
+    GetLocalTime(&st);
+    wsprintfW(e, L"%04u-%02u-%02u %02u:%02u:%02u  %s\r\n", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute,
+              st.wSecond, m);
+    {   /* as the service, also while working for a user */
+        HANDLE imp = vxp_unimpersonate();
+        vx_diag_append(L"decisions.log", e);
+        vxp_reimpersonate(imp);
+    }
+}
+
 static BOOL auto_on(void) { return vx_setting(L"Auto", 1) && vxp_enabled(); }
 
 static void new_file(const WCHAR *path, const root *r);
 static void reg_failed(LONG e, const WCHAR *key, const WCHAR *name);
 #define VX_REG_LATER VX_REG_ROOT L"\\RestoreLater"   /* patched, running when switched off */
 static int list_count(const WCHAR *key);
+static void review_if_due(void);
 static int restore_later(void);
 static void lock(void) { if (g_switch) WaitForSingleObject(g_switch, INFINITE); }
 /* the same, waiting "ms" at most (a program waits for the answer) */
@@ -450,54 +472,91 @@ static BOOL make_compatible(const WCHAR *dir)
     return ok;
 }
 
-/* file work as "user" (if not NULL); settings are saved as the service */
+/* The programs (.exe) under a folder that cannot start on this Windows by
+ * themselves (vxp_runs_natively). Game and anti-cheat folders and links are
+ * left out, as in process_files. */
+typedef struct { WCHAR (*p)[MAX_PATH]; int n, cap, native; } exelist;
+
+static void collect_exes(const WCHAR *dir, exelist *l, int depth)
+{
+    WCHAR pat[MAX_PATH], full[MAX_PATH], why[400];
+    WIN32_FIND_DATAW fd;
+    HANDLE h;
+    if (depth > 6 || is_game_dir(dir, NULL)) return;
+    vx_wcscpyn(pat, dir, MAX_PATH);
+    vx_wcscatn(pat, L"\\*", MAX_PATH);
+    if ((h = FindFirstFileW(pat, &fd)) == INVALID_HANDLE_VALUE) return;
+    do {
+        SIZE_T n = vx_wcslen(fd.cFileName);
+        if (fd.cFileName[0] == '.' && (!fd.cFileName[1] || (fd.cFileName[1] == '.' && !fd.cFileName[2]))) continue;
+        vx_wcscpyn(full, dir, MAX_PATH);
+        vx_wcscatn(full, L"\\", MAX_PATH);
+        vx_wcscatn(full, fd.cFileName, MAX_PATH);
+        if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) && !is_game_dir(full, fd.cFileName))
+                collect_exes(full, l, depth + 1);
+            continue;
+        }
+        if (n < 5 || vx_wcsicmp(fd.cFileName + n - 4, L".exe") || is_off(full, FALSE)) continue;
+        if (vxp_runs_natively(full, why, 400)) { l->native++; continue; }
+        if (!grow((void **)&l->p, l->n, &l->cap, sizeof(*l->p), 4096, L"programs")) continue;
+        vx_wcscpyn(l->p[l->n++], full, MAX_PATH);
+        if (!vxp_memory_registered(full)) decided(L"%s: cannot start on this Windows by itself (%s)", full, why);
+    } while (FindNextFileW(h, &fd));
+    FindClose(h);
+}
+
+/* file work as "user" (if not NULL); settings are saved as the service.
+ * Only programs that cannot start on this Windows by themselves are set up:
+ * a program that can is never changed automatically, whatever else is in
+ * its folder (DLLs it loads on demand, optional parts made for newer
+ * Windows) - a working program must not change because VistaExt is on. */
 static BOOL make_compatible_as(const WCHAR *dir, HANDLE user)
 {
     WCHAR layer[600], key[MAX_PATH + 2], probe[MAX_PATH + 4], m[MAX_PATH + 700];
     vx_layer l;
     walkctx w = { 0, 0 };
-    int n;
-    BOOL ok = TRUE;
+    exelist ex = { NULL, 0, 0, 0 };
+    int n = 0, i;
+    BOOL ok = TRUE, own;
     if (GetFileAttributesW(dir) == INVALID_FILE_ATTRIBUTES) return TRUE;
     if (is_off(dir, TRUE)) return TRUE;            /* the user undid VistaExt here */
     if (user && !ImpersonateLoggedOnUser(user)) return FALSE;
+    collect_exes(dir, &ex, 0);
+    if (!ex.n) {
+        if (ex.native) decided(L"%s: its programs run on this Windows by themselves; left as they are", dir);
+        goto done;
+    }
     vx_wcscpyn(key, dir, MAX_PATH);
     vx_wcscatn(key, L"\\", MAX_PATH + 2);
     vx_wcscpyn(probe, key, MAX_PATH + 4);
     vx_wcscatn(probe, L"x", MAX_PATH + 4);
     layer[0] = 0;
-    if (!vx_lookup_layer(probe, layer, 600)) {
-        /* nothing saved by the user: the recommended settings, saved only if
-         * the program needs VistaExt at all (decided below) */
-        vxp_recommend(dir, layer, 600);
-    }
+    /* nothing saved by the user: the recommended settings */
+    if (!(own = vx_lookup_layer(probe, layer, 600))) vxp_recommend(dir, layer, 600);
     vx_parse_layer(layer, &l);
-    w.flags |= vxp_flags_for_layer(layer);
-    /* in memory: every program of a folder that needs VistaExt is registered */
-    if ((w.flags |= vxp_mode_for(dir)) & VXP_MEMORY) w.flags |= VXP_REGALL;
-    /* only programs that need something get settings: check without them */
-    {
-        vxp_stats st = { 0 };
-        if (!vx_lookup_layer(probe, m, 600)) {
-            /* does anything in the folder need VistaExt by itself? if not, the
-             * program runs as it is and is left completely alone */
-            WCHAR pat[MAX_PATH];
-            vx_wcscpyn(pat, dir, MAX_PATH);
-            if (!vxp_process_dir(pat, VXP_DRYRUN | VXP_QUIET, NULL, NULL, &st) && !st.unsupported) goto done;
-            if (layer[0]) {
-                HANDLE imp = vxp_unimpersonate();
-                if (vx_set_layer(key, layer) == 0) {
-                    wsprintfW(m, L"%s: settings %s", dir, layer);
-                    logw(m);
-                }
-                vxp_reimpersonate(imp);
-            }
-        }
+    w.flags |= vxp_flags_for_layer(layer) | vxp_mode_for(dir);
+    if (!own && layer[0]) {
+        HANDLE imp = vxp_unimpersonate();
+        if (vx_set_layer(key, layer) == 0) decided(L"%s: settings %s", dir, layer);
+        vxp_reimpersonate(imp);
     }
-    n = process_files(dir, &w, 0);
+    if (w.flags & VXP_MEMORY) {
+        /* in memory: each program that needs it is registered (its DLLs are
+         * switched while it loads); programs next to it that run by
+         * themselves are not */
+        for (i = 0; i < ex.n; i++) {
+            vxp_stats st = { 0 };
+            if (too_often(ex.p[i])) continue;
+            BOOL was = vxp_memory_registered(ex.p[i]);
+            if (vxp_process_file(ex.p[i], w.flags | VXP_REGALL | VXP_QUIET, log_cb, NULL, &st) < 0) w.failed++;
+            else { n++; if (!was) decided(L"%s: set up for VistaExt (in memory)", ex.p[i]); }
+        }
+    } else n = process_files(dir, &w, 0);          /* file mode: every file that needs a change */
     if (n) { wsprintfW(m, L"%s: %d file(s) made compatible", dir, n); logw(m); }
     ok = w.failed == 0;
 done:
+    if (ex.p) HeapFree(GetProcessHeap(), 0, ex.p);
     if (user) RevertToSelf();
     return ok;
 }
@@ -1011,12 +1070,13 @@ static BOOL system_place(const WCHAR *path)
  * never driver packages. A setup told another version that tries to install
  * a driver Windows loads while starting is stopped (advapivx), so a driver
  * made for another Windows cannot keep this one from starting.
- * HKLM\SOFTWARE\VistaExt "Setups" = 0 turns this off (tray icon menu). */
+ * Off by default ("Setups" = 1 turns it on, tray icon menu): a setup that
+ * runs on this Windows is left exactly as it is, unless the user asks. */
 static BOOL setups_on(void)
 {
     WCHAR g[64];
     vx_layer l;
-    if (!vx_setting(L"Setups", 1) || !vx_global_version(g, 64)) return FALSE;
+    if (!vx_setting(L"Setups", 0) || !vx_global_version(g, 64)) return FALSE;
     vx_parse_layer(g, &l);
     return l.ver != NULL;                     /* "this Windows' own version": nothing to tell */
 }
@@ -1228,17 +1288,32 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
     vxp_stats st = { 0 };
     SIZE_T n = vx_wcslen(path);
     DWORD a = GetFileAttributesW(path), flags;
-    BOOL own, need, setup = FALSE;
+    BOOL own, need, setup = FALSE, dll_problem = FALSE;
     int r;
     if (n < 8 || path[1] != ':' || path[2] != '\\' || vx_wcsnicmp(path + n - 4, L".exe", 4)) return 0;
     if (a == INVALID_FILE_ATTRIBUTES || (a & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT))) return 0;
     if (system_place(path) || is_off(path, FALSE)) return 0;
     if (vxp_memory_registered(path)) return 1;
     file_dir(path, dir);
-    /* can it run on this Windows by itself? (only what the file needs) */
+    /* can it run on this Windows by itself? Then it is left exactly as it
+     * is: the program, the DLLs it loads at start, its header - not DLLs it
+     * loads on demand, which programs check for first */
     {
+        WCHAR miss[400];
         DWORD t = GetTickCount();
-        need = vxp_process_file(path, VXP_DRYRUN | VXP_QUIET, NULL, NULL, &st) == 1;
+        need = !vxp_runs_natively(path, miss, 400);
+        if (need) {
+            /* and VistaExt has something for it (not: a C runtime that is
+             * not installed): the program itself, or a DLL of its own that it
+             * loads at start ("<file>: ..." names that DLL) */
+            const WCHAR *fp = base_name(path);
+            SIZE_T fl = vx_wcslen(fp);
+            dll_problem = vx_wcsnicmp(miss, fp, fl) || miss[fl] != ':';
+            need = dll_problem || vxp_process_file(path, VXP_DRYRUN | VXP_QUIET, NULL, NULL, &st) == 1;
+            decided(need ? L"%s (%s): cannot start on this Windows by itself (%s)"
+                         : L"%s (%s): cannot start on this Windows by itself (%s), and VistaExt has nothing for it",
+                    path, why, miss);
+        }
         slow_step(path, L"checking its imports", t);
     }
     if (!need) {
@@ -1273,6 +1348,7 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
     if (!own) vxp_recommend(path, layer, 600);
     flags = vxp_flags_for_layer(layer) | VXP_MEMORY | VXP_QUIET;
     if (setup) flags |= VXP_FORCE;                         /* registered although nothing is missing */
+    if (dll_problem) flags |= VXP_REGALL;                  /* its DLL is what needs VistaExt: register the program */
     if (setup || from_setup || is_setup(path)) flags |= VXP_SETUP;
     vx_memset(&st, 0, sizeof(st));
     logf(setup ? L"%s (%s): a setup program; it is told the chosen Windows version"
@@ -1629,8 +1705,232 @@ static BOOL do_switch(BOOL on, BOOL quiet_if_done)
              on ? L"redirected again" : L"no longer redirected", files, on ? L"patched again" : L"put back",
              fs.reboot ? L"; Windows must restart to finish" : later ? L"; running ones follow when closed" : L"");
     if (fs.reboot) need_restart();
+    if (on) review_if_due();
     unlock();
     return fs.reboot || restart_needed();
+}
+
+/* ---- looking again at what was set up earlier ------------------------------
+ * The rules of this version are stricter than those of earlier ones: a
+ * program that runs on this Windows by itself is never changed (earlier
+ * versions set up a whole folder when any file in it - even a DLL loaded on
+ * demand - lacked something). And VistaExt's DLLs that Windows lacks have
+ * names of their own now, so files patched on disk by an earlier version may
+ * name DLLs that are gone. So, once per set of rules ("Reviewed"):
+ *  - registrations and patched files of programs that run by themselves are
+ *    taken back (not those the user chose: right-click, VistaExt's window);
+ *  - other patched files are patched again from their originals.
+ * A file in use is left for the next time (the service tries again when it
+ * starts). Runs after an update (install.cmd), when switched on, and at
+ * service start until it has been done completely. */
+#define VX_REVIEW_RULES 2
+
+/* registered as a setup program (data "setup", see handle_single) */
+static BOOL is_setup_registration(const WCHAR *path)
+{
+    HKEY k;
+    WCHAR data[16];
+    DWORD cb = sizeof(data) - sizeof(WCHAR), type;
+    BOOL r = FALSE;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT L"\\Memory", 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return FALSE;
+    if (!RegQueryValueExW(k, path, NULL, &type, (BYTE *)data, &cb) && type == REG_SZ) {
+        data[cb / sizeof(WCHAR)] = 0;
+        r = !vx_wcsicmp(data, L"setup");
+    }
+    RegCloseKey(k);
+    return r;
+}
+
+static BOOL dir_programs_native(const WCHAR *file)
+{
+    WCHAR dir[MAX_PATH], pat[MAX_PATH], full[MAX_PATH];
+    WIN32_FIND_DATAW fd;
+    HANDLE h;
+    int seen = 0;
+    BOOL all = TRUE;
+    file_dir(file, dir);
+    vx_wcscpyn(pat, dir, MAX_PATH);
+    vx_wcscatn(pat, L"\\*.exe", MAX_PATH);
+    if ((h = FindFirstFileW(pat, &fd)) == INVALID_HANDLE_VALUE) return FALSE;
+    do {
+        if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) continue;
+        vx_wcscpyn(full, dir, MAX_PATH);
+        vx_wcscatn(full, L"\\", MAX_PATH);
+        vx_wcscatn(full, fd.cFileName, MAX_PATH);
+        seen++;
+        if (!vxp_runs_natively(full, NULL, 0)) { all = FALSE; break; }
+    } while (FindNextFileW(h, &fd));
+    FindClose(h);
+    return seen && all;
+}
+
+static BOOL is_exe_path(const WCHAR *p)
+{
+    SIZE_T n = vx_wcslen(p);
+    return n > 4 && !vx_wcsicmp(p + n - 4, L".exe");
+}
+
+/* ---- diagnostics report (vxauto /report <file>, from vx-diagnostics.cmd) ------
+ * Every program VistaExt runs or patched, with: who chose it, its settings,
+ * whether it would start on this Windows by itself (and if not, why), and
+ * what VistaExt's check finds for it now. */
+static HANDLE g_rep;
+
+static void rep_line(void *ctx, const WCHAR *line)
+{
+    char u8[4400];
+    DWORD w;
+    int n = WideCharToMultiByte(CP_UTF8, 0, line, -1, u8, sizeof(u8) - 3, NULL, NULL);
+    if (n <= 0 || g_rep == INVALID_HANDLE_VALUE) return;
+    u8[n - 1] = '\r'; u8[n] = '\n';
+    WriteFile(g_rep, u8, (DWORD)n + 1, &w, NULL);
+}
+
+static void rep_f(const WCHAR *fmt, ...)
+{
+    WCHAR m[2200];
+    va_list ap;
+    va_start(ap, fmt);
+    wvsprintfW(m, fmt, ap);
+    va_end(ap);
+    rep_line(NULL, m);
+}
+
+static int diag_report(const WCHAR *file)
+{
+    static const WCHAR *keys[] = { VX_REG_ROOT L"\\Memory", VX_REG_ROOT L"\\Patched", VX_REG_ROOT L"\\Repatch" };
+    static const WCHAR *what[] = { L"in memory", L"patched on disk", L"put back while switched off (patched again when on)" };
+    unsigned k;
+    DWORD w;
+    g_rep = CreateFileW(file, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, 0, NULL);
+    if (g_rep == INVALID_HANDLE_VALUE) return 2;
+    WriteFile(g_rep, "\xEF\xBB\xBF", 3, &w, NULL);
+    rep_f(L"VistaExt is %s. Programs it runs or changed, and what it finds for them now.", vxp_enabled() ? L"on" : L"off");
+    rep_f(L"");
+    for (k = 0; k < 3; k++) {
+        WCHAR *list = list_entries(keys[k]), *p;
+        if (!list) continue;
+        for (p = list; *p; p += vx_wcslen(p) + 1) {
+            WCHAR why[400], layer[600] = L"";
+            vxp_stats st = { 0 };
+            BOOL ex = GetFileAttributesW(p) != INVALID_FILE_ATTRIBUTES;
+            rep_f(L"%s", p);
+            rep_f(L"  how: %s%s", what[k], k == 0 && vxp_user_registered(p) ? L", chosen by the user" : L"");
+            if (!ex) { rep_f(L"  the file is gone"); rep_f(L""); continue; }
+            vx_lookup_layer(p, layer, 600);
+            rep_f(L"  settings: %s", layer[0] ? layer : L"(none of its own: the global ones)");
+            if (is_exe_path(p)) {
+                if (vxp_runs_natively(p, why, 400)) rep_f(L"  without VistaExt: it would start (nothing it needs at start is missing)");
+                else rep_f(L"  without VistaExt: it would not start (%s)", why);
+            }
+            rep_f(L"  VistaExt's check now:");
+            vxp_process_file(p, VXP_DRYRUN, rep_line, NULL, &st);
+            rep_f(L"");
+        }
+        HeapFree(GetProcessHeap(), 0, list);
+    }
+    CloseHandle(g_rep);
+    return 0;
+}
+
+/* ---- old copies an update set aside (vxauto /tidy, run by install.cmd) -------
+ * install.cmd renames a file a running program has loaded to <name>.vxoldN
+ * and puts the new one in its place. Here every such copy is deleted, or,
+ * while a program still has it loaded, deleted when Windows restarts
+ * (MoveFileEx's delay-until-reboot, as Windows Installer does it). Only
+ * files with VistaExt's marker are touched. Returns how many wait for the
+ * restart. */
+static int tidy_dir(const WCHAR *dir)
+{
+    WCHAR pat[MAX_PATH], f[MAX_PATH];
+    WIN32_FIND_DATAW fd;
+    HANDLE h;
+    int later = 0;
+    vx_wcscpyn(pat, dir, MAX_PATH);
+    vx_wcscatn(pat, L"\\*.vxold*", MAX_PATH);
+    if ((h = FindFirstFileW(pat, &fd)) == INVALID_HANDLE_VALUE) return 0;
+    do {
+        if (fd.dwFileAttributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT)) continue;
+        vx_wcscpyn(f, dir, MAX_PATH);
+        vx_wcscatn(f, L"\\", MAX_PATH);
+        vx_wcscatn(f, fd.cFileName, MAX_PATH);
+        if (!has_marker(f)) continue;
+        if (DeleteFileW(f)) { logf(L"%s: old copy deleted", f); continue; }
+        if (MoveFileExW(f, NULL, MOVEFILE_DELAY_UNTIL_REBOOT)) { logf(L"%s: in use; deleted when Windows restarts", f); later++; }
+    } while (FindNextFileW(h, &fd));
+    FindClose(h);
+    return later;
+}
+
+static int tidy(void)
+{
+    WCHAR win[MAX_PATH], d[MAX_PATH + 40], vx[MAX_PATH];
+    static const WCHAR *sub[] = { L"\\System32", L"\\SysWOW64", L"\\System32\\VistaExt.off", L"\\SysWOW64\\VistaExt.off" };
+    unsigned i;
+    int later = 0;
+    GetWindowsDirectoryW(win, MAX_PATH);
+    for (i = 0; i < sizeof(sub) / sizeof(sub[0]); i++) {
+        vx_wcscpyn(d, win, MAX_PATH + 40);
+        vx_wcscatn(d, sub[i], MAX_PATH + 40);
+        later += tidy_dir(d);
+    }
+    tool_dir(vx);
+    later += tidy_dir(vx);
+    return later;
+}
+
+static int review(void)
+{
+    WCHAR *list, *p, why[400];
+    int undone = 0, refreshed = 0, busy = 0, r;
+    lock();
+    logw(L"looking again at the programs set up earlier (this version's rules)");
+    if ((list = list_entries(VX_REG_ROOT L"\\Memory"))) {
+        for (p = list; *p; p += vx_wcslen(p) + 1) {
+            if (GetFileAttributesW(p) == INVALID_FILE_ATTRIBUTES || vxp_user_registered(p)) continue;
+            if (setups_on() && is_setup_registration(p)) continue;   /* told the version on purpose */
+            if (!vxp_runs_natively(p, why, 400)) continue;
+            if ((r = vxp_restore_file(p, log_cb, NULL)) < 0) { busy++; continue; }
+            decided(L"%s: runs on this Windows by itself; VistaExt no longer changes it", p);
+            undone++;
+        }
+        HeapFree(GetProcessHeap(), 0, list);
+    }
+    if ((list = list_entries(VX_REG_PATCHED_LIST))) {
+        for (p = list; *p; p += vx_wcslen(p) + 1) {
+            BOOL native, user;
+            WCHAR layer[600];
+            vxp_stats st = { 0 };
+            if (GetFileAttributesW(p) == INVALID_FILE_ATTRIBUTES) continue;
+            /* the user's own choice is never taken back, only renewed */
+            user = vxp_user_registered(p);              /* (restoring removes the entry) */
+            native = !user && (is_exe_path(p) ? vxp_runs_natively(p, why, 400) : dir_programs_native(p));
+            if ((r = vxp_restore_file(p, log_cb, NULL)) < 0) { busy++; continue; }
+            if (native) {
+                decided(L"%s: runs on this Windows by itself; its original is back", p);
+                undone++;
+                continue;
+            }
+            /* patched again, with this version's DLL names (and only the
+             * settings saved for it: nothing more than before) */
+            layer[0] = 0;
+            vx_lookup_layer(p, layer, 600);
+            if (vxp_process_file(p, vxp_flags_for_layer(layer) | VXP_QUIET | (user ? VXP_USER : 0), log_cb, NULL, &st) < 0)
+                busy++;
+            else refreshed++;
+        }
+        HeapFree(GetProcessHeap(), 0, list);
+    }
+    if (!busy) set_dword(L"Reviewed", VX_REVIEW_RULES);
+    logf(L"looked again: %d program(s) put back (they run by themselves), %d patched file(s) renewed, %d in use (next time)",
+         undone, refreshed, busy);
+    unlock();
+    return busy;
+}
+
+static void review_if_due(void)
+{
+    if (vxp_enabled() && vx_setting(L"Reviewed", 0) < VX_REVIEW_RULES) review();
 }
 
 /* at start: finish a switch that was interrupted (power cut, crash) */
@@ -1701,7 +2001,7 @@ static void status_text(WCHAR *out, SIZE_T cch)
     WCHAR v[64] = L"", norm[40] = L"";
     const WCHAR *label = L"This Windows' own version";
     if (vx_global_version(v, 64)) valid_version(v, &label, norm, 40);
-    DWORD su = vx_setting(L"Setups", 1);
+    DWORD su = vx_setting(L"Setups", 0);
     wsprintfW(out, L"enabled=%d\nversion=%s\nlabel=%s\nsetups=%d\nrestart=%d\nwaiting=%d\n", vxp_enabled() ? 1 : 0,
               norm[0] ? norm : L"REAL", label, su ? 1 : 0, restart_needed() ? 1 : 0, list_count(VX_REG_LATER));
 }
@@ -1898,6 +2198,172 @@ static void init_common(void)
     find_roots();
 }
 
+/* ---- diagnostics: Windows' own error reports, as they come ----------------------
+ * Every program that crashes, hangs or "could not start" (a missing DLL or
+ * function) is reported by Windows to its event log - also programs VistaExt
+ * does not run. The service subscribes to those reports (wevtapi, Vista and
+ * later) and writes each to events.log in the diagnostics folder (diag.h),
+ * with what support needs to tell whether VistaExt had a part in it: whether
+ * VistaExt runs a program of that name, and whether the faulting module is
+ * one of VistaExt's files. */
+typedef HANDLE (WINAPI *evt_subscribe_fn)(HANDLE, HANDLE, LPCWSTR, LPCWSTR, HANDLE, PVOID, PVOID, DWORD);
+typedef HANDLE (WINAPI *evt_context_fn)(DWORD, LPCWSTR *, DWORD);
+typedef BOOL (WINAPI *evt_render_fn)(HANDLE, HANDLE, DWORD, DWORD, PVOID, PDWORD, PDWORD);
+typedef HANDLE (WINAPI *evt_openpub_fn)(HANDLE, LPCWSTR, LPCWSTR, LCID, DWORD);
+typedef BOOL (WINAPI *evt_format_fn)(HANDLE, HANDLE, DWORD, DWORD, PVOID, DWORD, DWORD, LPWSTR, PDWORD);
+typedef BOOL (WINAPI *evt_close_fn)(HANDLE);
+/* winevt.h (Windows SDK) values; Wine's header lacks some of them */
+#define VX_EVT_CONTEXT_SYSTEM   1       /* EvtRenderContextSystem */
+#define VX_EVT_CONTEXT_USER     2       /* EvtRenderContextUser: the event's own data, in order */
+#define VX_EVT_RENDER_VALUES    0       /* EvtRenderEventValues */
+#define VX_EVT_PROVIDER_NAME    0       /* EvtSystemProviderName */
+#define VX_EVT_EVENT_ID         2       /* EvtSystemEventID */
+#define VX_EVT_TIME_CREATED     8       /* EvtSystemTimeCreated */
+#define VX_EVT_FORMAT_EVENT     1       /* EvtFormatMessageEvent */
+#define VX_EVT_FUTURE           1       /* EvtSubscribeToFutureEvents */
+#define VX_EVT_DELIVER          1       /* EvtSubscribeActionDeliver */
+/* EVT_VARIANT: an 8-byte value, a count, a type (EvtVarTypeString 1,
+ * UInt16 6, FileTime 17) */
+typedef struct { union { const WCHAR *s; UINT16 u16; ULONGLONG u64; } v; DWORD count, type; } vx_evt_variant;
+static evt_render_fn p_render;
+static evt_openpub_fn p_openpub;
+static evt_format_fn p_format;
+static evt_close_fn p_close;
+static HANDLE g_ctx_sys, g_ctx_user;
+static CRITICAL_SECTION g_evcs;          /* reports can come on two threads at once */
+
+/* the values of one render context, in a static buffer (under g_evcs) */
+static vx_evt_variant *render_values(HANDLE ctx, HANDLE ev, DWORD *count)
+{
+    static vx_evt_variant buf[2048];      /* 32 KB, strings included */
+    DWORD used = 0;
+    *count = 0;
+    if (!ctx || !p_render(ctx, ev, VX_EVT_RENDER_VALUES, sizeof(buf), buf, &used, count)) return NULL;
+    return buf;
+}
+
+static BOOL vistaext_file_name(const WCHAR *n)
+{
+    static const WCHAR *ours[] = { L"vxload.dll", L"vxwatch.exe", L"vxauto.exe", L"vxtray.exe", L"vxcenter.exe",
+                                   L"vxpatch.exe", L"msifix.exe" };
+    SIZE_T l = vx_wcslen(n);
+    unsigned i;
+    for (i = 0; i < sizeof(ours) / sizeof(ours[0]); i++) if (!vx_wcsicmp(n, ours[i])) return TRUE;
+    if (l > 6 && !vx_wcsicmp(n + l - 6, L"vx.dll")) return TRUE;           /* kernelvx, uservx, combvx, ... */
+    return !vx_wcsnicmp(n, L"vxs-", 4) || !vx_wcsnicmp(n, L"vxe-", 4);
+}
+
+/* the registered or patched programs called <name> ("chrome.exe"), as text */
+static void runs_by_name(const WCHAR *name, WCHAR *out, SIZE_T cch)
+{
+    static const WCHAR *keys[] = { VX_REG_ROOT L"\\Memory", VX_REG_ROOT L"\\Patched" };
+    unsigned k;
+    out[0] = 0;
+    for (k = 0; k < 2; k++) {
+        WCHAR *list = list_entries(keys[k]), *p;
+        if (!list) continue;
+        for (p = list; *p; p += vx_wcslen(p) + 1) {
+            const WCHAR *b = base_name(p);
+            if (vx_wcsicmp(b, name)) continue;
+            if (out[0]) vx_wcscatn(out, L"; ", cch);
+            vx_wcscatn(out, p, cch);
+            vx_wcscatn(out, k ? L" (patched)" : vxp_user_registered(p) ? L" (in memory, chosen by the user)" : L" (in memory)", cch);
+        }
+        HeapFree(GetProcessHeap(), 0, list);
+    }
+}
+
+static DWORD WINAPI event_cb(DWORD action, PVOID ctx, HANDLE ev)
+{
+    static WCHAR msg[8192], e[16384];
+    WCHAR prov[128] = L"", app[MAX_PATH] = L"", mod[MAX_PATH] = L"", runs[2048], when[64] = L"?";
+    vx_evt_variant *v;
+    DWORD n = 0, used = 0, id = 0;
+    HANDLE pub;
+    if (action != VX_EVT_DELIVER) return 0;
+    EnterCriticalSection(&g_evcs);
+    /* Windows' own fields: who reported it, which event, when */
+    if ((v = render_values(g_ctx_sys, ev, &n)) && n > VX_EVT_TIME_CREATED) {
+        if (v[VX_EVT_PROVIDER_NAME].type == 1 && v[VX_EVT_PROVIDER_NAME].v.s) vx_wcscpyn(prov, v[VX_EVT_PROVIDER_NAME].v.s, 128);
+        if (v[VX_EVT_EVENT_ID].type == 6) id = v[VX_EVT_EVENT_ID].v.u16;
+        if (v[VX_EVT_TIME_CREATED].type == 17) {
+            FILETIME ft, lt;
+            SYSTEMTIME st;
+            ft.dwLowDateTime = (DWORD)v[VX_EVT_TIME_CREATED].v.u64;
+            ft.dwHighDateTime = (DWORD)(v[VX_EVT_TIME_CREATED].v.u64 >> 32);
+            if (FileTimeToLocalFileTime(&ft, &lt) && FileTimeToSystemTime(&lt, &st))
+                wsprintfW(when, L"%04u-%02u-%02u %02u:%02u:%02u", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+        }
+    }
+    /* Application Error / Application Hang: the program is the event's first
+     * value, the faulting module (Application Error) the fourth - the same
+     * on Vista, 7 and 8 */
+    if ((!vx_wcsicmp(prov, L"Application Error") || !vx_wcsicmp(prov, L"Application Hang")) &&
+        (v = render_values(g_ctx_user, ev, &n))) {
+        if (n > 0 && v[0].type == 1 && v[0].v.s) vx_wcscpyn(app, v[0].v.s, MAX_PATH);
+        if (n > 3 && v[3].type == 1 && v[3].v.s && !vx_wcsicmp(prov, L"Application Error")) vx_wcscpyn(mod, v[3].v.s, MAX_PATH);
+    }
+    /* the event's text as Event Viewer shows it */
+    msg[0] = 0;
+    if (prov[0] && (pub = p_openpub(NULL, prov, NULL, 0, 0))) {
+        if (!p_format(pub, ev, 0, 0, NULL, VX_EVT_FORMAT_EVENT, 8191, msg, &used)) msg[0] = 0;
+        p_close(pub);
+    }
+    wsprintfW(e, L"%s  %s, event %u\r\n", when, prov[0] ? prov : L"?", id);
+    if (app[0]) {
+        runs_by_name(app, runs, 2048);
+        vx_wcscatn(e, L"  program: ", 16384);
+        vx_wcscatn(e, app, 16384);
+        vx_wcscatn(e, runs[0] ? L" - VistaExt runs: " : L" - not a program VistaExt runs", 16384);
+        vx_wcscatn(e, runs, 16384);
+        vx_wcscatn(e, L"\r\n", 16384);
+    }
+    if (mod[0]) {
+        vx_wcscatn(e, L"  faulting module: ", 16384);
+        vx_wcscatn(e, mod, 16384);
+        if (vistaext_file_name(mod)) vx_wcscatn(e, L"  <-- one of VistaExt's files", 16384);
+        vx_wcscatn(e, L"\r\n", 16384);
+    }
+    vx_wcscatn(e, L"  ", 16384);
+    vx_wcscatn(e, msg[0] ? msg : L"(no text)", 16384);
+    vx_wcscatn(e, L"\r\n\r\n", 16384);
+    vx_diag_append(L"events.log", e);
+    LeaveCriticalSection(&g_evcs);
+    return 0;
+}
+
+static DWORD WINAPI event_watch(LPVOID unused)
+{
+    HMODULE w = LoadLibraryW(L"wevtapi.dll");
+    evt_subscribe_fn sub;
+    evt_context_fn ctx;
+    HANDLE h1 = NULL, h2 = NULL;
+    if (!w || !(sub = (evt_subscribe_fn)(void *)GetProcAddress(w, "EvtSubscribe")) ||
+        !(ctx = (evt_context_fn)(void *)GetProcAddress(w, "EvtCreateRenderContext")) ||
+        !(p_render = (evt_render_fn)(void *)GetProcAddress(w, "EvtRender")) ||
+        !(p_openpub = (evt_openpub_fn)(void *)GetProcAddress(w, "EvtOpenPublisherMetadata")) ||
+        !(p_format = (evt_format_fn)(void *)GetProcAddress(w, "EvtFormatMessage")) ||
+        !(p_close = (evt_close_fn)(void *)GetProcAddress(w, "EvtClose"))) {
+        logw(L"diagnostics: Windows' event log cannot be watched here (wevtapi.dll)");
+        return 0;
+    }
+    InitializeCriticalSection(&g_evcs);
+    g_ctx_sys = ctx(0, NULL, VX_EVT_CONTEXT_SYSTEM);
+    g_ctx_user = ctx(0, NULL, VX_EVT_CONTEXT_USER);
+    h1 = sub(NULL, NULL, L"Application",
+             L"*[System[(Level=1 or Level=2) and (Provider[@Name='Application Error'] or Provider[@Name='Application Hang']"
+             L" or Provider[@Name='SideBySide'] or Provider[@Name='.NET Runtime'] or Provider[@Name='Windows Error Reporting'])]]",
+             NULL, NULL, (PVOID)event_cb, VX_EVT_FUTURE);
+    h2 = sub(NULL, NULL, L"System", L"*[System[Provider[@Name='Application Popup']]]", NULL, NULL, (PVOID)event_cb, VX_EVT_FUTURE);
+    if (!h1 && !h2) logf(L"diagnostics: could not watch the event log (error %u)", GetLastError());
+    WaitForSingleObject(g_stop, INFINITE);
+    if (h1) p_close(h1);
+    if (h2) p_close(h2);
+    if (g_ctx_sys) p_close(g_ctx_sys);
+    if (g_ctx_user) p_close(g_ctx_user);
+    return 0;
+}
+
 static void WINAPI svc_main(DWORD argc, LPWSTR *argv)
 {
     HANDLE th[64], hs[2];
@@ -1912,10 +2378,12 @@ static void WINAPI svc_main(DWORD argc, LPWSTR *argv)
     report(SERVICE_RUNNING);
     logf(L"service started (VistaExt is %s)", vxp_enabled() ? L"on" : L"off");
     reconcile();                                    /* finish an interrupted switch */
+    review_if_due();                                /* after an update: this version's rules */
     lock();
     vxp_cleanup_missing(log_cb, NULL);              /* programs removed while it was not running */
     unlock();
     if ((th[nth] = CreateThread(NULL, 0, pipe_server, NULL, 0, NULL))) nth++;
+    if ((th[nth] = CreateThread(NULL, 0, event_watch, NULL, 0, NULL))) nth++;   /* diagnostics */
     find_session_roots();                           /* signed-in users' real folders */
     watch_new(th, &nth, 62);
     if ((th[nth] = CreateThread(NULL, 0, worker, NULL, 0, NULL))) nth++;
@@ -2020,6 +2488,46 @@ int wmain(int argc, WCHAR **argv)
         rep[got / sizeof(WCHAR)] = 0;
         con_write(rep);
         return vx_wcsnicmp(rep, L"error=", 6) ? 0 : 1;
+    }
+    if (argc > 1 && !vx_wcsicmp(argv[1], L"/tidy")) {
+        int later;
+        if (!is_elevated()) { con_print(L"This needs administrator rights.\r\n"); r = 5; goto out; }
+        g_stop = NULL;
+        init_common();
+        later = tidy();
+        if (later) con_print(L"%d old file(s) are in use: deleted when Windows restarts.\r\n", later);
+        r = 0;
+        goto out;
+    }
+    if (argc > 1 && !vx_wcsicmp(argv[1], L"/diagdir")) {
+        /* the diagnostics folder (diag.h): its path; "/diagdir report" also
+         * makes a new report-<date>-<time> folder in it and prints that */
+        WCHAR d[MAX_PATH], rd[MAX_PATH + 40];
+        SYSTEMTIME st;
+        if (!is_elevated() || !vx_diag_dir(d)) { con_print(L"The diagnostics folder needs administrator rights.\r\n"); r = 5; goto out; }
+        if (argc > 2 && !vx_wcsicmp(argv[2], L"report")) {
+            GetLocalTime(&st);
+            wsprintfW(rd, L"%s\\report-%04u%02u%02u-%02u%02u%02u", d, st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+            if (!CreateDirectoryW(rd, NULL) && GetLastError() != ERROR_ALREADY_EXISTS) { r = 2; goto out; }
+            con_print(L"%s\r\n", rd);
+        } else con_print(L"%s\r\n", d);
+        r = 0;
+        goto out;
+    }
+    if (argc > 2 && !vx_wcsicmp(argv[1], L"/report")) {
+        g_stop = NULL;
+        init_common();
+        r = diag_report(argv[2]);
+        goto out;
+    }
+    if (argc > 1 && !vx_wcsicmp(argv[1], L"/review")) {
+        if (!is_elevated()) { con_print(L"This needs administrator rights.\r\n"); r = 5; goto out; }
+        g_stop = NULL;
+        init_common();
+        r = review() ? 3 : 0;
+        con_print(r ? L"Some programs are in use: they are looked at again when the service starts.\r\n"
+                    : L"Programs set up earlier were looked at again (log: %s).\r\n", g_logpath);
+        goto out;
     }
     if (argc > 1 && (!vx_wcsicmp(argv[1], L"/enable") || !vx_wcsicmp(argv[1], L"/disable") ||
                      !vx_wcsicmp(argv[1], L"/setver") || !vx_wcsicmp(argv[1], L"/scan") || !vx_wcsicmp(argv[1], L"/prepare") ||

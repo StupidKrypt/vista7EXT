@@ -11,6 +11,7 @@
  *
  *   vxwatch /demo      shows the window with made-up details (tests) */
 #include "../common/vx.h"
+#include "../common/diag.h"
 #include <shellapi.h>
 
 static vx_watch *g_w;
@@ -299,6 +300,48 @@ static void log_crash(void)
     CloseHandle(f);
 }
 
+/* The same crash with more of what support needs: crash-details.log next
+ * to crashes.log, in this user's own %LOCALAPPDATA%\VistaExt ("Save
+ * diagnostics" copies it into the diagnostics folder, see diag.h). Built
+ * piece by piece (wsprintf stops at 1024 characters; the message and the
+ * command line can be longer). */
+static void diag_crash(void)
+{
+    static WCHAR e[7000];
+    WCHAR t[160], layer[600] = L"", path[MAX_PATH + 40];
+    DWORD maj = 0, min = 0, n;
+    SYSTEMTIME st;
+    vx_layer l;
+    const WCHAR *d = describe(g_code);
+    if (!(n = GetEnvironmentVariableW(L"LOCALAPPDATA", path, MAX_PATH)) || n >= MAX_PATH) return;
+    vx_wcscatn(path, L"\\VistaExt", MAX_PATH + 40);
+    CreateDirectoryW(path, NULL);
+    vx_wcscatn(path, L"\\crash-details.log", MAX_PATH + 40);
+    vx_lookup_layer(g_w->exe, layer, 600);
+    vx_effective_layer(g_w->exe, &l);
+    vx_real_version(&maj, &min);
+    GetLocalTime(&st);
+    wsprintfW(e, L"%04u-%02u-%02u %02u:%02u:%02u  crash of a program VistaExt runs\r\n  program:  ",
+              st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+    vx_wcscatn(e, g_w->exe, 7000);
+    wsprintfW(t, L"\r\n  exit:     0x%08X (", g_code);
+    vx_wcscatn(e, t, 7000);
+    vx_wcscatn(e, d ? d : L"stopped with an error", 7000);
+    vx_wcscatn(e, L")\r\n  where:    ", 7000);
+    vx_wcscatn(e, g_w->where[0] ? g_w->where : L"?", 7000);
+    vx_wcscatn(e, L"\r\n  message:  ", 7000);
+    vx_wcscatn(e, g_w->message[0] ? g_w->message : L"(none)", 7000);
+    vx_wcscatn(e, L"\r\n  settings: ", 7000);
+    vx_wcscatn(e, layer[0] ? layer : L"(the global ones)", 7000);
+    vx_wcscatn(e, L" (Windows version told: ", 7000);
+    vx_wcscatn(e, l.ver ? l.ver->label : L"this Windows' own", 7000);
+    wsprintfW(t, L")\r\n  Windows:  %u.%u\r\n  command:  ", maj, min);
+    vx_wcscatn(e, t, 7000);
+    vx_wcscatn(e, g_w->cmdline, 6900);
+    vx_wcscatn(e, L"\r\n\r\n", 7000);
+    vx_append_utf8(path, e);
+}
+
 static ULONG_PTR num(const WCHAR *s)
 {
     ULONG_PTR v = 0;
@@ -343,6 +386,7 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
         g_w = &copy;
     }
     log_crash();
+    diag_crash();
     {   /* tests: VX_WATCH_TEST_CHOICE=<WIN10...> answers the window at once */
         WCHAR t[32];
         if (GetEnvironmentVariableW(L"VX_WATCH_TEST_CHOICE", t, 32)) {

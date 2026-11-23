@@ -40,6 +40,8 @@ set "VX=%ProgramFiles%\VistaExt"
 set "SYS=%windir%\System32"
 set "WOW=%windir%\SysWOW64"
 set "LAYERS=HKLM\SOFTWARE\VistaExt\Layers"
+rem VistaExt's diagnostics folder (src/common/diag.h)
+set "DIAG=%ProgramData%\VistaExt Diagnostics"
 set "IFEO=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
 rem the Safe Mode part restarts Windows twice; these carry the run across
 set "SAFESTATE=%SystemDrive%\vxt-safe.state"
@@ -90,6 +92,8 @@ if defined OWNSYS call :say "Windows' own api-ms-win-core-synch-l1-2-0.dll is he
 call :say "### before VistaExt: a program that imports through API sets"
 call :run 60 "%B%\apitest.exe"
 call :nonzero "API-set program cannot start without VistaExt" !RC!
+rem what a program finds on this Windows: compared again with VistaExt installed
+"%B%\probe.exe" > "%R%\probe-before.txt" 2>&1
 
 rem ---------------------------------------------------------------- install
 call :say "### install.cmd"
@@ -98,9 +102,29 @@ call :expect "install.cmd succeeds" 0 !errorlevel!
 type "%R%\install.txt" | find "file(s) added" >> "%LOG%"
 call :exists "kernelvx.dll added to System32" "%SYS%\kernelvx.dll"
 call :exists "uservx.dll added to System32" "%SYS%\uservx.dll"
-call :exists "API-set DLL added: api-ms-win-core-synch-l1-2-0" "%SYS%\api-ms-win-core-synch-l1-2-0.dll"
+call :exists "VistaExt's API sets added under its own names: vxs-ms-win-core-synch-l1-2-0" "%SYS%\vxs-ms-win-core-synch-l1-2-0.dll"
 if "%OSA%"=="x64" call :exists "32-bit kernelvx.dll added to SysWOW64" "%WOW%\kernelvx.dll"
-if "%OSA%"=="x64" call :exists "32-bit API-set DLL added to SysWOW64" "%WOW%\api-ms-win-core-synch-l1-2-0.dll"
+if "%OSA%"=="x64" call :exists "32-bit API sets added to SysWOW64 (vxs-)" "%WOW%\vxs-ms-win-core-synch-l1-2-0.dll"
+call :say "### programs VistaExt does not run see exactly what Windows has"
+rem no file with a Windows name that is VistaExt's, in either system folder
+set "WN=0"
+for %%d in ("%SYS%" "%WOW%") do if exist "%%~d" (
+    for %%f in ("%%~d\api-ms-win-*.dll" "%%~d\ext-ms-win-*.dll" "%%~d\combase.dll" "%%~d\shcore.dll" "%%~d\d3d12.dll" "%%~d\kernelbase.dll" "%%~d\bcryptprimitives.dll") do (
+        findstr /m /l /c:"VistaExt-owned-file" "%%~f" >nul 2>&1 && (set /a WN+=1 & >>"%LOG%" echo   VistaExt's, with a Windows name: %%~f)
+    )
+)
+call :expect "no VistaExt file with a Windows name (api-ms-win-*, combase, shcore, d3d12, kernelbase, bcryptprimitives)" 0 !WN!
+"%B%\probe.exe" > "%R%\probe-after.txt" 2>&1
+call :expect "a program VistaExt does not run loads none of VistaExt's DLLs by a Windows name" 0 !errorlevel!
+"%B%\probe.exe" /ldr api-ms-win-core-url-l1-1-0.dll >nul 2>&1
+set "URLRC=!errorlevel!"
+if "%CV%"=="6.2" (call :expect "Windows 8 has api-ms-win-core-url-l1-1-0 itself" 0 !URLRC!) else (call :expect "... nor, through Windows' loader, an API set this Windows lacks (api-ms-win-core-url-l1-1-0)" 1 !URLRC!)
+fc "%R%\probe-before.txt" "%R%\probe-after.txt" >nul
+call :expect "... and finds exactly the DLLs it found before VistaExt was installed" 0 !errorlevel!
+if "%OSA%"=="x64" (
+    "%T%\bin\x86\probe.exe" > "%R%\probe-after-x86.txt" 2>&1
+    call :expect "the same for a 32-bit program" 0 !errorlevel!
+)
 call :exists "tools installed: vxpatch, msifix, VistaExt Center" "%VX%\vxcenter.exe"
 set "SM=%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs"
 call :startmenu
@@ -114,7 +138,7 @@ reg query "HKLM\SOFTWARE\Classes\lnkfile\shell\VistaExtRun\command" /ve 2>nul | 
 call :expect "right-click a shortcut: the same entry" 0 !errorlevel!
 findstr /i /l /c:"System32\kernelbase.dll" "%VX%\installed.txt" >nul
 set "KB=!errorlevel!"
-if "%CV%"=="6.0" call :expect "Vista: kernelbase.dll added (Vista has none)" 0 !KB!
+if "%CV%"=="6.0" call :expect "Vista: no kernelbase.dll added (kernelvx stands in for it, for programs VistaExt runs)" 1 !KB!
 if "%CV%"=="6.1" call :expect "Windows 7: its own kernelbase.dll left alone" 1 !KB!
 if "%CV%"=="6.2" call :expect "Windows 8: its own kernelbase.dll left alone" 1 !KB!
 rem one installer, four builds: it must pick this Windows' and architecture's
@@ -124,8 +148,8 @@ if "%CV%"=="6.2" set "WANTB=win8-%OSA%"
 if "%CV%"=="6.3" set "WANTB=win8-%OSA%"
 reg query "HKLM\SOFTWARE\VistaExt" /v Build 2>nul | find "!WANTB!" >nul
 call :expect "the installer picked the build for this Windows (!WANTB!)" 0 !errorlevel!
-if "%CV%"=="6.0" call :absent "Vista build: no bcryptprimvx.dll (Vista uses VistaExt's bcryptprimitives.dll)" "%SYS%\bcryptprimvx.dll"
-if "%CV%"=="6.0" call :exists "Vista build: VistaExt's bcryptprimitives.dll added" "%SYS%\bcryptprimitives.dll"
+if "%CV%"=="6.0" call :exists "Vista build: VistaExt's bcryptprimitives as bcryptprimvx.dll" "%SYS%\bcryptprimvx.dll"
+if "%CV%"=="6.0" call :absent "Vista build: no bcryptprimitives.dll (Vista has none; programs VistaExt does not run must not find one)" "%SYS%\bcryptprimitives.dll"
 if "%CV%"=="6.1" call :exists "Windows 7 build: bcryptprimvx.dll added" "%SYS%\bcryptprimvx.dll"
 if "%CV%"=="6.2" call :exists "Windows 8 build: bcryptprimvx.dll added" "%SYS%\bcryptprimvx.dll"
 findstr /m /l /c:"VistaExt-owned-file" "%SYS%\kernelvx.dll" >nul 2>&1
@@ -195,6 +219,7 @@ call :run 120 "%VX%\vxpatch.exe" /undo /q "%FE%"
 reg delete "%LAYERS%" /v "%FE%\\" /f >nul 2>&1
 
 if exist "%T%\only-diag.txt" goto :diag
+if exist "%T%\only-shellx.txt" goto :shellx
 if exist "%T%\only-watch.txt" goto :watchdiag
 if exist "%T%\only-uninst.txt" goto :uninst
 rem --------------------------------------------------------- performance
@@ -219,6 +244,8 @@ call :msitests
 rem ------------------------------------- the global version, setups, the switch
 call :globaltests
 call :setuptests
+call :nativetests
+call :diagtests
 call :switchtests
 
 rem ------------------------------------------------- Safe Mode (two restarts)
@@ -296,6 +323,7 @@ if exist "%SYS%\kernelvx.dll" (
 )
 call :absent "kernelvx.dll removed from System32" "%SYS%\kernelvx.dll"
 if defined OWNSYS (call :exists "Windows' own API-set DLL kept" "%SYS%\api-ms-win-core-synch-l1-2-0.dll") else (call :absent "API-set DLLs removed" "%SYS%\api-ms-win-core-synch-l1-2-0.dll")
+call :absent "VistaExt's API sets removed (vxs-)" "%SYS%\vxs-ms-win-core-synch-l1-2-0.dll"
 if "%OSA%"=="x64" call :absent "32-bit kernelvx.dll removed from SysWOW64" "%WOW%\kernelvx.dll"
 if "%CV%"=="6.0" call :absent "Vista: added kernelbase.dll removed" "%SYS%\kernelbase.dll"
 if "%CV%"=="6.1" call :exists "Windows 7: its own kernelbase.dll still there" "%SYS%\kernelbase.dll"
@@ -427,41 +455,20 @@ rem -------------------------------------------------------------------------
 :apisettests
 set "A=%~1"
 if "%OSA%"=="x86" if "%A%"=="x64" goto :eof
-set "AD=%SYS%"
-if "%OSA%"=="x64" if "%A%"=="x86" set "AD=%WOW%"
 set "W=%T%\%A%\api"
 mkdir "%W%" 2>nul
 copy /y "%T%\bin\%A%\apitest.exe" "%W%\apitest.exe" >nul
-set "OWN=%OWNSYS%"
-if "%OSA%"=="x64" if "%A%"=="x86" set "OWN=%OWNWOW%"
 call :say "### %A%: program importing through API sets"
-if defined OWN goto :apiset_own
 call :run 60 "%W%\apitest.exe"
-call :expect "%A% API-set program runs with VistaExt's API-set DLLs" 0 !RC!
-call :say "### %A%: the same when this Windows' copy of the API-set DLL lacks the functions"
-ren "%AD%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
+call :nonzero "%A% unchanged it cannot start, exactly as without VistaExt (VistaExt's API sets are only for programs it runs)" !RC!
+call :run 120 "%VX%\vxpatch.exe" /memory /q "%W%\apitest.exe"
 call :run 60 "%W%\apitest.exe"
-call :nonzero "%A% without that API-set DLL the program cannot start" !RC!
+call :expect "%A% in memory: it gets VistaExt's API sets, and runs" 0 !RC!
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%W%\apitest.exe"
+call :run 60 "%W%\apitest.exe"
+call :nonzero "%A% undone: as before" !RC!
 call :run 120 "%VX%\vxpatch.exe" /file "%W%\apitest.exe"
-call :expect "%A% vxpatch points the API-set import at VistaExt" 0 !RC!
-call :run 60 "%W%\apitest.exe"
-call :expect "%A% ... and then the program runs" 0 !RC!
-ren "%AD%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
-call :run 120 "%VX%\vxpatch.exe" /undo "%W%\apitest.exe"
-fc /b "%W%\apitest.exe" "%T%\bin\%A%\apitest.exe" >nul
-call :expect "%A% /undo restores it" 0 !errorlevel!
-goto :eof
-
-:apiset_own
-rem Windows' own file stays: unchanged, the program can't start; patched, it runs
-call :run 60 "%W%\apitest.exe"
-rem (Windows 8's own synch API set has these functions, and VistaExt's copy of
-rem the Windows 10 contract answers the rest: there it starts unchanged)
-if "%CV%"=="6.2" (
-    call :expect "%A% Windows 8: its own API sets have the Windows 8 functions, VistaExt's the rest: it runs unchanged" 0 !RC!
-) else call :nonzero "%A% Windows' own API-set DLL is kept, so the unchanged program cannot start" !RC!
-call :run 120 "%VX%\vxpatch.exe" /file "%W%\apitest.exe"
-call :expect "%A% vxpatch points the API-set import at VistaExt" 0 !RC!
+call :expect "%A% file mode: vxpatch points the API-set imports at VistaExt" 0 !RC!
 call :run 60 "%W%\apitest.exe"
 call :expect "%A% ... and then the program runs" 0 !RC!
 call :run 120 "%VX%\vxpatch.exe" /undo "%W%\apitest.exe"
@@ -538,12 +545,10 @@ call :run 60 "%W%\memhost.exe"
 call :expect "%A% memory: a DLL loaded at start and one loaded later are redirected too" 0 !RC!
 call :run 60 "%T%\%A%\other\vxtest.exe"
 call :expect "%A% memory: a program of the same name elsewhere is left alone" -1073741511 !RC!
-rem API sets: without VistaExt's api-ms file in the system folder, the
-rem import goes to VistaExt's vxs- copy, which Windows' API-set table ignores
-ren "%AD%\api-ms-win-core-synch-l1-2-0.dll" api-ms-win-core-synch-l1-2-0.dll.vxtest
+rem API sets: the import goes to VistaExt's vxs- copy (no api-ms file of
+rem VistaExt's is in the system folder; Windows' API-set table ignores vxs-)
 call :run 60 "%W%\apitest.exe"
 call :expect "%A% memory: API-set imports go to VistaExt's own copy" 0 !RC!
-ren "%AD%\api-ms-win-core-synch-l1-2-0.dll.vxtest" api-ms-win-core-synch-l1-2-0.dll
 rem crash window: a windowed program that stops itself after 4 s
 call :say "### %A%: crash window (picture: shots\crash-%A%.png)"
 start "" "%W%\crashtest.exe"
@@ -660,6 +665,9 @@ goto :eof
 
 :setuptests
 call :say "### a setup saved to Downloads, double-clicked, and the helper it unpacks to Temp"
+rem setups that run as they are are left alone by default; these tests turn
+rem the tray icon's "setup programs are told it too" on, and off again at the end
+call :run 60 "%VX%\vxauto.exe" /pipe SETUPS 1
 set "DL=%USERPROFILE%\Downloads"
 if not exist "%DL%" mkdir "%DL%"
 call :run 60 "%VX%\vxauto.exe" /pipe SETVER WIN10
@@ -705,8 +713,7 @@ call :run 60 "%VX%\vxauto.exe" /pipe SETUPS 0
 copy /y "%B%\vercheck.exe" "%DL%\vxver2-setup.exe" >nul
 ping -n 8 127.0.0.1 >nul
 reg query "%IFEO%\vxver2-setup.exe" /v VistaExt >nul 2>&1
-call :expect "with the tray icon's 'setup programs' turned off, such a setup is left alone" 1 !errorlevel!
-call :run 60 "%VX%\vxauto.exe" /pipe SETUPS 1
+call :expect "with the tray icon's 'setup programs' turned off (the default), such a setup is left alone" 1 !errorlevel!
 reg query "%IFEO%\notepad.exe" /v VistaExt >nul 2>&1
 call :expect "a setup named like a Windows program (notepad.exe) is never registered by name" 1 !errorlevel!
 find /i "Windows has a program of the same name" "%ProgramData%\VistaExt\VistaExt.log" >nul
@@ -901,6 +908,163 @@ if "%OSA%"=="x64" call :absent "no VistaExt.off folder is left in SysWOW64" "%WO
 call :absent "no old copy an update set aside is left" "%SYS%\*.vxold*"
 goto :finish
 
+rem ---- a program that runs on this Windows by itself is never changed
+:nativetests
+call :say "### a program VistaExt runs: Windows' own DLLs in it find the API sets the told Windows has; its children not"
+set "VP=%T%\vxpathtest"
+mkdir "%VP%" 2>nul
+copy /y "%B%\probe.exe" "%VP%\vxpprobe.exe" >nul
+copy /y "%B%\probe.exe" "%VP%\vxpchild.exe" >nul
+call :run 120 "%VX%\vxpatch.exe" /memory /q /winver:WIN10 "%VP%\vxpprobe.exe"
+call :run 60 "%VP%\vxpprobe.exe" /child api-ms-win-core-url-l1-1-0.dll
+rem Windows 7: VistaExt adds its API sets to the program's own API-set map
+rem (Vista has none and its DLLs use no API sets; Windows 8 has this one)
+if "%CV%"=="6.1" call :expect "Windows 7: the program loads an API set Windows lacks through Windows' loader; a program it starts does not" 11 !RC!
+if "%CV%"=="6.2" call :expect "Windows 8: both load it (Windows' own)" 10 !RC!
+if "%CV%"=="6.0" call :expect "Vista: neither (Vista has no API-set map)" 1 !RC!
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%VP%\vxpprobe.exe"
+rd /s /q "%VP%" >nul 2>&1
+call :say "### the service leaves a program that runs by itself alone, whatever else is in its folder"
+set "NP=%ProgramFiles%\VxNativeTest"
+set "NN=%ProgramFiles%\VxNeedsTest"
+mkdir "%NP%" "%NN%" 2>nul
+rem a program that runs as it is, next to a DLL it does not load at start
+rem that needs functions this Windows lacks (an optional part)
+copy /y "%B%\probe.exe" "%NP%\vxnative.exe" >nul
+copy /y "%B%\memdll.dll" "%NP%\optional.dll" >nul
+rem a program that loads such a DLL at start: it cannot run by itself
+copy /y "%B%\memhost.exe" "%NN%\vxneeds.exe" >nul
+copy /y "%B%\memdll.dll" "%NN%\memdll.dll" >nul
+copy /y "%B%\memdll.dll" "%NN%\memdll2.dll" >nul
+rem (memdll imports WaitOnAddress from kernel32: even Windows 8 has it only in
+rem kernelbase, so on every Windows it cannot start by itself)
+for /l %%w in (1,1,40) do (find /i "VxNeedsTest" "%DIAG%\decisions.log" >nul 2>&1 || ping -n 3 127.0.0.1 >nul)
+for /l %%w in (1,1,20) do (find /i "VxNativeTest" "%DIAG%\decisions.log" >nul 2>&1 || ping -n 3 127.0.0.1 >nul)
+ping -n 6 127.0.0.1 >nul
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%NN%\vxneeds.exe" >nul 2>&1
+call :expect "a program whose DLL needs VistaExt at start is set up" 0 !errorlevel!
+call :run 60 "%NN%\vxneeds.exe"
+call :expect "... and runs" 0 !RC!
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%NP%\vxnative.exe" >nul 2>&1
+call :expect "a program that runs by itself is not set up, although a DLL next to it needs VistaExt" 1 !errorlevel!
+reg query "%IFEO%\vxnative.exe" >nul 2>&1
+call :expect "... no Image File Execution Options entry for it" 1 !errorlevel!
+reg query "%LAYERS%" /v "%NP%\\" >nul 2>&1
+call :expect "... and no settings saved for its folder" 1 !errorlevel!
+call :run 60 "%NP%\vxnative.exe"
+call :expect "... it runs exactly as without VistaExt (none of VistaExt's DLLs)" 0 !RC!
+find /i "VxNativeTest: its programs run on this Windows by themselves" "%DIAG%\decisions.log" >nul 2>&1
+call :expect "... and the diagnostics folder's decisions.log says why" 0 !errorlevel!
+find /i "vxneeds.exe: cannot start on this Windows by itself" "%DIAG%\decisions.log" >nul 2>&1
+call :expect "decisions.log says why the other one was set up" 0 !errorlevel!
+call :say "### looking again: a program an earlier version set up that runs by itself is put back"
+copy /y "%B%\probe.exe" "%T%\vxreview.exe" >nul
+reg add "HKLM\SOFTWARE\VistaExt\Memory" /v "%T%\vxreview.exe" /d "" /f >nul
+mkdir "%T%\vxuserdir" 2>nul
+copy /y "%B%\probe.exe" "%T%\vxuserdir\vxuser.exe" >nul
+rem (a version setting makes vxpatch register it although nothing is missing)
+call :run 120 "%VX%\vxpatch.exe" /memory /q /winver:WIN10 "%T%\vxuserdir\vxuser.exe"
+call :run 300 "%VX%\vxauto.exe" /review
+call :expect "vxauto /review succeeds" 0 !RC!
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%T%\vxreview.exe" >nul 2>&1
+call :expect "an automatic registration of a program that runs by itself is taken back" 1 !errorlevel!
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%T%\vxuserdir\vxuser.exe" 2>nul | find "user" >nul
+call :expect "one the user chose (vxpatch, right-click) stays" 0 !errorlevel!
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%T%\vxuserdir\vxuser.exe"
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%NN%\vxneeds.exe" >nul 2>&1
+call :expect "one that cannot run by itself stays" 0 !errorlevel!
+rd /s /q "%NP%" >nul 2>&1
+rd /s /q "%NN%" >nul 2>&1
+del /f /q "%T%\vxreview.exe" >nul 2>&1
+rd /s /q "%T%\vxuserdir" >nul 2>&1
+goto :eof
+
+rem ---- the diagnostics folder: errors are written there as they happen
+:diagtests
+call :say "### diagnostics folder (%DIAG%)"
+call :exists "it exists, with its README" "%DIAG%\README.txt"
+for /f "delims=" %%a in ('"%VX%\vxauto.exe" /diagdir 2^>nul') do set "DD=%%a"
+if /i "!DD!"=="%DIAG%" (call :pass "vxauto /diagdir names it") else (call :fail "vxauto /diagdir names it [!DD!]")
+rem only administrators may write there (a folder every user could write to
+rem would let one plant a link the service writes through)
+icacls "%DIAG%" > "%R%\diag-acl.txt" 2>&1
+find /i "BUILTIN\Users:(OI)(CI)(RX)" "%R%\diag-acl.txt" >nul
+call :expect "every user may read it" 0 !errorlevel!
+findstr /i /c:"Users:(OI)(CI)(M)" /c:"Users:(OI)(CI)(F)" /c:"Users:(OI)(CI)(W)" /c:"Users:(M)" /c:"Users:(F)" /c:"Users:(W)" /c:"Users:(CI)(AD)" /c:"Users:(CI)(WD)" "%R%\diag-acl.txt" >nul
+call :expect "... and no user may change it (nothing inherited from ProgramData)" 1 !errorlevel!
+rem a crash of a program VistaExt does not run: Windows reports it to its
+rem event log (no "stopped working" window in this test VM), the service
+rem writes it to events.log
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f >nul
+copy /y "%B%\probe.exe" "%T%\vxcrashme.exe" >nul
+start "" /wait "%T%\vxcrashme.exe" /crash
+for /l %%w in (1,1,30) do (find /i "vxcrashme.exe" "%DIAG%\events.log" >nul 2>&1 || ping -n 2 127.0.0.1 >nul)
+find /i "vxcrashme.exe" "%DIAG%\events.log" >nul 2>&1
+call :expect "a crash of any program is written to events.log" 0 !errorlevel!
+find /i "not a program VistaExt runs" "%DIAG%\events.log" >nul 2>&1
+call :expect "... saying that VistaExt does not run it" 0 !errorlevel!
+call :exists "crashes of programs VistaExt runs are in the user's crash-details.log" "%LOCALAPPDATA%\VistaExt\crash-details.log"
+call :say "### Save diagnostics (vx-diagnostics.cmd)"
+cmd /c ""%VX%\vx-diagnostics.cmd" /quiet" > "%R%\diag-run.txt" 2>&1
+call :expect "it runs" 0 !errorlevel!
+set "REP="
+for /d %%d in ("%DIAG%\report-*") do set "REP=%%~d"
+if defined REP (call :pass "a report folder is made (!REP!)") else (call :fail "a report folder is made")
+if defined REP (
+    for %%f in (system.txt vistaext.txt programs.txt files.txt processes.txt events-application.txt events-system.txt) do call :exists "report: %%f" "!REP!\%%f"
+    set "CDL="
+    for %%f in ("!REP!\logs\crash-details-*.log") do set "CDL=%%~f"
+    if defined CDL (call :pass "report: each user's crash details are copied") else (call :fail "report: each user's crash details are copied")
+    find /i "without VistaExt:" "!REP!\programs.txt" >nul 2>&1
+    call :expect "report: programs.txt says for each program whether it would start without VistaExt" 0 !errorlevel!
+    xcopy "%DIAG%" "%R%\diagnostics\" /e /i /q /y >nul 2>&1
+)
+del /f /q "%T%\vxcrashme.exe" >nul 2>&1
+goto :eof
+
+:shellx
+rem ---- (VX_VM_ONLY=shellx) what makes ShellExecuteEx of a setup's helper fail
+call :say "### experiment: ShellExecuteEx of a helper from a setup VistaExt runs"
+set "DL=%USERPROFILE%\Downloads"
+if not exist "%DL%" mkdir "%DL%"
+call :run 60 "%VX%\vxauto.exe" /pipe SETUPS 1
+call :run 60 "%VX%\vxauto.exe" /pipe SETVER WIN10
+copy /y "%B%\spawntest.exe" "%DL%\vxsetuptest.exe" >nul
+for /l %%w in (1,1,20) do (reg query "%IFEO%\vxsetuptest.exe" /v VistaExt >nul 2>&1 || ping -n 2 127.0.0.1 >nul)
+ping -n 6 127.0.0.1 >nul
+call :say "--- A: helper needs VistaExt, CreateProcess"
+call :run 90 "%DL%\vxsetuptest.exe" "%B%\vxtest.exe"
+call :say "--- B: helper needs VistaExt, ShellExecute"
+call :run 90 "%DL%\vxsetuptest.exe" "%B%\vxtest.exe" /shell
+call :say "--- C: helper runs by itself (probe), ShellExecute"
+call :run 90 "%DL%\vxsetuptest.exe" "%B%\probe.exe" /shell
+call :say "--- D: B again, setup told this Windows' own version"
+call :run 60 "%VX%\vxauto.exe" /pipe SETVER REAL
+call :run 90 "%DL%\vxsetuptest.exe" "%B%\vxtest.exe" /shell
+call :say "--- E: B with the service stopped (no registration of the helper)"
+call :run 60 "%VX%\vxauto.exe" /pipe SETVER WIN10
+net stop VistaExtAuto >nul 2>&1
+call :run 90 "%DL%\vxsetuptest.exe" "%B%\probe.exe" /shell
+net start VistaExtAuto >nul 2>&1
+call :say "--- F: plain cmd START of a registered helper copy"
+copy /y "%B%\vxtest.exe" "%TEMP%\vxchild-manual.exe" >nul
+call :run 120 "%VX%\vxpatch.exe" /memory /q "%TEMP%\vxchild-manual.exe"
+start "" /wait "%TEMP%\vxchild-manual.exe"
+call :say "    START exit !errorlevel!"
+call :say "--- H: B under the debugger with the loader's messages (GlobalFlag 0x102)"
+set "SIF=%IFEO%\vxsetuptest.exe"
+reg query "%SIF%" > "%R%\shellx-sif.txt" 2>&1
+reg add "%SIF%" /v GlobalFlag /t REG_DWORD /d 0x102 /f >nul 2>&1
+"%NF%" 120 "%B%\vxdbg.exe" 60 "%DL%\vxsetuptest.exe" "%B%\probe.exe" /shell > "%R%\shellx-dbg.txt" 2>&1
+reg add "%SIF%" /v GlobalFlag /t REG_DWORD /d 0x100 /f >nul 2>&1
+call :say "--- G: the setup not registered (unchanged spawntest), probe helper, ShellExecute"
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%DL%\vxsetuptest.exe"
+reg add "HKLM\SOFTWARE\VistaExt\Layers" /v "%DL%\vxsetuptest.exe" /d OFF /f >nul
+copy /y "%B%\vxtest.exe" "%DL%\vxplainhost.exe" >nul
+copy /y "%ProgramData%\VistaExt\VistaExt.log" "%R%\shellx-VistaExt.log" >nul 2>&1
+reg query "%IFEO%" /s > "%R%\shellx-ifeo.txt" 2>&1
+goto :finish
+
 rem ---- the Start menu: one folder "VistaExt" with exactly two entries
 :startmenu
 call :exists "Start menu: VistaExt (the window with the on/off switch)" "%SM%\VistaExt\VistaExt.lnk"
@@ -946,6 +1110,9 @@ call :ran "earlier release: a patched program starts and runs" !RC!
 call :run 60 "%UP%\mem\vxupmem.exe"
 call :ran "earlier release: an in-memory program starts and runs" !RC!
 call :run 60 "%VX%\vxauto.exe" /setver WIN81
+rem what earlier versions did: a program that runs by itself set up automatically
+copy /y "%B%\probe.exe" "%UP%\vxupnative.exe" >nul
+reg add "HKLM\SOFTWARE\VistaExt\Memory" /v "%UP%\vxupnative.exe" /d "" /f >nul
 start "" "%UP%\busy\vxupbusy.exe" /wait:900
 ping -n 5 127.0.0.1 >nul
 
@@ -975,6 +1142,17 @@ call :expect "... and that old copy is deleted when Windows restarts" 0 !errorle
 call :hasnot "no file failed" "%R%\upgrade-setup.log" "could not"
 tasklist /fi "imagename eq vxupbusy.exe" 2>nul | find /i "vxupbusy.exe" >nul
 call :expect "the running program kept running" 0 !errorlevel!
+set "WN=0"
+for %%d in ("%SYS%" "%WOW%") do if exist "%%~d" (
+    for %%f in ("%%~d\api-ms-win-*.dll" "%%~d\ext-ms-win-*.dll" "%%~d\combase.dll" "%%~d\shcore.dll" "%%~d\d3d12.dll" "%%~d\kernelbase.dll" "%%~d\bcryptprimitives.dll") do (
+        findstr /m /l /c:"VistaExt-owned-file" "%%~f" >nul 2>&1 && (set /a WN+=1 & >>"%LOG%" echo   still there: %%~f)
+    )
+)
+call :expect "the update removed the earlier version's files with Windows names (or set them aside for the restart)" 0 !WN!
+"%B%\probe.exe" > "%R%\probe-upgraded.txt" 2>&1
+call :expect "a program VistaExt does not run loads none of VistaExt's DLLs by a Windows name" 0 !errorlevel!
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%UP%\vxupnative.exe" >nul 2>&1
+call :expect "the earlier automatic set-up of a program that runs by itself is taken back" 1 !errorlevel!
 reg query "HKLM\SOFTWARE\VistaExt" /v Version 2>nul | find "WIN81" >nul
 call :expect "settings kept: the Windows version programs are told" 0 !errorlevel!
 reg query "HKLM\SOFTWARE\VistaExt" /v Enabled 2>nul | find "0x1" >nul

@@ -103,7 +103,7 @@ for /d %%u in ("%SystemDrive%\Users\*") do if exist "%%~u\AppData\Local\VistaExt
 )
 rem the patched WebView2 runtime copy, if vx-webview2-setup made one
 if exist "%VX%\WebView2" rd /s /q "%VX%\WebView2" >nul 2>&1
-for %%f in (vxcenter.exe vxpatch.exe msifix.exe vxauto.exe vxtray.exe VistaExtSetup.exe vx-webview2-setup.cmd README.txt) do (
+for %%f in (vxcenter.exe vxpatch.exe msifix.exe vxauto.exe vxtray.exe VistaExtSetup.exe vx-webview2-setup.cmd vx-diagnostics.cmd README.txt installed.new) do (
     if exist "%VX%\%%f" del /f /q "%VX%\%%f" >nul 2>&1
     if exist "%VX%\%%f" if /i not "%%f"=="VistaExtSetup.exe" echo   still in use: %VX%\%%f
 )

@@ -33,6 +33,7 @@
 #define IDM_AUTO     105
 #define IDM_EXIT     106
 #define IDM_SETUPS   107
+#define IDM_DIAG     108
 #define IDM_VER0     200            /* + index into vx_osvers */
 #define VX_REG_TRAY  L"SOFTWARE\\VistaExt\\Tray"     /* HKCU: this user's choices */
 
@@ -63,7 +64,7 @@ static void describe(const WCHAR *tok, WCHAR *out, SIZE_T cch)
     vx_wcscpyn(out, tok, cch);
 }
 
-static BOOL setups(void) { return vx_setting(L"Setups", 1) != 0; }
+static BOOL setups(void) { return vx_setting(L"Setups", 0) != 0; }
 
 static void read_state(void)
 {
@@ -384,6 +385,7 @@ static void show_menu(void)
     AppendMenuW(m, MF_SEPARATOR, 0, NULL);
     AppendMenuW(m, MF_STRING, IDM_CENTER, L"&Open VistaExt (on/off, settings for one program)...");
     AppendMenuW(m, MF_STRING, IDM_LOG, L"View &log");
+    AppendMenuW(m, MF_STRING, IDM_DIAG, L"Save &diagnostics (to send when something goes wrong)...");
     AppendMenuW(m, MF_STRING | (autostart_on() ? MF_CHECKED : 0), IDM_AUTO, L"Start with &Windows");
     AppendMenuW(m, MF_SEPARATOR, 0, NULL);
     AppendMenuW(m, MF_STRING, IDM_EXIT, L"E&xit (VistaExt keeps working)");
@@ -423,6 +425,24 @@ static void show_menu(void)
         }
         wsprintfW(arg, L"\"%s\"", log);
         ShellExecuteW(g_wnd, NULL, L"notepad.exe", arg, NULL, SW_SHOWNORMAL);
+        break;
+    }
+    case IDM_DIAG: {
+        /* vx-diagnostics.cmd, as administrator (it reads every user's logs) */
+        WCHAR script[MAX_PATH], sys[MAX_PATH], args[MAX_PATH + 20];
+        SHELLEXECUTEINFOW se;
+        tool_path(L"vx-diagnostics.cmd", script);
+        GetSystemDirectoryW(sys, MAX_PATH);
+        vx_wcscatn(sys, L"\\cmd.exe", MAX_PATH);
+        wsprintfW(args, L"/c \"\"%s\"\"", script);
+        vx_memset(&se, 0, sizeof(se));
+        se.cbSize = sizeof(se);
+        se.hwnd = g_wnd;
+        se.lpVerb = L"runas";
+        se.lpFile = sys;
+        se.lpParameters = args;
+        se.nShow = SW_SHOWNORMAL;
+        ShellExecuteExW(&se);
         break;
     }
     case IDM_AUTO: set_autostart(!autostart_on()); break;

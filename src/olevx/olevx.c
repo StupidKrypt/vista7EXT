@@ -27,7 +27,9 @@ VX_EXPORT HRESULT WINAPI vx_RoGetAgileReference(int options, REFIID riid, IUnkno
 {
     static HRESULT (WINAPI *p)(int, REFIID, IUnknown *, void **);
     if (!p) {
+        /* Windows' combase (8 and later), else VistaExt's (combvx, see companions.h) */
         HMODULE h = LoadLibraryW(L"combase.dll");
+        if (!h) h = LoadLibraryW(L"combvx.dll");
         p = h ? (HRESULT (WINAPI *)(int, REFIID, IUnknown *, void **))(void *)GetProcAddress(h, "RoGetAgileReference") : NULL;
     }
     if (!p) { if (ref) *ref = NULL; return E_NOTIMPL; }

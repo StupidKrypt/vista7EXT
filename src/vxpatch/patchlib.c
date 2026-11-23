@@ -19,6 +19,14 @@ static const struct { const char *orig, *comp; BOOL ordinals; } g_map[] = {
 };
 #define NMAP (sizeof(g_map) / sizeof(g_map[0]))
 
+/* DLLs Windows lacks, VistaExt's under names of its own (companions.h) */
+static const struct { const char *orig, *priv; } g_new[] = {
+#define VX_NEWDLL(dll, priv) { #dll ".dll", #priv ".dll" },
+    VX_NEWDLLS
+#undef VX_NEWDLL
+};
+#define NNEW (sizeof(g_new) / sizeof(g_new[0]))
+
 /* ---- logging ------------------------------------------------------------- */
 typedef struct { vxp_log_fn fn; void *ctx; } logger;
 
@@ -361,6 +369,7 @@ typedef struct {
     const WCHAR *path;
     BOOL survey;        /* first pass: only find out which DLLs need a companion */
     DWORD need;         /* bit per g_map entry: some import table of it needs one */
+    BOOL windows_only;  /* "does it run without VistaExt?": VistaExt's own files count as absent */
 } job;
 
 /* Where the loader would take <dll> from for this program: Known DLLs from
@@ -374,6 +383,7 @@ static expset *locate(job *j, const char *dll)
     expset *s, *a;
     join(sp, j->sysdir, dll);
     s = get_exports(sp);
+    if (j->windows_only && s && s->vistaext) s = NULL;        /* an earlier VistaExt's file */
     if (is_known(dll) || !j->appdir[0]) return s && s->found ? s : NULL;
     join(ap, j->appdir, dll);
     if (is_apiset(dll) && s && s->found && !s->vistaext) return s;
@@ -465,8 +475,13 @@ static void list_names(job *j, const WCHAR *prefix, const char **names, DWORD n)
  * Runtime update's own copy lacks the Windows 8 functions), the import is
  * pointed at the VistaExt DLL that has them all. Its name is shorter, so it
  * fits in place. */
-static const char *g_apiset_hosts[] = { "kernelvx.dll", "advapivx.dll", "uservx.dll", "shellvx.dll", "combase.dll", "shcore.dll",
-                                        "olevx.dll", "ntvx.dll", "ws2vx.dll", "cfgmgrvx.dll" };
+static const char *g_apiset_hosts[] = { "kernelvx.dll", "advapivx.dll", "uservx.dll", "shellvx.dll",
+#if VX_OS < 602
+                                        "combvx.dll",       /* VistaExt's combase (Windows 8 has its own) */
+#else
+                                        "combase.dll",
+#endif
+                                        "shcrvx.dll", "olevx.dll", "ntvx.dll", "ws2vx.dll", "cfgmgrvx.dll" };
 
 static void do_apiset(job *j, DWORD name_rva, DWORD thunk_rva, BOOL delay, const char *dll, const WCHAR *wdll)
 {
@@ -539,6 +554,32 @@ static void do_descriptor(job *j, DWORD name_rva, DWORD thunk_rva, BOOL delay)
     for (i = 0; dll[i] && i < 63; i++) wdll[i] = (unsigned char)dll[i];
     wdll[i] = 0;
 
+    if (m < 0 && !j->survey) {
+        /* a DLL Windows lacks that VistaExt provides under its own name: the
+         * import goes there, unless Windows has the DLL (Windows 8.1's
+         * shcore) or the program ships its own (a d3d12.dll of a game) */
+        for (k = 0; k < NNEW; k++) {
+            WCHAR sp[MAX_PATH], ap[MAX_PATH];
+            expset *w;
+            if (vx_stricmp(dll, g_new[k].orig)) continue;
+            join(sp, j->sysdir, dll);
+            join(ap, j->appdir, dll);
+            w = get_exports(sp);
+            if ((w && w->found && !w->vistaext) || file_exists(ap)) break;
+            join(sp, j->sysdir, g_new[k].priv);
+            header(j);
+            if (!file_exists(sp)) {
+                vxlog(j->log, L"  %s: this Windows has none, and VistaExt's (%hs) is not installed", wdll, g_new[k].priv);
+                j->unsupported++;
+                return;
+            }
+            vxlog(j->log, L"  %s -> %hs (this Windows has no %s: VistaExt's%s)", wdll, g_new[k].priv, wdll,
+                  delay ? L", loaded on demand" : L"");
+            vx_memcpy(p->d + rva2off(p, name_rva), g_new[k].priv, vx_strlen(g_new[k].priv) + 1);
+            j->changed = TRUE;
+            return;
+        }
+    }
     real = m >= 0 ? NULL : locate(j, dll);
     if (m >= 0) { join(path, j->sysdir, dll); real = get_exports(path); }
     if (j->survey) {
@@ -751,17 +792,29 @@ void vxp_reimpersonate(HANDLE t)
     CloseHandle(t);
 }
 
-static void record_patched(const WCHAR *path, BOOL add)
+/* data: "user" when the user chose it (vxpatch, VistaExt's window), so that
+ * the service never takes it back; "" when the service did it */
+static void record_patched_as(const WCHAR *path, BOOL add, const WCHAR *data)
 {
     HKEY k;
     HANDLE imp = vxp_unimpersonate();
     if (!RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_PATCHED, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL)) {
-        if (add) RegSetValueExW(k, path, 0, REG_SZ, (const BYTE *)L"", sizeof(WCHAR));
-        else RegDeleteValueW(k, path);
+        if (add) {
+            WCHAR old[16];
+            DWORD cb = sizeof(old) - sizeof(WCHAR), type;
+            /* once chosen by the user, it stays the user's choice */
+            if (!*data && !RegQueryValueExW(k, path, NULL, &type, (BYTE *)old, &cb) && type == REG_SZ) {
+                old[cb / sizeof(WCHAR)] = 0;
+                if (!vx_wcsicmp(old, L"user")) data = L"user";
+            }
+            RegSetValueExW(k, path, 0, REG_SZ, (const BYTE *)data, (DWORD)((vx_wcslen(data) + 1) * sizeof(WCHAR)));
+        } else RegDeleteValueW(k, path);
         RegCloseKey(k);
     }
     vxp_reimpersonate(imp);
 }
+
+static void record_patched(const WCHAR *path, BOOL add) { record_patched_as(path, add, L""); }
 
 /* A file with more than one name (hard link) or a link itself: writing it
  * would change another file too - possibly one this user may not change. */
@@ -1069,6 +1122,160 @@ BOOL vxp_folder_needs(const WCHAR *file)
     return probe.patched > 0;
 }
 
+static BOOL user_tagged(const WCHAR *key, const WCHAR *path)
+{
+    HKEY k;
+    WCHAR data[16];
+    DWORD cb = sizeof(data) - sizeof(WCHAR), type;
+    BOOL r = FALSE;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, key, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return FALSE;
+    if (!RegQueryValueExW(k, path, NULL, &type, (BYTE *)data, &cb) && type == REG_SZ) {
+        data[cb / sizeof(WCHAR)] = 0;
+        r = !vx_wcsicmp(data, L"user");
+    }
+    RegCloseKey(k);
+    return r;
+}
+
+/* the user chose this program: registered (in memory) or patched (on disk) by them */
+BOOL vxp_user_registered(const WCHAR *path)
+{
+    return user_tagged(VX_REG_MEMORY, path) || user_tagged(VX_REG_PATCHED, path);
+}
+
+/* ---- does a program run on this Windows by itself? ------------------------
+ * What Windows' loader needs before the program's first instruction: its
+ * header must accept this Windows, and every function imported (not
+ * delay-loaded) by it and by the DLLs it loads at start must exist - in
+ * Windows' DLLs, through Windows' API sets, or in the program's own DLLs
+ * (checked the same way). VistaExt's own files do not count: the question is
+ * how the program fares without VistaExt. Where the loader would take a DLL
+ * from somewhere this cannot see (side-by-side assemblies, PATH), the
+ * program is given the benefit of the doubt. A file VistaExt changed is
+ * judged by its original (.vxorig). */
+#define NATIVE_FILES 96
+typedef struct {
+    WCHAR appdir[MAX_PATH];
+    WCHAR (*seen)[MAX_PATH];
+    int nseen;
+} natctx;
+
+/* An API set Windows itself provides (Windows 7 and 8 have them built into
+ * the loader, without a file): asked of Windows directly. Only ever from
+ * System32 (LOAD_LIBRARY_SEARCH_SYSTEM32): the service runs as SYSTEM, and
+ * a name Windows lacks must never make it load a same-named file from the
+ * PATH, where users can put files. Returns 1: has it, 0: lacks it, -1:
+ * cannot tell (Vista has no API-set table at all: there only the file in
+ * System32 counts, which locate() has looked for already; Windows 7 without
+ * update KB2533623 has no LOAD_LIBRARY_SEARCH_SYSTEM32). */
+static int windows_apiset_has(const char *dll, const char *name)
+{
+    WCHAR w[128];
+    HMODULE h;
+    DWORD maj = 0, min = 0;
+    int i;
+    vx_real_version(&maj, &min);
+    if (maj == 6 && min == 0) return 0;
+    for (i = 0; dll[i] && i < 127; i++) w[i] = (unsigned char)dll[i];
+    w[i] = 0;
+    if (!(h = GetModuleHandleW(w)) && !(h = LoadLibraryExW(w, NULL, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */)))
+        return GetLastError() == ERROR_INVALID_PARAMETER ? -1 : 0;
+    return GetProcAddress(h, name) != NULL;
+}
+
+static void why_missing(WCHAR *why, SIZE_T cch, const WCHAR *file, const char *dll, const char *name, DWORD more)
+{
+    WCHAR m[600];
+    if (!why || !cch) return;
+    if (name) wsprintfW(m, L"%s: %hs!%hs%s", file_part(file), dll, name, more ? L" and more" : L"");
+    else wsprintfW(m, L"%s: %hs", file_part(file), dll);
+    vx_wcscpyn(why, m, cch);
+}
+
+static BOOL native_image(const WCHAR *path, BOOL top, natctx *nc, WCHAR *why, SIZE_T cch)
+{
+    WCHAR sysdir[MAX_PATH], src[MAX_PATH + 8];
+    logger lg = { NULL, NULL };
+    DWORD size, o, n, ord, i;
+    BYTE *d;
+    pe p;
+    job j;
+    BOOL ok = TRUE;
+    int k;
+    for (k = 0; k < nc->nseen; k++) if (!vx_wcsicmp(nc->seen[k], path)) return TRUE;
+    if (nc->nseen >= NATIVE_FILES) return TRUE;
+    vx_wcscpyn(nc->seen[nc->nseen++], path, MAX_PATH);
+    backup_name(path, src);
+    if (!file_exists(src)) vx_wcscpyn(src, path, MAX_PATH + 8);
+    if (!(d = read_file(src, &size))) return TRUE;               /* cannot tell */
+    if (!pe_open(&p, d, size)) { release_file(d); return TRUE; }
+    if (top) {
+        WORD *ss = (WORD *)(d + p.opt + 48);
+        const DWORD maj = VX_OS / 100, min = VX_OS % 100;
+        DWORD rmaj = 0, rmin = 0;
+        vx_real_version(&rmaj, &rmin);
+        if (!rmaj) { rmaj = maj; rmin = min; }
+        if (ss[0] > rmaj || (ss[0] == rmaj && ss[1] > rmin)) {
+            if (why && cch) wsprintfW(why, L"%s: its header asks for Windows %u.%u", file_part(path), ss[0], ss[1]);
+            release_file(d);
+            return FALSE;
+        }
+    }
+    sys_dir(p.is64, sysdir);
+    vx_memset(&j, 0, sizeof(j));
+    j.p = &p; j.log = &lg; j.sysdir = sysdir; j.appdir = nc->appdir; j.path = path; j.windows_only = TRUE;
+    o = p.ndir > 1 && p.dir[1].VirtualAddress ? rva2off(&p, p.dir[1].VirtualAddress) : 0;
+    while (ok && o && o + sizeof(IMAGE_IMPORT_DESCRIPTOR) <= size) {
+        IMAGE_IMPORT_DESCRIPTOR *id = (void *)(d + o);
+        DWORD thunk = id->OriginalFirstThunk ? id->OriginalFirstThunk : id->FirstThunk;
+        const char *dll;
+        WCHAR ap[MAX_PATH];
+        expset *e;
+        o += sizeof(*id);
+        if (!id->Name) break;
+        if (!thunk || (!id->OriginalFirstThunk && id->TimeDateStamp)) continue;
+        if (!(dll = pe_str(&p, id->Name))) continue;
+        join(ap, nc->appdir, dll);
+        e = locate(&j, dll);
+        if (e && !vx_wcsicmp(e->path, ap)) {
+            /* one of the program's own DLLs: what it needs counts too */
+            if (!native_image(ap, FALSE, nc, why, cch)) { ok = FALSE; break; }
+            n = thunk_names(&p, thunk, g_names, MAXNAMES, &ord);
+            for (i = 0; i < n; i++)
+                if (lookup(e, g_names[i]) < 0) { why_missing(why, cch, path, dll, g_names[i], 0); ok = FALSE; break; }
+            continue;
+        }
+        n = thunk_names(&p, thunk, g_names, MAXNAMES, &ord);
+        if (!e) {
+            if (!is_apiset(dll)) continue;          /* side-by-side, PATH...: cannot tell */
+            for (i = 0; i < n; i++)
+                if (!windows_apiset_has(dll, g_names[i])) { why_missing(why, cch, path, dll, g_names[i], n - i - 1); ok = FALSE; break; }
+            continue;          /* (-1, cannot tell: given the benefit of the doubt) */
+        }
+        for (i = 0; i < n; i++)
+            if (!resolves(&j, dll, g_names[i], 0)) { why_missing(why, cch, path, dll, g_names[i], n - i - 1); ok = FALSE; break; }
+    }
+    release_file(d);
+    return ok;
+}
+
+BOOL vxp_runs_natively(const WCHAR *exe, WCHAR *why, SIZE_T cch)
+{
+    natctx nc;
+    SIZE_T n;
+    BOOL r;
+    if (why && cch) why[0] = 0;
+    vx_memset(&nc, 0, sizeof(nc));
+    if (!(nc.seen = xalloc(NATIVE_FILES * sizeof(*nc.seen)))) return TRUE;
+    vx_wcscpyn(nc.appdir, exe, MAX_PATH);
+    n = vx_wcslen(nc.appdir);
+    while (n && nc.appdir[n - 1] != '\\') n--;
+    nc.appdir[n ? n - 1 : 0] = 0;
+    r = native_image(exe, TRUE, &nc, why, cch);
+    xfree(nc.seen);
+    return r;
+}
+
 /* The mode for one program or folder: the default. (A per-program choice
  * belongs here; Firefox was suspected of needing file mode, but the crash
  * came from VistaExt's process-attribute handling, see kernelvx misc.c.) */
@@ -1261,7 +1468,8 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
         } else if (want && !is_dll && !vxp_memory_registered(path)) {
             header(&j);
             vxlog(&lg, L"  registered: VistaExt redirects its imports in memory when it starts");
-            if (!(flags & VXP_DRYRUN)) mem_register_as(path, TRUE, (flags & VXP_SETUP) ? L"setup" : L"");
+            if (!(flags & VXP_DRYRUN))
+                mem_register_as(path, TRUE, (flags & VXP_SETUP) ? L"setup" : (flags & VXP_USER) ? L"user" : L"");
             mem_done = TRUE;
         }
     }
@@ -1326,7 +1534,7 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
                 ret = -1;
             } else {
                 vxlog(&lg, L"  patched (original kept as .vxorig)");
-                if (!(flags & VXP_NOBACKUP)) record_patched(path, TRUE);
+                if (!(flags & VXP_NOBACKUP)) record_patched_as(path, TRUE, (flags & VXP_USER) ? L"user" : L"");
             }
             if (ret < 0 && st) { st->failed++; st->patched--; }
         }

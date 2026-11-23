@@ -29,7 +29,10 @@ int wmain(int argc, WCHAR **argv)
         se.lpFile = child;
         se.nShow = SW_HIDE;
         if (ShellExecuteExW(&se)) proc = se.hProcess;
-        else con_print(L"ShellExecuteEx failed (error %u)\r\n", GetLastError());
+        else {
+            DWORD e = GetLastError();
+            con_print(L"ShellExecuteEx failed (error %u, hInstApp %d)\r\n", e, (int)(INT_PTR)se.hInstApp);
+        }
     } else {
         STARTUPINFOW si;
         PROCESS_INFORMATION pi;

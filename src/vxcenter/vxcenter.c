@@ -19,7 +19,7 @@
 #include <shlguid.h>
 
 enum { IDC_PATH = 100, IDC_BROWSE, IDC_BROWSEDIR, IDC_VER, IDC_WV2, IDC_CHROMIUM, IDC_ARGS,
-       IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN, IDC_CLOSE, IDC_LOG, IDC_STATUS, IDC_ONOFF, IDC_ONTEXT };
+       IDC_CHECK, IDC_APPLY, IDC_UNDO, IDC_RUN, IDC_CLOSE, IDC_LOG, IDC_STATUS, IDC_ONOFF, IDC_ONTEXT, IDC_DIAG };
 
 #define CHROMIUM_ARGS VXP_CHROMIUM_ARGS
 
@@ -179,7 +179,7 @@ static DWORD WINAPI worker(LPVOID p)
         break;
     case OP_APPLY: {
         DWORD flags = vxp_flags_for_layer(w->layer);  /* settings need VistaExt loaded */
-        flags |= vxp_mode_for(w->path);
+        flags |= vxp_mode_for(w->path) | VXP_USER;   /* the user's choice: kept as it is */
         if ((flags & VXP_MEMORY) && !w->isdir && vxp_folder_needs(w->path)) flags |= VXP_REGALL;
         if (w->isdir) vxp_process_dir(w->path, flags, log_line, NULL, &w->st);
         else vxp_process_file(w->path, flags, log_line, NULL, &w->st);
@@ -403,6 +403,26 @@ static void switched(BOOL ok, BOOL restart)
     else status(on ? L"VistaExt is on." : L"VistaExt is off. Programs that are running keep it until they are closed.");
 }
 
+/* "Save diagnostics": vx-diagnostics.cmd makes a snapshot in the diagnostics
+ * folder (src/common/diag.h) and opens the folder; its window shows the
+ * progress. This window runs as administrator, so the script does too. */
+static void save_diagnostics(void)
+{
+    WCHAR script[MAX_PATH], sys[MAX_PATH], args[MAX_PATH + 20];
+    tool_path(L"vx-diagnostics.cmd", script);
+    if (GetFileAttributesW(script) == INVALID_FILE_ATTRIBUTES) {
+        MessageBoxW(g_wnd, L"vx-diagnostics.cmd is missing from VistaExt's folder. Install VistaExt again.", L"VistaExt",
+                    MB_ICONWARNING);
+        return;
+    }
+    GetSystemDirectoryW(sys, MAX_PATH);
+    vx_wcscatn(sys, L"\\cmd.exe", MAX_PATH);
+    wsprintfW(args, L"/c \"\"%s\"\"", script);
+    if ((INT_PTR)ShellExecuteW(g_wnd, NULL, sys, args, NULL, SW_SHOWNORMAL) <= 32)
+        MessageBoxW(g_wnd, L"The diagnostics could not be started.", L"VistaExt", MB_ICONWARNING);
+    else status(L"Saving diagnostics: see the window that opened. The folder opens when it is done.");
+}
+
 /* the tray icon belongs to the signed-in user: started through Explorer, not
  * as administrator like this window */
 static void ensure_tray(void)
@@ -427,11 +447,12 @@ static void build_ui(void)
 {
     int i, y = 12;
     HWND h;
-    add(L"BUTTON", L"VistaExt for the whole PC", BS_GROUPBOX, 12, y, 564, 52, -1, 0);
-    add(L"STATIC", L"", SS_LEFT, 24, y + 20, 440, 28, IDC_ONTEXT, 0);
-    add(L"BUTTON", L"", WS_TABSTOP, 476, y + 17, 90, 26, IDC_ONOFF, 0);
+    add(L"BUTTON", L"VistaExt for the whole PC", BS_GROUPBOX, 12, y, 564, 60, -1, 0);
+    add(L"STATIC", L"", SS_LEFT, 24, y + 18, 340, 38, IDC_ONTEXT, 0);
+    add(L"BUTTON", L"", WS_TABSTOP, 372, y + 20, 80, 26, IDC_ONOFF, 0);
+    add(L"BUTTON", L"Save diagnostics", WS_TABSTOP, 458, y + 20, 108, 26, IDC_DIAG, 0);
     show_onoff();
-    y += 62;
+    y += 70;
     h = add(L"STATIC", L"Make a program made for newer Windows run on this PC.", 0, 12, y, 560, 20, -1, 0);
     SendMessageW(h, WM_SETFONT, (WPARAM)g_bold, TRUE);
     y += 30;
@@ -486,6 +507,7 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp)
             return 0;
         case IDC_RUN: run_program(); return 0;
         case IDC_ONOFF: run_switch(); return 0;
+        case IDC_DIAG: save_diagnostics(); return 0;
         case IDC_CLOSE: case IDCANCEL: SendMessageW(h, WM_CLOSE, 0, 0); return 0;
         case IDOK: run_apply(); return 0;
         }
@@ -661,7 +683,9 @@ static int do_run(const WCHAR *file)
     if (!vx_lookup_layer(full, layer, 600)) vxp_recommend(full, layer, 600);
     flags |= vxp_flags_for_layer(layer);
     flags |= vxp_mode_for(full);          /* in memory: works for setups on a CD too */
-    if ((flags & VXP_MEMORY) && vxp_folder_needs(full)) flags |= VXP_REGALL;
+    /* asked for by name: registered even if nothing seems missing (the
+     * program may need its settings, or a DLL it loads later) */
+    if (flags & VXP_MEMORY) flags |= VXP_REGALL | VXP_USER;
     if (vxp_process_file(full, flags | VXP_QUIET, NULL, NULL, &st) < 0) {
         wsprintfW(m, L"%s could not be changed (is it running, or on a CD?). It is started as it is.", full);
         MessageBoxW(NULL, m, L"VistaExt", MB_ICONWARNING);
@@ -715,7 +739,7 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cmdline, int show)
     wc.lpszClassName = L"VistaExtCenter";
     RegisterClassExW(&wc);
 
-    rc.left = rc.top = 0; rc.right = S(588); rc.bottom = S(520);
+    rc.left = rc.top = 0; rc.right = S(588); rc.bottom = S(528);
     AdjustWindowRectEx(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE, 0);
     g_wnd = CreateWindowExW(WS_EX_CONTROLPARENT, wc.lpszClassName, L"VistaExt",
                             WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,

@@ -41,7 +41,7 @@
 
 /* this release; build.sh checks that it matches version.rci and
  * install.cmd's DisplayVersion */
-#define VX_THIS_VERSION L"1.2.0"
+#define VX_THIS_VERSION L"1.3.0"
 #define VX_ARP_KEY L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VistaExt"
 
 static BOOL g_quiet;
@@ -287,7 +287,7 @@ static void vx_folder(WCHAR *out)
 }
 
 /* Is VistaExt installed? Its version from Programs and Features
- * ("1.2.0 (Beta 1.2)"), or "" if that entry is missing but its files are there */
+ * ("1.3.0 (Beta 1.3)"), or "" if that entry is missing but its files are there */
 static BOOL installed_version(WCHAR *ver, DWORD cch)
 {
     HKEY k;
@@ -307,7 +307,7 @@ static BOOL installed_version(WCHAR *ver, DWORD cch)
     return found;
 }
 
-/* "1.0.0 (Beta 1)" against "1.2.0": <0 older, 0 the same, >0 newer; an
+/* "1.0.0 (Beta 1)" against "1.3.0": <0 older, 0 the same, >0 newer; an
  * unreadable version counts as older */
 static int cmp_version(const WCHAR *a, const WCHAR *b)
 {
@@ -990,10 +990,13 @@ static int do_uninstall(BOOL fromtemp, BOOL rp)
             if (GetFileAttributesW(f) != INVALID_FILE_ATTRIBUTES) MoveFileExW(f, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
         }
         MoveFileExW(vx, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);           /* the folder, once empty */
-        for (k = 0; k < 2; k++) {                                      /* VistaExt.off, once empty */
-            GetWindowsDirectoryW(d, MAX_PATH);
-            vx_wcscatn(d, k ? L"\\SysWOW64\\VistaExt.off" : L"\\System32\\VistaExt.off", MAX_PATH + 32);
-            if (GetFileAttributesW(d) != INVALID_FILE_ATTRIBUTES) MoveFileExW(d, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+        {   /* VistaExt's folders in the system folders, once empty */
+            static const WCHAR *dirs[] = { L"\\System32\\VistaExt.off", L"\\SysWOW64\\VistaExt.off" };
+            for (k = 0; k < (int)(sizeof(dirs) / sizeof(dirs[0])); k++) {
+                GetWindowsDirectoryW(d, MAX_PATH);
+                vx_wcscatn(d, dirs[k], MAX_PATH + 32);
+                if (GetFileAttributesW(d) != INVALID_FILE_ATTRIBUTES) MoveFileExW(d, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+            }
         }
         if (wow && on) on(redir);
     }
@@ -1013,6 +1016,8 @@ static int do_uninstall(BOOL fromtemp, BOOL rp)
                              L"Windows restarts.", 3000);
     if (nprogs) vx_wcscatn(m, L"\n\nThe programs you installed are still installed. Those made for newer Windows no "
                               L"longer start; remove them in Programs and Features if you do not need them.", 3000);
+    vx_wcscatn(m, L"\n\nThe diagnostics folder (%ProgramData%\\VistaExt Diagnostics) is kept, so you can still send "
+                  L"it. Delete it when you no longer need it.", 3000);
     msg(m, MB_ICONINFORMATION);
     return 0;
 }

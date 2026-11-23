@@ -41,4 +41,31 @@
     VX_COMPANION(winhttp,    winhtvx,  0) \
     VX_COMPANION(userenv,    uenvvx,   0)
 
+/* DLLs Windows does not have (on this build's Windows), which VistaExt
+ * provides under names of its own, so that programs VistaExt does not run
+ * never see them: a program that looks for "shcore.dll" or "d3d12.dll" to
+ * learn what Windows can do must find what Windows has, exactly as without
+ * VistaExt. Programs VistaExt runs get them in place of the Windows name -
+ * imports (vxload, vxpatch) and LoadLibrary/GetModuleHandle (kernelvx) -
+ * only when Windows has no DLL of that name and the program does not ship
+ * its own. Same rule as the companions: never a longer name.
+ *     VX_NEWDLL(dll, private)                                              */
+#if VX_OS < 601
+/* (Vista has no kernelbase: kernelvx answers for it, also to LoadLibrary
+ * and GetModuleHandle - Chromium looks functions up there by name) */
+#define VX_NEWDLL_VISTA VX_NEWDLL(bcryptprimitives, bcryptprimvx) VX_NEWDLL(kernelbase, kernelvx)
+#else
+#define VX_NEWDLL_VISTA
+#endif
+#if VX_OS < 602
+#define VX_NEWDLL_COMBASE VX_NEWDLL(combase, combvx)
+#else
+#define VX_NEWDLL_COMBASE
+#endif
+#define VX_NEWDLLS \
+    VX_NEWDLL_VISTA \
+    VX_NEWDLL_COMBASE \
+    VX_NEWDLL(shcore, shcrvx) \
+    VX_NEWDLL(d3d12,  d3dvx)
+
 #endif

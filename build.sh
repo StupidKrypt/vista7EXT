@@ -22,6 +22,7 @@ build_arch() {
     local entry=DllMainCRTStartup cmain=mainCRTStartup wmain=wWinMainCRTStartup
     [ "$arch" = i686 ] && entry=DllMainCRTStartup@12
     mkdir -p "$OUT" "$OBJ"
+    rm -f "$OUT"/*.dll        # no DLL an earlier build made under another name
     local CFLAGS=(--target=$arch-w64-windows-gnu -O2 -Wall -Wno-unused-parameter -Wno-unused-variable
         -Wno-missing-braces -Wno-unused-function -fno-builtin -ffreestanding -fno-stack-protector
         -mno-stack-arg-probe -ffunction-sections -fdata-sections
@@ -38,9 +39,10 @@ build_arch() {
     clang "${CFLAGS[@]}" -c src/common/common.c -o "$OBJ/common.o"
     clang "${CFLAGS[@]}" -c src/common/pin.c -o "$OBJ/pin.o"
     clang "${CFLAGS[@]}" -c src/common/notifywnd.c -o "$OBJ/notifywnd.o"
+    clang "${CFLAGS[@]}" -c src/common/diag.c -o "$OBJ/diag.o"
     # the shared code as a library: each program or DLL takes only the parts it uses
     rm -f "$OBJ/libvxcommon.a"
-    llvm-ar rcs "$OBJ/libvxcommon.a" "$OBJ/common.o" "$OBJ/pin.o" "$OBJ/notifywnd.o"
+    llvm-ar rcs "$OBJ/libvxcommon.a" "$OBJ/common.o" "$OBJ/pin.o" "$OBJ/notifywnd.o" "$OBJ/diag.o"
     # version info + ownership marker for every DLL (see src/common/dll.rc)
     llvm-windres --target=$arch-w64-mingw32 -I"$WINEINC/windows" src/common/dll.rc -o "$OBJ/dll.res.o"
 
@@ -50,7 +52,6 @@ build_arch() {
         "uservx:src/uservx/uservx.c::-luser32 -lgdi32 -lkernel32 -ladvapi32"
         "advapivx:src/advapivx/advapivx.c::-ladvapi32 -lkernel32"
         "shellvx:src/shellvx/shellvx.c::-lshell32 -lole32 -luser32 -lkernel32 -ladvapi32"
-        "combase:src/combase/combase.c::-lole32 -lkernel32 -ladvapi32 -luuid"
         "shcore:src/shcore/shcore.c::-luser32 -lgdi32 -lkernel32 -ladvapi32"
         "ntvx:src/ntvx/ntvx.c::-lntdll -lkernel32 -ladvapi32"
         "ws2vx:src/ws2vx/ws2vx.c::-lws2_32 -lkernel32 -ladvapi32"
@@ -64,17 +65,24 @@ build_arch() {
         # no Windows before 10 has Direct3D 12: a d3d12.dll that says so
         "d3d12:src/d3d12/d3d12.c::-lkernel32 -ladvapi32"
     )
+    # Windows 8 has its own combase
+    [ "$os" != win8 ] && comps+=("combase:src/combase/combase.c::-lole32 -lkernel32 -ladvapi32 -luuid")
     if [ "$os" = vista ]; then
-        # DLLs Vista lacks entirely: kernelbase (forwards to kernelvx) and
-        # bcryptprimitives (programs use VistaExt's directly)
-        comps+=("bcryptprimitives:src/bcryptprimitives/bcryptprimitives.c::-ladvapi32 -lkernel32"
-                "kernelbase:src/kernelbase/kernelbase.c::-lkernel32 -ladvapi32")
+        # Vista has no bcryptprimitives at all: VistaExt's own (as
+        # bcryptprimvx, see priv). No kernelbase either: kernelvx stands in
+        # for it (companions.h), so none is built.
+        comps+=("bcryptprimitives:src/bcryptprimitives/bcryptprimitives.c::-ladvapi32 -lkernel32")
     else
         # Windows 7's bcryptprimitives lacks ProcessPrng: a companion adds it
         comps+=("bcryptprimvx:src/bcryptprimitives/bcryptprimitives.c:-DVX_COMPANION:-ladvapi32 -lkernel32")
     fi
+    # DLLs Windows lacks get a name of VistaExt's own (VX_NEWDLLS in
+    # src/common/companions.h, PRIVATE in tools/gen.py): programs VistaExt
+    # does not run never find a "shcore.dll" in System32 that Windows lacks
+    priv() { python3 -I tools/gen.py private --os $os "$1"; }
     for c in "${comps[@]}"; do
         IFS=: read -r name srcs extra libs <<<"$c"
+        local file=$(priv "$name")
         local objs=()
         for s in $srcs; do
             local o="$OBJ/${name}_$(basename "${s%.c}").o"
@@ -82,24 +90,28 @@ build_arch() {
             objs+=("$o")
         done
         python3 -I tools/gen.py component --os $os --arch $arch --comp $name --out "$OBJ/$name.def" --outdir "$OUT" "${objs[@]}"
-        clang "${LDFLAGS[@]}" -shared -o "$OUT/$name.dll" "${objs[@]}" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$OBJ/$name.def" \
+        clang "${LDFLAGS[@]}" -shared -o "$OUT/$file.dll" "${objs[@]}" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$OBJ/$name.def" \
             -Wl,--entry=$entry $libs
     done
 
-    # api-set forwarder DLLs
-    mkdir -p "$OUT/apisets" "$OBJ/apisets"
+    # api-set forwarder DLLs. Only under names of VistaExt's own are they
+    # installed (vxs-ms-X for api-ms-X, vxe-ms-X for ext-ms-X): a file
+    # called api-ms-win-... in System32 would be found by every program,
+    # also those VistaExt does not run. Programs VistaExt runs get these
+    # names instead (vxload, vxpatch, kernelvx's LoadLibrary). The
+    # api-ms-named builds stay in out/obj (tests).
+    rm -rf "$OUT/apisets" "$OBJ/apisets-dll"
+    mkdir -p "$OUT/apisets" "$OBJ/apisets" "$OBJ/apisets-dll"
     python3 -I tools/gen.py apisets --os $os --arch $arch --outdir "$OBJ/apisets" --bindir "$OUT"
     clang "${CFLAGS[@]}" -c src/kernelbase/kernelbase.c -o "$OBJ/apistub.o"
     for def in "$OBJ"/apisets/*.def; do
         local n=$(basename "${def%.def}")
-        clang "${LDFLAGS[@]}" -shared -o "$OUT/apisets/$n.dll" "$OBJ/apistub.o" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$def" \
+        clang "${LDFLAGS[@]}" -shared -o "$OBJ/apisets-dll/$n.dll" "$OBJ/apistub.o" "$OBJ/libvxcommon.a" "$OBJ/dll.res.o" "$def" \
             -Wl,--entry=$entry -lkernel32 -ladvapi32
     done
+    for f in "$OBJ"/apisets-dll/api-*.dll; do cp "$f" "$OUT/apisets/vxs-$(basename "$f" | cut -c5-)"; done
+    for f in "$OBJ"/apisets-dll/ext-*.dll; do cp "$f" "$OUT/apisets/vxe-$(basename "$f" | cut -c5-)"; done
 
-    # VistaExt's API sets under names Windows' API-set table does not
-    # intercept, for the in-memory mode (vxload): api-ms-X -> vxs-ms-X, ext-ms-X -> vxe-ms-X
-    for f in "$OUT"/apisets/api-*.dll; do cp "$f" "$OUT/apisets/vxs-$(basename "$f" | cut -c5-)"; done
-    for f in "$OUT"/apisets/ext-*.dll; do cp "$f" "$OUT/apisets/vxe-$(basename "$f" | cut -c5-)"; done
 
     # the in-memory mode's loader hook: a verifier provider, ntdll only
     clang "${CFLAGS[@]}" -c src/vxload/vxload.c -o "$OBJ/vxload.o"

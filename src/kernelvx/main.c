@@ -377,7 +377,141 @@ static BOOL has_path(LPCWSTR n)
     return FALSE;
 }
 
+/* ---- DLLs Windows lacks ---------------------------------------------------
+ * VistaExt's shcore, d3d12, (Vista and 7) combase and (Vista)
+ * bcryptprimitives, and its API sets, have names of their own in System32
+ * (companions.h, VX_NEWDLLS; vxs-ms-X for api-ms-X, vxe-ms-X for ext-ms-X),
+ * so that programs VistaExt does not run find exactly what Windows has. A
+ * program VistaExt runs that asks for one by its Windows name gets it here:
+ * Windows is always asked first, and only when it has no such DLL is
+ * VistaExt's taken. */
+static const struct { const WCHAR *orig, *priv; } g_newdll[] = {
+#define VX_NEWDLL(dll, priv) { VX_W(#dll) L".dll", VX_W(#priv) L".dll" },
+    VX_NEWDLLS
+#undef VX_NEWDLL
+};
+
+static BOOL ieq_w(const WCHAR *a, const WCHAR *b, SIZE_T n)     /* the first n characters, any case */
+{
+    SIZE_T i;
+    for (i = 0; i < n; i++) {
+        WCHAR x = a[i], y = b[i];
+        if (x >= 'A' && x <= 'Z') x += 32;
+        if (y >= 'A' && y <= 'Z') y += 32;
+        if (x != y) return FALSE;
+    }
+    return TRUE;
+}
+
+/* VistaExt's file for <name> (a bare name, with or without ".dll", or a
+ * path in System32), as a full path; FALSE if it has none */
+static BOOL private_dll(LPCWSTR name, WCHAR *out)
+{
+    WCHAR sys[MAX_PATH];
+    const WCHAR *base = name, *q;
+    SIZE_T n, bl;
+    unsigned i;
+    UINT sl = GetSystemDirectoryW(sys, MAX_PATH);
+    if (!name || !sl || sl > MAX_PATH - 80) return FALSE;
+    for (q = name; *q; q++) if (*q == '\\' || *q == '/' || *q == ':') base = q + 1;
+    if (base != name) {                                   /* a path: only System32's */
+        n = (SIZE_T)(base - name) - 1;
+        if (n != sl || !ieq_w(name, sys, n)) return FALSE;
+    }
+    bl = vx_wcslen(base);
+    if (bl > 4 && ieq_w(base + bl - 4, L".dll", 4)) bl -= 4;
+    if (!bl || bl > 70) return FALSE;
+    vx_wcscpyn(out, sys, MAX_PATH);
+    vx_wcscatn(out, L"\\", MAX_PATH);
+    for (i = 0; i < sizeof(g_newdll) / sizeof(g_newdll[0]); i++) {
+        SIZE_T ol = vx_wcslen(g_newdll[i].orig) - 4;
+        if (ol == bl && ieq_w(base, g_newdll[i].orig, bl)) {
+            /* Windows has one of that name after all (8.1's shcore): never ours */
+            vx_wcscatn(out, g_newdll[i].orig, MAX_PATH);
+            if (GetFileAttributesW(out) != INVALID_FILE_ATTRIBUTES) return FALSE;
+            out[sl + 1] = 0;
+            vx_wcscatn(out, g_newdll[i].priv, MAX_PATH);
+            return GetFileAttributesW(out) != INVALID_FILE_ATTRIBUTES;
+        }
+    }
+    if (bl > 4 && (ieq_w(base, L"api-", 4) || ieq_w(base, L"ext-", 4))) {
+        n = vx_wcslen(out);
+        out[n] = 'v'; out[n + 1] = 'x'; out[n + 2] = ieq_w(base, L"api-", 4) ? 's' : 'e';
+        out[n + 3] = 0;
+        vx_wcscatn(out, base + 3, n + bl + 1);          /* without its ".dll" */
+        vx_wcscatn(out, L".dll", MAX_PATH);
+        return GetFileAttributesW(out) != INVALID_FILE_ATTRIBUTES;
+    }
+    return FALSE;
+}
+
+static HMODULE load_ex(LPCWSTR name, HANDLE file, DWORD flags);
+
 VX_EXPORT HMODULE WINAPI vx_LoadLibraryExW(LPCWSTR name, HANDLE file, DWORD flags)
+{
+    WCHAR alt[MAX_PATH];
+    HMODULE h = load_ex(name, file, flags);
+    DWORD e;
+    if (h || !name) return h;
+    e = GetLastError();
+    if ((e == ERROR_MOD_NOT_FOUND || e == ERROR_FILE_NOT_FOUND || e == ERROR_PATH_NOT_FOUND) && private_dll(name, alt) &&
+        (h = LoadLibraryExW(alt, file, (flags & ~(VX_SEARCH_MASK | VX_REQUIRE_SIGNED)) | LOAD_WITH_ALTERED_SEARCH_PATH)))
+        return h;
+    SetLastError(e);
+    return NULL;
+}
+
+VX_EXPORT HMODULE WINAPI vx_LoadLibraryW(LPCWSTR name) { return vx_LoadLibraryExW(name, NULL, 0); }
+
+VX_EXPORT HMODULE WINAPI vx_LoadLibraryA(LPCSTR name)
+{
+    WCHAR w[MAX_PATH];
+    if (!name) { SetLastError(ERROR_INVALID_PARAMETER); return NULL; }
+    if (!MultiByteToWideChar(CP_ACP, 0, name, -1, w, MAX_PATH)) return NULL;
+    return vx_LoadLibraryExW(w, NULL, 0);
+}
+
+VX_EXPORT HMODULE WINAPI vx_GetModuleHandleW(LPCWSTR name)
+{
+    WCHAR alt[MAX_PATH];
+    HMODULE h = GetModuleHandleW(name);
+    DWORD e;
+    if (h || !name) return h;
+    e = GetLastError();
+    if (private_dll(name, alt) && (h = GetModuleHandleW(alt))) return h;
+    SetLastError(e);
+    return NULL;
+}
+
+VX_EXPORT HMODULE WINAPI vx_GetModuleHandleA(LPCSTR name)
+{
+    WCHAR w[MAX_PATH];
+    if (!name) return GetModuleHandleA(NULL);
+    if (!MultiByteToWideChar(CP_ACP, 0, name, -1, w, MAX_PATH)) return GetModuleHandleA(name);
+    return vx_GetModuleHandleW(w);
+}
+
+VX_EXPORT BOOL WINAPI vx_GetModuleHandleExW(DWORD flags, LPCWSTR name, HMODULE *h)
+{
+    WCHAR alt[MAX_PATH];
+    DWORD e;
+    if (GetModuleHandleExW(flags, name, h)) return TRUE;
+    e = GetLastError();
+    if (name && !(flags & GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS) && private_dll(name, alt) &&
+        GetModuleHandleExW(flags, alt, h)) return TRUE;
+    SetLastError(e);
+    return FALSE;
+}
+
+VX_EXPORT BOOL WINAPI vx_GetModuleHandleExA(DWORD flags, LPCSTR name, HMODULE *h)
+{
+    WCHAR w[MAX_PATH];
+    if (!name || (flags & GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS) ||
+        !MultiByteToWideChar(CP_ACP, 0, name, -1, w, MAX_PATH)) return GetModuleHandleExA(flags, name, h);
+    return vx_GetModuleHandleExW(flags, w, h);
+}
+
+static HMODULE load_ex(LPCWSTR name, HANDLE file, DWORD flags)
 {
     static int native = -1;     /* Windows 7 with KB2533623, or later */
     DWORD search, plain;
@@ -770,6 +904,14 @@ static BOOL vistaext_runs(BYTE *base, IMAGE_NT_HEADERS *nh)
     return FALSE;
 }
 
+/* the program (.exe) of this process is one VistaExt runs */
+static BOOL runs_here(void)
+{
+    BYTE *base = (BYTE *)GetModuleHandleW(NULL);
+    if (!base) return FALSE;
+    return vistaext_runs(base, (IMAGE_NT_HEADERS *)(base + ((IMAGE_DOS_HEADER *)base)->e_lfanew));
+}
+
 static void start_watch(const WCHAR *exe)
 {
     IMAGE_NT_HEADERS *nh;
@@ -810,6 +952,11 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
         /* Settings are saved under the long path; a program started through
          * a short 8.3 path (C:\PROGRA~1\...) must still find them. */
         if (n && n < MAX_PATH) GetLongPathNameW(exe, exe, MAX_PATH);
+        /* Only in a program VistaExt runs: one that ended up with kernelvx
+         * some other way (a DLL of VistaExt's it loaded by hand) keeps its
+         * real Windows version, its own command line and no crash window -
+         * it must behave exactly as without VistaExt. */
+        if (!runs_here()) return TRUE;
         if (n && n < MAX_PATH) start_watch(exe);
         if (n && n < MAX_PATH && vx_effective_layer(exe, &g_layer)) {
             if (g_layer.ver) apply_version(g_layer.ver);

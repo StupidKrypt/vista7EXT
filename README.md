@@ -39,6 +39,16 @@ The only visible part is **VistaExt's icon in the notification area**. Click it 
 
 **Logs.** Every change VistaExt makes is logged in `%ProgramData%\VistaExt\VistaExt.log` (*View log* in the tray menu); setup in `setup.log` next to it.
 
+**Programs that run by themselves stay as they are.** VistaExt changes only programs that cannot start on this Windows without it: the service checks a program's header and every function it and the DLLs it loads at start need, against Windows' own DLLs. A program that runs by itself (a browser built for Vista, like Supermium) is never set up automatically, whatever else is in its folder, and VistaExt puts no DLL with a Windows name into System32 (its `shcore`, `combase`, `d3d12`, API sets... have names of its own and reach only the programs it runs). Updating from an earlier version takes back what earlier versions set up for programs that run by themselves (not what you chose yourself). Setup programs that run by themselves are no longer told another Windows version unless you turn that on in the tray menu. To give a program VistaExt anyway, right-click it (or its shortcut): **Open with VistaExt compatibility mode**.
+
+**Diagnostics.** VistaExt writes what goes wrong into **`%ProgramData%\VistaExt Diagnostics`** (type it into Explorer's address bar; *Save diagnostics* opens it), as it happens:
+- `events.log`: every program crash, hang or "could not start" Windows reports, also of programs VistaExt does not run, with whether VistaExt runs that program and whether one of its files is the faulting module (the service subscribes to Windows' event log);
+- `decisions.log`: which programs the service set up, and which it left alone because they run by themselves.
+
+Crashes of programs VistaExt runs go to each user's own `%LOCALAPPDATA%\VistaExt` (`crashes.log`, one line each; `crash-details.log` with the program's last message, settings and command line): the crash window runs as the user. The diagnostics folder itself has a protected access list: SYSTEM and Administrators write, every user reads and copies. (A folder every user could write to would let one plant a link there that the service, running as SYSTEM, writes through; an existing folder or link of that name is taken over or removed, and a log file that is a link is not written to.)
+
+**Save diagnostics** (in the VistaExt window, or the tray menu; as administrator) adds a snapshot `report-<date>-<time>`: Windows and hardware, updates, VistaExt's settings, every program it runs with whether it would start without VistaExt, VistaExt's files, running programs, Windows' error log of the last 14 days, each user's crash logs, Windows Error Reporting's reports and minidumps, and Chromium/Electron programs' own Crashpad dumps (last 14 days). Copy the whole folder to send it. Crash dumps can contain what a program had in memory (web pages, for example): look through the folder first. Uninstalling keeps the folder.
+
 ## How it works
 
 | Part | What it does |
@@ -137,7 +147,7 @@ In each VM, `tests/vm/run.cmd` checks:
 - VistaExt Center opens and shows what the program needs
 - `uninstall.cmd` stops and removes nothing while a patched program is running; once it is closed, it restores the patched programs and removes every file, setting and Explorer entry it added
 
-Results so far (Beta 1.2): Vista SP2 x64 211/211, Vista SP2 x86 175/175, Windows 7 SP1 x64 209/209, Windows 7 SP1 x86 173/173, Windows 8 x64 204/204. Updating (`VX_VM_ONLY=upgrade`, from Beta 1 and Beta 1.1) and uninstalling with a restart (`VX_VM_ONLY=uninst`) pass on all five. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
+Results so far (Beta 1.3): Vista SP2 x64 252/252, Vista SP2 x86 213/213, Windows 7 SP1 x64 250/250, Windows 7 SP1 x86 211/211, Windows 8 x64 245/245. Updating (`VX_VM_ONLY=upgrade`, from Beta 1 and Beta 1.1) and uninstalling with a restart (`VX_VM_ONLY=uninst`) pass on all five. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
 
 ### Real programs
 

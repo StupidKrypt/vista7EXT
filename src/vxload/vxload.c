@@ -21,8 +21,14 @@
  * on disk: kernel32.dll -> kernelvx.dll, user32.dll -> uservx.dll, ... and an
  * API-set name api-ms-win-X -> vxs-ms-win-X (VistaExt's own copy of that API
  * set, which Windows' API-set table does not intercept), when that copy
- * exports every function imported from it. The new names are never longer,
- * so they are written in place. Windows' own DLLs keep their imports.
+ * exports every function imported from it. A DLL Windows does not have at
+ * all (shcore.dll, d3d12.dll, combase.dll on Vista and 7, Vista's
+ * bcryptprimitives.dll) is VistaExt's under a name of its own
+ * (companions.h, VX_NEWDLLS), so that programs VistaExt does not run never
+ * find it: here the import is pointed at it, unless Windows has that DLL
+ * after all (Windows 8.1's shcore) or the program ships its own. The new
+ * names are never longer, so they are written in place. Windows' own DLLs
+ * keep their imports.
  *
  * When the program is told another Windows version, two places in Windows'
  * DLLs are changed, in this process only, so that what it reads elsewhere
@@ -142,6 +148,201 @@ static BOOL env_set(const WCHAR *name)
     }
     return FALSE;
 }
+
+#if VX_OS == 601
+/* ---- Windows 7: VistaExt's API sets in this process's API-set map ----------
+ * Windows resolves "api-ms-win-*" names through the API-set map its loader
+ * reads from the PEB (PEB->ApiSetMap, Windows 7 and later; Vista has none
+ * and its DLLs use no API sets). In a program told a newer Windows, Windows'
+ * own DLLs take the newer Windows' paths and load API sets Windows 7 lacks
+ * (its shell, told Windows 10, loads api-ms-win-core-url-l1-1-0 and refuses
+ * to start programs without it). Up to VistaExt 1.2 its api-ms-win-* files
+ * in System32 answered that - for every program, also those VistaExt does
+ * not run. Here, for this process only: a copy of Windows' map with an
+ * entry for each API set Windows lacks and VistaExt has, pointing at its
+ * vxs-ms-* copy in System32. Windows' own entries stay as they are (never
+ * overridden), no file of Windows' is shadowed, and programs this one starts
+ * get Windows' map: the map is per process, not inherited. (The same is done
+ * by VxKex for Windows 7; written here from the format, see tools/apiset.py.)
+ * Version 2 layout: ULONG Version, Count; Count entries {NameOffset,
+ * NameLength, DataOffset}, names without "api-" and ".dll", sorted ignoring
+ * case (the loader searches them by halves); data {Count; {NameOffset,
+ * NameLength, ValueOffset, ValueLength}...}; offsets from the map's start. */
+#ifdef _WIN64
+#define VX_PEB_APISETMAP 0x68
+#else
+#define VX_PEB_APISETMAP 0x38
+#endif
+typedef struct { ULONG NameOffset, NameLength, DataOffset; } apiset_entry2;
+typedef struct { ULONG NameOffset, NameLength, ValueOffset, ValueLength; } apiset_value2;
+
+static WCHAR upw(WCHAR c) { return c >= 'a' && c <= 'z' ? (WCHAR)(c - 32) : c; }
+
+static int name_cmp(const WCHAR *a, ULONG al, const WCHAR *b, ULONG bl)    /* lengths in characters */
+{
+    ULONG i;
+    for (i = 0; i < al && i < bl; i++) {
+        WCHAR x = upw(a[i]), y = upw(b[i]);
+        if (x != y) return x < y ? -1 : 1;
+    }
+    return al == bl ? 0 : al < bl ? -1 : 1;
+}
+
+#define MAX_NEW_SETS 400
+static void extend_apiset_map(void)
+{
+    static BYTE listing[65536];
+    static struct { WCHAR name[80]; ULONG len; } add[MAX_NEW_SETS];
+    static ULONG order[64 + MAX_NEW_SETS * 2];
+    BYTE *peb = (BYTE *)NtCurrentTeb()->Peb, *old = *(BYTE **)(peb + VX_PEB_APISETMAP), *map, *p;
+    const WCHAR *root = VX_KUSER_SYSTEM_ROOT;
+    static WCHAR dir[300];
+    UNICODE_STRING us, mask;
+    OBJECT_ATTRIBUTES oa;
+    IO_STATUS_BLOCK io;
+    HANDLE h;
+    NTSTATUS st;
+    ULONG oc, nadd = 0, i, j, total, oldsize = 0, k;
+    SIZE_T n = 0, size;
+    BOOL first = TRUE;
+    apiset_entry2 *oe, *ne;
+    if (!old || ((ULONG *)old)[0] != 2 || (oc = ((ULONG *)old)[1]) == 0 || oc > 64) return;   /* not Windows 7's map */
+    oe = (apiset_entry2 *)(old + 8);
+    /* the old map's size: up to its furthest string or value */
+    for (i = 0; i < oc; i++) {
+        apiset_value2 *v = (apiset_value2 *)(old + oe[i].DataOffset + 4);
+        ULONG vc = *(ULONG *)(old + oe[i].DataOffset);
+        if (oe[i].NameOffset + oe[i].NameLength > oldsize) oldsize = oe[i].NameOffset + oe[i].NameLength;
+        if (oe[i].DataOffset + 4 + vc * sizeof(apiset_value2) > oldsize) oldsize = oe[i].DataOffset + 4 + vc * sizeof(apiset_value2);
+        for (j = 0; j < vc && vc < 16; j++) {
+            if (v[j].NameOffset + v[j].NameLength > oldsize) oldsize = v[j].NameOffset + v[j].NameLength;
+            if (v[j].ValueOffset + v[j].ValueLength > oldsize) oldsize = v[j].ValueOffset + v[j].ValueLength;
+        }
+    }
+    /* VistaExt's copies: System32\vxs-ms-*.dll (SysWOW64 in a 32-bit process:
+     * the file system redirection applies here too) */
+    for (; root[n] && n < 250; n++) dir[n] = root[n];
+    for (i = 0; "\\System32"[i]; i++) dir[n++] = "\\System32"[i];
+    {
+        static WCHAR full[320];
+        SIZE_T f = 0;
+        for (i = 0; "\\??\\"[i]; i++) full[f++] = "\\??\\"[i];
+        for (i = 0; i < n; i++) full[f++] = dir[i];
+        us.Buffer = full; us.Length = (USHORT)(f * sizeof(WCHAR)); us.MaximumLength = us.Length;
+    }
+    InitializeObjectAttributes(&oa, &us, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    if (NtOpenFile(&h, FILE_LIST_DIRECTORY | SYNCHRONIZE, &oa, &io, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                   FILE_SYNCHRONOUS_IO_NONALERT | FILE_DIRECTORY_FILE) < 0) return;
+    mask.Buffer = (PWSTR)L"vxs-ms-*.dll";
+    mask.Length = 12 * sizeof(WCHAR);
+    mask.MaximumLength = mask.Length;
+    for (;;) {
+        FILE_NAMES_INFORMATION *fi;
+        st = NtQueryDirectoryFile(h, NULL, NULL, NULL, &io, listing, sizeof(listing), FileNamesInformation, FALSE,
+                                  first ? &mask : NULL, first);
+        first = FALSE;
+        if (st < 0) break;
+        for (fi = (FILE_NAMES_INFORMATION *)listing; ; fi = (FILE_NAMES_INFORMATION *)((BYTE *)fi + fi->NextEntryOffset)) {
+            ULONG len = fi->FileNameLength / sizeof(WCHAR);
+            /* "vxs-ms-win-core-url-l1-1-0.dll": the set is "ms-win-core-url-l1-1-0" */
+            if (len > 8 && len <= 80 && nadd < MAX_NEW_SETS) {
+                BOOL have = FALSE;
+                const WCHAR *nm = fi->FileName + 4;
+                ULONG nl = len - 8;
+                for (i = 0; i < oc && !have; i++)
+                    have = !name_cmp(nm, nl, (const WCHAR *)(old + oe[i].NameOffset), oe[i].NameLength / sizeof(WCHAR));
+                if (!have) {                              /* Windows' own entry stays */
+                    for (i = 0; i < len && i < 80; i++) add[nadd].name[i] = fi->FileName[i];
+                    add[nadd].len = len;                  /* the whole file name; the set name is [4, len - 4) */
+                    nadd++;
+                }
+            }
+            if (!fi->NextEntryOffset) break;
+        }
+    }
+    NtClose(h);
+    if (!nadd) return;
+    /* the new map: header and entries, then the old map's bytes (its strings
+     * and values, their offsets moved along), then the new names, values
+     * and host names */
+    total = oc + nadd;
+    {
+        ULONG head = 8 + total * sizeof(apiset_entry2), base = (head + 7) & ~7u, tail = base + ((oldsize + 7) & ~7u);
+        SIZE_T need = tail + nadd * (80 * 2 + 4 + sizeof(apiset_value2) + 80 * 2 + 16);
+        BYTE *q;
+        void *mem = NULL;
+        size = need;
+        if (NtAllocateVirtualMemory(NtCurrentProcess(), &mem, 0, &size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE) < 0) return;
+        map = mem;
+        ((ULONG *)map)[0] = 2;
+        ((ULONG *)map)[1] = total;
+        for (i = 0; i < oldsize; i++) map[base + i] = old[i];
+        /* entries, sorted: merge the old (sorted) and the new names; each
+         * as {index < oc: old entry, else new} in order[] */
+        for (i = 0; i < total; i++) order[i] = i;
+        for (i = 1; i < total; i++) {                       /* insertion sort, a few hundred names */
+            ULONG x = order[i];
+            const WCHAR *xn = x < oc ? (const WCHAR *)(old + oe[x].NameOffset) : add[x - oc].name + 4;
+            ULONG xl = x < oc ? oe[x].NameLength / sizeof(WCHAR) : add[x - oc].len - 8;
+            for (j = i; j > 0; j--) {
+                ULONG y = order[j - 1];
+                const WCHAR *yn = y < oc ? (const WCHAR *)(old + oe[y].NameOffset) : add[y - oc].name + 4;
+                ULONG yl = y < oc ? oe[y].NameLength / sizeof(WCHAR) : add[y - oc].len - 8;
+                if (name_cmp(yn, yl, xn, xl) <= 0) break;
+                order[j] = y;
+            }
+            order[j] = x;
+        }
+        ne = (apiset_entry2 *)(map + 8);
+        q = map + tail;
+        /* the old values: their offsets move by "base" (each value array once) */
+        for (i = 0; i < oc; i++) {
+            ULONG vc = *(ULONG *)(map + base + oe[i].DataOffset);
+            apiset_value2 *v = (apiset_value2 *)(map + base + oe[i].DataOffset + 4);
+            BOOL done = FALSE;
+            for (k = 0; k < i && !done; k++) done = oe[k].DataOffset == oe[i].DataOffset;
+            if (done || vc >= 16) continue;
+            for (j = 0; j < vc; j++) { v[j].NameOffset += base; v[j].ValueOffset += base; }
+        }
+        for (i = 0; i < total; i++) {
+            ULONG x = order[i];
+            if (x < oc) {
+                ne[i].NameOffset = oe[x].NameOffset + base;
+                ne[i].NameLength = oe[x].NameLength;
+                ne[i].DataOffset = oe[x].DataOffset + base;
+            } else {
+                const WCHAR *fn = add[x - oc].name;
+                ULONG fl = add[x - oc].len, nl = fl - 8, o;
+                apiset_value2 *v;
+                /* the set's name */
+                ne[i].NameOffset = (ULONG)(q - map);
+                ne[i].NameLength = nl * sizeof(WCHAR);
+                for (o = 0; o < nl; o++) ((WCHAR *)q)[o] = fn[4 + o];
+                q += (nl * sizeof(WCHAR) + 7) & ~7u;
+                /* its value: the host is VistaExt's copy, by its file name */
+                ne[i].DataOffset = (ULONG)(q - map);
+                *(ULONG *)q = 1;
+                v = (apiset_value2 *)(q + 4);
+                q += (4 + sizeof(apiset_value2) + 7) & ~7u;
+                v->NameOffset = 0;
+                v->NameLength = 0;
+                v->ValueOffset = (ULONG)(q - map);
+                v->ValueLength = fl * sizeof(WCHAR);
+                for (o = 0; o < fl; o++) ((WCHAR *)q)[o] = fn[o];
+                q += (fl * sizeof(WCHAR) + 7) & ~7u;
+            }
+        }
+        {   /* read-only, like Windows' own map */
+            ULONG oldprot;
+            void *pp = mem;
+            SIZE_T ps = size;
+            NtProtectVirtualMemory(NtCurrentProcess(), &pp, &ps, PAGE_READONLY, &oldprot);
+        }
+        *(BYTE **)(peb + VX_PEB_APISETMAP) = map;
+        trace_hex("API sets added to this process's map:", nadd);
+    }
+}
+#endif
 
 /* write into a (read-only, copy-on-write) page of a loaded image; its own
  * protection is put back afterwards */
@@ -416,6 +617,68 @@ static const struct { const char *from, *to; BOOL ordinals; } g_map[] = {
 #undef VX_COMPANION
 };
 
+/* DLLs Windows lacks, VistaExt's under its own names; state: 0 not yet
+ * looked at, 1 VistaExt's copy is used, 2 Windows has the DLL itself */
+static struct { const char *from, *to; int state; } g_new[] = {
+#define VX_NEWDLL(dll, priv) { #dll ".dll", #priv ".dll", 0 },
+    VX_NEWDLLS
+#undef VX_NEWDLL
+};
+
+/* does <dir (count characters)>\<name> exist? dir: a Win32 path */
+static BOOL file_in(const WCHAR *dir, SIZE_T count, const char *name)
+{
+    static WCHAR path[700];
+    UNICODE_STRING us;
+    OBJECT_ATTRIBUTES oa;
+    FILE_BASIC_INFORMATION fbi;
+    SIZE_T n = 0, i;
+    if (count > 500 || slen(name) > 100) return FALSE;
+    for (i = 0; "\\??\\"[i]; i++) path[n++] = "\\??\\"[i];
+    for (i = 0; i < count; i++) path[n++] = dir[i];
+    path[n++] = '\\';
+    for (i = 0; name[i]; i++) path[n++] = (unsigned char)name[i];
+    path[n] = 0;
+    us.Buffer = path;
+    us.Length = (USHORT)(n * sizeof(WCHAR));
+    us.MaximumLength = us.Length + sizeof(WCHAR);
+    InitializeObjectAttributes(&oa, &us, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    return NtQueryAttributesFile(&oa, &fbi) >= 0;
+}
+
+/* the program's own folder: the .exe's (where the loader looks first) */
+static BOOL in_program_dir(const char *name)
+{
+    UNICODE_STRING img = NtCurrentTeb()->Peb->ProcessParameters->ImagePathName;
+    SIZE_T n = img.Length / sizeof(WCHAR);
+    const WCHAR *b = img.Buffer;
+    if (n > 4 && b[0] == '\\' && b[1] == '?' && b[2] == '?' && b[3] == '\\') { b += 4; n -= 4; }
+    while (n && b[n - 1] != '\\') n--;
+    return n > 1 && file_in(b, n - 1, name);
+}
+
+static const char *newdll_target(const char *dll)
+{
+    unsigned m;
+    for (m = 0; m < sizeof(g_new) / sizeof(g_new[0]); m++) {
+        const WCHAR *root = VX_KUSER_SYSTEM_ROOT;
+        SIZE_T n = 0;
+        static WCHAR sys[300];
+        if (!ieq(dll, g_new[m].from)) continue;
+        if (!g_new[m].state) {
+            /* System32 (SysWOW64 in a 32-bit process: the file system
+             * redirection applies to this call too) */
+            for (; root[n] && n < 250; n++) sys[n] = root[n];
+            sys[n++] = '\\'; sys[n++] = 'S'; sys[n++] = 'y'; sys[n++] = 's'; sys[n++] = 't'; sys[n++] = 'e';
+            sys[n++] = 'm'; sys[n++] = '3'; sys[n++] = '2';
+            g_new[m].state = file_in(sys, n, g_new[m].from) ? 2 : 1;
+        }
+        if (g_new[m].state == 2 || in_program_dir(g_new[m].from)) return NULL;
+        return g_new[m].to;
+    }
+    return NULL;
+}
+
 /* the new name for one import (NULL: leave it) */
 static const char *target(const char *dll, const thunks *t, char *buf)
 {
@@ -427,6 +690,10 @@ static const char *target(const char *dll, const thunks *t, char *buf)
         if (!g_map[m].ordinals)
             for (k = 0; thunk_at(t, k, &nm); k++) if (!nm) return NULL;   /* by number: the companion may differ */
         return g_map[m].to;
+    }
+    {
+        const char *nd = newdll_target(dll);
+        if (nd) return nd;
     }
     if ((lc(dll[0]) == 'a' && lc(dll[1]) == 'p' && lc(dll[2]) == 'i' && dll[3] == '-') ||
         (lc(dll[0]) == 'e' && lc(dll[1]) == 'x' && lc(dll[2]) == 't' && dll[3] == '-'))
@@ -1226,6 +1493,9 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
             if (!env_set(L"VX_NO_REGHOOK")) { g_hooks_on = TRUE; version_hooks(); }
 #if VX_OS >= 602 || VX_OS == 0
             map_hook();
+#endif
+#if VX_OS == 601
+            extend_apiset_map();
 #endif
             rewrite((BYTE *)NtCurrentTeb()->Peb->ImageBaseAddress);
             LdrRegisterDllNotification(0, dll_notification, NULL, &g_cookie);

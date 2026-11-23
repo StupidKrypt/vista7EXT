@@ -138,6 +138,7 @@ int wmain(int argc, WCHAR **argv)
             con_print(L"%s: %s\r\n", full, rec[0] ? rec : L"no special settings needed");
         }
         if (!mode_chosen) flags = (flags & ~VXP_MEMORY) | vxp_mode_for(full);
+        flags |= VXP_USER;              /* asked for on the command line: the user's choice */
         if (attr & FILE_ATTRIBUTE_DIRECTORY) {
             SIZE_T n = vx_wcslen(full);
             if (n && full[n - 1] == '\\') full[--n] = 0;

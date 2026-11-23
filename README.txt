@@ -91,6 +91,27 @@ COMMAND LINE
   msifix.exe /install <package.msi>          fix and install a package
   vxauto.exe /scan                           make all installed programs work now
 
+PROGRAMS THAT ALREADY WORK
+  VistaExt changes only programs that cannot start on this Windows without
+  it. A program that runs by itself (for example a browser built for
+  Vista) is left exactly as it is, and VistaExt puts no DLL with a Windows
+  name into the system folder. To give a program VistaExt anyway,
+  right-click it: "Open with VistaExt compatibility mode".
+
+DIAGNOSTICS (when something goes wrong)
+  VistaExt writes errors as they happen into
+     %ProgramData%\VistaExt Diagnostics
+  (type that into Explorer's address bar; "Save diagnostics" opens it)
+  events.log      every program crash or "could not start" Windows reports
+  decisions.log   which programs VistaExt set up, and which it left alone
+  Crashes of programs VistaExt runs go to each user's
+  %LOCALAPPDATA%\VistaExt (crashes.log, crash-details.log).
+  After testing, click "Save diagnostics" in the VistaExt window (Start
+  menu) or the tray icon's menu: it adds a full snapshot (report-<date>)
+  with every user's crash logs, and opens the folder. Then copy the whole
+  folder and send it. Crash dumps in it can contain what a program had
+  open (web pages): look through it first.
+
 UNINSTALL
   Start menu -> VistaExt -> Uninstall VistaExt, or Programs and Features
   -> VistaExt -> Uninstall (or VistaExtSetup.exe /uninstall; /quiet for no

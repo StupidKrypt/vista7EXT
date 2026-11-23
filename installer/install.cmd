@@ -80,6 +80,10 @@ set ADDED=0
 set KEPT=0
 set FAILED=0
 set INUSE=0
+set REMOVED=0
+rem what this install puts in place (installed.txt is replaced by it at the end)
+set "NEWLIST=%VX%\installed.new"
+type nul > "%NEWLIST%"
 rem switched off (an update while VistaExt is off): its system files wait in
 rem VistaExt.off; the new ones go there too, and it stays off
 set "ISOFF="
@@ -106,8 +110,21 @@ if "%NATIVE%"=="x64" (
 rem the crash window, started by kernelvx from the program's own system folder
 call :install_file "%SRC%\%NATIVE%\vxwatch.exe" "%windir%\System32\vxwatch.exe"
 if "%NATIVE%"=="x64" call :install_file "%SRC%\x86\vxwatch.exe" "%windir%\SysWOW64\vxwatch.exe"
+rem What an earlier version installed and this one no longer has goes (only
+rem VistaExt's own files, by the marker). Since 1.3 VistaExt puts nothing with
+rem a Windows name into System32 (combase.dll, shcore.dll, d3d12.dll, Vista's
+rem kernelbase.dll and bcryptprimitives.dll, api-ms-win-*.dll): those of an
+rem earlier version are removed here, so programs VistaExt does not run see
+rem exactly what Windows has.
+if exist "%LIST%" for /f "usebackq delims=" %%f in ("%LIST%") do (
+    findstr /i /x /c:"%%f" "%NEWLIST%" >nul 2>&1 || call :remove_stale "%%f"
+)
+copy /y "%NEWLIST%" "%LIST%" >nul && del /f /q "%NEWLIST%" >nul 2>&1
 
 echo Installing the tools to %VX% ...
+rem an update keeps the earlier choice: installed without the automatic mode
+rem (no service), it stays without
+if exist "%VX%\vxauto.exe" sc query VistaExtAuto >nul 2>&1 || set "NOAUTO=1"
 rem a running service holds vxauto.exe, a tray icon vxtray.exe: stop them before updating
 if exist "%VX%\vxauto.exe" "%VX%\vxauto.exe" /uninstall >nul 2>&1
 taskkill /f /im vxtray.exe >nul 2>&1
@@ -123,15 +140,21 @@ reg query "HKLM\SOFTWARE\VistaExt" /v Version >nul 2>&1 || reg add "HKLM\SOFTWAR
 if exist "%HERE%VistaExtSetup.exe" call :install_tool "%HERE%VistaExtSetup.exe" "%VX%\VistaExtSetup.exe"
 call :install_tool "%HERE%webview2\vx-webview2-setup.cmd" "%VX%\vx-webview2-setup.cmd"
 call :install_tool "%HERE%uninstall.cmd" "%VX%\uninstall.cmd"
+call :install_tool "%HERE%vx-diagnostics.cmd" "%VX%\vx-diagnostics.cmd"
 if exist "%HERE%README.txt" call :install_tool "%HERE%README.txt" "%VX%\README.txt"
 start "" /wait "%VX%\vxcenter.exe" /register
+rem Programs an earlier version made compatible are looked at again with this
+rem version's rules: one that runs on this Windows by itself is put back as it
+rem was (unless the user chose it), and patched files get this version's DLL
+rem names. While switched off this happens when it is switched on.
+if not defined ISOFF "%VX%\vxauto.exe" /review
 
 rem Add/Remove Programs (Programs and Features)
 set "ARP=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VistaExt"
 set "UNINST=cmd.exe /c \"\"%VX%\uninstall.cmd\"\""
 if exist "%VX%\VistaExtSetup.exe" set "UNINST=\"%VX%\VistaExtSetup.exe\" /uninstall"
 reg add "%ARP%" /v DisplayName /d "VistaExt" /f >nul
-reg add "%ARP%" /v DisplayVersion /d "1.2.0 (Beta 1.2)" /f >nul
+reg add "%ARP%" /v DisplayVersion /d "1.3.0 (Beta 1.3)" /f >nul
 reg add "%ARP%" /v Publisher /d "VistaExt project" /f >nul
 reg add "%ARP%" /v DisplayIcon /d "%VX%\vxcenter.exe" /f >nul
 reg add "%ARP%" /v InstallLocation /d "%VX%" /f >nul
@@ -143,12 +166,17 @@ rem automatic mode: newly installed and updated programs are made compatible
 rem by a background service (vxauto); /noauto leaves it out
 if not defined NOAUTO "%VX%\vxauto.exe" /install
 
+rem old copies a running program still has (renamed above, <name>.vxoldN):
+rem deleted now, or when Windows restarts
+"%VX%\vxauto.exe" /tidy
+
 rem the tray icon starts with Windows for every user ("Start with Windows"
 rem in its menu turns that off for one user)
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v VistaExt /d "\"%VX%\vxtray.exe\" /autostart" /f >nul
 
 echo.
 echo   !ADDED! file(s) added or updated, !KEPT! already present on this Windows (left alone), !FAILED! failed.
+if not "!REMOVED!"=="0" echo   !REMOVED! file(s) of an earlier version removed ^(no longer part of VistaExt^).
 if not "!FAILED!"=="0" echo   Some files could not be written. Close all programs (or restart) and run install.cmd again.
 if not "!INUSE!"=="0" echo   !INUSE! file(s) were in use by running programs: they use the new version once restarted. Restart Windows to finish.
 if defined ISOFF echo   VistaExt is switched off, as it was before: turn it on in VistaExt ^(Start menu^).
@@ -186,14 +214,56 @@ if "!OURS!"=="0" (
     set /a KEPT+=1
     goto :eof
 )
+rem still VistaExt's after this install, also if it cannot be replaced now
+>>"%NEWLIST%" echo %~2
 rem Copied next to the target first, then renamed into place: a rename on the
 rem same disk is all or nothing, so a full disk or a power cut never leaves a
 rem half-written DLL in the system folder (Windows' own programs can load the
 rem API-set ones). (copy's and move's own results: they do not reset
 rem ERRORLEVEL on success.)
 call :put "%~1" "!DEST!" || goto :eof
-findstr /i /x /c:"%~2" "%LIST%" >nul 2>&1 || >>"%LIST%" echo %~2
 set /a ADDED+=1
+goto :eof
+
+rem remove_stale <path>: a file an earlier version installed that this one
+rem does not have; also its copy in VistaExt.off (switched off). Only if it
+rem is VistaExt's own. One a running program has loaded is renamed and
+rem deleted at the restart (VistaExtSetup.exe schedules it from this line).
+:remove_stale
+for %%p in ("%~1" "%~dp1VistaExt.off\%~nx1") do if exist "%%~p" (
+    findstr /m /l /c:"VistaExt-owned-file" "%%~p" >nul 2>&1 && call :remove_one "%%~p"
+)
+rem one that could not go stays listed, so that uninstalling removes it later
+for %%p in ("%~1" "%~dp1VistaExt.off\%~nx1") do if exist "%%~p" (
+    findstr /m /l /c:"VistaExt-owned-file" "%%~p" >nul 2>&1 && (
+        findstr /i /x /c:"%~1" "%NEWLIST%" >nul 2>&1 || >>"%NEWLIST%" echo %~1
+    )
+)
+goto :eof
+
+:remove_one
+del /f /q "%~1" >nul 2>&1
+if not exist "%~1" (
+    echo   removed, no longer part of VistaExt: %~1
+    set /a REMOVED+=1
+    goto :eof
+)
+call :aside "%~1"
+if defined ASIDE (
+    echo   in use, removed; old copy deleted at restart: !ASIDE!
+    set /a REMOVED+=1
+    set /a INUSE+=1
+) else echo   could not remove ^(in use^): %~1
+goto :eof
+
+rem aside <path>: renames it to <path>.vxoldN (a loaded DLL can be renamed);
+rem ASIDE = the new name, or empty if that failed
+:aside
+set "ASIDE="
+for /l %%i in (1,1,20) do if not defined ASIDE (
+    if exist "%~1.vxold%%i" del /f /q "%~1.vxold%%i" >nul 2>&1
+    if not exist "%~1.vxold%%i" ren "%~1" "%~nx1.vxold%%i" >nul 2>&1 && set "ASIDE=%~1.vxold%%i"
+)
 goto :eof
 
 rem install_tool <source> <target>: one of VistaExt's own files in its folder
@@ -216,11 +286,7 @@ copy /y "%~1" "%~2.vxnew" >nul 2>&1 || (
     exit /b 1
 )
 move /y "%~2.vxnew" "%~2" >nul 2>&1 && exit /b 0
-set "ASIDE="
-for /l %%i in (1,1,20) do if not defined ASIDE (
-    if exist "%~2.vxold%%i" del /f /q "%~2.vxold%%i" >nul 2>&1
-    if not exist "%~2.vxold%%i" ren "%~2" "%~nx2.vxold%%i" >nul 2>&1 && set "ASIDE=%~2.vxold%%i"
-)
+call :aside "%~2"
 if defined ASIDE move /y "%~2.vxnew" "%~2" >nul 2>&1 && (
     echo   in use, replaced; old copy deleted at restart: !ASIDE!
     set /a INUSE+=1

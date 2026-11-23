@@ -16,6 +16,8 @@
                                nothing itself (a DLL next to it does) */
 #define VXP_SETUP     0x80  /* in-memory mode: registered as a setup program (its new helper
                                programs are told the same version, see vxauto) */
+#define VXP_USER      0x100 /* in-memory mode: the user chose this program (right-click, VistaExt's
+                               window, vxpatch): never taken back because it would run without */
 #define VXP_LAYER     0x10  /* a Windows version setting is in effect: version.dll
                                imports go to versvx in every file (programs that
                                read kernel32's file version) */
@@ -63,6 +65,14 @@ BOOL  vxp_memory_available(void);
 DWORD vxp_default_mode(void);
 BOOL  vxp_memory_registered(const WCHAR *path);
 BOOL  vxp_folder_needs(const WCHAR *file);
+/* Can this program start on this Windows without VistaExt? Its header, and
+ * every function it and the DLLs it loads at start (from its own folder)
+ * import, not counting imports loaded on demand (delay-loaded: programs
+ * check those first) or VistaExt's own files. FALSE: why[] says what is
+ * missing. A program that runs by itself is never changed automatically. */
+BOOL  vxp_runs_natively(const WCHAR *exe, WCHAR *why, SIZE_T cch);
+/* registered for the in-memory mode by the user's choice (VXP_USER) */
+BOOL  vxp_user_registered(const WCHAR *path);
 /* the mode for this program or folder (file mode for sandboxed Gecko programs) */
 DWORD vxp_mode_for(const WCHAR *path);
 void vxp_reimpersonate(HANDLE token);

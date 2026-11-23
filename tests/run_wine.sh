@@ -109,7 +109,7 @@ PY
     expect "$out vxpatch patches the program" 0 $rc
     python3 -I tools/peexp.py "$W/app/vxtest.exe" imports | grep -v '^    '
     # Wine searches the program folder first, so the companions go there
-    cp "$O"/kernelvx.dll "$O"/uservx.dll "$O"/advapivx.dll "$O"/shellvx.dll "$O"/versvx.dll "$O"/ntvx.dll "$O"/cfgmgrvx.dll "$O"/ws2vx.dll "$O"/dxvx.dll "$O"/dnsvx.dll "$O"/winhtvx.dll "$O"/uenvvx.dll "$O"/d3d12.dll "$W/app/"
+    cp "$O"/kernelvx.dll "$O"/uservx.dll "$O"/advapivx.dll "$O"/shellvx.dll "$O"/versvx.dll "$O"/ntvx.dll "$O"/cfgmgrvx.dll "$O"/ws2vx.dll "$O"/dxvx.dll "$O"/dnsvx.dll "$O"/winhtvx.dll "$O"/uenvvx.dll "$O"/d3dvx.dll "$W/app/"
 
     note "$out: patched program, VistaExt's own versions also of functions an update can add (VX_NO_NATIVE=1)"
     VX_NO_NATIVE=1 wine "$W/app/vxtest.exe"; expect "$out patched program, VistaExt code" 0 $?

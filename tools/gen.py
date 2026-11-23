@@ -42,6 +42,31 @@ APISET_EXTRA['api-ms-win-core-psm-appnotify-l1-1-0'] = {'RegisterAppStateChangeN
 SKIP_TARGETS = {'ole'}
 COMPANIONS = set(TARGET_MAP.values()) | {'combase', 'shcore', 'gdi32'}
 
+# DLLs this Windows does not have, which VistaExt builds under names of its
+# own (src/common/companions.h, VX_NEWDLLS): programs VistaExt does not run
+# must never find a "shcore.dll" Windows lacks. Every forwarder to one of
+# them, and its own library name, uses the private name. (Vista has no
+# kernelbase: kernelvx is what VistaExt's kernelbase would forward to.)
+PRIVATE = {
+    'vista': {'combase': 'combvx', 'shcore': 'shcrvx', 'd3d12': 'd3dvx', 'kernelbase': 'kernelvx',
+              'bcryptprimitives': 'bcryptprimvx'},
+    'win7': {'combase': 'combvx', 'shcore': 'shcrvx', 'd3d12': 'd3dvx'},
+    'win8': {'shcore': 'shcrvx', 'd3d12': 'd3dvx'},
+}
+_OS = None      # this run's Windows (set from --os)
+
+
+def private(dll):
+    """The file name VistaExt gives <dll> on this build's Windows."""
+    return PRIVATE.get(_OS, {}).get(dll.lower(), dll)
+
+
+def private_fwd(target):
+    """'combase.RoInitialize' -> 'combvx.RoInitialize' where combase is VistaExt's."""
+    dll, _, func = target.partition('.')
+    return '%s.%s' % (private(dll), func) if func else target
+
+
 LINE = re.compile(r'^\s*(@|\d+)\s+(\w+)\s+(.*)$')
 
 
@@ -314,14 +339,15 @@ def write_def(path, libname, impl, fwd, ords=None, by_number=None):
     """by_number: {ordinal: 'dll.#ordinal'} exported without a name."""
     ords = ords or {}
     with open(path, 'w') as o:
-        o.write('LIBRARY %s\nEXPORTS\n' % libname)
+        base, ext = os.path.splitext(libname)
+        o.write('LIBRARY %s\nEXPORTS\n' % (private(base) + ext))
         for n in sorted(impl):
             o.write('  %s=%s%s\n' % (n, impl[n], ' @%d' % ords[n] if n in ords else ''))
         for n in sorted(fwd):
             if n not in impl:
-                o.write('  %s = %s%s\n' % (n, fwd[n], ' @%d' % ords[n] if n in ords else ''))
+                o.write('  %s = %s%s\n' % (n, private_fwd(fwd[n]), ' @%d' % ords[n] if n in ords else ''))
         for num in sorted(by_number or {}):
-            o.write('  __vxord_%d = %s @%d NONAME\n' % (num, by_number[num], num))
+            o.write('  __vxord_%d = %s @%d NONAME\n' % (num, private_fwd(by_number[num]), num))
 
 
 def keep_ordinals(comp, arch, impl, fwd, os_=None):
@@ -382,7 +408,7 @@ def host_exports(bindir, dll):
     """Export names of a DLL this build makes (a VistaExt companion), or of
     nothing for a system DLL that has none here."""
     if dll not in _HOST_EXPORTS:
-        p = os.path.join(bindir, dll + '.dll')
+        p = os.path.join(bindir, private(dll) + '.dll')
         _HOST_EXPORTS[dll] = set(PE(p).exports()) if os.path.exists(p) else set()
     return _HOST_EXPORTS[dll]
 
@@ -453,5 +479,12 @@ if __name__ == '__main__':
     s.add_argument('--outdir', required=True)
     s.add_argument('--os', required=True, choices=('vista', 'win7', 'win8'))
     s.add_argument('--bindir', required=True, help='this build\'s folder with kernelvx.dll')
+    pv = sub.add_parser('private', help='print the file name VistaExt gives a DLL on this Windows (build.sh)')
+    pv.add_argument('--os', required=True, choices=('vista', 'win7', 'win8'))
+    pv.add_argument('dll')
     a = ap.parse_args()
-    {'component': cmd_component, 'apisets': cmd_apisets}[a.cmd](a)
+    _OS = a.os
+    if a.cmd == 'private':
+        print(private(a.dll))
+    else:
+        {'component': cmd_component, 'apisets': cmd_apisets}[a.cmd](a)

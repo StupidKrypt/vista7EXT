@@ -13,7 +13,7 @@ for os in vista win7 win8; do
         cp out/$os-$a/apisets/*.dll "$D/$os/$a/apisets/"
     done
 done
-cp installer/install.cmd installer/uninstall.cmd "$D/"
+cp installer/install.cmd installer/uninstall.cmd installer/vx-diagnostics.cmd "$D/"
 cp webview2/vx-webview2-setup.cmd "$D/webview2/"
 cp README.txt LICENSE.txt KNOWN_RISKS.md "$D/" 2>/dev/null || true
 # Windows batch files and text files need CRLF line endings
