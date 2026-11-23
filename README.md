@@ -147,7 +147,7 @@ In each VM, `tests/vm/run.cmd` checks:
 - VistaExt Center opens and shows what the program needs
 - `uninstall.cmd` stops and removes nothing while a patched program is running; once it is closed, it restores the patched programs and removes every file, setting and Explorer entry it added
 
-Results so far (Beta 1.3): Vista SP2 x64 252/252, Vista SP2 x86 213/213, Windows 7 SP1 x64 250/250, Windows 7 SP1 x86 211/211, Windows 8 x64 245/245. Updating (`VX_VM_ONLY=upgrade`, from Beta 1 and Beta 1.1) and uninstalling with a restart (`VX_VM_ONLY=uninst`) pass on all five. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
+Results so far (Beta 1.3): Vista SP2 x64 253/253, Vista SP2 x86 214/214, Windows 7 SP1 x64 251/251, Windows 7 SP1 x86 212/212, Windows 8 x64 246/246. Updating (`VX_VM_ONLY=upgrade`, from Beta 1 and Beta 1.1) and uninstalling with a restart (`VX_VM_ONLY=uninst`) pass on all five. That includes the in-memory mode, the crash window, the performance measurements, the global version through every API, the registry and WMI, setups in Downloads and their helpers, the on/off switch and Safe Mode (Windows restarts twice). The 64-bit VMs have Microsoft's C runtime update installed, as users have it.
 
 ### Real programs
 

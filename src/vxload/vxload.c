@@ -149,8 +149,8 @@ static BOOL env_set(const WCHAR *name)
     return FALSE;
 }
 
-#if VX_OS == 601
-/* ---- Windows 7: VistaExt's API sets in this process's API-set map ----------
+#if VX_OS == 601 || VX_OS == 602
+/* ---- Windows 7 and 8: VistaExt's API sets in this process's API-set map ----
  * Windows resolves "api-ms-win-*" names through the API-set map its loader
  * reads from the PEB (PEB->ApiSetMap, Windows 7 and later; Vista has none
  * and its DLLs use no API sets). In a program told a newer Windows, Windows'
@@ -164,6 +164,9 @@ static BOOL env_set(const WCHAR *name)
  * overridden), no file of Windows' is shadowed, and programs this one starts
  * get Windows' map: the map is per process, not inherited. (The same is done
  * by VxKex for Windows 7; written here from the format, see tools/apiset.py.)
+ * Windows 7 and Windows 8 (RTM, build 9200) both use version 2 - checked in
+ * their apisetschema.dll (7: 35 sets, 8: 356, both api- and ext- sets with
+ * the prefix left out). Another version (8.1's) is left alone.
  * Version 2 layout: ULONG Version, Count; Count entries {NameOffset,
  * NameLength, DataOffset}, names without "api-" and ".dll", sorted ignoring
  * case (the loader searches them by halves); data {Count; {NameOffset,
@@ -193,7 +196,7 @@ static void extend_apiset_map(void)
 {
     static BYTE listing[65536];
     static struct { WCHAR name[80]; ULONG len; } add[MAX_NEW_SETS];
-    static ULONG order[64 + MAX_NEW_SETS * 2];
+    static ULONG order[1024 + MAX_NEW_SETS];
     BYTE *peb = (BYTE *)NtCurrentTeb()->Peb, *old = *(BYTE **)(peb + VX_PEB_APISETMAP), *map, *p;
     const WCHAR *root = VX_KUSER_SYSTEM_ROOT;
     static WCHAR dir[300];
@@ -206,7 +209,7 @@ static void extend_apiset_map(void)
     SIZE_T n = 0, size;
     BOOL first = TRUE;
     apiset_entry2 *oe, *ne;
-    if (!old || ((ULONG *)old)[0] != 2 || (oc = ((ULONG *)old)[1]) == 0 || oc > 64) return;   /* not Windows 7's map */
+    if (!old || ((ULONG *)old)[0] != 2 || (oc = ((ULONG *)old)[1]) == 0 || oc > 1024) return;   /* not a version 2 map */
     oe = (apiset_entry2 *)(old + 8);
     /* the old map's size: up to its furthest string or value */
     for (i = 0; i < oc; i++) {
@@ -219,8 +222,9 @@ static void extend_apiset_map(void)
             if (v[j].ValueOffset + v[j].ValueLength > oldsize) oldsize = v[j].ValueOffset + v[j].ValueLength;
         }
     }
-    /* VistaExt's copies: System32\vxs-ms-*.dll (SysWOW64 in a 32-bit process:
-     * the file system redirection applies here too) */
+    /* VistaExt's copies: System32\vxs-ms-*.dll for api-ms-* and vxe-ms-*.dll
+     * for ext-ms-* (SysWOW64 in a 32-bit process: the file system
+     * redirection applies here too); the map holds both without the prefix */
     for (; root[n] && n < 250; n++) dir[n] = root[n];
     for (i = 0; "\\System32"[i]; i++) dir[n++] = "\\System32"[i];
     {
@@ -233,7 +237,7 @@ static void extend_apiset_map(void)
     InitializeObjectAttributes(&oa, &us, OBJ_CASE_INSENSITIVE, NULL, NULL);
     if (NtOpenFile(&h, FILE_LIST_DIRECTORY | SYNCHRONIZE, &oa, &io, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                    FILE_SYNCHRONOUS_IO_NONALERT | FILE_DIRECTORY_FILE) < 0) return;
-    mask.Buffer = (PWSTR)L"vxs-ms-*.dll";
+    mask.Buffer = (PWSTR)L"vx?-ms-*.dll";
     mask.Length = 12 * sizeof(WCHAR);
     mask.MaximumLength = mask.Length;
     for (;;) {
@@ -251,6 +255,8 @@ static void extend_apiset_map(void)
                 ULONG nl = len - 8;
                 for (i = 0; i < oc && !have; i++)
                     have = !name_cmp(nm, nl, (const WCHAR *)(old + oe[i].NameOffset), oe[i].NameLength / sizeof(WCHAR));
+                for (i = 0; i < nadd && !have; i++)           /* the api- and ext- copy of one name: once */
+                    have = !name_cmp(nm, nl, add[i].name + 4, add[i].len - 8);
                 if (!have) {                              /* Windows' own entry stays */
                     for (i = 0; i < len && i < 80; i++) add[nadd].name[i] = fi->FileName[i];
                     add[nadd].len = len;                  /* the whole file name; the set name is [4, len - 4) */
@@ -1494,7 +1500,7 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
 #if VX_OS >= 602 || VX_OS == 0
             map_hook();
 #endif
-#if VX_OS == 601
+#if VX_OS == 601 || VX_OS == 602
             extend_apiset_map();
 #endif
             rewrite((BYTE *)NtCurrentTeb()->Peb->ImageBaseAddress);

@@ -187,10 +187,10 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
                   -I"$WINEINC/windows" -I"$WINEINC/msvcrt" -D_ACRTIMP= -D_ACRTIMP_ALT=)
         local LF=(--target=$arch-w64-windows-gnu -fuse-ld=lld -nostdlib -L/usr/lib/wine/$winarch-windows
                   -Wl,--entry=mainCRTStartup -Wl,--subsystem,console:6.0 -Xlinker --stack -Xlinker 0x100000,0x40000)
-        for c in src/common/console.c src/common/common.c src/common/pin.c tests/vm/nofault.c tests/guishot.c tests/msitest.c tests/vm/apitest.c tests/vm/vxdbg.c tests/vm/probe.c; do
+        for c in src/common/console.c src/common/common.c src/common/pin.c tests/vm/nofault.c tests/guishot.c tests/msitest.c tests/vm/apitest.c tests/vm/vxdbg.c tests/vm/probe.c tests/vm/mitigtest.c; do
             clang "${CF[@]}" -c "$c" -o "$O/obj/$(basename "${c%.c}").o" || return 1
         done
-        for t in nofault guishot msitest vxdbg probe; do
+        for t in nofault guishot msitest vxdbg probe mitigtest; do
             clang "${LF[@]}" -o "$O/$t.exe" "$O/obj/$t.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
                 -lmsi -lkernel32 -luser32 -lgdi32 -lshell32 -ladvapi32 || return 1
         done
@@ -265,6 +265,9 @@ make_testcd() {
     [ "${VX_VM_ONLY:-}" = bench ] && echo bench > "$S/vxvm/only-bench.txt"
     # VX_VM_ONLY=diag: install, then the version/helper diagnostics under vxdbg
     [ "${VX_VM_ONLY:-}" = diag ] && echo diag > "$S/vxvm/only-diag.txt"
+    # VX_VM_ONLY=mitig: only mitigtest (how this Windows treats mitigation
+    # policies it does not know), no install
+    [ "${VX_VM_ONLY:-}" = mitig ] && echo mitig > "$S/vxvm/only-mitig.txt"
     # VX_VM_ONLY=shellx: install, then the ShellExecute experiment
     [ "${VX_VM_ONLY:-}" = shellx ] && echo shellx > "$S/vxvm/only-shellx.txt"
     # VX_VM_ONLY=watch: install, then which crash watchers of a 32-bit program exist when

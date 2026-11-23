@@ -79,6 +79,12 @@ attrib -r "%T%\*" /s /d >nul
 set "B=%T%\bin\%OSA%"
 set "NF=%B%\nofault.exe"
 if exist "%T%\only-upgrade.txt" goto :upgrade
+if exist "%T%\only-mitig.txt" (
+    call :say "### mitigtest (no VistaExt): x64/x86 as this Windows has them"
+    "%B%\mitigtest.exe" >> "%LOG%" 2>&1
+    if "%OSA%"=="x64" "%T%\bin\x86\mitigtest.exe" >> "%LOG%" 2>&1
+    goto :finish
+)
 
 rem ---------------------------------------------------------- before install
 rem Microsoft's C runtime update (KB3118401, which VistaExt needs) brings its
@@ -910,18 +916,27 @@ goto :finish
 
 rem ---- a program that runs on this Windows by itself is never changed
 :nativetests
+call :say "### a program VistaExt runs without sandbox asks for Windows 10's process protections for its child"
+set "MT=%T%\vxmitig"
+mkdir "%MT%" 2>nul
+copy /y "%B%\mitigtest.exe" "%MT%\vxmitig.exe" >nul
+call :run 120 "%VX%\vxpatch.exe" /memory /q /winver:WIN10 "%MT%\vxmitig.exe"
+call :run 60 "%MT%\vxmitig.exe" /w10 --no-sandbox
+call :expect "the child starts (the protections this Windows knows are kept, the others left out)" 0 !RC!
+call :run 120 "%VX%\vxpatch.exe" /undo /q "%MT%\vxmitig.exe"
+rd /s /q "%MT%" >nul 2>&1
 call :say "### a program VistaExt runs: Windows' own DLLs in it find the API sets the told Windows has; its children not"
 set "VP=%T%\vxpathtest"
 mkdir "%VP%" 2>nul
 copy /y "%B%\probe.exe" "%VP%\vxpprobe.exe" >nul
 copy /y "%B%\probe.exe" "%VP%\vxpchild.exe" >nul
 call :run 120 "%VX%\vxpatch.exe" /memory /q /winver:WIN10 "%VP%\vxpprobe.exe"
-call :run 60 "%VP%\vxpprobe.exe" /child api-ms-win-core-url-l1-1-0.dll
-rem Windows 7: VistaExt adds its API sets to the program's own API-set map
-rem (Vista has none and its DLLs use no API sets; Windows 8 has this one)
-if "%CV%"=="6.1" call :expect "Windows 7: the program loads an API set Windows lacks through Windows' loader; a program it starts does not" 11 !RC!
-if "%CV%"=="6.2" call :expect "Windows 8: both load it (Windows' own)" 10 !RC!
-if "%CV%"=="6.0" call :expect "Vista: neither (Vista has no API-set map)" 1 !RC!
+rem (Windows 10's processthreads-l1-1-3, which neither 7 nor 8 has; checked
+rem in their apisetschema.dll)
+call :run 60 "%VP%\vxpprobe.exe" /child api-ms-win-core-processthreads-l1-1-3.dll
+rem Windows 7 and 8: VistaExt adds its API sets to the program's own API-set
+rem map (Vista has none, and its own DLLs use no API sets)
+if "%CV%"=="6.0" (call :expect "Vista: neither (Vista has no API-set map)" 1 !RC!) else call :expect "the program loads an API set Windows lacks through Windows' loader; a program it starts does not" 11 !RC!
 call :run 120 "%VX%\vxpatch.exe" /undo /q "%VP%\vxpprobe.exe"
 rd /s /q "%VP%" >nul 2>&1
 call :say "### the service leaves a program that runs by itself alone, whatever else is in its folder"

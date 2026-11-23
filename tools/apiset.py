@@ -10,7 +10,10 @@ Chappell's "API Set Schema" study and used by Wine/ReactOS loaders):
       {NameOffset, NameLength, DataOffset}; names are UTF-16 without the
       "api-" prefix and ".dll"; data {Count; {NameOffset, NameLength,
       ValueOffset, ValueLength}...} (value = host DLL, empty = none)
-  version 4 (Windows 8, 8.1): ULONG Version, Size, Flags, Count; entries
+  Windows 8 RTM (build 9200) uses version 2 too (checked in its
+  apisetschema.dll: 356 sets, api- and ext- sets both without the prefix);
+  an earlier note here said 4 - that was not checked against a real file.
+  version 4 (Windows 8.1, per Geoff Chappell; not checked here): ULONG Version, Size, Flags, Count; entries
       {Flags, NameOffset, NameLength, AliasOffset, AliasLength, DataOffset};
       data {Flags, Count; {Flags, NameOffset, NameLength, ValueOffset,
       ValueLength}...}

@@ -581,9 +581,37 @@ static BOOL lenient_attributes(void)
 VX_EXPORT BOOL WINAPI vx_UpdateProcThreadAttribute(LPPROC_THREAD_ATTRIBUTE_LIST list, DWORD flags, DWORD_PTR attr,
                                                    PVOID value, SIZE_T size, PVOID prev, PSIZE_T retsize)
 {
+#if VX_WIN8
+    /* Windows 8 takes any 8-byte mitigation mask here and checks it only in
+     * CreateProcess, which then fails with ERROR_INVALID_PARAMETER for a
+     * policy it does not know - measured in the test VMs (tests/vm/mitigtest,
+     * build 9200, 64- and 32-bit alike): DEP, ATL thunks and SEHOP (bits 0-2)
+     * and the 2-bit fields at bits 8 to 32 (forced relocation, heap
+     * termination, bottom-up and high-entropy ASLR, strict handle checks,
+     * win32k calls, extension points) are accepted; every field from bit 36
+     * on (8.1's dynamic code and CFG, Windows 10's) is refused. So for a
+     * program with the lenient handling, the policies Windows 8 knows are
+     * given to Windows - from a copy, since the list keeps a pointer to the
+     * value until CreateProcess - and the others are left out. (8.1 accepts
+     * all of Windows 8's too.) Windows 10's 16-byte form keeps its first
+     * mask. A sandboxed program gets Windows' own answer, as below. */
+    if (attr == VX_ATTR_MITIGATION && value && size >= sizeof(ULONGLONG) && lenient_attributes()) {
+        ULONGLONG *keep = HeapAlloc(GetProcessHeap(), 0, sizeof(ULONGLONG));
+        if (keep) {
+            *keep = *(ULONGLONG *)value & 0x333333307ULL;
+            if (*keep != *(ULONGLONG *)value || size != sizeof(ULONGLONG))
+                trace_hex("UpdateProcThreadAttribute: mitigation mask reduced to Windows 8's, was", (DWORD)*(ULONGLONG *)value);
+            if (!*keep) { HeapFree(GetProcessHeap(), 0, keep); SetLastError(ERROR_SUCCESS); return TRUE; }
+            if (UpdateProcThreadAttribute(list, flags, attr, keep, sizeof(ULONGLONG), prev, retsize)) return TRUE;
+            HeapFree(GetProcessHeap(), 0, keep);
+        }
+    }
+#endif
     if (UpdateProcThreadAttribute(list, flags, attr, value, size, prev, retsize)) return TRUE;
     if (!lenient_attributes()) return FALSE;
 #if VX_WIN7
+    /* Windows 7 refuses any mask that is not 4 bytes here (error 24, also
+     * measured with mitigtest) and knows DEP, ATL thunks and SEHOP only. */
     if (attr == VX_ATTR_MITIGATION && value && size > sizeof(DWORD)) {
         /* Windows 7 takes a 32-bit mask with DEP / ATL thunk / SEHOP only. The
          * list keeps a pointer to the value, so it must live on: lists are
@@ -592,24 +620,9 @@ VX_EXPORT BOOL WINAPI vx_UpdateProcThreadAttribute(LPPROC_THREAD_ATTRIBUTE_LIST 
         if (keep) {
             *keep = (DWORD)(*(ULONGLONG *)value & 0x7);
             trace_hex("UpdateProcThreadAttribute: mitigation mask reduced to Windows 7's, was", (DWORD)*(ULONGLONG *)value);
-            if (!*keep) { SetLastError(ERROR_SUCCESS); return TRUE; }
+            if (!*keep) { HeapFree(GetProcessHeap(), 0, keep); SetLastError(ERROR_SUCCESS); return TRUE; }
             if (UpdateProcThreadAttribute(list, flags, attr, keep, sizeof(DWORD), NULL, NULL)) return TRUE;
-        }
-    }
-#elif VX_WIN8
-    if (attr == VX_ATTR_MITIGATION && value && size >= sizeof(ULONGLONG)) {
-        /* Windows 8 takes a 64-bit mask with its own policies: DEP, ATL
-         * thunks, SEHOP (0x7), forced relocation, heap termination, bottom-up
-         * and high-entropy ASLR, strict handle checks, win32k calls and
-         * extension points (2 bits each from bit 8 to 33). Later ones (8.1's
-         * dynamic code and CFG, Windows 10's) are left out. Not yet verified
-         * on Windows 8. */
-        ULONGLONG *keep = HeapAlloc(GetProcessHeap(), 0, sizeof(ULONGLONG));
-        if (keep) {
-            *keep = *(ULONGLONG *)value & 0x333333307ULL;
-            trace_hex("UpdateProcThreadAttribute: mitigation mask reduced to Windows 8's, was", (DWORD)*(ULONGLONG *)value);
-            if (!*keep) { SetLastError(ERROR_SUCCESS); return TRUE; }
-            if (UpdateProcThreadAttribute(list, flags, attr, keep, sizeof(ULONGLONG), NULL, NULL)) return TRUE;
+            HeapFree(GetProcessHeap(), 0, keep);
         }
     }
 #endif
