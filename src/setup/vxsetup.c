@@ -41,7 +41,7 @@
 
 /* this release; build.sh checks that it matches version.rci and
  * install.cmd's DisplayVersion */
-#define VX_THIS_VERSION L"1.3.0"
+#define VX_THIS_VERSION L"1.3.1"
 #define VX_ARP_KEY L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VistaExt"
 
 static BOOL g_quiet;

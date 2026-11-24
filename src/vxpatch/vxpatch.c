@@ -12,6 +12,7 @@ L"\r\n"
 L"  /check          only report what is missing; change nothing\r\n"
 L"  /undo           put back the original files (<file>.vxorig)\r\n"
 L"  /undoall        put back every file VistaExt has patched on this PC\r\n"
+L"  /native <exe>   can it start on this Windows without VistaExt? (exit 0: yes, 1: no)\r\n"
 L"  /winver:<v>     tell the program it runs on another Windows version:\r\n"
 L"                  VISTA, WIN7, WIN8, WIN81, WIN10, WIN11, or OFF\r\n"
 L"  /args:\"...\"     extra command line arguments to add when it starts\r\n"
@@ -82,6 +83,14 @@ int wmain(int argc, WCHAR **argv)
                 return 3;
             }
             return 0;
+        }
+        if (!vx_wcsicmp(a, L"native") && i + 1 < argc) {
+            /* what the service decides from: can it start without VistaExt? */
+            WCHAR full[MAX_PATH], why[400];
+            if (!GetFullPathNameW(argv[i + 1], MAX_PATH, full, NULL)) return 2;
+            if (vxp_runs_natively(full, why, 400)) { con_print(L"%s: starts on this Windows by itself\r\n", full); return 0; }
+            con_print(L"%s: cannot start on this Windows by itself (%s)\r\n", full, why);
+            return 1;
         }
         if (!vx_wcsicmp(a, L"check")) flags |= VXP_DRYRUN;
         else if (!vx_wcsicmp(a, L"memory")) { flags |= VXP_MEMORY; mode_chosen = TRUE; }

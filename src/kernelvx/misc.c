@@ -697,7 +697,7 @@ static BOOL i_am_setup(void)
         r = 0;
         if (GetModuleFileNameW(NULL, me, MAX_PATH) && GetLongPathNameW(me, me, MAX_PATH) &&
             !RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT L"\\Memory", 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) {
-            if (!RegQueryValueExW(k, me, NULL, &type, (BYTE *)data, &cb) && type == REG_SZ) r = !vx_wcsicmp(data, L"setup");
+            if (!RegQueryValueExW(k, me, NULL, &type, (BYTE *)data, &cb) && type == REG_SZ) r = !vx_wcsicmp(data, L"setup") || !vx_wcsicmp(data, L"watch");
             RegCloseKey(k);
         }
     }

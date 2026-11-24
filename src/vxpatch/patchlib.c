@@ -1259,6 +1259,142 @@ static BOOL native_image(const WCHAR *path, BOOL top, natctx *nc, WCHAR *why, SI
     return ok;
 }
 
+/* The DLL names written in a file (ASCII or UTF-16): each ".dll" with the
+ * name characters before it. One pass over the file. */
+#define NAMED_MAX 256
+static int named_in(const BYTE *d, DWORD size, WCHAR (*out)[64])
+{
+    int n = 0, k;
+    DWORD i;
+    for (i = 4; i + 4 <= size && n < NAMED_MAX; i++) {
+        WCHAR nm[64];
+        int len = 0, step;
+        DWORD j;
+        if (d[i] != '.') continue;
+        if ((d[i + 1] | 32) == 'd' && (d[i + 2] | 32) == 'l' && (d[i + 3] | 32) == 'l') step = 1;
+        else if (i + 6 <= size && (d[i + 2] | 32) == 'd' && !d[i + 1] && !d[i + 3] && (d[i + 4] | 32) == 'l' && !d[i + 5] &&
+                 i + 7 <= size && (d[i + 6] | 32) == 'l') step = 2;
+        else continue;
+        if (step == 1 && i + 4 < size && ((d[i + 4] | 32) >= 'a' && (d[i + 4] | 32) <= 'z')) continue;   /* ".dllx" */
+        /* back to the start of the name */
+        j = i;
+        while (j >= (DWORD)step && len < 56) {
+            BYTE c = d[j - step];
+            if (step == 2 && d[j - 1]) break;          /* high byte of a UTF-16 character */
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-' ||
+                  c == '.')) break;
+            j -= step;
+            len++;
+        }
+        if (len < 1 || len > 56) continue;
+        for (k = 0; k < len; k++) nm[k] = d[j + (DWORD)k * step];
+        vx_wcscpyn(nm + len, L".dll", 8);
+        for (k = 0; k < n && vx_wcsicmp(out[k], nm); k++) ;
+        if (k == n) vx_wcscpyn(out[n++], nm, 64);
+    }
+    return n;
+}
+
+/* drops from names[] the DLLs the file imports (judged already, or - on
+ * demand, delay-loaded - checked for by the program first) */
+static int drop_imported(BYTE *d, DWORD size, WCHAR (*names)[64], int n)
+{
+    pe p;
+    int pass;
+    if (!pe_open(&p, d, size)) return n;
+    for (pass = 0; pass < 2; pass++) {
+        DWORD idx = pass ? 13 : 1, step = pass ? 32 : sizeof(IMAGE_IMPORT_DESCRIPTOR), o;
+        o = p.ndir > idx && p.dir[idx].VirtualAddress ? rva2off(&p, p.dir[idx].VirtualAddress) : 0;
+        while (o && o + step <= size) {
+            DWORD attr = *(DWORD *)(d + o), name = pass ? *(DWORD *)(d + o + 4) : ((IMAGE_IMPORT_DESCRIPTOR *)(d + o))->Name;
+            const char *dll;
+            int k;
+            o += step;
+            if (!name) break;
+            if (pass && !(attr & 1)) {                  /* an old (VC6) table: addresses, not RVAs */
+                if ((ULONGLONG)name < (ULONGLONG)p.base) continue;
+                name = (DWORD)(name - p.base);
+            }
+            if (!(dll = pe_str(&p, name))) continue;
+            for (k = 0; k < n; k++) {
+                int c;
+                for (c = 0; dll[c] && names[k][c] && ((dll[c] | 32) == (names[k][c] | 32)); c++) ;
+                if (!dll[c] && !names[k][c]) { vx_wcscpyn(names[k], names[n - 1], 64); n--; k--; }
+            }
+        }
+    }
+    return n;
+}
+
+/* A program's own DLLs that it loads by name rather than through its import
+ * table (firefox.exe loads xul.dll, chrome.exe its version folder's
+ * chrome.dll): the program is them, so what they need at start counts too.
+ * Evidence that it loads one: its name is written in the program's file
+ * (not in its import tables) and the DLL is in the program's folder or a
+ * folder right below it (a version folder). Only the program's main code
+ * counts: the largest such DLL, and only if it is larger than the program
+ * file itself (a small starter and its big DLL). Optional DLLs a program
+ * names too and loads only if they work (Chromium's dxcompiler.dll,
+ * vulkan-1.dll, d3dcompiler_47.dll) never count: a native program must
+ * not be changed for them. */
+static BOOL named_dlls_native(const WCHAR *exe, natctx *nc, WCHAR *why, SIZE_T cch)
+{
+    static WCHAR names[NAMED_MAX][64], subs[16][MAX_PATH];
+    WCHAR src[MAX_PATH + 8], pat[MAX_PATH], full[MAX_PATH], w[400];
+    WIN32_FIND_DATAW fd;
+    HANDLE h;
+    DWORD size;
+    BYTE *d;
+    int n, i, ns = 0, s2;
+    BOOL ok = TRUE;
+    backup_name(exe, src);
+    if (!file_exists(src)) vx_wcscpyn(src, exe, MAX_PATH + 8);
+    if (!(d = read_file(src, &size))) return TRUE;
+    n = named_in(d, size, names);
+    n = drop_imported(d, size, names, n);
+    release_file(d);
+    if (!n) return TRUE;
+    /* the folders right below the program's (the first 16) */
+    vx_wcscpyn(pat, nc->appdir, MAX_PATH);
+    vx_wcscatn(pat, L"\\*", MAX_PATH);
+    if ((h = FindFirstFileW(pat, &fd)) != INVALID_HANDLE_VALUE) {
+        do {
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) || fd.cFileName[0] == '.' ||
+                (fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)) continue;
+            vx_wcscpyn(subs[ns], nc->appdir, MAX_PATH);
+            vx_wcscatn(subs[ns], L"\\", MAX_PATH);
+            vx_wcscatn(subs[ns], fd.cFileName, MAX_PATH);
+            ns++;
+        } while (ns < 16 && FindNextFileW(h, &fd));
+        FindClose(h);
+    }
+    {
+        WIN32_FILE_ATTRIBUTE_DATA fa;
+        ULONGLONG best = 0, exesize;
+        WCHAR main[MAX_PATH] = L"";
+        int bi = -1;
+        if (!GetFileAttributesExW(src, GetFileExInfoStandard, &fa)) return TRUE;
+        exesize = ((ULONGLONG)fa.nFileSizeHigh << 32) | fa.nFileSizeLow;
+        for (i = 0; i < n; i++)
+            for (s2 = -1; s2 < ns; s2++) {
+                ULONGLONG sz;
+                vx_wcscpyn(full, s2 < 0 ? nc->appdir : subs[s2], MAX_PATH);
+                vx_wcscatn(full, L"\\", MAX_PATH);
+                vx_wcscatn(full, names[i], MAX_PATH);
+                if (!GetFileAttributesExW(full, GetFileExInfoStandard, &fa) || (fa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+                    continue;
+                sz = ((ULONGLONG)fa.nFileSizeHigh << 32) | fa.nFileSizeLow;
+                if (sz > best) { best = sz; bi = i; vx_wcscpyn(main, full, MAX_PATH); }
+            }
+        if (bi < 0 || best <= exesize) return TRUE;
+        if (!native_image(main, FALSE, nc, w, 400)) {
+            if (why && cch) wsprintfW(why, L"%s loads %s, which cannot load on this Windows (%.200s)", file_part(exe), names[bi], w);
+            ok = FALSE;
+        }
+    }
+    return ok;
+}
+
 BOOL vxp_runs_natively(const WCHAR *exe, WCHAR *why, SIZE_T cch)
 {
     natctx nc;
@@ -1272,6 +1408,7 @@ BOOL vxp_runs_natively(const WCHAR *exe, WCHAR *why, SIZE_T cch)
     while (n && nc.appdir[n - 1] != '\\') n--;
     nc.appdir[n ? n - 1 : 0] = 0;
     r = native_image(exe, TRUE, &nc, why, cch);
+    if (r) r = named_dlls_native(exe, &nc, why, cch);
     xfree(nc.seen);
     return r;
 }
@@ -1469,7 +1606,8 @@ int vxp_process_file(const WCHAR *path, DWORD flags, vxp_log_fn fn, void *ctx, v
             header(&j);
             vxlog(&lg, L"  registered: VistaExt redirects its imports in memory when it starts");
             if (!(flags & VXP_DRYRUN))
-                mem_register_as(path, TRUE, (flags & VXP_SETUP) ? L"setup" : (flags & VXP_USER) ? L"user" : L"");
+                mem_register_as(path, TRUE, (flags & VXP_WATCH) ? L"watch" : (flags & VXP_SETUP) ? L"setup" :
+                                            (flags & VXP_USER) ? L"user" : L"");
             mem_done = TRUE;
         }
     }

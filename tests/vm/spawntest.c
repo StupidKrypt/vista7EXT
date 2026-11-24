@@ -1,7 +1,11 @@
 /* spawntest - a "setup" that needs VistaExt (it imports a Windows 8 function
  * from kernel32) and, like a real setup, unpacks a helper program into Temp
  * and starts it at once.
- *   spawntest <program> [/shell]
+ *   spawntest <program> [/shell] [/squirrel]
+ * Built twice: spawntest.exe needs VistaExt itself; spawnnative.exe
+ * (-DVX_NATIVE_SETUP) runs on this Windows by itself, like Discord's
+ * setup on Vista with KB2533623. /squirrel unpacks into
+ * %LOCALAPPDATA%\VxSquirrelTemp (as Squirrel does) instead of Temp.
  * copies <program> to %TEMP%\vxchild-<n>.exe and starts it (CreateProcess,
  * or ShellExecuteEx with /shell), waits, and returns its exit code. The
  * helper needs VistaExt too: it only starts if VistaExt's service registered
@@ -17,11 +21,23 @@ int wmain(int argc, WCHAR **argv)
     DWORD code = 99;
     HANDLE proc = NULL;
     if (argc < 2) { con_print(L"usage: spawntest <program> [/shell]\r\n"); return 2; }
+#ifdef VX_NATIVE_SETUP
+    GetSystemTimeAsFileTime(&ft);                   /* runs by itself */
+#else
     GetSystemTimePreciseAsFileTime(&ft);            /* Windows 8: this program needs VistaExt itself */
+#endif
     GetTempPathW(MAX_PATH, tmp);
+    {
+        int i;
+        for (i = 2; i < argc; i++)
+            if (!vx_wcsicmp(argv[i], L"/squirrel") && GetEnvironmentVariableW(L"LOCALAPPDATA", tmp, MAX_PATH - 20)) {
+                vx_wcscatn(tmp, L"\\VxSquirrelTemp\\", MAX_PATH);
+                CreateDirectoryW(tmp, NULL);
+            }
+    }
     wsprintfW(child, L"%svxchild-%u.exe", tmp, GetTickCount() ^ ft.dwLowDateTime);
     if (!CopyFileW(argv[1], child, FALSE)) { con_print(L"cannot copy %s (error %u)\r\n", argv[1], GetLastError()); return 3; }
-    if (argc > 2 && !vx_wcsicmp(argv[2], L"/shell")) {
+    if (argc > 2 && !vx_wcsicmp(argv[2], L"/shell")) {      /* (the second argument only) */
         SHELLEXECUTEINFOW se;
         vx_memset(&se, 0, sizeof(se));
         se.cbSize = sizeof(se);

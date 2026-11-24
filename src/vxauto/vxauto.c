@@ -1288,7 +1288,7 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
     vxp_stats st = { 0 };
     SIZE_T n = vx_wcslen(path);
     DWORD a = GetFileAttributesW(path), flags;
-    BOOL own, need, setup = FALSE, dll_problem = FALSE;
+    BOOL own, need, setup = FALSE, dll_problem = FALSE, watch_only = FALSE;
     int r;
     if (n < 8 || path[1] != ':' || path[2] != '\\' || vx_wcsnicmp(path + n - 4, L".exe", 4)) return 0;
     if (a == INVALID_FILE_ATTRIBUTES || (a & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT))) return 0;
@@ -1317,10 +1317,19 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
         slow_step(path, L"checking its imports", t);
     }
     if (!need) {
-        /* a setup that refuses this Windows can still be told the chosen
-         * version: one the user downloaded, or a new helper of a setup */
+        /* A setup that runs by itself often unpacks and starts a helper that
+         * does not (Discord's: its setup runs on Vista with KB2533623, the
+         * Update.exe it unpacks needs Windows 7's functions). VistaExt can
+         * only look at that helper before it starts if it sees the setup
+         * start it, so a recognised setup - one the user downloaded, or a
+         * new helper of a setup - is registered to watch: nothing of it is
+         * changed (vxload rewrites nothing, tells no version, loads no
+         * kernelvx), only each program it starts is looked at first: one
+         * that cannot run by itself is set up, one that can is watched the
+         * same way. With "setup programs are told it too" on, it is told the
+         * chosen version instead (and then runs with VistaExt). */
         DWORD t = GetTickCount();
-        BOOL su = setups_on() && (from_setup ? recent_file(path) : is_setup(path)), ms;
+        BOOL su = from_setup ? recent_file(path) : is_setup(path), ms;
         slow_step(path, L"recognising a setup", t);
         if (!su) return 0;
         t = GetTickCount();
@@ -1335,6 +1344,7 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
             return 0;
         }
         setup = TRUE;
+        watch_only = !setups_on();
     }
     if (is_game_dir(dir, NULL)) {
         logf(L"%s (%s): a game or anti-cheat folder; not changed automatically", path, why);
@@ -1345,14 +1355,22 @@ static int handle_single(const WCHAR *path, const WCHAR *why, BOOL from_setup, B
         return -1;
     }
     own = vx_lookup_layer(path, layer, 600);
-    if (!own) vxp_recommend(path, layer, 600);
-    flags = vxp_flags_for_layer(layer) | VXP_MEMORY | VXP_QUIET;
-    if (setup) flags |= VXP_FORCE;                         /* registered although nothing is missing */
+    if (watch_only) {
+        layer[0] = 0;
+        own = TRUE;                                          /* no setting saved */
+        flags = VXP_MEMORY | VXP_QUIET | VXP_REGALL | VXP_WATCH;
+    } else {
+        if (!own) vxp_recommend(path, layer, 600);
+        flags = vxp_flags_for_layer(layer) | VXP_MEMORY | VXP_QUIET;
+    }
+    if (setup && !watch_only) flags |= VXP_FORCE;          /* registered although nothing is missing */
     if (dll_problem) flags |= VXP_REGALL;                  /* its DLL is what needs VistaExt: register the program */
-    if (setup || from_setup || is_setup(path)) flags |= VXP_SETUP;
+    if (!watch_only && (setup || from_setup || is_setup(path))) flags |= VXP_SETUP;
     vx_memset(&st, 0, sizeof(st));
-    logf(setup ? L"%s (%s): a setup program; it is told the chosen Windows version"
-               : L"%s (%s): cannot run on this Windows by itself; made compatible", path, why);
+    if (watch_only) decided(L"%s (%s): a setup program that runs by itself; watched (not changed), so that what it starts "
+                            L"is looked at first", path, why);
+    else if (setup) decided(L"%s (%s): a setup program; it is told the chosen Windows version", path, why);
+    else logf(L"%s (%s): cannot run on this Windows by itself; made compatible", path, why);
     /* a program is waiting to start this one: if a switch or a scan holds
      * the lock, it starts as it is rather than waiting for them */
     if (!lock_for(waited_for ? 5000 : INFINITE)) {
@@ -1723,22 +1741,34 @@ static BOOL do_switch(BOOL on, BOOL quiet_if_done)
  * A file in use is left for the next time (the service tries again when it
  * starts). Runs after an update (install.cmd), when switched on, and at
  * service start until it has been done completely. */
-#define VX_REVIEW_RULES 2
+/* 3 (1.3.1): a setup told the version while that is off is only watched;
+ * programs whose own DLLs (loaded by name) need VistaExt count as not
+ * running by themselves - 1.3's review put some back, so every program
+ * folder is looked at again (AutoScanned is cleared) */
+#define VX_REVIEW_RULES 3
 
-/* registered as a setup program (data "setup", see handle_single) */
-static BOOL is_setup_registration(const WCHAR *path)
+/* the data of a program's in-memory registration ("", "user", "setup",
+ * "watch"); FALSE: not registered */
+static BOOL memory_data(const WCHAR *path, WCHAR *data, DWORD cch)
 {
     HKEY k;
-    WCHAR data[16];
-    DWORD cb = sizeof(data) - sizeof(WCHAR), type;
+    DWORD cb = (cch - 1) * sizeof(WCHAR), type;
     BOOL r = FALSE;
+    data[0] = 0;
     if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT L"\\Memory", 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return FALSE;
     if (!RegQueryValueExW(k, path, NULL, &type, (BYTE *)data, &cb) && type == REG_SZ) {
         data[cb / sizeof(WCHAR)] = 0;
-        r = !vx_wcsicmp(data, L"setup");
-    }
+        r = TRUE;
+    } else data[0] = 0;
     RegCloseKey(k);
     return r;
+}
+
+/* registered as a setup program (data "setup" or "watch", see handle_single) */
+static BOOL is_setup_registration(const WCHAR *path)
+{
+    WCHAR data[16];
+    return memory_data(path, data, 16) && (!vx_wcsicmp(data, L"setup") || !vx_wcsicmp(data, L"watch"));
 }
 
 static BOOL dir_programs_native(const WCHAR *file)
@@ -1815,7 +1845,8 @@ static int diag_report(const WCHAR *file)
             vxp_stats st = { 0 };
             BOOL ex = GetFileAttributesW(p) != INVALID_FILE_ATTRIBUTES;
             rep_f(L"%s", p);
-            rep_f(L"  how: %s%s", what[k], k == 0 && vxp_user_registered(p) ? L", chosen by the user" : L"");
+            rep_f(L"  how: %s%s", what[k], k == 0 && vxp_user_registered(p) ? L", chosen by the user" :
+                                         k == 0 && is_setup_registration(p) ? L", a setup (or watched: nothing of it changed)" : L"");
             if (!ex) { rep_f(L"  the file is gone"); rep_f(L""); continue; }
             vx_lookup_layer(p, layer, 600);
             rep_f(L"  settings: %s", layer[0] ? layer : L"(none of its own: the global ones)");
@@ -1881,14 +1912,28 @@ static int tidy(void)
 
 static int review(void)
 {
-    WCHAR *list, *p, why[400];
-    int undone = 0, refreshed = 0, busy = 0, r;
+    WCHAR *list, *p, why[400], data[16];
+    int undone = 0, refreshed = 0, busy = 0, watched = 0, r;
+    DWORD was = vx_setting(L"Reviewed", 0);
     lock();
     logw(L"looking again at the programs set up earlier (this version's rules)");
     if ((list = list_entries(VX_REG_ROOT L"\\Memory"))) {
         for (p = list; *p; p += vx_wcslen(p) + 1) {
             if (GetFileAttributesW(p) == INVALID_FILE_ATTRIBUTES || vxp_user_registered(p)) continue;
-            if (setups_on() && is_setup_registration(p)) continue;   /* told the version on purpose */
+            if (memory_data(p, data, 16) && !vx_wcsicmp(data, L"setup")) {
+                /* a setup told the version (1.2 did that by default): with
+                 * that off, one that runs by itself is only watched */
+                vxp_stats st = { 0 };
+                if (setups_on() || !vxp_runs_natively(p, why, 400)) continue;
+                if ((r = vxp_restore_file(p, log_cb, NULL)) < 0) { busy++; continue; }
+                if (vxp_process_file(p, VXP_MEMORY | VXP_QUIET | VXP_REGALL | VXP_WATCH, log_cb, NULL, &st) < 0) busy++;
+                else {
+                    decided(L"%s: a setup that runs by itself; now only watched (it sees this Windows' real version)", p);
+                    watched++;
+                }
+                continue;
+            }
+            if (is_setup_registration(p)) continue;   /* watched on purpose */
             if (!vxp_runs_natively(p, why, 400)) continue;
             if ((r = vxp_restore_file(p, log_cb, NULL)) < 0) { busy++; continue; }
             decided(L"%s: runs on this Windows by itself; VistaExt no longer changes it", p);
@@ -1921,9 +1966,14 @@ static int review(void)
         }
         HeapFree(GetProcessHeap(), 0, list);
     }
-    if (!busy) set_dword(L"Reviewed", VX_REVIEW_RULES);
-    logf(L"looked again: %d program(s) put back (they run by themselves), %d patched file(s) renewed, %d in use (next time)",
-         undone, refreshed, busy);
+    if (!busy) {
+        set_dword(L"Reviewed", VX_REVIEW_RULES);
+        /* the check found too little before 3 (not the DLLs a program
+         * loads by name): every program folder is looked at again */
+        if (was < 3) set_dword(L"AutoScanned", 0);
+    }
+    logf(L"looked again: %d program(s) put back (they run by themselves), %d setup(s) now only watched, "
+         L"%d patched file(s) renewed, %d in use (next time)", undone, watched, refreshed, busy);
     unlock();
     return busy;
 }
@@ -2273,8 +2323,58 @@ static void runs_by_name(const WCHAR *name, WCHAR *out, SIZE_T cch)
     }
 }
 
+/* An event value as a number: Windows writes the exception code as text
+ * ("c0000139") or as a number, depending on the version */
+static DWORD event_hex(const vx_evt_variant *v)
+{
+    DWORD r = 0;
+    const WCHAR *s;
+    if (v->type == 8 || v->type == 20) return (DWORD)v->v.u64;          /* UInt32, HexInt32 */
+    if (v->type != 1 || !(s = v->v.s)) return 0;
+    if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) s += 2;
+    for (; *s; s++) {
+        WCHAR c = *s;
+        r = (r << 4) | (DWORD)(c >= '0' && c <= '9' ? c - '0' : c >= 'a' && c <= 'f' ? c - 'a' + 10 :
+                               c >= 'A' && c <= 'F' ? c - 'A' + 10 : 0);
+    }
+    return r;
+}
+
+/* A program VistaExt left alone (it starts by itself) failed because this
+ * Windows lacks a DLL or function: something the check before it starts
+ * cannot see (a DLL it loads later, an optional import it calls without
+ * checking). VistaExt does not change it on its own - it cannot tell from
+ * the event whether it has what is missing, and a guess must not change a
+ * program - but says so: in decisions.log, and as a tip at the tray icon
+ * (value "Hint", shown once by each signed-in user's tray icon). */
+static BOOL names_dll(const WCHAR *t)
+{
+    for (; *t; t++)
+        if (t[0] == '.' && (t[1] | 32) == 'd' && (t[2] | 32) == 'l' && (t[3] | 32) == 'l') return TRUE;
+    return FALSE;
+}
+
+static void hint_missing(const WCHAR *app, const WCHAR *what)
+{
+    WCHAR t[600];
+    HKEY k;
+    DWORD id = GetTickCount();
+    if (!vxp_enabled()) return;
+    decided(L"%s: VistaExt left it alone (it starts by itself), but it then failed: %s. "
+            L"Right-click it, \"Open with VistaExt compatibility mode\".", app, what);
+    wsprintfW(t, L"%.120s failed: %.80s. If it should run, right-click it and choose \"Open with VistaExt "
+                 L"compatibility mode\".", app, what);
+    if (!RegCreateKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, NULL, 0, KEY_SET_VALUE | VX_REG_VIEW, NULL, &k, NULL)) {
+        RegSetValueExW(k, L"Hint", 0, REG_SZ, (const BYTE *)t, (DWORD)((vx_wcslen(t) + 1) * sizeof(WCHAR)));
+        RegSetValueExW(k, L"HintId", 0, REG_DWORD, (const BYTE *)&id, sizeof(id));
+        RegCloseKey(k);
+    }
+}
+
 static DWORD WINAPI event_cb(DWORD action, PVOID ctx, HANDLE ev)
 {
+    DWORD code = 0;
+    WCHAR caption[256] = L"";
     static WCHAR msg[8192], e[16384];
     WCHAR prov[128] = L"", app[MAX_PATH] = L"", mod[MAX_PATH] = L"", runs[2048], when[64] = L"?";
     vx_evt_variant *v;
@@ -2302,7 +2402,13 @@ static DWORD WINAPI event_cb(DWORD action, PVOID ctx, HANDLE ev)
         (v = render_values(g_ctx_user, ev, &n))) {
         if (n > 0 && v[0].type == 1 && v[0].v.s) vx_wcscpyn(app, v[0].v.s, MAX_PATH);
         if (n > 3 && v[3].type == 1 && v[3].v.s && !vx_wcsicmp(prov, L"Application Error")) vx_wcscpyn(mod, v[3].v.s, MAX_PATH);
+        if (n > 6 && !vx_wcsicmp(prov, L"Application Error")) code = event_hex(&v[6]);
     }
+    /* Application Popup: a message box Windows showed for a program (its
+     * caption "<program> - <what>": "Update.exe - Entry Point Not Found") */
+    if (!vx_wcsicmp(prov, L"Application Popup") && (v = render_values(g_ctx_user, ev, &n)) && n > 0 && v[0].type == 1 &&
+        v[0].v.s)
+        vx_wcscpyn(caption, v[0].v.s, 256);
     /* the event's text as Event Viewer shows it */
     msg[0] = 0;
     if (prov[0] && (pub = p_openpub(NULL, prov, NULL, 0, 0))) {
@@ -2328,6 +2434,28 @@ static DWORD WINAPI event_cb(DWORD action, PVOID ctx, HANDLE ev)
     vx_wcscatn(e, msg[0] ? msg : L"(no text)", 16384);
     vx_wcscatn(e, L"\r\n\r\n", 16384);
     vx_diag_append(L"events.log", e);
+    /* a DLL or a function this Windows lacks, in a program VistaExt does not run */
+    if (app[0] && !runs[0]) {
+        const WCHAR *what = code == 0xC0000135 ? L"a DLL it needs is missing" :
+                            code == 0xC0000139 ? L"a function it needs is missing" :
+                            code == 0xC06D007E ? L"a DLL it loads on demand is missing" :
+                            code == 0xC06D007F ? L"a function it loads on demand is missing" : NULL;
+        if (what) hint_missing(app, what);
+    }
+    if (caption[0]) {
+        /* only for Windows' "entry point" and "DLL not found" boxes: the
+         * program name, then Windows' own text, which names the DLL in
+         * every language (a crash box names none) */
+        WCHAR *sep = NULL, *c;
+        for (c = caption; *c; c++) if (c[0] == ' ' && c[1] == '-' && c[2] == ' ') { sep = c; break; }
+        if (sep) {
+            *sep = 0;
+            runs_by_name(caption, runs, 2048);
+            if (!runs[0] && vx_wcslen(caption) > 4 && !vx_wcsicmp(caption + vx_wcslen(caption) - 4, L".exe") &&
+                names_dll(msg))
+                hint_missing(caption, sep + 3);
+        }
+    }
     LeaveCriticalSection(&g_evcs);
     return 0;
 }

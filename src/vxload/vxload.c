@@ -368,11 +368,19 @@ static void poke(void *dst, const void *src, SIZE_T n)
 }
 
 /* ---- is this program registered? ---------------------------------------- */
+static BOOL g_watch;          /* registered to watch only ("watch"): see watch_hook */
+
 static BOOL listed(HANDLE k, UNICODE_STRING *vn)
 {
     BYTE buf[sizeof(KEY_VALUE_PARTIAL_INFORMATION) + 16];
     ULONG got;
     NTSTATUS s = NtQueryValueKey(k, vn, KeyValuePartialInformation, buf, sizeof(buf), &got);
+    if (s >= 0) {
+        const KEY_VALUE_PARTIAL_INFORMATION *v = (const void *)buf;
+        const WCHAR *d = (const WCHAR *)v->Data;
+        g_watch = v->Type == REG_SZ && v->DataLength >= 10 && lcw(d[0]) == 'w' && lcw(d[1]) == 'a' && lcw(d[2]) == 't' &&
+                  lcw(d[3]) == 'c' && lcw(d[4]) == 'h' && (v->DataLength < 12 || !d[5]);
+    }
     return s >= 0 || s == STATUS_BUFFER_OVERFLOW;
 }
 
@@ -1473,6 +1481,80 @@ static void map_hook(void)
 }
 #endif
 
+/* ---- watching a setup (registration "watch") --------------------------------
+ * A setup that runs on this Windows by itself is not changed at all: no
+ * import is rewritten, no version told, no kernelvx. It is registered only
+ * so that every program it starts is looked at before it starts - a setup
+ * often unpacks and starts a helper that cannot run by itself (Discord's
+ * Update.exe). Every process start in Windows ends in NtCreateUserProcess,
+ * also one made by Windows' own DLLs (ShellExecute): right before it,
+ * VistaExt's service is asked (\\.\pipe\VistaExt "PREPARE setup <path>", as
+ * kernelvx asks for the programs VistaExt runs) and registers the helper if
+ * it needs VistaExt - or to watch it, if it is a setup's helper that runs
+ * by itself. Only ntdll is used (this runs before kernel32 is loaded). */
+typedef NTSTATUS (NTAPI *cup_fn)(PHANDLE, PHANDLE, ACCESS_MASK, ACCESS_MASK, PVOID, PVOID, ULONG, ULONG, PVOID, PVOID, PVOID);
+static void *g_real_cup;
+
+static void ask_service(const WCHAR *path, SIZE_T n)
+{
+    static const WCHAR pipe[] = L"\\??\\pipe\\VistaExt", pre[] = L"PREPARE setup ";
+    WCHAR req[MAX_PATH + 32];
+    BYTE rep[128];
+    UNICODE_STRING us;
+    OBJECT_ATTRIBUTES oa;
+    IO_STATUS_BLOCK io;
+    LARGE_INTEGER wait;
+    HANDLE h = NULL;
+    SIZE_T k = 0, i;
+    int tries;
+    if (n > MAX_PATH) return;
+    for (i = 0; pre[i]; i++) req[k++] = pre[i];
+    for (i = 0; i < n; i++) req[k++] = path[i];
+    req[k++] = 0;
+    us.Buffer = (PWSTR)pipe;
+    us.Length = sizeof(pipe) - sizeof(WCHAR);
+    us.MaximumLength = sizeof(pipe);
+    InitializeObjectAttributes(&oa, &us, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    wait.QuadPart = -100 * 10000;                   /* 100 ms */
+    /* every instance busy: the service makes the next one right away; 3 s at most */
+    for (tries = 0; tries < 30; tries++) {
+        NTSTATUS st = NtCreateFile(&h, GENERIC_READ | GENERIC_WRITE | SYNCHRONIZE, &oa, &io, NULL, 0, 0, FILE_OPEN,
+                                   FILE_SYNCHRONOUS_IO_NONALERT | FILE_NON_DIRECTORY_FILE, NULL, 0);
+        if (st >= 0) break;
+        h = NULL;
+        if (st != (NTSTATUS)0xC00000AE /* STATUS_PIPE_BUSY */ && st != (NTSTATUS)0xC00000AD /* PIPE_NOT_AVAILABLE */) return;
+        NtDelayExecution(FALSE, &wait);
+    }
+    if (!h) return;
+    if (NtWriteFile(h, NULL, NULL, NULL, &io, req, (ULONG)(k * sizeof(WCHAR)), NULL, NULL) >= 0)
+        NtReadFile(h, NULL, NULL, NULL, &io, rep, sizeof(rep), NULL, NULL);   /* its answer: it is done */
+    NtClose(h);
+}
+
+static NTSTATUS NTAPI watch_cup(PHANDLE ph, PHANDLE th, ACCESS_MASK pa, ACCESS_MASK ta, PVOID poa, PVOID toa, ULONG pf,
+                                ULONG tf, PVOID params, PVOID info, PVOID attrs)
+{
+    RTL_USER_PROCESS_PARAMETERS *pp = params;
+    if (pp && pp->ImagePathName.Length) {
+        const WCHAR *b = pp->ImagePathName.Buffer;
+        SIZE_T n = pp->ImagePathName.Length / sizeof(WCHAR);
+        /* not normalized: the buffer is an offset from the block */
+        if (!(pp->Flags & 1)) b = (const WCHAR *)((BYTE *)pp + (ULONG_PTR)b);
+        if (n > 4 && b[0] == '\\' && b[1] == '?' && b[2] == '?' && b[3] == '\\') { b += 4; n -= 4; }
+        if (n > 3 && b[1] == ':') {
+            trace_w("a program about to start:", b, n);
+            ask_service(b, n);
+        }
+    }
+    return ((cup_fn)g_real_cup)(ph, th, pa, ta, poa, toa, pf, tf, params, info, attrs);
+}
+
+static void watch_hook(void)
+{
+    LDR_DATA_TABLE_ENTRY *nt = find_module(L"ntdll.dll");
+    if (nt) stub_hook(nt->DllBase, "NtCreateUserProcess", (void *)watch_cup, &g_real_cup);
+}
+
 static void version_hooks(void)
 {
     LDR_DATA_TABLE_ENTRY *nt = find_module(L"ntdll.dll"), *ole = find_module(L"ole32.dll");
@@ -1488,6 +1570,12 @@ BOOL WINAPI DllMainCRTStartup(HINSTANCE inst, DWORD reason, LPVOID reserved)
         /* Safe Mode: Windows as it is, for every program */
         g_on = !VX_KUSER_SAFE_BOOT && registered();
         trace(g_on ? "on for this program" : "not registered for this program (or Safe Mode)", NULL, NULL);
+        if (g_on && g_watch) {
+            /* watched only: nothing of the program is changed */
+            g_on = FALSE;
+            trace("watched only: programs it starts are looked at first", NULL, NULL);
+            watch_hook();
+        }
         /* the verifier was switched on for VistaExt (by file name): keep it
          * out of the way also in programs of the same name that VistaExt
          * leaves alone */

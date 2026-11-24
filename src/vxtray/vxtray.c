@@ -485,8 +485,26 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM wp, LPARAM lp)
     return DefWindowProcW(h, m, wp, lp);
 }
 
+/* the service's latest tip (a program it left alone failed for something
+ * this Windows lacks: vxauto's hint_missing); 0: none */
+static DWORD hint_id(WCHAR *text, DWORD cch)
+{
+    HKEY k;
+    DWORD id = 0, cb = sizeof(id), type;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, VX_REG_ROOT, 0, KEY_QUERY_VALUE | VX_REG_VIEW, &k)) return 0;
+    if (RegQueryValueExW(k, L"HintId", NULL, &type, (BYTE *)&id, &cb) || type != REG_DWORD) id = 0;
+    if (text) {
+        cb = (cch - 1) * sizeof(WCHAR);
+        if (RegQueryValueExW(k, L"Hint", NULL, &type, (BYTE *)text, &cb) || type != REG_SZ) cb = 0;
+        text[cb / sizeof(WCHAR)] = 0;
+    }
+    RegCloseKey(k);
+    return id;
+}
+
 int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
 {
+    DWORD seen_hint;
     WNDCLASSW wc;
     MSG msg;
     int argc = 0, i;
@@ -510,6 +528,7 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
     if (!g_wnd) return 1;
     read_state();
     update_icon(TRUE);
+    seen_hint = hint_id(NULL, 0);                /* only tips that come while it runs */
     if (!g_added && FindWindowW(L"Shell_TrayWnd", NULL)) SetTimer(g_wnd, ID_RETRY, 2000, NULL);
     for (i = 1; argv && i < argc; i++)          /* tests: open the menu at once, for a picture */
         if (!vx_wcsicmp(argv[i], L"/showmenu")) PostMessageW(g_wnd, WM_TRAY, 1, WM_RBUTTONUP);
@@ -531,6 +550,14 @@ int WINAPI wWinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cl, int show)
             vx_wcscpyn(v, g_ver, 40);
             read_state();
             if (on != g_on || rs != g_restart || wt != g_waiting || vx_wcsicmp(v, g_ver)) update_icon(FALSE);
+            {
+                WCHAR t[256];
+                DWORD id = hint_id(t, 256);
+                if (id && id != seen_hint && t[0]) {
+                    seen_hint = id;
+                    balloon(L"A program could not run", t, NIIF_WARNING);
+                }
+            }
             continue;
         }
         while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {

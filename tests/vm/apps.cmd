@@ -181,8 +181,11 @@ for %%s in ("%CDR%\setups\*.exe") do copy /y "%%~fs" "%DL%\" >nul
 ping -n 16 127.0.0.1 >nul
 for %%s in ("%DL%\*.exe") do (
     reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%%~fs" > "%T%\m.txt" 2>&1
-    find /i "setup" "%T%\m.txt" >nul && (call :say "%%~nxs: registered by VistaExt as a setup program") || (
-        find /i "REG_SZ" "%T%\m.txt" >nul && (call :say "%%~nxs: registered by VistaExt") || (call :say "%%~nxs: left alone by VistaExt"))
+    set "KIND=left alone by VistaExt"
+    find /i "REG_SZ" "%T%\m.txt" >nul && set "KIND=registered by VistaExt"
+    findstr /i /r /c:"REG_SZ *setup$" "%T%\m.txt" >nul && set "KIND=registered by VistaExt as a setup program"
+    findstr /i /r /c:"REG_SZ *watch$" "%T%\m.txt" >nul && set "KIND=watched by VistaExt (a setup that runs by itself)"
+    call :say "%%~nxs: !KIND!"
 )
 if exist "%DL%\SpotifySetup.exe" if "%OSA%"=="x64" call :setup_run spotify SpotifySetup.exe "%APPDATA%\Spotify\Spotify.exe" 0
 if exist "%DL%\DiscordSetup.exe" call :setup_run discord DiscordSetup.exe "%LOCALAPPDATA%\Discord\Update.exe" 0
@@ -190,6 +193,8 @@ set "STEAMDIR=%ProgramFiles%\Steam"
 if "%OSA%"=="x64" set "STEAMDIR=%ProgramFiles(x86)%\Steam"
 if exist "%DL%\SteamSetup.exe" call :setup_run steam SteamSetup.exe "!STEAMDIR!\Steam.exe" 4
 copy /y "%ProgramData%\VistaExt\VistaExt.log" "%R%\VistaExt-setups.log" >nul 2>&1
+copy /y "%ProgramData%\VistaExt Diagnostics\decisions.log" "%R%\decisions-setups.log" >nul 2>&1
+copy /y "%ProgramData%\VistaExt Diagnostics\events.log" "%R%\events-setups.log" >nul 2>&1
 call :uninstall_app spotify Spotify
 call :uninstall_app discord Discord
 call :uninstall_app steam Steam

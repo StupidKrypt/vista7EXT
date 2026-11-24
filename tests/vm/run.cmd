@@ -717,9 +717,23 @@ call :expect "... and when run again it sees this Windows' real version (and ref
 reg delete "HKCU\Software\VistaExt\Layers" /v "%DL%\vxver-setup.exe" /f >nul 2>&1
 call :run 60 "%VX%\vxauto.exe" /pipe SETUPS 0
 copy /y "%B%\vercheck.exe" "%DL%\vxver2-setup.exe" >nul
-ping -n 8 127.0.0.1 >nul
-reg query "%IFEO%\vxver2-setup.exe" /v VistaExt >nul 2>&1
-call :expect "with the tray icon's 'setup programs' turned off (the default), such a setup is left alone" 1 !errorlevel!
+for /l %%w in (1,1,20) do (reg query "%IFEO%\vxver2-setup.exe" /v VistaExt >nul 2>&1 || ping -n 2 127.0.0.1 >nul)
+call :run 60 "%DL%\vxver2-setup.exe"
+call :expect "with 'setup programs are told it too' off (the default), such a setup is only watched: it sees this Windows' real version (it refuses, as without VistaExt)" 1 !RC!
+call :say "### a setup that runs by itself and unpacks a helper that does not (Discord's on Vista)"
+copy /y "%B%\spawnnative.exe" "%DL%\vxnative-setup.exe" >nul
+for /l %%w in (1,1,20) do (reg query "%IFEO%\vxnative-setup.exe" /v VistaExt >nul 2>&1 || ping -n 2 127.0.0.1 >nul)
+ping -n 3 127.0.0.1 >nul
+reg query "HKLM\SOFTWARE\VistaExt\Memory" /v "%DL%\vxnative-setup.exe" 2>nul | find "watch" >nul
+call :expect "the service registers it only to watch what it starts" 0 !errorlevel!
+call :run 60 "%DL%\vxnative-setup.exe"
+call :expect "... and it runs unchanged" 2 !RC!
+call :run 90 "%DL%\vxnative-setup.exe" "%B%\vxtest.exe" /squirrel
+call :expect "the helper it unpacks into AppData\Local and starts at once runs too" 0 !RC!
+call :run 90 "%DL%\vxnative-setup.exe" "%B%\probe.exe" /squirrel
+call :expect "... and a helper that runs by itself is left alone (it finds none of VistaExt's DLLs)" 0 !RC!
+del /f /q "%DL%\vxnative-setup.exe" >nul 2>&1
+rd /s /q "%LOCALAPPDATA%\VxSquirrelTemp" >nul 2>&1
 reg query "%IFEO%\notepad.exe" /v VistaExt >nul 2>&1
 call :expect "a setup named like a Windows program (notepad.exe) is never registered by name" 1 !errorlevel!
 find /i "Windows has a program of the same name" "%ProgramData%\VistaExt\VistaExt.log" >nul
@@ -939,6 +953,22 @@ rem map (Vista has none, and its own DLLs use no API sets)
 if "%CV%"=="6.0" (call :expect "Vista: neither (Vista has no API-set map)" 1 !RC!) else call :expect "the program loads an API set Windows lacks through Windows' loader; a program it starts does not" 11 !RC!
 call :run 120 "%VX%\vxpatch.exe" /undo /q "%VP%\vxpprobe.exe"
 rd /s /q "%VP%" >nul 2>&1
+call :say "### a small starter that loads its big main DLL by name (firefox.exe and xul.dll)"
+set "NM=%SystemDrive%\VxNamedTest"
+mkdir "%NM%\1.0" 2>nul
+rem the starter: a program that runs by itself, with the DLL's name in it
+> "%NM%\name.txt" echo vxbigcore.dll
+copy /y /b "%B%\probe.exe" + "%NM%\name.txt" "%NM%\vxstarter.exe" >nul
+rem its main code, larger than it, in a version folder, needing functions this Windows lacks
+copy /y /b "%B%\memdll.dll" + "%B%\probe.exe" + "%B%\probe.exe" + "%B%\probe.exe" "%NM%\1.0\vxbigcore.dll" >nul
+call :run 60 "%VX%\vxpatch.exe" /native "%NM%\vxstarter.exe"
+call :expect "the starter cannot run by itself: its main DLL cannot load" 1 !RC!
+rem the same DLL smaller than the starter: an optional part (Chromium's dxcompiler.dll), not counted
+copy /y /b "%B%\probe.exe" + "%B%\probe.exe" + "%B%\probe.exe" + "%B%\probe.exe" + "%B%\probe.exe" + "%NM%\name.txt" "%NM%\vxstarter.exe" >nul
+copy /y /b "%B%\memdll.dll" "%NM%\1.0\vxbigcore.dll" >nul
+call :run 60 "%VX%\vxpatch.exe" /native "%NM%\vxstarter.exe"
+call :expect "... a smaller optional DLL it names does not make it need VistaExt" 0 !RC!
+rd /s /q "%NM%" >nul 2>&1
 call :say "### the service leaves a program that runs by itself alone, whatever else is in its folder"
 set "NP=%ProgramFiles%\VxNativeTest"
 set "NN=%ProgramFiles%\VxNeedsTest"

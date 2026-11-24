@@ -226,6 +226,10 @@ build_tools() {   # the in-VM helpers, both architectures, into $VMS/bin
             -lntdll -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         clang "${LF[@]}" -o "$O/spawntest.exe" "$O/obj/spawntest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             "$O/obj/libk32new.a" -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
+        # the same as a setup that runs by itself (only what Vista has)
+        clang "${CF[@]}" -DVX_NATIVE_SETUP -c tests/vm/spawntest.c -o "$O/obj/spawnnative.o" || return 1
+        clang "${LF[@]}" -o "$O/spawnnative.exe" "$O/obj/spawnnative.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
+            -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1
         clang "${CF[@]}" -c tests/vm/nettest.c -o "$O/obj/nettest.o" || return 1
         clang "${LF[@]}" -o "$O/nettest.exe" "$O/obj/nettest.o" "$O/obj/console.o" "$O/obj/common.o" "$O/obj/pin.o" \
             -lwinhttp -lwininet -lkernel32 -luser32 -lshell32 -ladvapi32 || return 1

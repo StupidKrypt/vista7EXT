@@ -18,6 +18,8 @@
                                programs are told the same version, see vxauto) */
 #define VXP_USER      0x100 /* in-memory mode: the user chose this program (right-click, VistaExt's
                                window, vxpatch): never taken back because it would run without */
+#define VXP_WATCH     0x200 /* in-memory mode: registered only to watch the programs it starts
+                               (a setup that runs by itself): vxload changes nothing of it */
 #define VXP_LAYER     0x10  /* a Windows version setting is in effect: version.dll
                                imports go to versvx in every file (programs that
                                read kernel32's file version) */

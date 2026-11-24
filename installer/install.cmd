@@ -154,7 +154,7 @@ set "ARP=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VistaExt"
 set "UNINST=cmd.exe /c \"\"%VX%\uninstall.cmd\"\""
 if exist "%VX%\VistaExtSetup.exe" set "UNINST=\"%VX%\VistaExtSetup.exe\" /uninstall"
 reg add "%ARP%" /v DisplayName /d "VistaExt" /f >nul
-reg add "%ARP%" /v DisplayVersion /d "1.3.0 (Beta 1.3)" /f >nul
+reg add "%ARP%" /v DisplayVersion /d "1.3.1 (Beta 1.3.1)" /f >nul
 reg add "%ARP%" /v Publisher /d "VistaExt project" /f >nul
 reg add "%ARP%" /v DisplayIcon /d "%VX%\vxcenter.exe" /f >nul
 reg add "%ARP%" /v InstallLocation /d "%VX%" /f >nul
